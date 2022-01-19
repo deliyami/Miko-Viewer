@@ -1,22 +1,31 @@
+import { HStack, Text, VStack } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import Script from 'next/script';
 import { Container } from '../components/Container';
-import { Main } from '../components/Main';
 
-const DynamicVideoPlayer = dynamic(() => import('../components/VideoPlayer'), {
-  loading: () => <div> loading</div>,
-  ssr: false,
-});
+const DynamicVideoPlayer = dynamic(
+  () => import('../components/ivs-player/VideoPlayer'),
+  {
+    loading: () => <div> loading</div>,
+    ssr: false,
+  }
+);
 
 const Video = () => (
-  <Container height="100vh">
+  <Container height="auto" width="full">
     <Script
       src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js"
       strategy="beforeInteractive"
     />
-    <Main>
+    <HStack>
       <DynamicVideoPlayer />
-    </Main>
+      <VStack backgroundColor="red.100" height="80vh" width="20vw">
+        <Text>채팅</Text>
+      </VStack>
+    </HStack>
+    <HStack backgroundColor="blue.200" width="80vw" height="20vh">
+      <Text>아바타</Text>
+    </HStack>
   </Container>
 );
 
