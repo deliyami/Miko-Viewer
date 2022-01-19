@@ -1,14 +1,26 @@
-import { Button, Text } from '@chakra-ui/react';
+import { Box, Button, HStack, Text } from '@chakra-ui/react';
+import styled from '@emotion/styled';
 import * as ivs from 'amazon-ivs-player';
 import { useEffect, useRef, useState } from 'react';
+import VideoQualitySelect from './VideoQualitySelect';
 const streamUrl =
   'https://de853ef2a345.us-east-1.playback.live-video.net/api/video/v1/us-east-1.121323684128.channel.Cj5ynk97sEJv.m3u8';
 
+// NOTE aws cli 실행할때 region 설정 주의
+// aws ivs put-metadata --channel-arn arn:aws:ivs:us-east-1:121323684128:channel/Cj5ynk97sEJv --metadata '{"question": "What does IVS stand for?", "correctIndex": 0, "answers": ["interactive video service", "interesting video service", "ingenious video service"]}'
 declare global {
   interface Window {
     IVSPlayer: typeof ivs;
   }
 }
+
+const Video = styled.video`
+  background-color: #292929;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+`;
 
 const VideoPlayer = (props) => {
   const { IVSPlayer } = window;
@@ -16,16 +28,19 @@ const VideoPlayer = (props) => {
   const { isPlayerSupported } = IVSPlayer;
 
   const [loading, setLoading] = useState(true);
-  const [isMiniPlayer, setIsMiniPlayer] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+
+  const [selectableQuality, setSelectableQuality] = useState<ivs.Quality[]>([]);
+  // const [isMiniPlayer, setIsMiniPlayer] = useState(false);
   const [muted, setMuted] = useState(false);
 
-  const [playerPosition, setPlayerPosition] = useState({});
-  const [playerSize, setPlayerSize] = useState({});
+  // const [playerPosition, setPlayerPosition] = useState({});
+  // const [playerSize, setPlayerSize] = useState({});
 
   const player = useRef<ivs.MediaPlayer>(null);
   const playerBaseEl = useRef(null);
   const videoEl = useRef(null);
-  const visibleRef = useRef(null);
+  // const visibleRef = useRef(null);
 
   // 브라우저 설정으로 인해서 소리와 함께 자동재생이 허용되지 않았을 경우 state 변경
   useEffect(() => {
@@ -39,14 +54,6 @@ const VideoPlayer = (props) => {
     console.log('no');
   }
 
-  // useEffect(() => {
-  //   player.current = IVSPlayer.create();
-  //   player.current.load(PLAYBACK_URL);
-  //   player.current.attachHTMLVideoElement(videoEl.current);
-  //   player.current.play();
-  //   return () => {};
-  // }, []);
-
   useEffect(() => {
     const { ENDED, PLAYING, READY } = IVSPlayer.PlayerState;
     const { ERROR } = IVSPlayer.PlayerEventType;
@@ -58,6 +65,15 @@ const VideoPlayer = (props) => {
     const onStateChange = () => {
       const playerState = player.current.getState();
 
+      switch (playerState) {
+        case READY:
+          setSelectableQuality(player.current.getQualities());
+          console.log('aaa', player.current.getQualities());
+          break;
+        default:
+          break;
+      }
+
       console.log(`Player State - ${playerState}`);
       setLoading(playerState !== PLAYING);
     };
@@ -66,8 +82,18 @@ const VideoPlayer = (props) => {
       console.warn('Player Event - ERROR:', err);
     };
 
+    const onTimeMetaData = (cue) => {
+      console.log(cue);
+      console.log('Timed metadata: ', cue.text);
+      console.log(player.current.getPosition().toFixed(2));
+    };
+
     player.current = IVSPlayer.create();
     player.current.attachHTMLVideoElement(videoEl.current);
+
+    player.current.setAutoplay(true);
+    player.current.setVolume(1);
+
     player.current.load(streamUrl);
     player.current.play();
 
@@ -75,23 +101,34 @@ const VideoPlayer = (props) => {
     player.current.addEventListener(PLAYING, onStateChange);
     player.current.addEventListener(ENDED, onStateChange);
     player.current.addEventListener(ERROR, onError);
+    player.current.addEventListener(
+      IVSPlayer.PlayerEventType.TEXT_METADATA_CUE,
+      onTimeMetaData
+    );
 
     return () => {
       player.current.removeEventListener(READY, onStateChange);
       player.current.removeEventListener(PLAYING, onStateChange);
       player.current.removeEventListener(ENDED, onStateChange);
       player.current.removeEventListener(ERROR, onError);
+      player.current.removeEventListener(
+        IVSPlayer.PlayerEventType.TEXT_METADATA_CUE,
+        onTimeMetaData
+      );
+      player.current.delete();
     };
-  }, [IVSPlayer, isPlayerSupported, streamUrl]);
+  }, []);
 
   const pause = () => {
-    if (player.current.isPaused()) {
+    const isPaused = player.current.isPaused();
+    if (isPaused) {
       player.current.play();
     } else {
       player.current.pause();
     }
     console.log(player.current.isPaused());
-    setIsMiniPlayer(false);
+    setIsPlaying(isPaused);
+    // setIsMiniPlayer(false);
   };
 
   const resize = () => {
@@ -116,12 +153,46 @@ const VideoPlayer = (props) => {
   }
 
   return (
-    <div>
-      videoPlayer
-      <video ref={videoEl} playsInline></video>
-      <Button onClick={toggleMute}>Mute</Button>
-      <Button onClick={pause}>pause</Button>
-    </div>
+    <Box
+      id="player-wrapper"
+      width="90%"
+      position="relative"
+      overflow="hidden"
+      role="group"
+    >
+      <Box id="aspect-spacer" pb="56.25%"></Box>
+      <Box height="100%" width="100%" position="absolute" top="0">
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          right="0"
+          bottom="0"
+          zIndex="1"
+          visibility="hidden"
+          _groupHover={{
+            visibility: 'visible',
+          }}
+        >
+          <HStack
+            id="control-bottom"
+            position="absolute"
+            width="full"
+            bottom="0"
+            pd="2rem"
+          >
+            <Button onClick={toggleMute}>{muted ? 'mute' : 'sound'}</Button>
+            <Button onClick={pause}>{isPlaying ? 'pause' : 'play'}</Button>
+            <Box flexGrow="1"></Box>
+            <VideoQualitySelect
+              player={player}
+              selectableQuality={selectableQuality}
+            ></VideoQualitySelect>
+          </HStack>
+        </Box>
+        <Video ref={videoEl} playsInline></Video>
+      </Box>
+    </Box>
   );
 };
 

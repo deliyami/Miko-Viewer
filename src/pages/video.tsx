@@ -17,7 +17,7 @@ const Video = () => (
       src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js"
       strategy="beforeInteractive"
     />
-    <HStack>
+    <HStack width="full">
       <DynamicVideoPlayer />
       <VStack backgroundColor="red.100" height="80vh" width="20vw">
         <Text>채팅</Text>
