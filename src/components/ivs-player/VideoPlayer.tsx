@@ -181,8 +181,10 @@ const VideoPlayer = (props) => {
             bottom="0"
             pd="2rem"
           >
-            <Button onClick={toggleMute}>{muted ? 'mute' : 'sound'}</Button>
-            <Button onClick={pause}>{isPlaying ? 'pause' : 'play'}</Button>
+            <Button onClick={toggleMute}>
+              {muted ? '소리켜기' : '뮤트하기'}
+            </Button>
+            <Button onClick={pause}>{isPlaying ? '정지' : '재생'}</Button>
             <Box flexGrow="1"></Box>
             <VideoQualitySelect
               player={player}
