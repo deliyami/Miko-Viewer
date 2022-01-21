@@ -1,19 +1,18 @@
+import { CheckCircleIcon, LinkIcon } from '@chakra-ui/icons';
 import {
-  Link as ChakraLink,
-  Text,
   Code,
+  Link as ChakraLink,
   List,
   ListIcon,
   ListItem,
-} from '@chakra-ui/react'
-import { CheckCircleIcon, LinkIcon } from '@chakra-ui/icons'
-
-import { Hero } from '../components/Hero'
-import { Container } from '../components/Container'
-import { Main } from '../components/Main'
-import { DarkModeSwitch } from '../components/DarkModeSwitch'
-import { CTA } from '../components/CTA'
-import { Footer } from '../components/Footer'
+  Text,
+} from '@chakra-ui/react';
+import { Container } from '../components/Container';
+import { CTA } from '../components/CTA';
+import { DarkModeSwitch } from '../components/DarkModeSwitch';
+import { Footer } from '../components/Footer';
+import { Hero } from '../components/Hero';
+import { Main } from '../components/Main';
 
 const Index = () => (
   <Container height="100vh">
@@ -51,6 +50,18 @@ const Index = () => (
     </Footer>
     <CTA />
   </Container>
-)
+);
 
-export default Index
+export async function getServerSideProps() {
+  // Server-side requests are mocked by `mocks/server.js`.
+  const res = await fetch('https://my.backend/book');
+  const book = await res.json();
+  console.log('mock', res);
+  return {
+    props: {
+      book,
+    },
+  };
+}
+
+export default Index;

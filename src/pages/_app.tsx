@@ -4,6 +4,10 @@ import { useEffect } from 'react';
 import { RecoilRoot } from 'recoil';
 import theme from '../theme';
 
+if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
+  require('@src/mocks');
+}
+
 declare global {
   interface Window {
     sockets: Socket;
