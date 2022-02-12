@@ -53,14 +53,8 @@ const Index = () => (
 );
 
 export async function getServerSideProps() {
-  // Server-side requests are mocked by `mocks/server.js`.
-  const res = await fetch('https://my.backend/book');
-  const book = await res.json();
-  console.log('mock', res);
   return {
-    props: {
-      book,
-    },
+    props: {},
   };
 }
 
