@@ -1,3 +1,4 @@
+import { Box, Center, Text, VStack } from '@chakra-ui/react';
 import { useOAuthLogin } from '@src/state/swr/useUser';
 import { useRouter } from 'next/dist/client/router';
 import { useEffect, useState } from 'react';
@@ -27,7 +28,7 @@ export default function redirect() {
     if (!loading) {
       setTimeout(() => {
         router.push(`/${error ? 'login' : '/'}`);
-      }, 2000);
+      }, 100);
     }
   }, [loading]);
 
@@ -36,44 +37,46 @@ export default function redirect() {
   }, []);
 
   return (
-    <div>
-      {loading && (
-        <>
-          {router.isReady && token === undefined ? (
-            <>
-              <div>
-                <h1>✋</h1>
-              </div>
-              <h3>잘못된 접근입니다.</h3>
-              <h3> 홈으로 이동합니다.</h3>
-            </>
-          ) : (
-            <>
-              <div>Cricle</div>
-              <h3>로그인 중입니다 </h3>
-              <h3>잠시만 기달려 주세요.</h3>
-            </>
-          )}
-        </>
-      )}
-      {!loading && error && (
-        <>
-          <div>
-            <h1>⁉️</h1>
-          </div>
-          <h3>로그인에 실패했습니다.</h3>
-          <h3>로그인 페이지로 이동합니다</h3>
-        </>
-      )}
-      {!loading && !error && (
-        <>
-          <div>
-            <h1>✔️</h1>
-          </div>
-          <h3>로그인에 성공했습니다.</h3>
-          <h3> 잠시 후 홈 화면으로 이동</h3>
-        </>
-      )}
-    </div>
+    <Center width="full" height="100vh">
+      <VStack>
+        {loading && (
+          <>
+            {router.isReady && token === undefined ? (
+              <>
+                <Box>
+                  <Text fontSize="3xl">✋</Text>
+                </Box>
+                <Text fontSize="2xl">잘못된 접근입니다.</Text>
+                <Text fontSize="2xl"> 홈으로 이동합니다.</Text>
+              </>
+            ) : (
+              <>
+                <Box>Cricle</Box>
+                <Text fontSize="2xl">로그인 중입니다 </Text>
+                <Text fontSize="2xl">잠시만 기달려 주세요.</Text>
+              </>
+            )}
+          </>
+        )}
+        {!loading && error && (
+          <>
+            <Box>
+              <Text fontSize="3xl">⁉️</Text>
+            </Box>
+            <Text fontSize="2xl">로그인에 실패했습니다.</Text>
+            <Text fontSize="2xl">로그인 페이지로 이동합니다</Text>
+          </>
+        )}
+        {!loading && !error && (
+          <>
+            <Box>
+              <Text fontSize="3xl">✔️</Text>
+            </Box>
+            <Text fontSize="2xl">로그인에 성공했습니다.</Text>
+            <Text fontSize="2xl"> 잠시 후 홈 화면으로 이동</Text>
+          </>
+        )}
+      </VStack>
+    </Center>
   );
 }
