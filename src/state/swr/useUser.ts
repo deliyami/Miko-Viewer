@@ -1,22 +1,17 @@
-import { axiosI } from '@src/state/fetcher';
+import { axiosI, fetcher } from '@src/state/fetcher';
 import { LoginData, User } from '@src/types/User';
-import { useState } from 'react';
 import { mutate } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 import laggy from './middleware/laggy';
 
-const URL_USER = '/api/users';
-const URL_LOGIN = '/api/login';
-const URL_LOGOUT = '/api/logout';
+const URL_USER = '/users';
+const URL_LOGIN = '/login';
+const URL_LOGOUT = '/logout';
 
 const useUser = () => {
-  const [a] = useState({
-    data: { id: Math.round(Math.random() * 10000), name: 'aio' },
-  });
-  return a;
   const aFetcher = (url: string) => {
     const isExistToken = document.cookie.match(
-      /^(.*;)?\s*logged\s*=\s*[^;]+(.*)?$/
+      /^(.*;)?\s*csrftoken\s*=\s*[^;]+(.*)?$/
     );
     console.log('isExistToken', isExistToken);
     if (!isExistToken) return Promise.resolve(undefined);

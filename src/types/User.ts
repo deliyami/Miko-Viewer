@@ -2,7 +2,8 @@ export type User = {
   id: number;
   name: string;
   email: string;
-  photo?: string;
+  avatar?: string;
+  coin: number;
 };
 
 export type CreteUserData = Pick<User, 'name' | 'email'> & {
