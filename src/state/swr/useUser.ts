@@ -6,6 +6,7 @@ import laggy from './middleware/laggy';
 
 const URL_USER = '/users';
 const URL_LOGIN = '/login';
+const URL_OAUTH_LOGIN = '/login/google/login';
 const URL_LOGOUT = '/logout';
 
 const useUser = () => {
@@ -42,6 +43,18 @@ const useLogin = async (loginData: LoginData) => {
   }
 };
 
+const useOAuthLogin = async (token: string) => {
+  try {
+    const { data, status } = await axiosI.post<User>(`${URL_OAUTH_LOGIN}`, {
+      token,
+    });
+    mutate(URL_USER, data, false);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 const useLogOut = async () => {
   try {
     const { data, status } = await axiosI.get(`${URL_LOGOUT}`);
@@ -50,4 +63,4 @@ const useLogOut = async () => {
     return undefined;
   }
 };
-export { useLogin, useUser, useLogOut };
+export { useLogin, useUser, useLogOut, useOAuthLogin };

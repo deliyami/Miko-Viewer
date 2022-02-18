@@ -45,7 +45,7 @@ const LoginPage = () => {
     router.push('/'); // 로그인 상태면 홈으로 강제 이동동
   }
 
-  console.info(watch());
+  // console.info(watch());
   console.log(errors);
   return (
     <>

@@ -1,3 +1,4 @@
+import { useOAuthLogin } from '@src/state/swr/useUser';
 import { useRouter } from 'next/dist/client/router';
 import { useEffect, useState } from 'react';
 
@@ -5,35 +6,40 @@ export default function redirect() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const { code } = router.query;
+  const { token } = router.query;
 
   useEffect(() => {
-    if (!router.isReady) {
-      return;
-    }
-    if (router.isReady && code === undefined) {
+    if (!router.isReady) return;
+
+    async function tryLogin() {
+      if (token) {
+        const result = await useOAuthLogin(token as string);
+        if (result === false) setError(true);
+      } else {
+        setError(true);
+      }
       setLoading(false);
-      setError(true);
     }
-  }, [code]);
+    tryLogin();
+  }, [router.isReady]);
 
   useEffect(() => {
     if (!loading) {
       setTimeout(() => {
-        router.push(`/${error ? 'login' : 'room'}`);
+        router.push(`/${error ? 'login' : '/'}`);
       }, 2000);
     }
   }, [loading]);
 
   useEffect(() => {
-    router.prefetch('/room');
+    router.prefetch('/');
   }, []);
 
   return (
     <div>
       {loading && (
         <>
-          {router.isReady && code === undefined ? (
+          {router.isReady && token === undefined ? (
             <>
               <div>
                 <h1>✋</h1>
