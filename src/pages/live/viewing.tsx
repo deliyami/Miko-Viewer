@@ -1,17 +1,17 @@
 import { HStack, Text, VStack } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import Script from 'next/script';
-import { Container } from '../components/Container';
+import { Container } from '../../components/Container';
 
 const DynamicVideoPlayer = dynamic(
-  () => import('../components/ivs-player/VideoPlayer'),
+  () => import('../../components/ivs-player/VideoPlayer'),
   {
     loading: () => <div> loading</div>,
     ssr: false,
   }
 );
 
-const Video = () => (
+const ViewingPage = () => (
   <Container height="auto" width="full">
     <Script
       src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js"
@@ -29,4 +29,4 @@ const Video = () => (
   </Container>
 );
 
-export default Video;
+export default ViewingPage;

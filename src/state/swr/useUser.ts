@@ -11,11 +11,10 @@ const URL_LOGOUT = '/logout';
 const useUser = () => {
   const aFetcher = (url: string) => {
     const isExistToken = document.cookie.match(
-      /^(.*;)?\s*csrftoken\s*=\s*[^;]+(.*)?$/
+      /^(.*;)?\s*isLogin\s*=\s*[^;]+(.*)?$/
     );
     console.log('isExistToken', isExistToken);
     if (!isExistToken) return Promise.resolve(undefined);
-    console.log('useUser 실행');
     return fetcher(url);
   };
 

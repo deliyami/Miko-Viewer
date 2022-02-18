@@ -139,7 +139,7 @@ const LoginPage = () => {
                     type="submit"
                     isLoading={isSubmitting}
                     onClick={() => {
-                      router.push(`${LARAVEL_URL}/login/google`);
+                      router.push(`http://${LARAVEL_URL}/login/google`);
                     }}
                   >
                     Google
