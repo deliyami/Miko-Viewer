@@ -51,7 +51,7 @@ const LoginPage = () => {
     <>
       <Head>
         <title>LOGIN | MICO</title>
-        <meta name="description" content="마루스쿠 로그인 페이지" />
+        <meta name="description" content="미코 로그인 페이지" />
       </Head>
       <Flex
         minH={'100vh'}

@@ -1,7 +1,7 @@
 import { Box, HStack, Text } from '@chakra-ui/react';
 import { useUser } from '@src/state/swr/useUser';
 import Link from 'next/link';
-import { FC } from 'react';
+import { FC, Suspense } from 'react';
 
 const MenuLink: FC<{ name: string; url: string }> = ({ name, url }) => {
   return (
@@ -19,13 +19,28 @@ const MenuLink: FC<{ name: string; url: string }> = ({ name, url }) => {
   );
 };
 
-const MenuBar = (params) => {
+const UserData = () => {
   const { data } = useUser();
+
+  return (
+    <Box>
+      {data ? (
+        <Text>{data.email}</Text>
+      ) : (
+        <MenuLink name="로그인" url="/login" />
+      )}
+    </Box>
+  );
+};
+
+const MenuBar = (params) => {
+  const devList = [{ name: '챗팅', url: '/test/chat' }];
 
   const linkList = [
     { name: '콘서트 검색', url: '/concerts' },
     { name: '이용자', url: '/my' },
     // { name: '로그인', url: '/login' },
+    ...devList,
   ];
 
   return (
@@ -49,11 +64,9 @@ const MenuBar = (params) => {
         {linkList.map(({ name, url }) => (
           <MenuLink key={name} name={name} url={url} />
         ))}
-        {data ? (
-          <Text>{data.email}</Text>
-        ) : (
-          <MenuLink name="로그인" url="/login" />
-        )}
+        <Suspense fallback={<Text> 로딩 </Text>}>
+          <UserData />
+        </Suspense>
       </HStack>
     </Box>
   );

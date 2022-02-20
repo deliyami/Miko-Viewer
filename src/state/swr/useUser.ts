@@ -6,11 +6,13 @@ import laggy from './middleware/laggy';
 
 const URL_USER = '/users';
 const URL_LOGIN = '/login';
-const URL_OAUTH_LOGIN = '/login/google/login';
+const URL_OAUTH_LOGIN = '/login/google';
 const URL_LOGOUT = '/logout';
 
 const useUser = () => {
   const aFetcher = (url: string) => {
+    if (typeof window === 'undefined') return Promise.resolve(undefined);
+
     const isExistToken = document.cookie.match(
       /^(.*;)?\s*isLogin\s*=\s*[^;]+(.*)?$/
     );
@@ -25,6 +27,7 @@ const useUser = () => {
     {
       errorRetryCount: 5,
       use: [laggy],
+      // suspense: true,
     }
   );
 
