@@ -1,7 +1,9 @@
 import { HStack, Text, VStack } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import Script from 'next/script';
+import { useState } from 'react';
 import { Container } from '../../components/Container';
+import { ModelComponent } from '../../components/live/ModelComponent'
 
 const DynamicVideoPlayer = dynamic(
   () => import('../../components/ivs-player/VideoPlayer'),
@@ -9,8 +11,8 @@ const DynamicVideoPlayer = dynamic(
     loading: () => <div> loading</div>,
     ssr: false,
   }
-);
-
+  );
+  
 const ViewingPage = () => (
   <Container height="auto" width="full">
     <Script
@@ -24,7 +26,8 @@ const ViewingPage = () => (
       </VStack>
     </HStack>
     <HStack backgroundColor="blue.200" width="80vw" height="20vh">
-      <Text>아바타</Text>
+      {/* <Text>아바타</Text> */}
+      <ModelComponent/>
     </HStack>
   </Container>
 );
