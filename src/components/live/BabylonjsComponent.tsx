@@ -64,6 +64,7 @@ const BabylonjsComponent = (props:props) => {
   const { antialias, engineOptions, adaptToDeviceRatio, sceneOptions, path, x, y, ...rest } = props;
   const reactCanvas = useRef(null);
   const user = useRef<User[]>([]);
+
   useEffect(() => {
 
     const onSceneReady = (scene:BABYLON.Scene, path:string) => {

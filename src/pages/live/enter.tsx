@@ -17,7 +17,7 @@ const RoomEnterPage = (props) => {
     if (!error||error===4) {
       const roomName = roomRef.current.value;
       const userName = userRef.current.value;
-  
+
       sessionStorage.setItem('user', userName);
       sessionStorage.setItem('roomName', roomName);
       sessionStorage.setItem('host',error)
