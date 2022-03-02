@@ -3,9 +3,6 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 import useSocket from '../../hooks/useSocket'
 
-const backendDone = (msg) => {
-  console.log('work done!:',msg)
-}
 
 
 const RoomEnterPage = (props) => {
@@ -17,11 +14,13 @@ const RoomEnterPage = (props) => {
   const sockets = useSocket();
 
   function findError(error){
-    if (!error) {
+    if (!error||error===4) {
       const roomName = roomRef.current.value;
       const userName = userRef.current.value;
   
       sessionStorage.setItem('user', userName);
+      sessionStorage.setItem('roomName', roomName);
+      sessionStorage.setItem('host',error)
       // props.history.push(`/room/${roomName}`);
       router.push({
         pathname:'/live/viewing',
@@ -37,8 +36,6 @@ const RoomEnterPage = (props) => {
   }
 
   useEffect(() => {
-    console.log(window.sockets)
-    // if(!sockets) return;
     window.sockets.on('FE-error-user-exist', findError);
   }, []);
   

@@ -5,13 +5,13 @@ import { useState } from 'react';
 import { Container } from '../../components/Container';
 import { ModelComponent } from '../../components/live/ModelComponent'
 
-const DynamicVideoPlayer = dynamic(
-  () => import('../../components/ivs-player/VideoPlayer'),
-  {
-    loading: () => <div> loading</div>,
-    ssr: false,
-  }
-  );
+// const DynamicVideoPlayer = dynamic(
+//   () => import('../../components/ivs-player/VideoPlayer'),
+//   {
+//     loading: () => <div> loading</div>,
+//     ssr: false,
+//   }
+//   );
   
 const ViewingPage = () => (
   <Container height="auto" width="full">
@@ -20,7 +20,7 @@ const ViewingPage = () => (
       strategy="beforeInteractive"
     />
     <HStack width="full">
-      <DynamicVideoPlayer />
+      {/* <DynamicVideoPlayer /> */}
       <VStack backgroundColor="red.100" height="80vh" width="20vw">
         <Text>채팅</Text>
       </VStack>

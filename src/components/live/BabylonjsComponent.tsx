@@ -53,7 +53,10 @@ declare global{
         pose:Kalidokit.TPose[]
         face:number[][]
       },
-    }
+    },
+    RTCPeer:RTCPeerConnection,
+    mediaStream:MediaStream
+    dataChannel:RTCDataChannel
   }
 }
 
@@ -75,7 +78,6 @@ const BabylonjsComponent = (props:props) => {
     
       const reader = new FileReader();
       reader.onload = function (e) {
-        console.log(e);
       };
       if (BABYLON&&BABYLON.SceneLoader) {
         const borns:BABYLON.TransformNode[][]=[]; // born array
@@ -147,7 +149,6 @@ const BabylonjsComponent = (props:props) => {
             makeGround(`nameGround${i}`,0.5,1.5,'175px','40px',1)
             makeGround(`chatGround${i}`,5,0,'175px','137.78px',0)
             if(i===0){
-              console.log('userHandler', i)
               useHandler(user)
             }
           })
