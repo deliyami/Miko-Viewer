@@ -21,19 +21,14 @@ const useUser = () => {
     return fetcher(url);
   };
 
-  const { data, error, mutate, isValidating } = useSWRImmutable<User>(
-    URL_USER,
-    aFetcher,
-    {
-      errorRetryCount: 5,
-      use: [laggy],
-      // suspense: true,
-    }
-  );
+  return useSWRImmutable<User>(URL_USER, aFetcher, {
+    errorRetryCount: 5,
+    use: [laggy],
+    // suspense: true,
+  });
 
-  const isNotLogged = !isValidating && !data; // 확인중이 아니며, 데이터가 undefined
-
-  return { data, error, mutate, isValidating, isNotLogged };
+  // const isNotLogged = !isValidating && !data; // 확인중이 아니며, 데이터가 undefined
+  // return { data, error, mutate, isValidating, isNotLogged };
 };
 
 const useLogin = async (loginData: LoginData) => {

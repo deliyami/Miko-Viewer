@@ -34,7 +34,7 @@ const UserData = () => {
 };
 
 const MenuBar = (params) => {
-  const devList = [{ name: '챗팅', url: '/test/chat' }];
+  const devList = [{ name: '챗팅', url: '/test/webrtc' }];
 
   const linkList = [
     { name: '콘서트 검색', url: '/concerts' },
