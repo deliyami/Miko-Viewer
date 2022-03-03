@@ -7,5 +7,7 @@ const roomKeyState = atom<string>({
 
 const concertIdState = atom<number>({
   key: 'concertId',
-  default: undefined,
+  default: 1111,
 });
+
+export { concertIdState, roomKeyState };

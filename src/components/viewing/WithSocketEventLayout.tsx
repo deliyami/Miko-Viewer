@@ -4,7 +4,8 @@ import {
   // mySocket as socket,
   myStreamState,
   newMessageState,
-  peersArrayState,
+  PeerDataInterface,
+  peerDataListState,
   roomIdState,
   screenStreamIDState,
   screenStreamState,
@@ -14,8 +15,10 @@ import {
   videoStreamsState,
 } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
-import Peer from 'peerjs';
-import { FC, useEffect, useState } from 'react';
+import produce from 'immer';
+import { nanoid } from 'nanoid';
+import Peer, { DataConnection } from 'peerjs';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 interface ConnectParams {
@@ -23,14 +26,28 @@ interface ConnectParams {
   video: boolean;
 }
 
-const myPeerUniqueID = Math.round(Math.random() * 100000) + '';
+const myPeerUniqueID = nanoid();
 const myPeer = new Peer(myPeerUniqueID, { debug: 2 });
-console.log('my peer id :', myPeer.id);
+const concertId = 1111;
+
+//@ts-ignore
+const getUserMedia =
+  //@ts-ignore
+  navigator.getUserMedia ||
+  //@ts-ignore
+  navigator.webkitGetUserMedia ||
+  //@ts-ignore
+  navigator.mozGetUserMedia;
+
+const addEvnetToDataConnection = (dataConnection: DataConnection) => {
+  dataConnection.on('data', (data) => {
+    console.log('Received B', data);
+  });
+};
 
 const WithSocketEventLayout: FC = ({ children }) => {
   const socket = useSocket();
   const user = useUser();
-  // const user = { data: { email: 'aaaa' } };
 
   const [streamOptions, _] = useState<ConnectParams>({
     audio: true,
@@ -39,7 +56,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
 
   const [roomId, setRoomIdState] = useRecoilState(roomIdState);
   const [videoStreams, setVideoStreams] = useRecoilState(videoStreamsState);
-  const [peersArray, setPeersArray] = useRecoilState(peersArrayState);
+  const [peerDataList, setPeerDataList] = useRecoilState(peerDataListState);
   const [myStream, setMyStream] = useRecoilState(myStreamState);
   const [userNames, setUserNames] = useRecoilState(userNamesState);
   const [newMessage, setNewMessage] = useRecoilState(newMessageState);
@@ -55,17 +72,22 @@ const WithSocketEventLayout: FC = ({ children }) => {
     useRecoilState(screenStreamIDState);
   const [screenStream, setScreenStream] = useRecoilState(screenStreamState);
 
-  //@ts-ignore
-  const getUserMedia =
-    //@ts-ignore
-    navigator.getUserMedia ||
-    //@ts-ignore
-    navigator.webkitGetUserMedia ||
-    //@ts-ignore
-    navigator.mozGetUserMedia;
+  const addDataConnectionToPeersDataList = useCallback(
+    (dataConnection: DataConnection) => {
+      setPeerDataList(
+        produce((peers) => {
+          const idx = peers.findIndex(
+            (peer) => peer.id === dataConnection.peer
+          );
+          console.log('find index ', idx, peers, dataConnection);
+          peers[idx].dataConnection = dataConnection;
+        })
+      );
+    },
+    []
+  );
 
   useEffect(() => {
-    console.log('Socket add useEffect');
     if (!socket || !user.data) {
       console.log('not socket or user', socket, user);
       return;
@@ -73,41 +95,56 @@ const WithSocketEventLayout: FC = ({ children }) => {
     console.log('user and socket exist', socket, user, myPeerUniqueID);
 
     socket.emit(
-      'new-user-arriving-start',
+      'fe-new-user-request-join',
       myPeerUniqueID,
       roomId,
-      user.data.email
+      user.data,
+      concertId
     );
 
-    const newUserArrivedFinishEvent = (
+    myPeer.on('connection', (dataConnection) => {
+      console.log('data connected to ', dataConnection.peer);
+      // setPeerDataList(
+      //   produce((peers) => {
+      //     const idx = peers.findIndex(
+      //       (peer) => peer.id === dataConnection.peer
+      //     );
+      //     peers[idx].dataConnection = dataConnection;
+      //   })
+      // );
+      addDataConnectionToPeersDataList(dataConnection);
+      addEvnetToDataConnection(dataConnection);
+    });
+
+    const newUserCome = (
       otherPeerId: string,
       roomID: string,
-      userName: string
+      userData: PeerDataInterface['data']
     ) => {
-      console.log('new-user-arrived-finish', otherPeerId, roomId, userName);
-      setPeersArray((prevPeers) => {
-        const newPeers = [...prevPeers];
-        const found = newPeers.some((el) => el === otherPeerId);
-        if (!found && otherPeerId !== myPeerUniqueID)
-          newPeers.push(otherPeerId);
-        return newPeers;
-      });
+      console.log('new-user-come', otherPeerId, roomId, userData);
 
-      // if (!fullName) {
-      //   localStorage.setItem('fullName', userName);
-      //   setFullName(userName);
-      // }
-      socket.emit('newUserName', roomId, user.data.email);
-
+      setPeerDataList(
+        produce((prevPeers) => {
+          const notFound = !prevPeers.some((peer) => peer.id === otherPeerId);
+          if (notFound && otherPeerId !== myPeerUniqueID)
+            prevPeers.push({ id: otherPeerId, data: userData });
+          return prevPeers;
+        })
+      );
+      // socket.emit('newUserName', roomId, user.data.email);
       getUserMedia(
         streamOptions,
         (stream) => {
           setMyStream(stream);
-
           // localStorage.setItem('currentStreamId', stream.id);
 
           if (otherPeerId !== myPeerUniqueID) {
-            socket.emit('sendMyPeer', roomID, myPeerUniqueID);
+            socket.emit(
+              'fe-answer-send-peer-id',
+              roomID,
+              myPeerUniqueID,
+              userData
+            );
             const call = myPeer.call(otherPeerId, stream);
 
             call.on('stream', (remoteStream) => {
@@ -158,84 +195,72 @@ const WithSocketEventLayout: FC = ({ children }) => {
       const dataConnection = myPeer.connect(otherPeerId);
 
       dataConnection.on('open', () => {
-        console.log('open!');
-
-        dataConnection.on('data', (data) => {
-          console.log('Received A', data);
-        });
-        // Send messages
-        dataConnection.send('Hello!');
-      });
-
-      setInterval(() => {
-        dataConnection.send('hello');
-      }, 1000);
-
-      myPeer.on('connection', (dataConnection) => {
-        dataConnection.on('data', (data) => {
-          console.log('Received B', data);
-        });
-        setInterval(() => {
-          dataConnection.send('hello');
-        }, 1000);
+        console.log('data connect success 👌 to' + otherPeerId);
+        addDataConnectionToPeersDataList(dataConnection);
+        addEvnetToDataConnection(dataConnection);
+        dataConnection.send('Hello! I am' + myPeerUniqueID);
       });
     };
-
-    socket.on('new-user-arrived-finish', newUserArrivedFinishEvent);
-
-    socket.on('receiveMyPeer', (peer: string) => {
-      setPeersArray((peers) => {
-        const streamsCopy = [...peers];
-        const found = streamsCopy.some((el) => el === peer);
-        if (!found && peer !== myPeerUniqueID) streamsCopy.push(peer);
-        return streamsCopy;
+    const broadcastPeerId = (
+      peerId: string,
+      userData: PeerDataInterface['data']
+    ) => {
+      setPeerDataList(
+        produce((prevPeers) => {
+          const notFound = !prevPeers.some((peer) => peer.id === peerId);
+          if (notFound && peerId !== myPeerUniqueID)
+            prevPeers.push({ id: peerId, data: userData });
+          return prevPeers;
+        })
+      );
+    };
+    const broadcastNewMessage = (data: {
+      sender: string;
+      receivedMessage: string;
+    }) => {
+      let currentSender = data.sender;
+      setMessages((currentArray) => {
+        return [
+          ...currentArray,
+          {
+            sender: currentSender,
+            receivedMessage: data.receivedMessage,
+          },
+        ];
       });
-    });
+      setNewMessage('');
+    };
+    socket.on('be-new-user-come', newUserCome);
+    socket.on('be-broadcast-peer-id', broadcastPeerId);
+    socket.on('be-broadcast-new-message', broadcastNewMessage);
 
-    socket.on('newUserName', (userName: string) => {
-      if (userName !== user.data.email) {
-        setUserNames((userNames) => {
-          const userNamesCopy = [...userNames];
-          const found = userNamesCopy.some((el) => el === userName);
-          if (!found) userNamesCopy.push(userName);
+    // socket.on('newUserName', (userName: string) => {
+    //   if (userName !== user.data.email) {
+    //     setUserNames((userNames) => {
+    //       const userNamesCopy = [...userNames];
+    //       const found = userNamesCopy.some((el) => el === userName);
+    //       if (!found) userNamesCopy.push(userName);
 
-          return userNamesCopy;
-        });
-      }
-    });
+    //       return userNamesCopy;
+    //     });
+    //   }
+    // });
 
-    socket.on(
-      'new message received',
-      (data: { sender: string; receivedMessage: string }) => {
-        let currentSender = data.sender;
-        setMessages((currentArray) => {
-          return [
-            ...currentArray,
-            {
-              sender: currentSender,
-              receivedMessage: data.receivedMessage,
-            },
-          ];
-        });
-        setNewMessage('');
-      }
-    );
+    // socket.on('screen-share-receive', (streamID: string) => {
+    //   setScreenStreamID(streamID);
+    //   setShareScreenButtonText('Start screen sharing');
+    //   setStartSharingButtonDisabled(true);
+    // });
 
-    socket.on('screen-share-receive', (streamID: string) => {
-      setScreenStreamID(streamID);
-      setShareScreenButtonText('Start screen sharing');
-      setStartSharingButtonDisabled(true);
-    });
-
-    socket.on('screen-share-stop-done', (streamID: string) => {
-      setStartSharingButtonDisabled(false);
-      setVideoStreams((streams) => {
-        const streamsCopy = streams.filter((el) => {
-          return el.id !== streamID;
-        });
-        return streamsCopy;
-      });
-    });
+    // socket.on('screen-share-stop-done', (streamID: string) => {
+    //   setStartSharingButtonDisabled(false);
+    //   setVideoStreams((streams) => {
+    //     const streamsCopy = streams.filter((el) => {
+    //       return el.id !== streamID;
+    //     });
+    //     return streamsCopy;
+    //   });
+    // });
 
     socket.on('userLeft', (streamID: string) => {
       setVideoStreams((currentArray) => {
@@ -257,9 +282,11 @@ const WithSocketEventLayout: FC = ({ children }) => {
 
     return () => {
       console.log('Socket Event Add - useEffect return');
-      socket.off('new-user-arrived-finish', newUserArrivedFinishEvent);
+      socket.off('new-user-arrived-finish', newUserCome);
+      socket.off('be-broadcast-peer-id', broadcastPeerId);
+      socket.off('be-broadcast-new-message', broadcastNewMessage);
       myPeer.destroy();
-      setPeersArray([]);
+      setPeerDataList([]);
       setVideoStreams([]);
       setMessages([]);
     };

@@ -1,16 +1,18 @@
-import { Box, HStack } from '@chakra-ui/react';
+import { Box, HStack, Text } from '@chakra-ui/react';
 import Streamer from '@src/components/viewing/Streamer';
 import useSocket from '@src/hooks/useSocket';
 import {
   myStreamState,
+  PeerDataInterface,
+  peerDataListState,
   screenStreamIDState,
   screenStreamState,
   userNamesState,
   videoStreamsState,
 } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
-import { createRef, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { createRef, FC, useEffect } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 const RoomAvatarView = () => {
   const socket = useSocket();
@@ -25,6 +27,8 @@ const RoomAvatarView = () => {
   const [videoStreams, setVideoStreams] = useRecoilState(videoStreamsState);
   const [myStream, setMyStream] = useRecoilState(myStreamState);
   const [userNames, setUserNames] = useRecoilState(userNamesState);
+
+  const peerDataList = useRecoilValue(peerDataListState);
 
   useEffect(() => {
     if (screenStream) {
@@ -86,11 +90,34 @@ const RoomAvatarView = () => {
     </>
   );
 
+  console.log('peerDataList', peerDataList);
+
   return (
     <HStack width="full" backgroundColor="blue.400">
       <Box>aaa</Box>
-      {videoStreamsList}
+      {/* {videoStreamsList} */}
+      {peerDataList.map((peer) => (
+        <UserBox peer={peer} key={peer.id} />
+      ))}
     </HStack>
+  );
+};
+
+const UserBox: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
+  const { id, data, dataConnection, mediaConnection } = peer;
+
+  return (
+    <Box
+      width="300px"
+      height="300px"
+      bgColor="blackAlpha.500"
+      id={peer.id + 'box'}
+      position="relative"
+    >
+      <Text> {data.email} </Text>
+
+      <HStack position="absolute" right="1" bottom="1"></HStack>
+    </Box>
   );
 };
 

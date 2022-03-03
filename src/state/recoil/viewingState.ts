@@ -1,3 +1,5 @@
+import { User } from '@src/types/User';
+import { DataConnection, MediaConnection } from 'peerjs';
 import { atom } from 'recoil';
 import io from 'socket.io-client';
 const videoStreamsState = atom<MediaStream[]>({
@@ -69,6 +71,17 @@ const isShowChatInputState = atom<boolean>({
   key: 'isShowChatInput',
   default: true,
 });
+export type PeerDataInterface = {
+  id: string;
+  dataConnection?: DataConnection;
+  mediaConnection?: MediaConnection;
+  data?: Pick<User, 'id' | 'avatar' | 'email' | 'name'>;
+};
+
+const peerDataListState = atom<PeerDataInterface[]>({
+  key: 'peerDataList',
+  default: [],
+});
 
 const mySocket = io('http://localhost:3001', {
   // autoConnect: true,
@@ -95,6 +108,7 @@ export {
   screenStreamIDState,
   screenStreamState,
   chatModeState,
+  peerDataListState,
   isShowChatInputState,
   mySocket,
 };

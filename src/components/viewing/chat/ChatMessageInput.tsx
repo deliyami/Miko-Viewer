@@ -6,10 +6,12 @@ import {
   Input,
   ScaleFade,
 } from '@chakra-ui/react';
+import sendToAllPeers from '@src/helper/sendToAllPeers';
 import useSocket from '@src/hooks/useSocket';
 import {
   chatModeState,
   isShowChatInputState,
+  peerDataListState,
   roomIdState,
 } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
@@ -30,16 +32,21 @@ const ChatMessageInput = () => {
   const inputRef = useRef<HTMLInputElement>();
   const roomId = useRecoilValue(roomIdState);
   const [newMessage, setNewMessage] = useState<string>('');
+  const peers = useRecoilValue(peerDataListState);
 
   const sendMessage = useCallback(() => {
-    socket.emit(
-      'new message',
-      {
-        sender: user.data.email,
-        receivedMessage: newMessage,
-      },
-      roomId
-    );
+    sendToAllPeers(peers, 'aaaa');
+    if (chatMode === 'public') {
+      socket.emit(
+        'fe-send-message',
+        {
+          sender: user.data.email,
+          receivedMessage: newMessage,
+        },
+        roomId
+      );
+    }
+
     setNewMessage('');
     inputRef.current.focus();
   }, [newMessage, user.data]);
