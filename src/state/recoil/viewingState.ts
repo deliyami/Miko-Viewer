@@ -65,6 +65,11 @@ const chatModeState = atom<ChatMode>({
   default: 'public',
 });
 
+const isShowChatInputState = atom<boolean>({
+  key: 'isShowChatInput',
+  default: true,
+});
+
 const mySocket = io('http://localhost:3001', {
   // autoConnect: true,
   // forceNew: true,
@@ -90,5 +95,6 @@ export {
   screenStreamIDState,
   screenStreamState,
   chatModeState,
+  isShowChatInputState,
   mySocket,
 };

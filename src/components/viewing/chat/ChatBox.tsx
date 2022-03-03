@@ -1,7 +1,6 @@
 import { Box, Text, VStack } from '@chakra-ui/react';
 import { messagesState } from '@src/state/recoil/viewingState';
 import { useRecoilValue } from 'recoil';
-import ChatMessageInput from './ChatMessageInput';
 import Message from './Message';
 
 const ChatBox = () => {
@@ -18,7 +17,6 @@ const ChatBox = () => {
             })
           : 'Chat is empty'}
       </Box>
-      <ChatMessageInput />
     </VStack>
   );
 };
