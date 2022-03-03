@@ -15,6 +15,7 @@ import {
   roomIdState,
 } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
+import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import {
   FormEvent,
   KeyboardEventHandler,
@@ -35,16 +36,15 @@ const ChatMessageInput = () => {
   const peers = useRecoilValue(peerDataListState);
 
   const sendMessage = useCallback(() => {
-    sendToAllPeers(peers, 'aaaa');
+    const data: ChatMessageInterface = {
+      sender: user.data.name,
+      text: newMessage,
+      timestamp: Date.now(),
+    };
+
+    sendToAllPeers(peers, { type: 'chat', data });
     if (chatMode === 'public') {
-      socket.emit(
-        'fe-send-message',
-        {
-          sender: user.data.email,
-          receivedMessage: newMessage,
-        },
-        roomId
-      );
+      socket.emit('fe-send-message', data, roomId);
     }
 
     setNewMessage('');

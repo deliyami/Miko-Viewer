@@ -1,19 +1,11 @@
+import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import React from 'react';
 
-interface MessageInterface {
-  data: {
-    sender: string;
-    receivedMessage: string;
-  };
-}
-
-const Message: React.FC<MessageInterface> = ({
-  data: { sender, receivedMessage },
-}) => {
+const Message: React.FC<ChatMessageInterface> = ({ sender, text }) => {
   return (
     <div className="message-item">
       <p>
-        <strong>{sender}:</strong> {receivedMessage}
+        <strong>{sender}:</strong> {text}
       </p>
     </div>
   );

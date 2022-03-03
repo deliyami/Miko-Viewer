@@ -1,3 +1,4 @@
+import { createStandaloneToast } from '@chakra-ui/react';
 import useSocket from '@src/hooks/useSocket';
 import {
   messagesState,
@@ -7,19 +8,17 @@ import {
   PeerDataInterface,
   peerDataListState,
   roomIdState,
-  screenStreamIDState,
-  screenStreamState,
-  startSharingButtonDisabledState,
-  startSharingState,
-  userNamesState,
   videoStreamsState,
 } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
+import { DataConnectionEvent } from '@src/types/DataConnectionEventType';
 import produce from 'immer';
 import { nanoid } from 'nanoid';
 import Peer, { DataConnection } from 'peerjs';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
+
+const toast = createStandaloneToast();
 
 interface ConnectParams {
   audio: boolean;
@@ -39,12 +38,6 @@ const getUserMedia =
   //@ts-ignore
   navigator.mozGetUserMedia;
 
-const addEvnetToDataConnection = (dataConnection: DataConnection) => {
-  dataConnection.on('data', (data) => {
-    console.log('Received B', data);
-  });
-};
-
 const WithSocketEventLayout: FC = ({ children }) => {
   const socket = useSocket();
   const user = useUser();
@@ -58,19 +51,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
   const [videoStreams, setVideoStreams] = useRecoilState(videoStreamsState);
   const [peerDataList, setPeerDataList] = useRecoilState(peerDataListState);
   const [myStream, setMyStream] = useRecoilState(myStreamState);
-  const [userNames, setUserNames] = useRecoilState(userNamesState);
   const [newMessage, setNewMessage] = useRecoilState(newMessageState);
   const [messages, setMessages] = useRecoilState(messagesState);
-
-  const [shareScreenButtonText, setShareScreenButtonText] = useState<string>(
-    'Start screen sharing'
-  );
-  const [startSharing, setStartSharing] = useRecoilState(startSharingState);
-  const [startSharingButtonDisabled, setStartSharingButtonDisabled] =
-    useRecoilState(startSharingButtonDisabledState);
-  const [screenStreamID, setScreenStreamID] =
-    useRecoilState(screenStreamIDState);
-  const [screenStream, setScreenStream] = useRecoilState(screenStreamState);
 
   const addDataConnectionToPeersDataList = useCallback(
     (dataConnection: DataConnection) => {
@@ -79,13 +61,54 @@ const WithSocketEventLayout: FC = ({ children }) => {
           const idx = peers.findIndex(
             (peer) => peer.id === dataConnection.peer
           );
-          console.log('find index ', idx, peers, dataConnection);
-          peers[idx].dataConnection = dataConnection;
+          console.log('find index ', idx, dataConnection);
+          if (idx >= 0) peers[idx].dataConnection = dataConnection;
         })
       );
     },
     []
   );
+
+  const addMediaStreamToPeersDataList = useCallback(
+    (mediaSteram: MediaStream, id) => {
+      setPeerDataList(
+        produce((peers) => {
+          const idx = peers.findIndex((peer) => peer.id === id);
+          if (idx >= 0) peers[idx].mediaStream = mediaSteram;
+        })
+      );
+    },
+    []
+  );
+
+  const removePeerById = useCallback((id) => {
+    setPeerDataList(
+      produce((peers) => {
+        return peers.filter((peer) => peer.id !== id);
+      })
+    );
+  }, []);
+
+  const addEventToDataConnection = (dataConnection: DataConnection) => {
+    const id = dataConnection.peer;
+    dataConnection.on('data', (event: DataConnectionEvent) => {
+      console.log('data connection event :', event);
+      switch (event.type) {
+        case 'chat':
+          const chatDiv = document.getElementById(id + 'chat');
+          chatDiv.innerText = event.data.text;
+          break;
+        case 'motion':
+          break;
+        default:
+          break;
+      }
+    });
+    // Firefox와 호환 안됨.
+    dataConnection.on('close', () => {
+      removePeerById(id);
+    });
+  };
 
   useEffect(() => {
     if (!socket || !user.data) {
@@ -113,7 +136,30 @@ const WithSocketEventLayout: FC = ({ children }) => {
       //   })
       // );
       addDataConnectionToPeersDataList(dataConnection);
-      addEvnetToDataConnection(dataConnection);
+      addEventToDataConnection(dataConnection);
+    });
+
+    myPeer.on('disconnected', () => {
+      toast({
+        title: 'myPeer disconnected',
+        description: 'peer가 시그널링 서버와 끊겼습니다.',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
+
+      myPeer.reconnect();
+    });
+
+    myPeer.on('error', (err) => {
+      toast({
+        title: 'myPeer error',
+        description: '심각한 에러발생 로그창 확인.',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
+      console.error(err);
     });
 
     const newUserCome = (
@@ -148,16 +194,17 @@ const WithSocketEventLayout: FC = ({ children }) => {
             const call = myPeer.call(otherPeerId, stream);
 
             call.on('stream', (remoteStream) => {
-              if (stream.id !== remoteStream.id) {
-                setVideoStreams((prevStreams) => {
-                  const newStreams = [...prevStreams];
-                  const found = newStreams.some(
-                    (el) => el.id === remoteStream.id
-                  );
-                  if (!found) newStreams.push(remoteStream);
-                  return newStreams;
-                });
-              }
+              // if (stream.id !== remoteStream.id) {
+              //   setVideoStreams((prevStreams) => {
+              //     const newStreams = [...prevStreams];
+              //     const found = newStreams.some(
+              //       (el) => el.id === remoteStream.id
+              //     );
+              //     if (!found) newStreams.push(remoteStream);
+              //     return newStreams;
+              //   });
+              // }
+              addMediaStreamToPeersDataList(remoteStream, call.peer);
             });
           }
         },
@@ -174,16 +221,17 @@ const WithSocketEventLayout: FC = ({ children }) => {
             // localStorage.setItem('currentStreamId', stream.id);
             mediaConnection.answer(myStream);
             mediaConnection.on('stream', (otherStream) => {
-              if (myStream?.id !== otherStream.id) {
-                setVideoStreams((prevStreams) => {
-                  const newStreams = [...prevStreams];
-                  const found = newStreams.some(
-                    (aStream) => aStream.id === otherStream.id
-                  );
-                  if (!found) newStreams.push(otherStream);
-                  return newStreams;
-                });
-              }
+              // if (myStream?.id !== otherStream.id) {
+              //   setVideoStreams((prevStreams) => {
+              //     const newStreams = [...prevStreams];
+              //     const found = newStreams.some(
+              //       (aStream) => aStream.id === otherStream.id
+              //     );
+              //     if (!found) newStreams.push(otherStream);
+              //     return newStreams;
+              //   });
+              // }
+              addMediaStreamToPeersDataList(otherStream, mediaConnection.peer);
             });
           },
           (err) => {
@@ -193,11 +241,17 @@ const WithSocketEventLayout: FC = ({ children }) => {
       });
 
       const dataConnection = myPeer.connect(otherPeerId);
+      console.log(
+        'abc',
+        myPeer.disconnected,
+        myPeer.connections,
+        dataConnection
+      );
 
       dataConnection.on('open', () => {
         console.log('data connect success 👌 to' + otherPeerId);
         addDataConnectionToPeersDataList(dataConnection);
-        addEvnetToDataConnection(dataConnection);
+        addEventToDataConnection(dataConnection);
         dataConnection.send('Hello! I am' + myPeerUniqueID);
       });
     };
@@ -209,7 +263,11 @@ const WithSocketEventLayout: FC = ({ children }) => {
         produce((prevPeers) => {
           const notFound = !prevPeers.some((peer) => peer.id === peerId);
           if (notFound && peerId !== myPeerUniqueID)
-            prevPeers.push({ id: peerId, data: userData });
+            prevPeers.push({
+              id: peerId,
+              data: userData,
+              dataConnection: undefined,
+            });
           return prevPeers;
         })
       );
@@ -234,47 +292,14 @@ const WithSocketEventLayout: FC = ({ children }) => {
     socket.on('be-broadcast-peer-id', broadcastPeerId);
     socket.on('be-broadcast-new-message', broadcastNewMessage);
 
-    // socket.on('newUserName', (userName: string) => {
-    //   if (userName !== user.data.email) {
-    //     setUserNames((userNames) => {
-    //       const userNamesCopy = [...userNames];
-    //       const found = userNamesCopy.some((el) => el === userName);
-    //       if (!found) userNamesCopy.push(userName);
-
-    //       return userNamesCopy;
-    //     });
-    //   }
-    // });
-
-    // socket.on('screen-share-receive', (streamID: string) => {
-    //   setScreenStreamID(streamID);
-    //   setShareScreenButtonText('Start screen sharing');
-    //   setStartSharingButtonDisabled(true);
-    // });
-
-    // socket.on('screen-share-stop-done', (streamID: string) => {
-    //   setStartSharingButtonDisabled(false);
-    //   setVideoStreams((streams) => {
-    //     const streamsCopy = streams.filter((el) => {
-    //       return el.id !== streamID;
-    //     });
-    //     return streamsCopy;
-    //   });
-    // });
-
-    socket.on('userLeft', (streamID: string) => {
-      setVideoStreams((currentArray) => {
-        let currentStreams = currentArray.filter((el) => {
-          return el.id != streamID;
-        });
-        return [...currentStreams];
-      });
+    socket.on('be-user-left', (peerId: string) => {
+      removePeerById(peerId);
     });
 
-    window.onbeforeunload = () => {
-      // const currentStreamID = localStorage.getItem('currentStreamId');
-      socket.emit('userExited', myStream.id, roomId);
-    };
+    // window.onbeforeunload = () => {
+    //   // const currentStreamID = localStorage.getItem('currentStreamId');
+    //   socket.emit('userExited', myStream.id, roomId);
+    // };
 
     // socket.on('shareScreen', (stream) => {
 
@@ -285,6 +310,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
       socket.off('new-user-arrived-finish', newUserCome);
       socket.off('be-broadcast-peer-id', broadcastPeerId);
       socket.off('be-broadcast-new-message', broadcastNewMessage);
+      socket.emit('fe--user-left', myPeerUniqueID, roomId, concertId);
       myPeer.destroy();
       setPeerDataList([]);
       setVideoStreams([]);

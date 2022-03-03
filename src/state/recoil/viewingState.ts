@@ -1,5 +1,5 @@
 import { User } from '@src/types/User';
-import { DataConnection, MediaConnection } from 'peerjs';
+import { DataConnection } from 'peerjs';
 import { atom } from 'recoil';
 import io from 'socket.io-client';
 const videoStreamsState = atom<MediaStream[]>({
@@ -15,11 +15,6 @@ const peersArrayState = atom<string[]>({
 const myStreamState = atom<MediaStream>({
   key: 'myStream',
   default: undefined,
-});
-
-const userNamesState = atom<string[]>({
-  key: 'userNames',
-  default: [],
 });
 
 const newMessageState = atom<string>({
@@ -42,24 +37,6 @@ const roomIdState = atom<string>({
   default: '3333',
 });
 
-const startSharingState = atom<Boolean>({
-  key: 'startSharing',
-  default: false,
-});
-const startSharingButtonDisabledState = atom<Boolean>({
-  key: 'startSharingButtonDisabled',
-  default: false,
-});
-const screenStreamIDState = atom<string>({
-  key: 'screenStreamID',
-  default: '',
-});
-
-const screenStreamState = atom<MediaStream>({
-  key: 'screenStream',
-  default: undefined,
-});
-
 type ChatMode = 'public' | 'private';
 
 const chatModeState = atom<ChatMode>({
@@ -74,7 +51,7 @@ const isShowChatInputState = atom<boolean>({
 export type PeerDataInterface = {
   id: string;
   dataConnection?: DataConnection;
-  mediaConnection?: MediaConnection;
+  mediaStream?: MediaStream;
   data?: Pick<User, 'id' | 'avatar' | 'email' | 'name'>;
 };
 
@@ -99,14 +76,9 @@ export {
   videoStreamsState,
   peersArrayState,
   myStreamState,
-  userNamesState,
   newMessageState,
   messagesState,
   roomIdState,
-  startSharingState,
-  startSharingButtonDisabledState,
-  screenStreamIDState,
-  screenStreamState,
   chatModeState,
   peerDataListState,
   isShowChatInputState,
