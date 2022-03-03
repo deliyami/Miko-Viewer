@@ -134,7 +134,6 @@ const MotionComponent = (props) => {
           faceTurn(borns,faceRig[i][0],faceRig[i][1],faceRig[i][2]);
         }
       }
-        
   
   
       let canvasWidth = canvasRef.current?.width
@@ -270,7 +269,7 @@ const MotionComponent = (props) => {
         textAlign:"center",
         width:320,
         height: 240,}}></canvas>
-      {show?<BabylonjsComponent antialias x={1200} y={300} path={'http://localhost:3000/resources/babylonjs/'} />:<></>}
+      <BabylonjsComponent antialias x={1200} y={300} path={'http://localhost:3000/resources/babylonjs/'} />
       <button onClick={(e)=>{
         e.preventDefault();
         window.dataChannel.send(JSON.stringify(window.model.pose))

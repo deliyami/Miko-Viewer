@@ -179,16 +179,18 @@ export const useHandler = async (user: React.MutableRefObject<User[]>) => {
     window.model.user = user.current;
     const peer = window.RTCPeer;
     const socket = window.sockets;
-    socket.on("welcome", async ({ roomId, userName }) => {
+    socket.on("welcome", async ({ roomId, userName, newSocketId }) => {
       addUserHandler(userName);
-      console.log(`${roomId}방에서 ${userName}님이 참가하였습니다`);
+      console.log(
+        `${roomId}방에서 ${userName}님이 참가하였습니다, 상대 socketid:${newSocketId}`
+      );
 
       // const peer = window.RTCPeer;
       // RTC
       const offer = await peer.createOffer();
       peer.setLocalDescription(offer);
       console.log("sent the offer");
-      socket.emit("offer", offer, roomId);
+      socket.emit("offer", offer, newSocketId);
 
       // console.log(offer);
     });
@@ -196,14 +198,14 @@ export const useHandler = async (user: React.MutableRefObject<User[]>) => {
       removeUserHandler(userName);
       console.log(`${roomId}방에서 ${userName}님이 나가셨습니다`);
     });
-    socket.on("offer", async ({ offer, userName }) => {
+    socket.on("offer", async ({ offer, userName, oldSocketId }) => {
       // console.log(`offer offer:${userName}`, offer);
       // const peer = window.RTCPeer;
       peer.setRemoteDescription(offer);
       const answer = await peer.createAnswer();
       peer.setLocalDescription(answer);
 
-      socket.emit("answer", answer, roomName);
+      socket.emit("answer", answer, oldSocketId);
       console.log("sent answer");
       addUserHandler(userName);
     });
@@ -213,15 +215,20 @@ export const useHandler = async (user: React.MutableRefObject<User[]>) => {
       console.log("received answer");
     });
 
-    socket.on("ice", (ice) => {
+    socket.on("ice", ({ ice, nickname, socketId }) => {
       console.log("receive ice");
-      peer.addIceCandidate(ice);
+      socket.emit("save_socket_id", { ice, socketId }, saveSocketId);
     });
+    const saveSocketId = (ice) => {
+      console.log("save ice");
+      // peer.addIceCandidate(ice);
+    };
 
     // const userName = sessionStorage.getItem("user");
     // const roomName = sessionStorage.getItem("roomName");
 
     window.sockets.emit("FE-enter-room", { roomId: roomName, userName });
+    // 처음 들어올 때  서버에서 키 같이 날리기
   }
   addUserHandler(sessionStorage.getItem("user"));
   user.current = window.model.user;
