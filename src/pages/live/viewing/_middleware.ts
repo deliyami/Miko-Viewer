@@ -10,10 +10,10 @@ export function middleware(req: NextRequest, ev: NextFetchEvent) {
     return NextResponse.redirect('/login');
   }
 
-  const url = req.nextUrl;
-  if (url.searchParams.has('roomId') === false) {
-    return NextResponse.redirect('/login');
-  }
+  // const url = req.nextUrl;
+  // if (url.searchParams.has('roomId') === false) {
+  //   return NextResponse.redirect('/login');
+  // }
 
   return NextResponse.next();
 }

@@ -38,6 +38,8 @@ const ChatMessageInput = () => {
   const [newMessage, setNewMessage] = useState<string>('');
 
   const sendMessage = useCallback(() => {
+    if (!newMessage) return;
+
     const data: ChatMessageInterface = {
       sender: user.data.name,
       text: newMessage,
@@ -57,9 +59,7 @@ const ChatMessageInput = () => {
 
   const onSubmitHandler = (e: FormEvent) => {
     e.preventDefault();
-    if (newMessage) {
-      sendMessage();
-    }
+    sendMessage();
   };
 
   const onKeyDownHandler: KeyboardEventHandler<HTMLInputElement> = (e) => {
