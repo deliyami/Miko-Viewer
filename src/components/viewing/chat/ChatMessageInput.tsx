@@ -71,7 +71,6 @@ const ChatMessageInput = () => {
       setIsShow(false);
     }
   };
-
   return (
     <Box bottom="2" position="fixed" zIndex={100}>
       <ScaleFade in={isShow}>

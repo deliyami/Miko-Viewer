@@ -27,7 +27,7 @@ const ConcertCard = () => {
 
 const ConcertList = (params) => {
   const [isLargerThan960] = useMediaQuery('(min-width: 960px)');
-  console.log(isLargerThan960);
+
   return (
     <SimpleGrid columns={isLargerThan960 ? 3 : 2} spacing={10} width="full">
       {Array(10)

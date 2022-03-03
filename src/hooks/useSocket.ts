@@ -14,7 +14,7 @@ const useSocket = () => {
           console.log('connect 👌 ', window.sockets.connected);
         })
         .on('error', (err) => {
-          console.log(err);
+          console.error(err);
         });
     }
     setSocket(window.sockets);

@@ -9,7 +9,6 @@ const ChatBox = () => {
   return (
     <VStack backgroundColor="red.100" height="80vh" width="20vw">
       <Text>채팅</Text>
-      <Text>{messages.length > 0 ? '0' : '10'}</Text>
       <Box>
         {messages.length > 0
           ? messages.map((data, idx) => {

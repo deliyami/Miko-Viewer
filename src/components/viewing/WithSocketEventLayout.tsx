@@ -17,7 +17,7 @@ import produce from 'immer';
 import { nanoid } from 'nanoid';
 import Peer, { DataConnection } from 'peerjs';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 const toast = createStandaloneToast();
 
@@ -48,12 +48,11 @@ const WithSocketEventLayout: FC = ({ children }) => {
     video: true,
   });
 
-  const [roomId, setRoomIdState] = useRecoilState(roomIdState);
-  const [videoStreams, setVideoStreams] = useRecoilState(videoStreamsState);
-  const [peerDataList, setPeerDataList] = useRecoilState(peerDataListState);
-  const [myStream, setMyStream] = useRecoilState(myStreamState);
-  // const [newMessage, setNewMessage] = useRecoilState(newMessageState);
-  const [messages, setMessages] = useRecoilState(messagesState);
+  const roomId = useRecoilValue(roomIdState);
+  const setVideoStreams = useSetRecoilState(videoStreamsState);
+  const setPeerDataList = useSetRecoilState(peerDataListState);
+  const setMyStream = useSetRecoilState(myStreamState);
+  const setMessages = useSetRecoilState(messagesState);
 
   const addDataConnectionToPeersDataList = useCallback(
     (dataConnection: DataConnection) => {
@@ -62,7 +61,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
           const idx = peers.findIndex(
             (peer) => peer.id === dataConnection.peer
           );
-          console.log('find index ', idx, dataConnection);
           if (idx >= 0) peers[idx].dataConnection = dataConnection;
         })
       );
@@ -93,7 +91,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
   const addEventToDataConnection = (dataConnection: DataConnection) => {
     const id = dataConnection.peer;
     dataConnection.on('data', (event: DataConnectionEvent) => {
-      console.log('data connection event :', event);
       switch (event.type) {
         case 'chat':
           showChatToRoom(id, event.data.text, 5);
@@ -108,14 +105,15 @@ const WithSocketEventLayout: FC = ({ children }) => {
     dataConnection.on('close', () => {
       removePeerById(id);
     });
+    dataConnection.on('error', () => {
+      removePeerById(id);
+    });
   };
 
   useEffect(() => {
     if (!socket || !user.data) {
-      console.log('not socket or user', socket, user);
       return;
     }
-    console.log('user and socket exist', socket, user, myPeerUniqueID);
 
     socket.emit(
       'fe-new-user-request-join',
@@ -126,7 +124,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
     );
 
     myPeer.on('connection', (dataConnection) => {
-      console.log('data connected to ', dataConnection.peer);
       addDataConnectionToPeersDataList(dataConnection);
       addEventToDataConnection(dataConnection);
     });
@@ -159,8 +156,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
       roomID: string,
       otherUserData: PeerDataInterface['data']
     ) => {
-      console.log('new-user-come', otherPeerId, roomId, otherUserData);
-
       setPeerDataList(
         produce((prevPeers) => {
           const notFound = !prevPeers.some((peer) => peer.id === otherPeerId);
@@ -189,7 +184,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
           }
         },
         (err) => {
-          console.log('Failed to get local stream', err);
+          console.error('Failed to get local stream', err);
         }
       );
 
@@ -204,21 +199,14 @@ const WithSocketEventLayout: FC = ({ children }) => {
             });
           },
           (err) => {
-            console.log('Failed to get stream', err);
+            console.error('Failed to get stream', err);
           }
         );
       });
 
       const dataConnection = myPeer.connect(otherPeerId);
-      console.log(
-        'abc',
-        myPeer.disconnected,
-        myPeer.connections,
-        dataConnection
-      );
 
       dataConnection.on('open', () => {
-        console.log('data connect success 👌 to' + otherPeerId);
         addDataConnectionToPeersDataList(dataConnection);
         addEventToDataConnection(dataConnection);
         dataConnection.send('Hello! I am' + myPeerUniqueID);
@@ -228,7 +216,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
       peerId: string,
       otherUserData: PeerDataInterface['data']
     ) => {
-      console.log('broadcastPeerId', otherUserData);
       setPeerDataList(
         produce((prevPeers) => {
           const notFound = !prevPeers.some((peer) => peer.id === peerId);
@@ -242,7 +229,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
       );
     };
     const broadcastNewMessage = (data: ChatMessageInterface) => {
-      let currentSender = data.sender;
       setMessages(
         produce((prevMsgs) => {
           prevMsgs.push(data);
@@ -250,18 +236,17 @@ const WithSocketEventLayout: FC = ({ children }) => {
         })
       );
     };
-    socket.on('be-new-user-come', newUserCome);
+
+    myPeer.on('open', (id) => {
+      // NOTE  peer.conncet 는  peer open 상태가 아니면 undefined 리턴
+      socket.on('be-new-user-come', newUserCome);
+    });
     socket.on('be-broadcast-peer-id', broadcastPeerId);
     socket.on('be-broadcast-new-message', broadcastNewMessage);
 
     socket.on('be-user-left', (peerId: string) => {
       removePeerById(peerId);
     });
-
-    window.onbeforeunload = () => {
-      // const currentStreamID = localStorage.getItem('currentStreamId');
-      socket.emit('userExited', myStream.id, roomId);
-    };
 
     const windowBeforeUnloadEvent = (e: BeforeUnloadEvent) => {
       e.preventDefault();
@@ -275,7 +260,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
     window.addEventListener('beforeunload', windowBeforeUnloadEvent);
 
     return () => {
-      console.log('Socket Event Add - useEffect return');
       socket.off('new-user-arrived-finish', newUserCome);
       socket.off('be-broadcast-peer-id', broadcastPeerId);
       socket.off('be-broadcast-new-message', broadcastNewMessage);
