@@ -30,10 +30,10 @@ const ChatMessageInput = () => {
   const user = useUser();
   const [isShow, setIsShow] = useRecoilState(isShowChatInputState);
   const [chatMode, setChatMode] = useRecoilState(chatModeState);
-  const inputRef = useRef<HTMLInputElement>();
   const roomId = useRecoilValue(roomIdState);
-  const [newMessage, setNewMessage] = useState<string>('');
   const peers = useRecoilValue(peerDataListState);
+  const inputRef = useRef<HTMLInputElement>();
+  const [newMessage, setNewMessage] = useState<string>('');
 
   const sendMessage = useCallback(() => {
     const data: ChatMessageInterface = {

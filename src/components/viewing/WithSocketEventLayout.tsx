@@ -3,10 +3,11 @@ import useSocket from '@src/hooks/useSocket';
 import {
   messagesState,
   // mySocket as socket,
-  myStreamState, PeerDataInterface,
+  myStreamState,
+  PeerDataInterface,
   peerDataListState,
   roomIdState,
-  videoStreamsState
+  videoStreamsState,
 } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
@@ -164,15 +165,15 @@ const WithSocketEventLayout: FC = ({ children }) => {
     const newUserCome = (
       otherPeerId: string,
       roomID: string,
-      userData: PeerDataInterface['data']
+      otherUserData: PeerDataInterface['data']
     ) => {
-      console.log('new-user-come', otherPeerId, roomId, userData);
+      console.log('new-user-come', otherPeerId, roomId, otherUserData);
 
       setPeerDataList(
         produce((prevPeers) => {
           const notFound = !prevPeers.some((peer) => peer.id === otherPeerId);
           if (notFound && otherPeerId !== myPeerUniqueID)
-            prevPeers.push({ id: otherPeerId, data: userData });
+            prevPeers.push({ id: otherPeerId, data: otherUserData });
           return prevPeers;
         })
       );
@@ -188,7 +189,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
               'fe-answer-send-peer-id',
               roomID,
               myPeerUniqueID,
-              userData
+              user.data
             );
             const call = myPeer.call(otherPeerId, stream);
 
@@ -256,16 +257,16 @@ const WithSocketEventLayout: FC = ({ children }) => {
     };
     const broadcastPeerId = (
       peerId: string,
-      userData: PeerDataInterface['data']
+      otherUserData: PeerDataInterface['data']
     ) => {
+      console.log('broadcastPeerId', otherUserData);
       setPeerDataList(
         produce((prevPeers) => {
           const notFound = !prevPeers.some((peer) => peer.id === peerId);
           if (notFound && peerId !== myPeerUniqueID)
             prevPeers.push({
               id: peerId,
-              data: userData,
-              dataConnection: undefined,
+              data: otherUserData,
             });
           return prevPeers;
         })
@@ -273,10 +274,12 @@ const WithSocketEventLayout: FC = ({ children }) => {
     };
     const broadcastNewMessage = (data: ChatMessageInterface) => {
       let currentSender = data.sender;
-      setMessages( produce((prevMsgs) => {
-        prevMsgs.push(data)
-        return prevMsgs
-      }));
+      setMessages(
+        produce((prevMsgs) => {
+          prevMsgs.push(data);
+          return prevMsgs;
+        })
+      );
     };
     socket.on('be-new-user-come', newUserCome);
     socket.on('be-broadcast-peer-id', broadcastPeerId);
