@@ -1,4 +1,5 @@
 import { createStandaloneToast } from '@chakra-ui/react';
+import showChatToRoom from '@src/helper/showChatToRoom';
 import useSocket from '@src/hooks/useSocket';
 import {
   messagesState,
@@ -95,8 +96,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
       console.log('data connection event :', event);
       switch (event.type) {
         case 'chat':
-          const chatDiv = document.getElementById(id + 'chat');
-          chatDiv.innerText = event.data.text;
+          showChatToRoom(id, event.data.text, 5);
           break;
         case 'motion':
           break;
@@ -127,14 +127,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
 
     myPeer.on('connection', (dataConnection) => {
       console.log('data connected to ', dataConnection.peer);
-      // setPeerDataList(
-      //   produce((peers) => {
-      //     const idx = peers.findIndex(
-      //       (peer) => peer.id === dataConnection.peer
-      //     );
-      //     peers[idx].dataConnection = dataConnection;
-      //   })
-      // );
       addDataConnectionToPeersDataList(dataConnection);
       addEventToDataConnection(dataConnection);
     });
@@ -177,12 +169,10 @@ const WithSocketEventLayout: FC = ({ children }) => {
           return prevPeers;
         })
       );
-      // socket.emit('newUserName', roomId, user.data.email);
       getUserMedia(
         streamOptions,
         (stream) => {
           setMyStream(stream);
-          // localStorage.setItem('currentStreamId', stream.id);
 
           if (otherPeerId !== myPeerUniqueID) {
             socket.emit(
@@ -194,16 +184,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
             const call = myPeer.call(otherPeerId, stream);
 
             call.on('stream', (remoteStream) => {
-              // if (stream.id !== remoteStream.id) {
-              //   setVideoStreams((prevStreams) => {
-              //     const newStreams = [...prevStreams];
-              //     const found = newStreams.some(
-              //       (el) => el.id === remoteStream.id
-              //     );
-              //     if (!found) newStreams.push(remoteStream);
-              //     return newStreams;
-              //   });
-              // }
               addMediaStreamToPeersDataList(remoteStream, call.peer);
             });
           }
@@ -218,19 +198,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
           { video: true, audio: true },
           (myStream) => {
             setMyStream(myStream);
-            // localStorage.setItem('currentStreamId', stream.id);
             mediaConnection.answer(myStream);
             mediaConnection.on('stream', (otherStream) => {
-              // if (myStream?.id !== otherStream.id) {
-              //   setVideoStreams((prevStreams) => {
-              //     const newStreams = [...prevStreams];
-              //     const found = newStreams.some(
-              //       (aStream) => aStream.id === otherStream.id
-              //     );
-              //     if (!found) newStreams.push(otherStream);
-              //     return newStreams;
-              //   });
-              // }
               addMediaStreamToPeersDataList(otherStream, mediaConnection.peer);
             });
           },
@@ -289,21 +258,29 @@ const WithSocketEventLayout: FC = ({ children }) => {
       removePeerById(peerId);
     });
 
-    // window.onbeforeunload = () => {
-    //   // const currentStreamID = localStorage.getItem('currentStreamId');
-    //   socket.emit('userExited', myStream.id, roomId);
-    // };
+    window.onbeforeunload = () => {
+      // const currentStreamID = localStorage.getItem('currentStreamId');
+      socket.emit('userExited', myStream.id, roomId);
+    };
 
-    // socket.on('shareScreen', (stream) => {
-
-    // })
+    const windowBeforeUnloadEvent = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      const exit = confirm('Are you sure you want to leave?');
+      if (exit) {
+        socket.emit('fe-user-left', myPeerUniqueID, roomId, concertId);
+        myPeer.destroy();
+        window.close();
+      }
+    };
+    window.addEventListener('beforeunload', windowBeforeUnloadEvent);
 
     return () => {
       console.log('Socket Event Add - useEffect return');
       socket.off('new-user-arrived-finish', newUserCome);
       socket.off('be-broadcast-peer-id', broadcastPeerId);
       socket.off('be-broadcast-new-message', broadcastNewMessage);
-      socket.emit('fe--user-left', myPeerUniqueID, roomId, concertId);
+      socket.emit('fe-user-left', myPeerUniqueID, roomId, concertId);
+      window.removeEventListener('beforeunload', windowBeforeUnloadEvent);
       myPeer.destroy();
       setPeerDataList([]);
       setVideoStreams([]);
@@ -315,3 +292,5 @@ const WithSocketEventLayout: FC = ({ children }) => {
 };
 
 export default WithSocketEventLayout;
+
+export { myPeerUniqueID };

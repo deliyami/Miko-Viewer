@@ -7,6 +7,7 @@ import {
   ScaleFade,
 } from '@chakra-ui/react';
 import sendToAllPeers from '@src/helper/sendToAllPeers';
+import showChatToRoom from '@src/helper/showChatToRoom';
 import useSocket from '@src/hooks/useSocket';
 import {
   chatModeState,
@@ -24,6 +25,7 @@ import {
   useState,
 } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { myPeerUniqueID } from '../WithSocketEventLayout';
 
 const ChatMessageInput = () => {
   const socket = useSocket();
@@ -43,6 +45,8 @@ const ChatMessageInput = () => {
     };
 
     sendToAllPeers(peers, { type: 'chat', data });
+    showChatToRoom(myPeerUniqueID, newMessage, 5);
+
     if (chatMode === 'public') {
       socket.emit('fe-send-message', data, roomId);
     }
