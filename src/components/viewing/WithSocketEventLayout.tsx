@@ -3,14 +3,13 @@ import useSocket from '@src/hooks/useSocket';
 import {
   messagesState,
   // mySocket as socket,
-  myStreamState,
-  newMessageState,
-  PeerDataInterface,
+  myStreamState, PeerDataInterface,
   peerDataListState,
   roomIdState,
-  videoStreamsState,
+  videoStreamsState
 } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
+import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import { DataConnectionEvent } from '@src/types/DataConnectionEventType';
 import produce from 'immer';
 import { nanoid } from 'nanoid';
@@ -51,7 +50,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
   const [videoStreams, setVideoStreams] = useRecoilState(videoStreamsState);
   const [peerDataList, setPeerDataList] = useRecoilState(peerDataListState);
   const [myStream, setMyStream] = useRecoilState(myStreamState);
-  const [newMessage, setNewMessage] = useRecoilState(newMessageState);
+  // const [newMessage, setNewMessage] = useRecoilState(newMessageState);
   const [messages, setMessages] = useRecoilState(messagesState);
 
   const addDataConnectionToPeersDataList = useCallback(
@@ -272,21 +271,12 @@ const WithSocketEventLayout: FC = ({ children }) => {
         })
       );
     };
-    const broadcastNewMessage = (data: {
-      sender: string;
-      receivedMessage: string;
-    }) => {
+    const broadcastNewMessage = (data: ChatMessageInterface) => {
       let currentSender = data.sender;
-      setMessages((currentArray) => {
-        return [
-          ...currentArray,
-          {
-            sender: currentSender,
-            receivedMessage: data.receivedMessage,
-          },
-        ];
-      });
-      setNewMessage('');
+      setMessages( produce((prevMsgs) => {
+        prevMsgs.push(data)
+        return prevMsgs
+      }));
     };
     socket.on('be-new-user-come', newUserCome);
     socket.on('be-broadcast-peer-id', broadcastPeerId);

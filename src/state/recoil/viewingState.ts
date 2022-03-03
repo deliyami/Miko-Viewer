@@ -1,3 +1,4 @@
+import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import { User } from '@src/types/User';
 import { DataConnection } from 'peerjs';
 import { atom } from 'recoil';
@@ -22,12 +23,7 @@ const newMessageState = atom<string>({
   default: '',
 });
 
-interface MessageInterface {
-  sender: string;
-  receivedMessage: string;
-}
-
-const messagesState = atom<MessageInterface[]>({
+const messagesState = atom<ChatMessageInterface[]>({
   key: 'messages',
   default: [],
 });
