@@ -52,9 +52,17 @@ const screenStreamIDState = atom<string>({
   key: 'screenStreamID',
   default: '',
 });
+
 const screenStreamState = atom<MediaStream>({
   key: 'screenStream',
   default: undefined,
+});
+
+type ChatMode = 'public' | 'private';
+
+const chatModeState = atom<ChatMode>({
+  key: 'chatMode',
+  default: 'public',
 });
 
 const mySocket = io('http://localhost:3001', {
@@ -81,5 +89,6 @@ export {
   startSharingButtonDisabledState,
   screenStreamIDState,
   screenStreamState,
+  chatModeState,
   mySocket,
 };

@@ -2,10 +2,13 @@ import { Container } from '@src/components/Container';
 import dynamic from 'next/dynamic';
 import Script from 'next/script';
 
-const DynamicViewingPage = dynamic(() => import('./viewingCSR'), {
-  loading: () => <div> loading</div>,
-  ssr: false,
-});
+const DynamicViewingPage = dynamic(
+  () => import('../../../components/viewing/ViewingCSRPage'),
+  {
+    loading: () => <div> loading</div>,
+    ssr: false,
+  }
+);
 
 const ViewingPage = () => (
   <Container height="auto" width="full">

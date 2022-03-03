@@ -1,6 +1,7 @@
+import useSocket from '@src/hooks/useSocket';
 import {
   messagesState,
-  mySocket as socket,
+  // mySocket as socket,
   myStreamState,
   newMessageState,
   peersArrayState,
@@ -23,10 +24,11 @@ interface ConnectParams {
 }
 
 const myPeerUniqueID = Math.round(Math.random() * 100000) + '';
-const myPeer = new Peer(myPeerUniqueID);
+const myPeer = new Peer(myPeerUniqueID, { debug: 2 });
+console.log('my peer id :', myPeer.id);
 
-const SocketEventAdd: FC = ({ children }) => {
-  // const socket = useSocket();
+const WithSocketEventLayout: FC = ({ children }) => {
+  const socket = useSocket();
   const user = useUser();
   // const user = { data: { email: 'aaaa' } };
 
@@ -78,17 +80,17 @@ const SocketEventAdd: FC = ({ children }) => {
     );
 
     const newUserArrivedFinishEvent = (
-      peerID: string,
+      otherPeerId: string,
       roomID: string,
       userName: string
     ) => {
-      console.log('new-user-arrived-finish', peerID, roomId, userName);
-      setPeersArray((peers) => {
-        const streamsCopy = [...peers];
-        const found = streamsCopy.some((el) => el === peerID);
-        if (!found && peerID !== myPeerUniqueID) streamsCopy.push(peerID);
-
-        return streamsCopy;
+      console.log('new-user-arrived-finish', otherPeerId, roomId, userName);
+      setPeersArray((prevPeers) => {
+        const newPeers = [...prevPeers];
+        const found = newPeers.some((el) => el === otherPeerId);
+        if (!found && otherPeerId !== myPeerUniqueID)
+          newPeers.push(otherPeerId);
+        return newPeers;
       });
 
       // if (!fullName) {
@@ -99,62 +101,86 @@ const SocketEventAdd: FC = ({ children }) => {
 
       getUserMedia(
         streamOptions,
-        function (stream) {
+        (stream) => {
           setMyStream(stream);
 
-          localStorage.setItem('currentStreamId', stream.id);
+          // localStorage.setItem('currentStreamId', stream.id);
 
-          if (peerID !== myPeerUniqueID) {
+          if (otherPeerId !== myPeerUniqueID) {
             socket.emit('sendMyPeer', roomID, myPeerUniqueID);
-            var call = myPeer.call(peerID, stream);
-            call.on('stream', function (remoteStream) {
+            const call = myPeer.call(otherPeerId, stream);
+
+            call.on('stream', (remoteStream) => {
               if (stream.id !== remoteStream.id) {
-                setVideoStreams((streams) => {
-                  const streamsCopy = [...streams];
-                  const found = streamsCopy.some(
+                setVideoStreams((prevStreams) => {
+                  const newStreams = [...prevStreams];
+                  const found = newStreams.some(
                     (el) => el.id === remoteStream.id
                   );
-                  if (!found) streamsCopy.push(remoteStream);
-                  return streamsCopy;
+                  if (!found) newStreams.push(remoteStream);
+                  return newStreams;
                 });
               }
             });
           }
         },
-        function (err) {
+        (err) => {
           console.log('Failed to get local stream', err);
         }
       );
 
-      myPeer.on('call', function (call) {
+      myPeer.on('call', (mediaConnection) => {
         getUserMedia(
           { video: true, audio: true },
-          function (stream) {
-            setMyStream(stream);
-
-            localStorage.setItem('currentStreamId', stream.id);
-            call.answer(stream);
-
-            call.on('stream', function (remoteStream) {
-              if (myStream?.id !== remoteStream.id) {
-                setVideoStreams((streams) => {
-                  const streamsCopy = [...streams];
-
-                  const found = streamsCopy.some(
-                    (el) => el.id === remoteStream.id
+          (myStream) => {
+            setMyStream(myStream);
+            // localStorage.setItem('currentStreamId', stream.id);
+            mediaConnection.answer(myStream);
+            mediaConnection.on('stream', (otherStream) => {
+              if (myStream?.id !== otherStream.id) {
+                setVideoStreams((prevStreams) => {
+                  const newStreams = [...prevStreams];
+                  const found = newStreams.some(
+                    (aStream) => aStream.id === otherStream.id
                   );
-                  if (!found) streamsCopy.push(remoteStream);
-                  return streamsCopy;
+                  if (!found) newStreams.push(otherStream);
+                  return newStreams;
                 });
               }
             });
           },
-          function (err) {
-            console.log('Failed to get local stream', err);
+          (err) => {
+            console.log('Failed to get stream', err);
           }
         );
       });
+
+      const dataConnection = myPeer.connect(otherPeerId);
+
+      dataConnection.on('open', () => {
+        console.log('open!');
+
+        dataConnection.on('data', (data) => {
+          console.log('Received A', data);
+        });
+        // Send messages
+        dataConnection.send('Hello!');
+      });
+
+      setInterval(() => {
+        dataConnection.send('hello');
+      }, 1000);
+
+      myPeer.on('connection', (dataConnection) => {
+        dataConnection.on('data', (data) => {
+          console.log('Received B', data);
+        });
+        setInterval(() => {
+          dataConnection.send('hello');
+        }, 1000);
+      });
     };
+
     socket.on('new-user-arrived-finish', newUserArrivedFinishEvent);
 
     socket.on('receiveMyPeer', (peer: string) => {
@@ -182,7 +208,6 @@ const SocketEventAdd: FC = ({ children }) => {
       'new message received',
       (data: { sender: string; receivedMessage: string }) => {
         let currentSender = data.sender;
-        console.log('메세지 도착');
         setMessages((currentArray) => {
           return [
             ...currentArray,
@@ -222,8 +247,8 @@ const SocketEventAdd: FC = ({ children }) => {
     });
 
     window.onbeforeunload = () => {
-      const currentStreamID = localStorage.getItem('currentStreamId');
-      socket.emit('userExited', currentStreamID, roomId);
+      // const currentStreamID = localStorage.getItem('currentStreamId');
+      socket.emit('userExited', myStream.id, roomId);
     };
 
     // socket.on('shareScreen', (stream) => {
@@ -231,13 +256,16 @@ const SocketEventAdd: FC = ({ children }) => {
     // })
 
     return () => {
+      console.log('Socket Event Add - useEffect return');
       socket.off('new-user-arrived-finish', newUserArrivedFinishEvent);
+      myPeer.destroy();
+      setPeersArray([]);
+      setVideoStreams([]);
+      setMessages([]);
     };
-  }, [user.data]);
-
-  console.log('socket socket', socket);
+  }, [user.data, socket]);
 
   return <> {children}</>;
 };
 
-export default SocketEventAdd;
+export default WithSocketEventLayout;

@@ -1,12 +1,13 @@
 import { HStack } from '@chakra-ui/react';
-import ChatBox from '@src/components/chat/ChatBox';
 import VideoPlayer from '@src/components/ivs-player/VideoPlayer';
-import RoomAvatarView from './RoomAvatarView';
-import SocketEventAdd from './SocketEventAdd';
+import ChatBox from '@src/components/viewing/chat/ChatBox';
+import RoomAvatarView from './avatar/RoomAvatarView';
+import ChatMessageInput from './chat/ChatMessageInput';
+import WithSocketEventLayout from './WithSocketEventLayout';
 
 const ViewingCSRPage = () => {
   return (
-    <SocketEventAdd>
+    <WithSocketEventLayout>
       <HStack width="full">
         <VideoPlayer />
         <ChatBox />
@@ -15,8 +16,8 @@ const ViewingCSRPage = () => {
         {/* <Text>아바타</Text> */}
         <RoomAvatarView />
       </HStack>
-    </SocketEventAdd>
+      <ChatMessageInput />
+    </WithSocketEventLayout>
   );
 };
-
 export default ViewingCSRPage;

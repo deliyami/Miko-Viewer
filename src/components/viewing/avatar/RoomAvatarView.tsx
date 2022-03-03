@@ -1,6 +1,6 @@
 import { Box, HStack } from '@chakra-ui/react';
+import Streamer from '@src/components/viewing/Streamer';
 import useSocket from '@src/hooks/useSocket';
-import Streamer from '@src/pages/test/webrtc/streamer';
 import {
   myStreamState,
   screenStreamIDState,

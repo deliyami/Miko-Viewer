@@ -1,4 +1,4 @@
-import { Button, Input } from '@chakra-ui/react';
+import { Box, Button, Input } from '@chakra-ui/react';
 import useSocket from '@src/hooks/useSocket';
 import { roomIdState } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
@@ -28,7 +28,7 @@ const ChatMessageInput = () => {
   };
 
   return (
-    <div className="input-area">
+    <Box className="input-area">
       <form onSubmit={formHandler}>
         <Input
           type="text"
@@ -39,7 +39,7 @@ const ChatMessageInput = () => {
         />
         <Button type="submit">제출</Button>
       </form>
-    </div>
+    </Box>
   );
 };
 
