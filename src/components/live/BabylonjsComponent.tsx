@@ -20,22 +20,6 @@ type props = {
 
 declare global{
   interface Window{
-    // modelOriginalBorns:quaternionBorn[][],
-    /*
-    modelOriginalBorns:BABYLON.Quaternion[][]|undefined[][],
-    modelBorns:BABYLON.TransformNode[][],
-    modelScene:BABYLON.Scene,
-    modelname:{
-      text:GUI.TextBlock[],
-      position:BABYLON.Mesh[],
-    },
-    modelchat:{
-      text:GUI.TextBlock[],
-      position:BABYLON.Mesh[],
-    }*/
-    /**
-     * user = 현재 방에 있는 유저
-     */
     model:{
       user?:User[],
       borns:BABYLON.TransformNode[][],
@@ -54,9 +38,9 @@ declare global{
         face:number[][]
       },
     },
-    RTCPeer:RTCPeerConnection,
     mediaStream:MediaStream
-    dataChannel:RTCDataChannel
+    dataChannel:{ [socketId:string]: RTCDataChannel }
+    pcs:{ [socketId: string]: RTCPeerConnection }
   }
 }
 
@@ -154,64 +138,7 @@ const BabylonjsComponent = (props:props) => {
             }
           })
         }
-        // window.model.name={position:nameGround, text:nameText}
-        
-        
-        // window.model.name.position = nameGround;
-        // window.model.name.text = nameText;
-        // window.model.chat.position = chatGround;
-        // window.model.chat.text = chatText;
       }
-
-
-      // const ground = BABYLON.Mesh.CreateGround("ground", 26, 26, 0, scene);        
-      // ground.rotation = new BABYLON.Vector3(5, Math.PI, 0);
-      // ground.position = new BABYLON.Vector3(0, 5, 0);
-      // const advancedTexture = GUI.AdvancedDynamicTexture.CreateForMesh(ground,1024,1024)
-      // const rect = new GUI.Rectangle('rect');
-      // rect.background = 'black';
-      // rect.color = 'yellow';
-      // rect.width = '150px'
-      // rect.height = '100px'
-      // advancedTexture.addControl(rect)
-
-      // const textBox = new GUI.TextBlock('textBox');
-
-      // textBox.fontFamily = 'Helventica'
-      // textBox.textWrapping = true;
-
-      // // textBox.text = 'test lorem ipsum 가나다라마바사아자차카타파하거너더러머버서어저처커터퍼허고노도로모보소오조초코토포호구누두루무부수우주추쿠투푸후그느드르므브스으즈츠크트프흐기니디리미비시이지치키티피히 여긴 지옥이야 빨리 탈출해!'
-      // textBox.text = 'test lorem ipsum 여긴 지옥이야 빨리 탈출해! 낫지않아 난 어떻해도 난'
-      // textBox.color = 'white'
-      // textBox.fontSize = '14px';
-      // rect.addControl(textBox)
-
-
-
-      // const nameGround = BABYLON.Mesh.CreateGround("nameGround", 26, 26, 0, scene);        
-      // nameGround.rotation = new BABYLON.Vector3(5, Math.PI, 0);
-      // nameGround.position = new BABYLON.Vector3(0, 0.5, 1.5);
-      // const advancedName = GUI.AdvancedDynamicTexture.CreateForMesh(nameGround,1024,1024)
-      // const nameRect = new GUI.Rectangle('rect');
-      // nameRect.background = 'black';
-      // nameRect.color = 'yellow';
-      // nameRect.width = '100px'
-      // nameRect.height = '30px'
-      // advancedName.addControl(nameRect)
-
-      // const nameBox = new GUI.TextBlock('textBox');
-
-      // nameBox.fontFamily = 'Helventica'
-      // nameBox.textWrapping = true;
-
-      // // textBox.text = 'test lorem ipsum 가나다라마바사아자차카타파하거너더러머버서어저처커터퍼허고노도로모보소오조초코토포호구누두루무부수우주추쿠투푸후그느드르므브스으즈츠크트프흐기니디리미비시이지치키티피히 여긴 지옥이야 빨리 탈출해!'
-      // nameBox.text = '김철수'
-      // nameBox.color = 'white'
-      // nameBox.fontSize = '14px';
-      // nameRect.addControl(nameBox)
-      
-
-      // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
       const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, -1), scene);
     
       // Default intensity is 1. Let's dim the light a small amount

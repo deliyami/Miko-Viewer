@@ -15,6 +15,7 @@ import '@mediapipe/drawing_utils'
 import '@mediapipe/pose'
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 import BabylonjsComponent from './BabylonjsComponent';
+import { Button } from '@chakra-ui/react';
 
 
 
@@ -47,6 +48,13 @@ const MotionComponent = (props) => {
   
       const poseRig = window.model.pose.pose
       const faceRig = window.model.pose.face
+      if(window.dataChannel){
+        for (const key in window.dataChannel){
+          if(window.dataChannel[key].readyState==='open'){
+            window.dataChannel[key].send(`${sessionStorage.getItem('user')};${JSON.stringify(poseRig[0])};${JSON.stringify(faceRig[0])}`)
+          }
+        }
+      }
       /**
        * 
        * @param transBorn 모델링
@@ -210,7 +218,7 @@ const MotionComponent = (props) => {
       minDetectionConfidence:0.5,
       minTrackingConfidence:0.5,
     })
-    // pose.onResults(onResults)
+    pose.onResults(onResults)
     if(webcamRef.current && webcamRef.current){
       camera.current = new cam.Camera(webcamRef?.current,{
         onFrame:async()=>{
@@ -270,10 +278,15 @@ const MotionComponent = (props) => {
         width:320,
         height: 240,}}></canvas>
       <BabylonjsComponent antialias x={1200} y={300} path={'http://localhost:3000/resources/babylonjs/'} />
-      <button onClick={(e)=>{
+      <Button onClick={(e)=>{
         e.preventDefault();
-        window.dataChannel.send(JSON.stringify(window.model.pose))
-      }}>test</button>
+        Object.keys(window.dataChannel).forEach((key)=>{
+          console.log('first message',window.dataChannel[key])
+        })
+        for (const key in window.dataChannel){
+          console.log('second message',window.dataChannel[key])
+        }
+      }}>message button</Button>
     </>
   );
 }

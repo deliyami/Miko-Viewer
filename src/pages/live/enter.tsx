@@ -36,6 +36,7 @@ const RoomEnterPage = (props) => {
   }
 
   useEffect(() => {
+    window.pcs = {};
     window.sockets.on('FE-error-user-exist', findError);
   }, []);
   
