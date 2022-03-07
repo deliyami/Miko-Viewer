@@ -90,7 +90,7 @@ const VideoPlayer = (props) => {
       console.log(player.current.getPosition().toFixed(2));
     };
 
-    player.current = IVSPlayer.create();
+    player.current = IVSPlayer.create(); // web 버전이어서 wasm 넣어줄 필요는 없음.
     player.current.attachHTMLVideoElement(videoEl.current);
 
     player.current.setAutoplay(true);

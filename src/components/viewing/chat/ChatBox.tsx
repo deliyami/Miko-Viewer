@@ -19,7 +19,7 @@ const ChatBox = () => {
       inline: 'start',
     });
   };
-
+  console.log('message', messages);
   return (
     <VStack backgroundColor="#181818" width="20vw" textColor="white">
       <Text>채팅</Text>

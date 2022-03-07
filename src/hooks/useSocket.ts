@@ -5,7 +5,7 @@ const useSocket = () => {
   const [socket, setSocket] = useState<Socket | undefined>(window.sockets);
   useEffect(() => {
     if (window.sockets == undefined) {
-      window.sockets = io('http://localhost:3001', {
+      window.sockets = io('http://localhost:3002', {
         // autoConnect: true,
         // forceNew: true,
         transports: ['websocket', 'polling'],

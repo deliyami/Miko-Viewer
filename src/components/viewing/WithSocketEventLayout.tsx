@@ -21,13 +21,22 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 const toast = createStandaloneToast();
 
+const motionStore = {
+  peerId: { data: 'data' },
+}; // 60times
+
 interface ConnectParams {
   audio: boolean;
   video: boolean;
 }
 
 const myPeerUniqueID = nanoid();
-const myPeer = new Peer(myPeerUniqueID, { debug: 2 });
+const myPeer = new Peer(myPeerUniqueID, {
+  debug: 2,
+  // host: 'localhost',
+  // path: '/myapp',
+  // port: 9000,
+});
 const concertId = 1111;
 
 //@ts-ignore
@@ -229,6 +238,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
       );
     };
     const broadcastNewMessage = (data: ChatMessageInterface) => {
+      console.log('broadcastNewMessage', data);
       setMessages(
         produce((prevMsgs) => {
           prevMsgs.push(data);
@@ -237,27 +247,40 @@ const WithSocketEventLayout: FC = ({ children }) => {
       );
     };
 
+    const failEnterRoom = () => {
+      console.log('fail enter room');
+    };
+
     myPeer.on('open', (id) => {
       // NOTE  peer.conncet 는  peer open 상태가 아니면 undefined 리턴
       socket.on('be-new-user-come', newUserCome);
     });
     socket.on('be-broadcast-peer-id', broadcastPeerId);
     socket.on('be-broadcast-new-message', broadcastNewMessage);
+    socket.on('be-fail-enter-room', failEnterRoom);
 
     socket.on('be-user-left', (peerId: string) => {
       removePeerById(peerId);
     });
 
     const windowBeforeUnloadEvent = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      const exit = confirm('Are you sure you want to leave?');
-      if (exit) {
-        socket.emit('fe-user-left', myPeerUniqueID, roomId, concertId);
-        myPeer.destroy();
-        window.close();
-      }
+      // NOTE confirm alert propmpt는 모던브라우저 (파폭 제외) onbeforeonload 동안에는 작동 안함
+      let isFired = false;
+      return function () {
+        e.preventDefault();
+        if (!isFired) {
+          isFired = true;
+          const exit = confirm('Are you sure you want to leave?');
+          if (exit) {
+            socket.emit('fe-user-left', myPeerUniqueID, roomId, concertId);
+            myPeer.destroy();
+            window.close();
+          }
+        }
+      };
     };
     window.addEventListener('beforeunload', windowBeforeUnloadEvent);
+    window.addEventListener('unload', windowBeforeUnloadEvent);
 
     return () => {
       socket.off('new-user-arrived-finish', newUserCome);
@@ -265,6 +288,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
       socket.off('be-broadcast-new-message', broadcastNewMessage);
       socket.emit('fe-user-left', myPeerUniqueID, roomId, concertId);
       window.removeEventListener('beforeunload', windowBeforeUnloadEvent);
+      window.removeEventListener('unload', windowBeforeUnloadEvent);
       myPeer.destroy();
       setPeerDataList([]);
       setVideoStreams([]);

@@ -2,7 +2,6 @@ import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import { User } from '@src/types/User';
 import { DataConnection } from 'peerjs';
 import { atom } from 'recoil';
-import io from 'socket.io-client';
 const videoStreamsState = atom<MediaStream[]>({
   key: 'videoStreams',
   default: [],
@@ -56,17 +55,17 @@ const peerDataListState = atom<PeerDataInterface[]>({
   default: [],
 });
 
-const mySocket = io('http://localhost:3001', {
-  // autoConnect: true,
-  // forceNew: true,
-  transports: ['websocket', 'polling'],
-})
-  .on('connect', () => {
-    console.log('connect 👌 ', window.sockets.connected);
-  })
-  .on('error', (err) => {
-    console.log(err);
-  });
+// const mySocket = io('http://localhost:3001', {
+//   // autoConnect: true,
+//   // forceNew: true,
+//   transports: ['websocket', 'polling'],
+// })
+//   .on('connect', () => {
+//     console.log('connect 👌 ', window.sockets.connected);
+//   })
+//   .on('error', (err) => {
+//     console.log(err);
+//   });
 
 export {
   videoStreamsState,
@@ -78,5 +77,4 @@ export {
   chatModeState,
   peerDataListState,
   isShowChatInputState,
-  mySocket,
 };
