@@ -16,6 +16,10 @@ import '@mediapipe/pose'
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 import BabylonjsComponent from './BabylonjsComponent';
 import { Button } from '@chakra-ui/react';
+import * as GUI from 'babylonjs-gui'
+import { User } from '@src/types/User';
+import useSocket from '@src/hooks/useSocket';
+
 
 
 
@@ -25,6 +29,12 @@ const MotionComponent = (props) => {
   const camera = useRef<cam.Camera|null>(null);
   const [ mediaStream, setMediaStream ] = useState<MediaStream>()
   const [ show, setShow ] = useState<boolean>(false);
+  const [ user, setUser ] = useState<User[]>([{
+    id: 1825,
+    name: 'kirari',
+    email: 'kirari@gmail.com',
+    coin: 93
+  }]);
   
   //RTC
   const pcsRef = useRef<{ [socketId: string]: RTCPeerConnection }>({});
@@ -141,28 +151,29 @@ const MotionComponent = (props) => {
           bornTurn(borns,11,poseRig[i],1)
           faceTurn(borns,faceRig[i][0],faceRig[i][1],faceRig[i][2]);
         }
+        if(window.model.scene[i])
+          window.model.scene[i].render();
       }
   
   
-      let canvasWidth = canvasRef.current?.width
-      let canvasHeight = canvasRef.current?.width
+      // let canvasWidth = canvasRef.current?.width
+      // let canvasHeight = canvasRef.current?.width
       
-      canvasWidth=webcamRef.current?.videoWidth
-      canvasHeight=webcamRef.current?.videoHeight
+      // canvasWidth=webcamRef.current?.videoWidth
+      // canvasHeight=webcamRef.current?.videoHeight
   
   
-      const canvasElement = canvasRef.current;
-      const canvasLm = canvasElement?.getContext("2d");
-      if(canvasElement&& canvasLm){
-        canvasLm.save()
-        canvasLm.clearRect(0,0,canvasElement.width,canvasElement.height)
-        canvasLm.drawImage(results.image, 0,0,canvasElement?.width, canvasElement.height)
-        if(results.poseLandmarks){
-          drawConnectors(canvasLm,results.poseLandmarks,PoseMotion.POSE_CONNECTIONS,{color:'#CCAACC',lineWidth:2})
-          drawLandmarks(canvasLm,results.poseLandmarks,{color:'#FF6666',lineWidth:1})
-        }
-      }
-      window.model.scene.render();
+      // const canvasElement = canvasRef.current;
+      // const canvasLm = canvasElement?.getContext("2d");
+      // if(canvasElement&& canvasLm){
+      //   canvasLm.save()
+      //   canvasLm.clearRect(0,0,canvasElement.width,canvasElement.height)
+      //   canvasLm.drawImage(results.image, 0,0,canvasElement?.width, canvasElement.height)
+      //   if(results.poseLandmarks){
+      //     drawConnectors(canvasLm,results.poseLandmarks,PoseMotion.POSE_CONNECTIONS,{color:'#CCAACC',lineWidth:2})
+      //     drawLandmarks(canvasLm,results.poseLandmarks,{color:'#FF6666',lineWidth:1})
+      //   }
+      // }
     }
     
   }
@@ -246,18 +257,6 @@ const MotionComponent = (props) => {
     }
   }
 
-  // RTC Code
-
-  // function makeConnection () {
-  //   const peerConnection = new RTCPeerConnection();
-  //   // peerConnection.addTrack()
-  //   mediaStream.getVideoTracks().forEach((track)=>{
-  //     // track['test'] = 'num value'
-  //     // console.log('트랙',track)
-  //     peerConnection.addTrack(track)
-  //   })
-  //   window.RTCPeer=peerConnection
-  // }
 
   return (
     <>
@@ -277,16 +276,20 @@ const MotionComponent = (props) => {
         textAlign:"center",
         width:320,
         height: 240,}}></canvas>
-      <BabylonjsComponent antialias x={1200} y={300} path={'http://localhost:3000/resources/babylonjs/'} />
+      { user.map((use,i)=>
+        <Button key={i} onClick={e=>e.preventDefault()}>
+          作られたuser
+        </Button>) }
+      {/* http://localhost:3000/resources/babylonjs/models/proseka/proseka.glb */}
+      { [0,0,0,0,0].map((use,i)=>
+        <BabylonjsComponent key={i} i={i} user={user[i]} setUser={setUser} antialias x={250} y={250} path={'http://localhost:3000/resources/babylonjs/'} />
+        )
+      }
+      {/* <BabylonjsComponent i={0} setUser={setUser} antialias x={250} y={250} path={'http://localhost:3000/resources/babylonjs/'} /> */}
       <Button onClick={(e)=>{
         e.preventDefault();
-        Object.keys(window.dataChannel).forEach((key)=>{
-          console.log('first message',window.dataChannel[key])
-        })
-        for (const key in window.dataChannel){
-          console.log('second message',window.dataChannel[key])
-        }
-      }}>message button</Button>
+        console.log(user)
+      }}>user add button</Button>
     </>
   );
 }
