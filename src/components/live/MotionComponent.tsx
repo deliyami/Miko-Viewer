@@ -19,14 +19,82 @@ import BabylonjsComponent from './BabylonjsComponent';
 import { User } from '@src/types/User';
 
 
+const bornTurn=(transBorn:BABYLON.TransformNode[],bornNum:number,kalidoRig:Kalidokit.TPose,direction:number)=>{
+  const bornX:number[] = [];
+  const bornY:number[] = [];
+  const bornZ:number[] = [];
+  if(direction===0){
+    bornX[0] = kalidoRig.RightUpperArm.x
+    bornY[0] = kalidoRig.RightUpperArm.y
+    bornZ[0] = kalidoRig.RightUpperArm.z
+    bornX[1] = kalidoRig.RightLowerArm.x
+    bornY[1] = kalidoRig.RightLowerArm.y
+    bornZ[1] = kalidoRig.RightLowerArm.z
+    bornX[2] = kalidoRig.RightHand.x
+    bornY[2] = kalidoRig.RightHand.y
+    bornZ[2] = kalidoRig.RightHand.z
+  }else{
+    bornX[0] = kalidoRig.LeftUpperArm.x
+    bornY[0] = kalidoRig.LeftUpperArm.y
+    bornZ[0] = kalidoRig.LeftUpperArm.z
+    bornX[1] = kalidoRig.LeftLowerArm.x
+    bornY[1] = kalidoRig.LeftLowerArm.y
+    bornZ[1] = kalidoRig.LeftLowerArm.z
+    bornX[2] = kalidoRig.LeftHand.x
+    bornY[2] = kalidoRig.LeftHand.y
+    bornZ[2] = kalidoRig.LeftHand.z
+  }
+  let x = bornX[1] - bornX[0] // 3
+  let y = bornY[1] - bornY[0] // 0.1
+  let z = bornZ[1] - bornZ[0] // -4
+  if(bornX[0]&&bornY[0]&&bornZ[0]){
+    //왼팔 보정
+    if(direction===0){
+      transBorn[bornNum].rotate(new BABYLON.Vector3(1,0,0),bornZ[0]+(Math.PI-0.5)/2,2)
+      transBorn[bornNum].rotate(new BABYLON.Vector3(0,1,0),-bornY[0]+(Math.PI-0.5)/2,2)
+      transBorn[bornNum].rotate(new BABYLON.Vector3(0,0,1),bornX[0],2)
+    }else{
+      transBorn[bornNum].rotate(new BABYLON.Vector3(1,0,0),-bornZ[0]+(Math.PI-0.5)/2,2)
+      transBorn[bornNum].rotate(new BABYLON.Vector3(0,1,0),-bornY[0]-(Math.PI-0.5)/2,2)
+      transBorn[bornNum].rotate(new BABYLON.Vector3(0,0,1),-bornX[0],2)
+    }
+  }
+  let childX = bornX[2] - bornX[1]
+  let childY = bornY[2] - bornY[1]
+  let childZ = bornZ[2] - bornZ[1]
+  if(bornX[1]&&bornY[1]&&bornZ[1]){
+    if(direction===0){
+      transBorn[bornNum-1].rotate(new BABYLON.Vector3(1,0,0),bornZ[1]*2,2)
+    }else{
+      transBorn[bornNum-1].rotate(new BABYLON.Vector3(1,0,0),-bornZ[1]*2,2)
+    }
+  }
+}
+
+
 
 const MotionComponent = (props) => {
   const webcamRef = useRef<HTMLVideoElement|null>(null);
   const canvasRef = useRef<HTMLCanvasElement|null>(null);
+
+  const lsxRef = useRef(null);
+  const lsyRef = useRef(null);
+  const lszRef = useRef(null);
+  const laxRef = useRef(null);
+  const layRef = useRef(null);
+  const lazRef = useRef(null);
+
+  const rsxRef = useRef(null);
+  const rszRef = useRef(null);
+  const rsyRef = useRef(null);
+  const raxRef = useRef(null);
+  const rayRef = useRef(null);
+  const razRef = useRef(null);
+
   const camera = useRef<cam.Camera|null>(null);
   const [ mediaStream, setMediaStream ] = useState<MediaStream>()
   const [ show, setShow ] = useState<boolean>(false);
-  const [ value, setValue ] = useState<number>();
+  const [ value, setValue ] = useState<number>(0);
   const [ user, setUser ] = useState<User[]>([{
     id: 1825,
     name: 'kirari',
@@ -34,8 +102,6 @@ const MotionComponent = (props) => {
     coin: 93
   }]);
   
-  //RTC
-  const pcsRef = useRef<{ [socketId: string]: RTCPeerConnection }>({});
 
   const onResults =(results:Results)=>{
     if(window.model&&window.model.scene&&window.model.borns&&window.model.originalBorns){
@@ -51,21 +117,11 @@ const MotionComponent = (props) => {
           enableLegs: false,
         }
       )
-      window.model.pose.pose[0]=myRig
-      window.model.pose.face[0]=[results.poseLandmarks[0].x,results.poseLandmarks[7].x,results.poseLandmarks[8].x]
       if(value%25===0){
-
+        window.model.pose.pose[0]=myRig
+        window.model.pose.face[0]=[results.poseLandmarks[0].x,results.poseLandmarks[7].x,results.poseLandmarks[8].x]
       }
       setValue(e=>e++)
-      const poseRig = window.model.pose.pose
-      const faceRig = window.model.pose.face
-      if(window.dataChannel){
-        for (const key in window.dataChannel){
-          if(window.dataChannel[key].readyState==='open'){
-            window.dataChannel[key].send(`${sessionStorage.getItem('user')};${JSON.stringify(poseRig[0])};${JSON.stringify(faceRig[0])}`)
-          }
-        }
-      }
       /**
        * 
        * @param transBorn 모델링
@@ -73,69 +129,7 @@ const MotionComponent = (props) => {
        * @param kalidoRig 관절 회전 값의 오브젝트, xyz키를 가진 배열...?
        * @param direction 팔 좌우 방향
        */
-      const bornTurn=(transBorn:BABYLON.TransformNode[],bornNum:number,kalidoRig:Kalidokit.TPose,direction:number)=>{
-        const bornX:number[] = [];
-        const bornY:number[] = [];
-        const bornZ:number[] = [];
-        if(direction===0){
-          bornX[0] = kalidoRig.RightUpperArm.x
-          bornY[0] = kalidoRig.RightUpperArm.y
-          bornZ[0] = kalidoRig.RightUpperArm.z
-          bornX[1] = kalidoRig.RightLowerArm.x
-          bornY[1] = kalidoRig.RightLowerArm.y
-          bornZ[1] = kalidoRig.RightLowerArm.z
-          bornX[2] = kalidoRig.RightHand.x
-          bornY[2] = kalidoRig.RightHand.y
-          bornZ[2] = kalidoRig.RightHand.z
-        }else{
-          bornX[0] = kalidoRig.LeftUpperArm.x
-          bornY[0] = kalidoRig.LeftUpperArm.y
-          bornZ[0] = kalidoRig.LeftUpperArm.z
-          bornX[1] = kalidoRig.LeftLowerArm.x
-          bornY[1] = kalidoRig.LeftLowerArm.y
-          bornZ[1] = kalidoRig.LeftLowerArm.z
-          bornX[2] = kalidoRig.LeftHand.x
-          bornY[2] = kalidoRig.LeftHand.y
-          bornZ[2] = kalidoRig.LeftHand.z
-        }
-        let x = bornX[1] - bornX[0] // 3
-        let y = bornY[1] - bornY[0] // 0.1
-        let z = bornZ[1] - bornZ[0] // -4
-        if(bornX[0]&&bornY[0]&&bornZ[0]){
-          //왼팔 보정
-          if(direction===0){
-            transBorn[bornNum].rotate(new BABYLON.Vector3(1,0,0),bornZ[0]+(Math.PI-0.5)/2,2)
-            transBorn[bornNum].rotate(new BABYLON.Vector3(0,1,0),-bornY[0]+(Math.PI-0.5)/2,2)
-            transBorn[bornNum].rotate(new BABYLON.Vector3(0,0,1),bornX[0],2)
-          }else{
-            transBorn[bornNum].rotate(new BABYLON.Vector3(1,0,0),-bornZ[0]+(Math.PI-0.5)/2,2)
-            transBorn[bornNum].rotate(new BABYLON.Vector3(0,1,0),-bornY[0]-(Math.PI-0.5)/2,2)
-            transBorn[bornNum].rotate(new BABYLON.Vector3(0,0,1),-bornX[0],2)
-          }
-        }
-        let childX = bornX[2] - bornX[1]
-        let childY = bornY[2] - bornY[1]
-        let childZ = bornZ[2] - bornZ[1]
-        if(bornX[1]&&bornY[1]&&bornZ[1]){
-          // y x z 
-          // x y z 
-          // 왼팔 보정
-          if(direction===0){
-            transBorn[bornNum-1].rotate(new BABYLON.Vector3(1,0,0),bornZ[1]*2,2)
-          }else{
-            transBorn[bornNum-1].rotate(new BABYLON.Vector3(1,0,0),-bornZ[1]*2,2)
-          }
-          // transBorn[bornNum-1].rotate(new BABYLON.Vector3(0,1,0),bornY[1],2)
-          // transBorn[bornNum-1].rotate(new BABYLON.Vector3(0,0,1),bornX[1],2)
-        }
-      }
-  
-      const faceTurn = (transBorn:BABYLON.TransformNode[],faceFront:number, faceLeft:number, faceRight:number) => {
-        const avg = (faceLeft+faceRight)/2
-        
-        // console.log(Math.atan2(avg, faceFront)-(Math.PI/4)-0.02)
-        transBorn[7].rotate(new BABYLON.Vector3(0,1,0),-(Math.atan2(avg, faceFront)-(Math.PI/4))*10,2)
-      }
+      
       // for(let i = 0; i < window.model.borns.length;i++){
       //   if(!(user[i]&&user[i].id && user[i].name)) break;
       //   for(let j = 0; j < window.model.borns[0].length;j++){
@@ -259,35 +253,64 @@ const MotionComponent = (props) => {
           作られたuser
         </Button>) }
       {/* http://localhost:3000/resources/babylonjs/models/proseka/proseka.glb */}
-      { [0,0,0,0,0].map((use,i)=>
+      { [0].map((use,i)=>
         <BabylonjsComponent key={i} i={i} user={user[i]} setUser={setUser} antialias x={250} y={250} path={'http://localhost:3000/resources/babylonjs/'} />
         )
       }
       {/* <BabylonjsComponent i={0} setUser={setUser} antialias x={250} y={250} path={'http://localhost:3000/resources/babylonjs/'} /> */}
-      <FormControl onSubmit={(e)=>{
+      <form onSubmit={(e)=>{
           e.preventDefault();
+          console.log('lsx회전 각도',parseInt(lsxRef.current.value))
+          console.log('lsy회전 각도',parseInt(lsyRef.current.value))
+          console.log('lsz회전 각도',parseInt(lszRef.current.value))
+          console.log('lax회전 각도',parseInt(laxRef.current.value))
+          console.log('lay회전 각도',parseInt(layRef.current.value))
+          console.log('laz회전 각도',parseInt(lazRef.current.value))
+
+          console.log('rsx회전 각도',parseInt(rsxRef.current.value))
+          console.log('rsy회전 각도',parseInt(rsyRef.current.value))
+          console.log('rsz회전 각도',parseInt(rszRef.current.value))
+          console.log('rax회전 각도',parseInt(raxRef.current.value))
+          console.log('ray회전 각도',parseInt(rayRef.current.value))
+          console.log('raz회전 각도',parseInt(razRef.current.value))
         }}>
           <HStack spacing='24px'>
             <Box>
-              <FormLabel htmlFor='left-shoulder'>왼쪽어깨회전각도</FormLabel>
-              <Input id='left-shoulder' placeholder='left-shoulder' type='number'></Input>
+              <FormLabel htmlFor='left-shoulder-x'>왼쪽어깨회전각도</FormLabel>
+              <Input id='left-shoulder-x' placeholder='left-shoulder-x' type='text' ref={lsxRef}></Input>
+              <Input id='left-shoulder-y' placeholder='left-shoulder-y' type='text' ref={lsyRef}></Input>
+              <Input id='left-shoulder-z' placeholder='left-shoulder-z' type='text' ref={lszRef}></Input>
             </Box>
             <Box>
-              <FormLabel htmlFor='left-arm'>왼쪽팔꿈치회전각도</FormLabel>
-              <Input id='left-arm' placeholder='left-arm' type='number'></Input>
+              <FormLabel htmlFor='left-arm-x'>왼쪽팔꿈치회전각도</FormLabel>
+              <Input id='left-arm-x' placeholder='left-arm-x' type='text' ref={laxRef}></Input>
+              <Input id='left-arm-y' placeholder='left-arm-y' type='text' ref={layRef}></Input>
+              <Input id='left-arm-z' placeholder='left-arm-z' type='text' ref={lazRef}></Input>
             </Box>
             <Box>
-              <FormLabel htmlFor='right-shoulder'>오른쪽어깨회전각도</FormLabel>
-              <Input id='right-shoulder' placeholder='right-shoulder' type='number'></Input>
+              <FormLabel htmlFor='right-shoulder-x'>오른쪽어깨회전각도</FormLabel>
+              <Input id='right-shoulder-x' placeholder='right-shoulder-x' type='text' ref={rsxRef}></Input>
+              <Input id='right-shoulder-y' placeholder='right-shoulder-y' type='text' ref={rsyRef}></Input>
+              <Input id='right-shoulder-z' placeholder='right-shoulder-z' type='text' ref={rszRef}></Input>
             </Box>
             <Box>
-              <FormLabel htmlFor='right-arm'>오른쪽팔꿈치회전각도</FormLabel>
-              <Input id='right-arm' placeholder='right-arm' type='number'></Input>
+              <FormLabel htmlFor='right-arm-x'>오른쪽팔꿈치회전각도</FormLabel>
+              <Input id='right-arm-x' placeholder='right-arm-x' type='text' ref={raxRef}></Input>
+              <Input id='right-arm-y' placeholder='right-arm-y' type='text' ref={rayRef}></Input>
+              <Input id='right-arm-z' placeholder='right-arm-z' type='text' ref={razRef}></Input>
             </Box>
           </HStack>
           <Button type='submit'>관절 회전</Button>
-      </FormControl>
-      <Button>
+      </form>
+      <Button onClick={e=>{
+        e.preventDefault();
+        console.log(window.model.pose)
+      //     bornTurn(borns,15,poseRig[i],0)
+      //     bornTurn(borns,11,poseRig[i],1)
+        bornTurn(window.model.borns[0],15,window.model.pose.pose[0],0)
+        bornTurn(window.model.borns[0],11,window.model.pose.pose[0],1)
+        window.model.scene[0].render();
+      }}>
         현재 양 어깨 회전 각도
       </Button>
     </>

@@ -143,9 +143,9 @@ const BabylonjsComponent = (props:props) => {
           // }
           // makeGround(`nameGround${i}`,0.5,1.5,'175px','40px',1)
           // makeGround(`chatGround${i}`,5,0,'175px','137.78px',0)
-          if(i===0){
-            useHandler(i,setUser)
-          }
+          // if(i===0){
+          //   useHandler(i,setUser)
+          // }
         })
       }
       const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, -1), scene);

@@ -11,7 +11,7 @@ const RoomEnterPage = (props) => {
   const userRef = useRef<HTMLInputElement>();
   const [err, setErr] = useState(false);
   const [errMsg, setErrMsg] = useState('');
-  const sockets = useSocket();
+  // const sockets = useSocket();
 
   function findError(error){
     if (!error||error===4) {
@@ -37,7 +37,7 @@ const RoomEnterPage = (props) => {
 
   useEffect(() => {
     window.pcs = {};
-    window.sockets.on('FE-error-user-exist', findError);
+    // window.sockets.on('FE-error-user-exist', findError);
   }, []);
   
 
@@ -45,38 +45,13 @@ const RoomEnterPage = (props) => {
     e.preventDefault();
     const roomName = roomRef.current.value;
     const userName = userRef.current.value;
-
-    if (!roomName || !userName) {
-      setErr(true);
-      setErrMsg('Enter Room Name or User Name');
-    } else {
-      sockets.emit('BE-participate-room', { roomId: roomName, userName },findError);
-      // sockets.on('welcome',({roomId, userName})=>{
-      //   console.log(`${roomId}방에 ${userName}님이 참가하였습니다`)
-      // })
-      // sockets.on('goodbye',({roomId, userName})=>{
-      //   console.log(`${roomId}방애 ${userName}님이 나가셨습니다`)
-      // })
-      
-      // router.push(`/live/viewing?roomId=${roomName}&user=${userName}`,'/live/viewing',{shallow:true});
-
-      // router.push({
-      //   pathname:'/live/viewing',
-      //   query:{
-      //     roomId:roomName,
-      //     user:userName,
-      //   }
-      // },'/live/viewing',{shallow:true})
-    }
+    findError(0)
   }
 
   function clickLeave(e:React.MouseEvent){ 
     e.preventDefault();
     const roomName = roomRef.current.value;
     const userName = userRef.current.value;
-    // sockets.emit('BE-leave-room', { roomId: roomName, userName },backendDone)
-    // sockets.emit('disconnecting', { roomId: roomName, userName },backendDone);
-    sockets.disconnect()
   }
 
   return (
