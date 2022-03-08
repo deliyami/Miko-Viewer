@@ -1,12 +1,12 @@
 import {
-    Box,
-    chakra,
-    Container,
-    Link,
-    Stack,
-    Text,
-    useColorModeValue,
-    VisuallyHidden
+  Box,
+  chakra,
+  Container,
+  Link,
+  Stack,
+  Text,
+  useColorModeValue,
+  VisuallyHidden
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
