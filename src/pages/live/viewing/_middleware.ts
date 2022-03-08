@@ -5,6 +5,7 @@ const allowedParams = ['roomId'];
 const LARAVEL_SESSION = 'laravel_session';
 
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
+  // Check Login Cookie
   const cookies = req.cookies[LARAVEL_SESSION];
   if (!cookies) {
     return NextResponse.redirect('/login');

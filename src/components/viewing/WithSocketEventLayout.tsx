@@ -1,5 +1,6 @@
 import { createStandaloneToast } from '@chakra-ui/react';
 import showChatToRoom from '@src/helper/showChatToRoom';
+import usePeer from '@src/hooks/usePeer';
 import useSocket from '@src/hooks/useSocket';
 import {
   messagesState,
@@ -14,8 +15,7 @@ import { useUser } from '@src/state/swr/useUser';
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import { DataConnectionEvent } from '@src/types/DataConnectionEventType';
 import produce from 'immer';
-import { nanoid } from 'nanoid';
-import Peer, { DataConnection } from 'peerjs';
+import { DataConnection } from 'peerjs';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
@@ -30,13 +30,13 @@ interface ConnectParams {
   video: boolean;
 }
 
-const myPeerUniqueID = nanoid();
-const myPeer = new Peer(myPeerUniqueID, {
-  debug: 2,
-  // host: 'localhost',
-  // path: '/myapp',
-  // port: 9000,
-});
+// const myPeerUniqueID = nanoid();
+// const myPeer = new Peer(myPeerUniqueID, {
+//   debug: 2,
+//   // host: 'localhost',
+//   // path: '/myapp',
+//   // port: 9000,
+// });
 const concertId = 1111;
 
 //@ts-ignore
@@ -51,6 +51,8 @@ const getUserMedia =
 const WithSocketEventLayout: FC = ({ children }) => {
   const socket = useSocket();
   const user = useUser();
+  const myPeer = usePeer();
+  const myPeerUniqueID = user.data.uuid;
 
   const [streamOptions, _] = useState<ConnectParams>({
     audio: true,
@@ -301,4 +303,4 @@ const WithSocketEventLayout: FC = ({ children }) => {
 
 export default WithSocketEventLayout;
 
-export { myPeerUniqueID };
+// export { myPeerUniqueID };

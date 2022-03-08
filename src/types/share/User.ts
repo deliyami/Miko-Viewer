@@ -3,6 +3,7 @@ export type User = {
   name: string;
   email: string;
   avatar?: string;
+  uuid: string;
   coin: number;
 };
 

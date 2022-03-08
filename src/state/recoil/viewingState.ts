@@ -1,5 +1,5 @@
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
-import { User } from '@src/types/User';
+import { User } from '@src/types/share/User';
 import { DataConnection } from 'peerjs';
 import { atom } from 'recoil';
 const videoStreamsState = atom<MediaStream[]>({
