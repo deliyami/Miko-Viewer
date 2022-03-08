@@ -2,7 +2,7 @@ import { Box, Button, Container } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 
-const Main = (props) => {
+const RoomEnterPage = (props) => {
   const router = useRouter();
   const roomRef = useRef<HTMLInputElement>();
   const userRef = useRef<HTMLInputElement>();
@@ -56,4 +56,4 @@ const Main = (props) => {
   );
 };
 
-export default Main;
+export default RoomEnterPage;

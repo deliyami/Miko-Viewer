@@ -1,41 +1,80 @@
 import {
-  Image,
+  Box, Heading, Image,
   SimpleGrid,
-  Text,
-  useMediaQuery,
-  VStack,
+  Text, VStack
 } from '@chakra-ui/react';
 import Link from 'next/link';
 
-const ConcertCard = () => {
+const ConcertCard = ({ concert }) => {
+
   return (
-    <Link href="">
-      <VStack>
-        <Image
-          src="https://obs.line-scdn.net/0h-k7bIERqckQKG2WTdxoNE1pGdDNzNWhVbmM4di0ZLnByK2BCY344cnhIKnckfjQUNCluIixPKXJzKDUVNHQ1Ji0aKXMnI2dFNXo7ImoaeCB1IzMXMQ/f375x375"
-          alt=""
-        />
+    <Box className="movie">
+      <Link href="">
         <VStack>
-          <Text textStyle="h6">aaaa</Text>
-          <Text textStyle="st">aaaa</Text>
-          <Text textStyle="body">aaaa</Text>
+          <Link href={`/concerts/${concert.id}`}>
+            <a>
+              <Image
+                boxSize='300px'
+                src={concert.cover_image}
+              />
+              <VStack pt={3}>
+                <Heading size='sm' fontSize='23px'>{concert.title}</Heading>
+                <Text textStyle="body">{concert.artist}</Text>
+              </VStack>
+            </a>
+          </Link>
         </VStack>
-      </VStack>
-    </Link>
+
+      </Link >
+
+      <style>{`
+            .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 20px;
+            gap: 20px;
+            }
+            .movie img {
+            max-width: 100%;
+            border-radius: 12px;
+            transition: transform 0.2s ease-in-out;
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+            }
+            .movie:hover img {
+            transform: scale(1.05);
+            }
+            .movie h4 {
+            font-size: 18px;
+            text-align: center;
+            }
+            `}
+      </style>
+    </Box >
   );
 };
 
 const ConcertList = (params) => {
+<<<<<<< HEAD
+
+  // console.log(params.fract);
+
+  const fract = params.fract; // 최신순, 인기순 정렬하는 
+  const data = params.data;
+  const concerts = data.data;
+=======
   const [isLargerThan960] = useMediaQuery('(min-width: 960px)');
-  console.log(isLargerThan960);
+>>>>>>> 68ade93ab0af8290bc77b3991905b8abf2d4463d
+
   return (
-    <SimpleGrid columns={isLargerThan960 ? 3 : 2} spacing={10} width="full">
-      {Array(10)
-        .fill(0)
-        .map((_, id) => (
-          <ConcertCard key={id} />
-        ))}
-    </SimpleGrid>
+    <div>
+      <SimpleGrid columns={[2, null, 3]} spacing={10} width="full">
+        {concerts.length > 0 && (concerts?.map((concert) => (
+          <div key={concert.id} >
+            <ConcertCard concert={concert} />
+          </div>
+        )))}
+      </SimpleGrid>
+    </div>
   );
 };
 

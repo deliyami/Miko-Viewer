@@ -1,27 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import io, { Socket } from 'socket.io-client';
 
 const useSocket = () => {
-  const [socket, setSocket] = useState<Socket | undefined>();
-
-  useEffect(() => {
-    if (!window.sockets) {
-      window.sockets = io('http://localhost:3001', {
-        // autoConnect: true,
+  const socket = useRef<Socket>(
+    window.socket ??
+      io('http://localhost:3002', {
+        autoConnect: true,
         // forceNew: true,
         transports: ['websocket', 'polling'],
       })
         .on('connect', () => {
-          console.log('connect 👌 ', window.sockets.connected);
+          console.log('connect 👌 ', socket.current.connected);
+        })
+        .on('connect_error', (err) => {
+          console.error(err);
+          setTimeout(() => socket.current.connect(), 1000);
         })
         .on('error', (err) => {
-          console.log(err);
-        });
-    }
-    setSocket(window.sockets);
+          console.error(err);
+        })
+        .on('disconnect', (reason) => {
+          console.error('socket disconnect', reason);
+        })
+  );
+
+  window.socket = socket.current;
+  useEffect(() => {
+    return () => {};
   }, []);
 
-  return socket;
+  return socket.current;
 };
 
 export default useSocket;

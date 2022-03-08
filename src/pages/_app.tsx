@@ -1,8 +1,19 @@
 import { ChakraProvider } from '@chakra-ui/react';
+import { NextPage } from 'next';
 import { AppProps } from 'next/app';
-import { useEffect } from 'react';
+import Peer from 'peerjs';
+import { ReactElement, ReactNode, useEffect } from 'react';
 import { RecoilRoot } from 'recoil';
+import { Socket } from 'socket.io-client';
 import theme from '../theme';
+
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
 
 if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
   require('@src/mocks');
@@ -10,11 +21,12 @@ if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
 
 declare global {
   interface Window {
-    sockets: Socket;
+    socket: Socket;
+    myPeer: Peer;
   }
 }
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
     // window.sockets = io('http://localhost:3001', {
     //   // autoConnect: true,
@@ -32,7 +44,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     // };
   }, []);
 
-  return (
+  const getLayout = Component?.getLayout || ((page) => page);
+
+  return getLayout(
     <ChakraProvider resetCSS theme={theme}>
       <RecoilRoot>
         <Component {...pageProps} />
