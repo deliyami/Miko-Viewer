@@ -25,7 +25,6 @@ import {
   useState,
 } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { myPeerUniqueID } from '../WithSocketEventLayout';
 
 const ChatMessageInput = () => {
   const socket = useSocket();
@@ -47,7 +46,7 @@ const ChatMessageInput = () => {
     };
 
     sendToAllPeers(peers, { type: 'chat', data });
-    showChatToRoom(myPeerUniqueID, newMessage, 5);
+    showChatToRoom(user.data.uuid, newMessage, 5);
 
     if (chatMode === 'public') {
       socket.emit('fe-send-message', data, roomId);

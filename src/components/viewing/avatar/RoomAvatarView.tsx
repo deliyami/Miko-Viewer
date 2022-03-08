@@ -7,7 +7,6 @@ import {
 import { useUser } from '@src/state/swr/useUser';
 import { createRef, FC, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { myPeerUniqueID } from '../WithSocketEventLayout';
 
 const RoomAvatarView = () => {
   const peerDataList = useRecoilValue(peerDataListState);
@@ -68,21 +67,22 @@ const UserBox: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
 };
 
 const MyUserBox: FC = () => {
-  const id = myPeerUniqueID;
+  const {
+    data: { uuid, email },
+  } = useUser();
   const [myStream, setMyStream] = useRecoilState(myStreamState);
-  const { data } = useUser();
 
   return (
     <Center
       width="300px"
       height="300px"
       bgColor="blackAlpha.500"
-      id={id + 'box'}
+      id={uuid + 'box'}
       position="relative"
     >
-      <Text> {data?.email} </Text>
-      <Text fontSize="6xl" id={id + 'chat'}></Text>
-      <Text fontSize="6xl" id={id + 'motion'}></Text>
+      <Text> {email} </Text>
+      <Text fontSize="6xl" id={uuid + 'chat'}></Text>
+      <Text fontSize="6xl" id={uuid + 'motion'}></Text>
     </Center>
   );
 };

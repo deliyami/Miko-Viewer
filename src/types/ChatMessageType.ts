@@ -1,7 +1,7 @@
 interface ChatMessageInterface {
   sender: string;
   text: string;
-  amount: number;
+  amount?: number;
   timestamp: number;
 }
 

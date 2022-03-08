@@ -9,39 +9,24 @@ const useSocket = () => {
         // forceNew: true,
         transports: ['websocket', 'polling'],
       })
-  );
-  useEffect(() => {
-    // if (window.sockets == undefined) {
-    //   window.sockets = io('http://localhost:3002', {
-    //     // autoConnect: true,
-    //     // forceNew: true,
-    //     transports: ['websocket', 'polling'],
-    //   })
-    //     .on('connect', () => {
-    //       console.log('connect 👌 ', window.sockets.connected);
-    //     })
-    //     .on('error', (err) => {
-    //       console.error(err);
-    //     });
-    // }
-
-    window.socket = socket.current;
-
-    if (!socket.current.hasListeners('conncet')) {
-      socket.current
         .on('connect', () => {
           console.log('connect 👌 ', socket.current.connected);
         })
+        .on('connect_error', (err) => {
+          console.error(err);
+          setTimeout(() => socket.current.connect(), 1000);
+        })
         .on('error', (err) => {
           console.error(err);
-        });
-    }
+        })
+        .on('disconnect', (reason) => {
+          console.error('socket disconnect', reason);
+        })
+  );
 
-    return () => {
-      socket.current.off('conncet');
-      socket.current.off('error');
-    };
-    // setSocket(window.sockets);
+  window.socket = socket.current;
+  useEffect(() => {
+    return () => {};
   }, []);
 
   return socket.current;

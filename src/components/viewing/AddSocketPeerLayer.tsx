@@ -1,6 +1,6 @@
 import { createStandaloneToast } from '@chakra-ui/react';
 import showChatToRoom from '@src/helper/showChatToRoom';
-import usePeer from '@src/hooks/usePeer';
+import useMyPeer from '@src/hooks/useMyPeer';
 import useSocket from '@src/hooks/useSocket';
 import {
   messagesState,
@@ -51,7 +51,7 @@ const getUserMedia =
 const WithSocketEventLayout: FC = ({ children }) => {
   const socket = useSocket();
   const user = useUser();
-  const myPeer = usePeer();
+  const myPeer = useMyPeer();
   const myPeerUniqueID = user.data.uuid;
 
   const [streamOptions, _] = useState<ConnectParams>({
@@ -188,7 +188,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
               user.data
             );
             const call = myPeer.call(otherPeerId, stream);
-
             call.on('stream', (remoteStream) => {
               addMediaStreamToPeersDataList(remoteStream, call.peer);
             });
@@ -253,6 +252,10 @@ const WithSocketEventLayout: FC = ({ children }) => {
       console.log('fail enter room');
     };
 
+    const userLeft = (peerId: string) => {
+      removePeerById(peerId);
+    };
+
     myPeer.on('open', (id) => {
       // NOTE  peer.conncet 는  peer open 상태가 아니면 undefined 리턴
       socket.on('be-new-user-come', newUserCome);
@@ -260,10 +263,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
     socket.on('be-broadcast-peer-id', broadcastPeerId);
     socket.on('be-broadcast-new-message', broadcastNewMessage);
     socket.on('be-fail-enter-room', failEnterRoom);
-
-    socket.on('be-user-left', (peerId: string) => {
-      removePeerById(peerId);
-    });
+    socket.on('be-user-left', userLeft);
 
     const windowBeforeUnloadEvent = (e: BeforeUnloadEvent) => {
       // NOTE confirm alert propmpt는 모던브라우저 (파폭 제외) onbeforeonload 동안에는 작동 안함
@@ -288,6 +288,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
       socket.off('new-user-arrived-finish', newUserCome);
       socket.off('be-broadcast-peer-id', broadcastPeerId);
       socket.off('be-broadcast-new-message', broadcastNewMessage);
+      socket.off('be-broadcast-new-message', userLeft);
       socket.emit('fe-user-left', myPeerUniqueID, roomId, concertId);
       window.removeEventListener('beforeunload', windowBeforeUnloadEvent);
       window.removeEventListener('unload', windowBeforeUnloadEvent);
