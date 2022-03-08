@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import dynamic from 'next/dynamic';
-import MotionComponent from './MotionComponent'; // uses above component in same directory
-import { User } from '../../types/User'
+import MotionComponent from './MotionComponent'; // uses above component in same directory]
 import * as BABYLON from 'babylonjs';
 import { useRouter } from 'next/router';
 

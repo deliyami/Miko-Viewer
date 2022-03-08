@@ -100,8 +100,7 @@ const BabylonjsComponent = (props:props) => {
               },
             };
           }
-          window.model.scene[i]=scene
-          console.log('import 성공')
+          window.model.scene[i]=scene;
           args[4][27].rotate(new BABYLON.Vector3(0,1,0),Math.PI,2)
           window.model.borns[i]=args[4]
           window.model.originalBorns[i]=[]
@@ -109,42 +108,41 @@ const BabylonjsComponent = (props:props) => {
             window.model.originalBorns[i][j]=args[4][j].rotationQuaternion?.clone()
           }
           const animations = scene.animationGroups;
-          const meshes = scene.meshes
           for(let j = 0;j<animations.length;j++){
             animations[j].stop()
           }
-          const makeGround = (groundName:string, positionY:number, positionZ:number,
-                                width:string, height:string, checkName:number) => {
-            const ground = BABYLON.Mesh.CreateGround(groundName, 26, 26, 0, scene);        
-            ground.rotation = new BABYLON.Vector3(5, Math.PI, 0);
-            ground.position = new BABYLON.Vector3(0, positionY, positionZ);
-            const advancedTexture = GUI.AdvancedDynamicTexture.CreateForMesh(ground,1024,1024)
+          // const makeGround = (groundName:string, positionY:number, positionZ:number,
+          //                       width:string, height:string, checkName:number) => {
+          //   const ground = BABYLON.Mesh.CreateGround(groundName, 26, 26, 0, scene);        
+          //   ground.rotation = new BABYLON.Vector3(5, Math.PI, 0);
+          //   ground.position = new BABYLON.Vector3(0, positionY, positionZ);
+          //   const advancedTexture = GUI.AdvancedDynamicTexture.CreateForMesh(ground,1024,1024)
 
-            const image = new GUI.Image('image',path+'svg/'+(checkName?'NameTag_ma.svg':'SpeechBallons.svg'))
-            image.width = width;
-            image.height = height;
-            advancedTexture.addControl(image)
+          //   const image = new GUI.Image('image',path+'svg/'+(checkName?'NameTag_ma.svg':'SpeechBallons.svg'))
+          //   image.width = width;
+          //   image.height = height;
+          //   advancedTexture.addControl(image)
 
-            const textBox = new GUI.TextBlock('textBox');
-            textBox.fontFamily = 'Helventica'
-            textBox.textWrapping = true;
-            textBox.width = '125px'
-            // textBox.text = 'test lorem ipsum 가나다라마바사아자차카타파하거너더러머버서어저처커터퍼허고노도로모보소오조초코토포호구누두루무부수우주추쿠투푸후그느드르므브스으즈츠크트프흐기니디리미비시이지치키티피히 여긴 지옥이야 빨리 탈출해!'
-            textBox.text = ''
-            textBox.color = 'black'
-            textBox.fontSize = '14px';
-            advancedTexture.addControl(textBox)
-            if(checkName){
-              // truthy면 name falsey면 chat
-              window.model.name.position[i] = ground
-              window.model.name.text[i] = textBox
-            }else{
-              window.model.chat.position[i] = ground
-              window.model.chat.text[i] = textBox
-            }
-          }
-          makeGround(`nameGround${i}`,0.5,1.5,'175px','40px',1)
-          makeGround(`chatGround${i}`,5,0,'175px','137.78px',0)
+          //   const textBox = new GUI.TextBlock('textBox');
+          //   textBox.fontFamily = 'Helventica'
+          //   textBox.textWrapping = true;
+          //   textBox.width = '125px'
+          //   // textBox.text = 'test lorem ipsum 가나다라마바사아자차카타파하거너더러머버서어저처커터퍼허고노도로모보소오조초코토포호구누두루무부수우주추쿠투푸후그느드르므브스으즈츠크트프흐기니디리미비시이지치키티피히 여긴 지옥이야 빨리 탈출해!'
+          //   textBox.text = ''
+          //   textBox.color = 'black'
+          //   textBox.fontSize = '14px';
+          //   advancedTexture.addControl(textBox)
+          //   if(checkName){
+          //     // truthy면 name falsey면 chat
+          //     window.model.name.position[i] = ground
+          //     window.model.name.text[i] = textBox
+          //   }else{
+          //     window.model.chat.position[i] = ground
+          //     window.model.chat.text[i] = textBox
+          //   }
+          // }
+          // makeGround(`nameGround${i}`,0.5,1.5,'175px','40px',1)
+          // makeGround(`chatGround${i}`,5,0,'175px','137.78px',0)
           if(i===0){
             useHandler(i,setUser)
           }

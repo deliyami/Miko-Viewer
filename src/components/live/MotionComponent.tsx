@@ -3,6 +3,7 @@ import * as BABYLON from 'babylonjs';
 // import * as PoseSolver from 'kalidokit/dist/PoseSolver/index'
 // import { Pose as PoseSolver } from 'kalidokit/dist/index'
 // import { TPose } from 'kalidokit/dist/Types'
+import { FormControl, Input, FormLabel, HStack, Button, Box } from '@chakra-ui/react';
 import * as Kalidokit from './kalidokit/index'
 import { Pose } from '@mediapipe/pose'
 import * as PoseMotion from '@mediapipe/pose'
@@ -15,11 +16,7 @@ import '@mediapipe/drawing_utils'
 import '@mediapipe/pose'
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 import BabylonjsComponent from './BabylonjsComponent';
-import { Button } from '@chakra-ui/react';
-import * as GUI from 'babylonjs-gui'
 import { User } from '@src/types/User';
-import useSocket from '@src/hooks/useSocket';
-
 
 
 
@@ -29,6 +26,7 @@ const MotionComponent = (props) => {
   const camera = useRef<cam.Camera|null>(null);
   const [ mediaStream, setMediaStream ] = useState<MediaStream>()
   const [ show, setShow ] = useState<boolean>(false);
+  const [ value, setValue ] = useState<number>();
   const [ user, setUser ] = useState<User[]>([{
     id: 1825,
     name: 'kirari',
@@ -55,7 +53,10 @@ const MotionComponent = (props) => {
       )
       window.model.pose.pose[0]=myRig
       window.model.pose.face[0]=[results.poseLandmarks[0].x,results.poseLandmarks[7].x,results.poseLandmarks[8].x]
-  
+      if(value%25===0){
+
+      }
+      setValue(e=>e++)
       const poseRig = window.model.pose.pose
       const faceRig = window.model.pose.face
       if(window.dataChannel){
@@ -135,44 +136,21 @@ const MotionComponent = (props) => {
         // console.log(Math.atan2(avg, faceFront)-(Math.PI/4)-0.02)
         transBorn[7].rotate(new BABYLON.Vector3(0,1,0),-(Math.atan2(avg, faceFront)-(Math.PI/4))*10,2)
       }
-      // kalido에서 나온 값을 기반으로... vector의 계산이 있음, (0,-1,0)에서 rotation각도 구하고 BABYLON.Vector3(x,y,z)방향으로 나온 각도만큼 굴려보기
-      // 손에서 어깨 방향으로 역으로 계산, 팔꿈치>손 각도 계산>굴리기, (0,-1,0)에서 팔꿈치 각도 계산, 아니면 어깨 위치 계산해서 모두다 어깨 위치 값만큼 뺀 뒤에 계산...
-      
-      for(let i = 0; i < window.model.borns.length;i++){
-        if(!(user[i]&&user[i].id && user[i].name)) break;
-        for(let j = 0; j < window.model.borns[0].length;j++){
-          if(window.model.borns[i][j].rotationQuaternion&&window.model.originalBorns[i][j]){
-              window.model.borns[i][j].rotationQuaternion = window.model.originalBorns[i][j]?.clone()!;
-          }
-        }
-        const borns:BABYLON.TransformNode[] = window.model.borns[i]
-        if(poseRig[i]){
-          bornTurn(borns,15,poseRig[i],0)
-          bornTurn(borns,11,poseRig[i],1)
-          faceTurn(borns,faceRig[i][0],faceRig[i][1],faceRig[i][2]);
-        }
-        if(window.model.scene[i])
-          window.model.scene[i].render();
-      }
-  
-  
-      // let canvasWidth = canvasRef.current?.width
-      // let canvasHeight = canvasRef.current?.width
-      
-      // canvasWidth=webcamRef.current?.videoWidth
-      // canvasHeight=webcamRef.current?.videoHeight
-  
-  
-      // const canvasElement = canvasRef.current;
-      // const canvasLm = canvasElement?.getContext("2d");
-      // if(canvasElement&& canvasLm){
-      //   canvasLm.save()
-      //   canvasLm.clearRect(0,0,canvasElement.width,canvasElement.height)
-      //   canvasLm.drawImage(results.image, 0,0,canvasElement?.width, canvasElement.height)
-      //   if(results.poseLandmarks){
-      //     drawConnectors(canvasLm,results.poseLandmarks,PoseMotion.POSE_CONNECTIONS,{color:'#CCAACC',lineWidth:2})
-      //     drawLandmarks(canvasLm,results.poseLandmarks,{color:'#FF6666',lineWidth:1})
+      // for(let i = 0; i < window.model.borns.length;i++){
+      //   if(!(user[i]&&user[i].id && user[i].name)) break;
+      //   for(let j = 0; j < window.model.borns[0].length;j++){
+      //     if(window.model.borns[i][j].rotationQuaternion&&window.model.originalBorns[i][j]){
+      //         window.model.borns[i][j].rotationQuaternion = window.model.originalBorns[i][j]?.clone()!;
+      //     }
       //   }
+      //   const borns:BABYLON.TransformNode[] = window.model.borns[i]
+      //   if(poseRig[i]){
+      //     bornTurn(borns,15,poseRig[i],0)
+      //     bornTurn(borns,11,poseRig[i],1)
+      //     faceTurn(borns,faceRig[i][0],faceRig[i][1],faceRig[i][2]);
+      //   }
+      //   if(window.model.scene[i])
+      //     window.model.scene[i].render();
       // }
     }
     
@@ -286,10 +264,32 @@ const MotionComponent = (props) => {
         )
       }
       {/* <BabylonjsComponent i={0} setUser={setUser} antialias x={250} y={250} path={'http://localhost:3000/resources/babylonjs/'} /> */}
-      <Button onClick={(e)=>{
-        e.preventDefault();
-        console.log(user)
-      }}>user add button</Button>
+      <FormControl onSubmit={(e)=>{
+          e.preventDefault();
+        }}>
+          <HStack spacing='24px'>
+            <Box>
+              <FormLabel htmlFor='left-shoulder'>왼쪽어깨회전각도</FormLabel>
+              <Input id='left-shoulder' placeholder='left-shoulder' type='number'></Input>
+            </Box>
+            <Box>
+              <FormLabel htmlFor='left-arm'>왼쪽팔꿈치회전각도</FormLabel>
+              <Input id='left-arm' placeholder='left-arm' type='number'></Input>
+            </Box>
+            <Box>
+              <FormLabel htmlFor='right-shoulder'>오른쪽어깨회전각도</FormLabel>
+              <Input id='right-shoulder' placeholder='right-shoulder' type='number'></Input>
+            </Box>
+            <Box>
+              <FormLabel htmlFor='right-arm'>오른쪽팔꿈치회전각도</FormLabel>
+              <Input id='right-arm' placeholder='right-arm' type='number'></Input>
+            </Box>
+          </HStack>
+          <Button type='submit'>관절 회전</Button>
+      </FormControl>
+      <Button>
+        현재 양 어깨 회전 각도
+      </Button>
     </>
   );
 }
