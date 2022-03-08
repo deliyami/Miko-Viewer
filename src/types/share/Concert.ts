@@ -2,7 +2,7 @@ import { CommonProps } from './common/common';
 
 export interface Concert extends CommonProps {
   id: number;
-  createdAt: Date;
+  createdAt: string;
   updatedAt: Date;
   categoryId: number;
   user: number;
@@ -16,8 +16,8 @@ export interface Concert extends CommonProps {
   streamKeyValue: string;
   content: string;
   isPublic: boolean;
-  allConcertStartDate: Date;
-  allConcertEndDate: Date;
+  allConcertStartDate: string;
+  allConcertEndDate: string;
 }
 
 export type CreateConcertData = Pick<

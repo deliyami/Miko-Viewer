@@ -9,12 +9,14 @@ import {
 } from '@chakra-ui/react';
 import Footer from '@src/components/home/Footer';
 import MenuBar from '@src/components/home/MenuBar';
+import { S3_URL } from '@src/const';
+import { Concert } from '@src/types/share/Concert';
+import { Ticket } from '@src/types/share/Ticket';
 import axios from 'axios';
-import { useRouter } from 'next/router';
-import React from 'react';
+import React, { FC } from 'react';
 
-const TicketDate = ({ ticket }) => {
-  const concert_start_date = ticket.concert_start_date.split('T');
+const TicketDate: FC<{ ticket: Ticket }> = ({ ticket }) => {
+  const concert_start_date = ticket.concertStartDate.split('T');
   const date = concert_start_date[0].split('-');
   const time = concert_start_date[1].split(':', 2);
   // console.log(time);
@@ -36,32 +38,32 @@ const TicketDate = ({ ticket }) => {
   );
 };
 
-const TicketDetail = ({ ticket }) => {
+const TicketDetail: FC<{ ticket: Ticket }> = ({ ticket }) => {
   // console.log(ticket);
   const week = new Array('日', '月', '火', '水', '木', '金', '土');
 
-  const start_date = ticket.concert_start_date.split('.', 1);
+  const start_date = ticket.concertStartDate.split('.', 1);
   const sdate = start_date[0].split('T')[0].split('-');
   const stime = start_date[0].split('T')[1].split(':', 2);
   const sd = new Date(start_date);
   const sday = week[sd.getDay()];
 
-  const end_date = ticket.concert_end_date.split('.', 1);
+  const end_date = ticket.concertEndDate.split('.', 1);
   const etime = end_date[0].split('T')[1].split(':', 2);
 
-  const archive_end = ticket.archive_end_time.split('.', 1);
+  const archive_end = ticket.archiveEndTime.split('.', 1);
   const adate = archive_end[0].split('T')[0].split('-');
   const atime = archive_end[0].split('T')[1].split(':', 2);
   const ad = new Date(start_date);
   const aday = week[ad.getDay()];
 
   const today = new Date();
-  const sale_start_date = new Date(ticket.sale_start_date);
-  const sale_end_date = new Date(ticket.sale_end_date);
+  const sale_start_date = new Date(ticket.saleStartDate);
+  const sale_end_date = new Date(ticket.saleEndDate);
 
   return (
     <Box flex="1 1 auto" padding="20px 60px 20px">
-      {new Date(ticket.sale_start_date) < today ? (
+      {new Date(ticket.saleStartDate) < today ? (
         <>
           {sale_start_date < today && today < sale_end_date ? (
             <div>
@@ -157,13 +159,13 @@ const TicketBox = ({ ticket }) => {
 };
 
 const LiveInformation = ({ data }) => {
-  const concert = data.data;
+  const concert = data.data as Concert;
   const [show, setShow] = React.useState(false);
   const handleToggle = () => setShow(!show);
 
   // console.log(concert);
   const week = new Array('日', '月', '火', '水', '木', '金', '土');
-  const start_date = concert.all_concert_start_date.split('T');
+  const start_date = concert.allConcertStartDate.split('T');
   const date = start_date[0].split('T')[0].split('-');
   const d = new Date(start_date);
   const day = week[d.getDay()];
@@ -176,8 +178,8 @@ const LiveInformation = ({ data }) => {
       <HStack justifyContent="center">
         <Box w="400px" mb="20px">
           <img
-            src={concert.cover_image}
-            srcSet={concert.cover_image}
+            src={S3_URL + concert.coverImage}
+            srcSet={S3_URL + concert.coverImage}
             alt="ディズニー・オン・クラシック ～まほうの夜の音楽会 2021"
           />
         </Box>
@@ -245,14 +247,4 @@ LiveDetailPage.getInitialProps = async (context) => {
   return { concert, tickets };
 };
 
-const ConcertDetailPage = (second) => {
-  const router = useRouter();
-  return (
-    <Box>
-      {router.asPath}
-      <Text>콘서트 상세 정보</Text>
-    </Box>
-  );
-};
-
-export default ConcertDetailPage;
+export default LiveDetailPage;

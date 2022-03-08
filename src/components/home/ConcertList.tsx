@@ -4,19 +4,21 @@ import {
   Image,
   SimpleGrid,
   Text,
-  useMediaQuery,
   VStack,
 } from '@chakra-ui/react';
+import { S3_URL } from '@src/const';
+import { Concert } from '@src/types/share/Concert';
 import Link from 'next/link';
+import { FC } from 'react';
 
-const ConcertCard = ({ concert }) => {
+const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
   return (
     <Box className="movie">
       <Link href="">
         <VStack>
           <Link href={`/concerts/${concert.id}`}>
             <a>
-              <Image boxSize="300px" src={concert.cover_image} />
+              <Image boxSize="300px" src={S3_URL + concert.coverImage} />
               <VStack pt={3}>
                 <Heading size="sm" fontSize="23px">
                   {concert.title}
@@ -55,12 +57,9 @@ const ConcertCard = ({ concert }) => {
   );
 };
 
-const ConcertList = (params) => {
-  const fract = params.fract; // 최신순, 인기순 정렬하는
-  const data = params.data;
-  const concerts = data.data;
-  const [isLargerThan960] = useMediaQuery('(min-width: 960px)');
-
+const ConcertList: FC<{ data: Concert[] }> = ({ data }) => {
+  const concerts = data;
+  console.log(concerts);
   return (
     <div>
       <SimpleGrid columns={[2, null, 3]} spacing={10} width="full">

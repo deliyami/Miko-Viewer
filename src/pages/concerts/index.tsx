@@ -5,19 +5,24 @@ import {
   Heading,
   HStack,
   Input,
-  Text,
   VStack,
 } from '@chakra-ui/react';
 import Category from '@src/components/Category';
 import ConcertList from '@src/components/home/ConcertList';
 import Footer from '@src/components/home/Footer';
 import MenuBar from '@src/components/home/MenuBar';
+import { axiosI } from '@src/state/fetcher';
+import { createFSWQueryString } from '@src/state/swr/createQueryStringKey';
+import { Pagination } from '@src/types/share/common/common';
+import { Concert } from '@src/types/share/Concert';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 
-const Index = ({ data, category_id }) => {
+const ConcertPage: FC<{ data: Pagination<Concert>; category_id: number }> = ({
+  data,
+  category_id,
+}) => {
   const links = data.meta.links;
-  // console.log(category_id);
 
   const router = useRouter();
 
@@ -71,7 +76,7 @@ const Index = ({ data, category_id }) => {
               </Button>
             </HStack>
             <Category />
-            <ConcertList data={data} />
+            <ConcertList data={data.data} />
             <HStack>
               {links.length > 3 &&
                 links?.map((link, key) => (
@@ -97,75 +102,28 @@ const Index = ({ data, category_id }) => {
 };
 
 export async function getServerSideProps(context) {
-  console.log(context.query);
+  const URL_CONCERTS = '/concerts';
   const category_id = context.query.category_id;
   const page = context.query.page;
   const search = context.query.search;
 
-  if (category_id && page) {
-    const data = await (
-      await fetch(
-        `http://localhost:8080/api/concerts?category_id=${category_id}&page=${page}`
-      )
-    ).json();
-    return {
-      props: {
-        data,
-        category_id,
-      },
-    };
-  } else if (search && page) {
-    const data = await (
-      await fetch(
-        `http://localhost:8080/api/concerts?search=${search}*&page=${page}`
-      )
-    ).json();
-    return {
-      props: {
-        data,
-      },
-    };
-  } else if (category_id) {
-    const data = await (
-      await fetch(
-        `http://localhost:8080/api/concerts?category_id=${category_id}`
-      )
-    ).json();
-    return {
-      props: {
-        data,
-        category_id,
-      },
-    };
-  } else if (search) {
-    const data = await (
-      await fetch(`http://localhost:8080/api/concerts?search=${search}*`)
-    ).json();
-    return {
-      props: {
-        data,
-      },
-    };
-  } else {
-    const data = await (
-      await fetch(`http://localhost:8080/api/concerts?page=${page}`)
-    ).json();
-    return {
-      props: {
-        data,
-      },
-    };
-  }
-}
+  let url =
+    URL_CONCERTS +
+    '?' +
+    createFSWQueryString({
+      filter: [['category_id', category_id]],
+      page: page,
+      per_page: 3,
+    });
 
-const ConcertPage = (second) => {
-  const router = useRouter();
-  return (
-    <Box>
-      {router.asPath}
-      <Text>콘서트 검색 페이지</Text>
-    </Box>
-  );
-};
+  const { data } = await axiosI.get<Pagination<Concert>>(url);
+
+  return {
+    props: {
+      data: data,
+      category_id,
+    },
+  };
+}
 
 export default ConcertPage;
