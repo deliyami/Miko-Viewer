@@ -15,6 +15,7 @@ export interface CommonFSW {
   end?: string;
   per_page?: number;
   page?: number;
+  search?: string;
 }
 
 export interface Pagination<T> {

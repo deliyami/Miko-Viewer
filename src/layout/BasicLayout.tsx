@@ -1,11 +1,17 @@
-import { Center, Text } from '@chakra-ui/react';
+import { Box, Center, Text } from '@chakra-ui/react';
+import Footer from '@src/components/home/Footer';
+import MenuBar from '@src/components/home/MenuBar';
 import { withSuspense } from './withSuspenseHOC';
 
 const Layout = ({ children }) => {
   return (
-    <>
-      <main>{children}</main>
-    </>
+    <Box>
+      <MenuBar />
+      <Box my={30} pb={20}>
+        {children}
+      </Box>
+      <Footer />
+    </Box>
   );
 };
 

@@ -1,3 +1,6 @@
+/**
+ * @type {import('next').NextConfig}
+ **/
 module.exports = {
   // reactStrictMod: true,
   //   async redirects() {
@@ -18,6 +21,13 @@ module.exports = {
   //       },
   //     ];
   //   },
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: false,
+  },
 };
 
 //  Ctc를 통해 query나 params 분석 가능
