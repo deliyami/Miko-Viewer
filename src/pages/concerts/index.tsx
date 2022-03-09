@@ -16,9 +16,47 @@ type Data = {
   categoryId: number;
 };
 
+const SearchBox = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
+
+  const onChangeSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+  const onClickSearch = () => {
+    setSearchQuery('');
+    router.push(
+      `/concerts?category_id=${router.query.category_id}&search=${searchQuery}`
+    );
+  };
+
+  const enterKey: KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key === 'Enter') {
+      onClickSearch();
+    }
+  };
+  return (
+    <HStack>
+      <Input
+        width="auto"
+        placeholder="Basic usage"
+        name="sWord"
+        value={searchQuery}
+        required
+        onChange={onChangeSearch}
+        onKeyUp={enterKey}
+      />
+      <Button id="btn" name="btn" type="submit" onClick={onClickSearch}>
+        Search
+      </Button>
+    </HStack>
+  );
+};
+
 export const getServerSideProps: GetServerSideProps<Data> = async (context) => {
   const URL_CONCERTS = '/concerts';
-  const categoryId = parseInt((context.query.category_id as string) ?? '1');
+  let categoryId = parseInt((context.query.category_id as string) ?? '1');
+
   const page = context.query.page as string;
   const search = context.query.search as string;
 
@@ -46,79 +84,19 @@ export default function ConcertPage({
   data,
   categoryId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const links = data.meta.links;
-
-  const router = useRouter();
-
-  const onClickPage = async (url) => {
-    const page = url.split('=');
-    if (categoryId) {
-      router.push(`/concerts?category_id=${categoryId}&page=${page[1]}`);
-    } else {
-      router.push(`/concerts?page=${page[1]}`);
-    }
-  };
-
-  const [searchWord, setSearchWord] = useState('');
-
-  const onChangeSearch = (e) => {
-    setSearchWord(e.target.value);
-  };
-  const onClickSearch = () => {
-    // console.log(searchWord);
-    // http://localhost:8080/api/concerts?search=f*
-    router.push(`/concerts?search=${searchWord}`);
-    setSearchWord('');
-  };
-
-  const enterKey: KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key === 'Enter') {
-      onClickSearch();
-    }
-  };
-
   return (
     <Flex pt={50} width="full" justifyContent="center">
       <VStack>
         <Heading fontWeight="700" size="2xl" my="20px">
           Concert List
         </Heading>
-        <HStack>
-          <Input
-            width="auto"
-            placeholder="Basic usage"
-            name="sWord"
-            value={searchWord}
-            required
-            onChange={onChangeSearch}
-            onKeyUp={enterKey}
-          />
-          <Button id="btn" name="btn" type="submit" onClick={onClickSearch}>
-            Search
-          </Button>
-        </HStack>
+        <SearchBox />
         <Category />
         <ConcertList data={data.data} />
         <PaginationBtn
           data={data.meta}
           url={`/concerts?category_id=${categoryId}`}
         />
-        {/* <HStack>
-          {links.length > 3 &&
-            links?.map((link, key) => (
-              <>
-                {link.url === null ? (
-                  <Button disabled key={key}>
-                    {link.label}
-                  </Button>
-                ) : (
-                  <Button onClick={() => onClickPage(link.url)}>
-                    {link.label}
-                  </Button>
-                )}
-              </>
-            ))}
-        </HStack> */}
       </VStack>
     </Flex>
   );
