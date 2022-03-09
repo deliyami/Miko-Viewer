@@ -3,19 +3,19 @@ import {
   CommonFSW,
   Pagination,
 } from '@src/types/share/common/common';
-import { Concert } from '@src/types/share/Concert';
 import useSWR from 'swr';
 import { fetcher } from '../fetcher';
+import { UserTicket } from './../../types/share/UserTicket';
 import { createFSWQueryString } from './createQueryStringKey';
 import laggy from './middleware/laggy';
 
-const URL_CONCERTS = '/concerts';
+const URL_USER_TICKETS = '/user_tickets';
 
-const useConcerts = (query?: CommonFSW) => {
-  let url = URL_CONCERTS + '?';
+const useUserTickets = (query?: CommonFSW) => {
+  let url = URL_USER_TICKETS + '?';
   query && (url += createFSWQueryString(query));
 
-  const swrResponses = useSWR<Pagination<Concert>>(
+  const swrResponses = useSWR<Pagination<UserTicket>>(
     query ? url : null,
     fetcher,
     {
@@ -27,10 +27,10 @@ const useConcerts = (query?: CommonFSW) => {
   return swrResponses;
 };
 
-const useConcert = (Concert_id: number) => {
-  const url = `${URL_CONCERTS}/${Concert_id}`;
+const useTicket = (Concert_id: number) => {
+  const url = `${URL_USER_TICKETS}/${Concert_id}`;
 
-  const swrResponses = useSWR<CommonDataResponse<Concert>>(url, fetcher, {
+  const swrResponses = useSWR<CommonDataResponse<UserTicket>>(url, fetcher, {
     use: [laggy],
     suspense: true,
   });
@@ -38,4 +38,4 @@ const useConcert = (Concert_id: number) => {
   return swrResponses;
 };
 
-export { useConcerts, useConcert };
+export { useUserTickets, useTicket };

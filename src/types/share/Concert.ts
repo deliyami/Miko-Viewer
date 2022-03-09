@@ -1,9 +1,6 @@
 import { CommonProps } from './common/common';
 
 export interface Concert extends CommonProps {
-  id: number;
-  createdAt: string;
-  updatedAt: Date;
   categoryId: number;
   user: number;
   coverImage: string;

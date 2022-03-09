@@ -2,6 +2,7 @@ import { Box, HStack, Text } from '@chakra-ui/react';
 import { useUser } from '@src/state/swr/useUser';
 import Link from 'next/link';
 import { FC, Suspense } from 'react';
+import LogoutBtn from '../common/button/LogoutBtn';
 
 const MenuLink: FC<{ name: string; url: string }> = ({ name, url }) => {
   return (
@@ -25,7 +26,10 @@ const UserData = () => {
   return (
     <Box>
       {data ? (
-        <Text>{data.email}</Text>
+        <>
+          <Text>{data.email}</Text>
+          <LogoutBtn />
+        </>
       ) : (
         <MenuLink name="로그인" url="/login" />
       )}

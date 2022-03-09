@@ -9,22 +9,7 @@ const RoomEnterPage = (props) => {
   const [err, setErr] = useState(false);
   const [errMsg, setErrMsg] = useState('');
 
-  useEffect(() => {
-    const { sockets } = window;
-
-    sockets.on('FE-error-user-exist', ({ error }) => {
-      if (!error) {
-        const roomName = roomRef.current.value;
-        const userName = userRef.current.value;
-
-        sessionStorage.setItem('user', userName);
-        props.history.push(`/room/${roomName}`);
-      } else {
-        setErr(error);
-        setErrMsg('User name already exist');
-      }
-    });
-  }, [props.history]);
+  useEffect(() => {}, [props.history]);
 
   function clickJoin() {
     const roomName = roomRef.current.value;
@@ -34,9 +19,7 @@ const RoomEnterPage = (props) => {
       setErr(true);
       setErrMsg('Enter Room Name or User Name');
     } else {
-      sockets.emit('BE-check-user', { roomId: roomName, userName });
       console.log('aaaa');
-      router.push(`/webrtc?roomId=${roomName}&user=${userName}`, {});
     }
   }
 

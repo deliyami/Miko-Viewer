@@ -1,9 +1,58 @@
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import BasicLayout from '@src/layout/BasicLayout';
+import { withSuspense } from '@src/layout/withSuspenseHOC';
+import {
+  curUseTicketState,
+  enterConcertIdState,
+} from '@src/state/recoil/concertState';
+import { useUser } from '@src/state/swr/useUser';
+import { useUserTickets } from '@src/state/swr/useUserTicket';
+import { Ticket } from '@src/types/share/Ticket';
+import { UserTicket } from '@src/types/share/UserTicket';
 import { useRouter } from 'next/router';
+import { FC, ReactElement } from 'react';
+import { useSetRecoilState } from 'recoil';
+
+const Ticket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
+  const router = useRouter();
+  const setCurUseTicket = useSetRecoilState(curUseTicketState);
+  const setEnterConcertId = useSetRecoilState(enterConcertIdState);
+  const ticket = userTicket.ticket;
+
+  const useTicketHandler = () => {
+    setCurUseTicket(ticket);
+    setEnterConcertId(ticket.concertId);
+    router.push('/live/enter');
+  };
+
+  return <Box onClick={useTicketHandler}>{userTicket.id}</Box>;
+};
+
+const UserTicketList: FC<{ userTickets: UserTicket[] }> = ({ userTickets }) => {
+  return (
+    <Box>
+      {userTickets.map((userTicket) => (
+        <Ticket key={userTicket.id} userTicket={userTicket} />
+      ))}
+    </Box>
+  );
+};
 
 const MyListPage = (second) => {
   const router = useRouter();
+  const {
+    data: { id },
+  } = useUser();
+
   const { menu } = router.query as { menu: string };
+
+  const { data } = useUserTickets({
+    with: ['ticket'],
+    filter: [['user_id', id]],
+  });
+
+  console.log('ticket', data);
+
   return (
     <Box>
       <Tabs variant="enclosed" isFitted>
@@ -13,7 +62,7 @@ const MyListPage = (second) => {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <p>one!</p>
+            <UserTicketList userTickets={data.data} />
           </TabPanel>
           <TabPanel>
             <p>two!</p>
@@ -24,4 +73,8 @@ const MyListPage = (second) => {
   );
 };
 
-export default MyListPage;
+MyListPage.getLayout = function getLayout(page: ReactElement) {
+  return <BasicLayout>{page}</BasicLayout>;
+};
+
+export default withSuspense(MyListPage);

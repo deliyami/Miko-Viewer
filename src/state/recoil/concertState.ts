@@ -1,13 +1,19 @@
 import { atom } from 'recoil';
+import { Ticket } from './../../types/share/Ticket';
 
-const roomKeyState = atom<string>({
-  key: 'roomKey',
+const enterRoomIdState = atom<string>({
+  key: 'enterRoomId',
   default: undefined,
 });
 
-const concertIdState = atom<number>({
-  key: 'concertId',
+const enterConcertIdState = atom<number>({
+  key: 'enterConcert',
   default: 1111,
 });
 
-export { concertIdState, roomKeyState };
+const curUseTicketState = atom<Ticket>({
+  key: 'curUseTicket',
+  default: undefined,
+});
+
+export { enterConcertIdState, enterRoomIdState, curUseTicketState };
