@@ -36,7 +36,7 @@ const createFSWQueryString = (query: CommonFSW): string => {
   }
 
   if (page) {
-    url.set('per_page', page.toString());
+    url.set('page', page.toString());
   }
 
   if (search) {

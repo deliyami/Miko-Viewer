@@ -5,18 +5,19 @@ import BasicLayout from '@src/layout/BasicLayout';
 import { Pagination } from '@src/types/share/common/common';
 import { Concert } from '@src/types/share/Concert';
 import axios from 'axios';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
 import { ReactElement } from 'react';
 
-const fract = [
+const tab = [
   { id: 'ranking', name: 'RANKING' },
   { id: 'new', name: 'NEW' },
 ];
 
-export const getServerSideProps: GetServerSideProps<{
+// TIP 무조건 서버에서 실행됨, Dev모드에서는 매번 실행
+export const getStaticProps: GetStaticProps<{
   data: Concert[];
-}> = async (ctx) => {
+}> = async (context) => {
   const { data } = await axios.get<Pagination<Concert>>(
     `http://localhost:8080/api/concerts?per_page=3`
   );
@@ -24,18 +25,19 @@ export const getServerSideProps: GetServerSideProps<{
     props: {
       data: data.data,
     },
+    revalidate: 60 * 30, // 30분 마다 재생성
   };
 };
 
 export default function HomePage({
   data,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
       <Carousel />
       <Flex pt={50} width="full" justifyContent="center">
         <VStack align="start">
-          {fract.map(({ name }) => (
+          {tab.map(({ name }) => (
             <Box mb={9}>
               <Heading size="xl" fontSize="50px" my={5}>
                 {name}
