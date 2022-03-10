@@ -2,9 +2,8 @@ import { Button, Flex, Heading, HStack, Input, VStack } from '@chakra-ui/react';
 import PaginationBtn from '@src/components/common/button/PaginationBtn';
 import Category from '@src/components/concert/Category';
 import ConcertList from '@src/components/home/ConcertList';
+import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
 import BasicLayout from '@src/layout/BasicLayout';
-import { axiosI } from '@src/state/fetcher';
-import { createFSWQueryString } from '@src/state/swr/createQueryStringKey';
 import { Pagination } from '@src/types/share/common/common';
 import { Concert } from '@src/types/share/Concert';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
@@ -56,21 +55,15 @@ const SearchBox = () => {
 export const getServerSideProps: GetServerSideProps<Data> = async (context) => {
   const URL_CONCERTS = '/concerts';
   let categoryId = parseInt((context.query.category_id as string) ?? '1');
-
   const page = context.query.page as string;
   const search = context.query.search as string;
 
-  let url =
-    URL_CONCERTS +
-    '?' +
-    createFSWQueryString({
-      filter: [['category_id', categoryId]],
-      page: parseInt(page),
-      per_page: 6,
-      search,
-    });
-  const { data } = await axiosI.get<Pagination<Concert>>(url);
-  console.log(url, data.data.length);
+  const { data } = await getDataFromLaravel<Pagination<Concert>>(URL_CONCERTS, {
+    filter: [['category_id', categoryId]],
+    page: parseInt(page),
+    per_page: 3,
+    search,
+  });
 
   return {
     props: {
