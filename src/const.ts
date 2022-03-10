@@ -6,4 +6,6 @@ export const S3_URL = 'https://marusuku.s3.ap-northeast-2.amazonaws.com/';
 
 export const categoryArray = ['콘서트', '음악'];
 
+export const USER_TICKET_COOKIE = 'userTicket';
+
 // export { PORT, LARAVEL_URL };

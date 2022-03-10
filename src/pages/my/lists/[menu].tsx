@@ -1,8 +1,7 @@
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import BasicLayout from '@src/layout/BasicLayout';
-import { withSuspense } from '@src/layout/withSuspenseHOC';
 import {
-  curUseTicketState,
+  curUserTicketState,
   enterConcertIdState,
 } from '@src/state/recoil/concertState';
 import { useUser } from '@src/state/swr/useUser';
@@ -15,13 +14,11 @@ import { useSetRecoilState } from 'recoil';
 
 const Ticket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   const router = useRouter();
-  const setCurUseTicket = useSetRecoilState(curUseTicketState);
+  const setCurUseTicket = useSetRecoilState(curUserTicketState);
   const setEnterConcertId = useSetRecoilState(enterConcertIdState);
-  const ticket = userTicket.ticket;
-
   const useTicketHandler = () => {
-    setCurUseTicket(ticket);
-    setEnterConcertId(ticket.concertId);
+    setCurUseTicket(userTicket);
+    setEnterConcertId(userTicket.concertId);
     router.push('/live/enter');
   };
 
@@ -47,7 +44,7 @@ const MyListPage = (second) => {
   const { menu } = router.query as { menu: string };
 
   const { data } = useUserTickets({
-    with: ['ticket'],
+    with: ['ticket', 'concert'],
     filter: [['user_id', id]],
   });
 
@@ -77,4 +74,4 @@ MyListPage.getLayout = function getLayout(page: ReactElement) {
   return <BasicLayout>{page}</BasicLayout>;
 };
 
-export default withSuspense(MyListPage);
+export default MyListPage;

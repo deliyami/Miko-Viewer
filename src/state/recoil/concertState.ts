@@ -1,5 +1,5 @@
+import { UserTicket } from '@src/types/share/UserTicket';
 import { atom } from 'recoil';
-import { Ticket } from './../../types/share/Ticket';
 
 const enterRoomIdState = atom<string>({
   key: 'enterRoomId',
@@ -11,9 +11,9 @@ const enterConcertIdState = atom<number>({
   default: 1111,
 });
 
-const curUseTicketState = atom<Ticket>({
-  key: 'curUseTicket',
+const curUserTicketState = atom<UserTicket>({
+  key: 'curUserTicket',
   default: undefined,
 });
 
-export { enterConcertIdState, enterRoomIdState, curUseTicketState };
+export { enterConcertIdState, enterRoomIdState, curUserTicketState };
