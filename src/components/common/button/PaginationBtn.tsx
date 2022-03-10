@@ -11,7 +11,11 @@ type Props = {
 const PageBtn: FC<
   { text: number | string } & ComponentProps<typeof Button>
 > = ({ text, ...props }) => {
-  return <Button {...props}>{text}</Button>;
+  return (
+    <Button {...props} colorScheme="gray">
+      {text}
+    </Button>
+  );
 };
 
 const PaginationBtn: FC<Props> = ({
@@ -45,7 +49,7 @@ const PaginationBtn: FC<Props> = ({
             onClick={() => onPageChangeHandler(startPage + idx)}
           />
         ))}
-        <PageBtn text={curPage} color="red" />
+        <PageBtn text={curPage} color="green.400" />
         {new Array(Math.max(lastPage - curPage, 0)).fill(0).map((_, idx) => {
           return (
             <PageBtn
@@ -57,7 +61,6 @@ const PaginationBtn: FC<Props> = ({
         {curPage != lastPage && (
           <PageBtn text=">" onClick={onNextPageHandler} />
         )}
-        {lastPage}
       </HStack>
     </Center>
   );
