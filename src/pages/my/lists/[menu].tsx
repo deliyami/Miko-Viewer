@@ -1,9 +1,6 @@
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import BasicLayout from '@src/layout/BasicLayout';
-import {
-  curUserTicketState,
-  enterConcertIdState,
-} from '@src/state/recoil/concertState';
+import { curUserTicketState } from '@src/state/recoil/concertState';
 import { useUser } from '@src/state/swr/useUser';
 import { useUserTickets } from '@src/state/swr/useUserTicket';
 import { Ticket } from '@src/types/share/Ticket';
@@ -15,10 +12,8 @@ import { useSetRecoilState } from 'recoil';
 const Ticket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   const router = useRouter();
   const setCurUseTicket = useSetRecoilState(curUserTicketState);
-  const setEnterConcertId = useSetRecoilState(enterConcertIdState);
   const useTicketHandler = () => {
     setCurUseTicket(userTicket);
-    setEnterConcertId(userTicket.concertId);
     router.push('/live/enter');
   };
 

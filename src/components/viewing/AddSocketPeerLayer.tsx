@@ -3,12 +3,15 @@ import showChatToRoom from '@src/helper/showChatToRoom';
 import useMyPeer from '@src/hooks/useMyPeer';
 import useSocket from '@src/hooks/useSocket';
 import {
+  enterConcertState,
+  enterRoomIdState,
+} from '@src/state/recoil/concertState';
+import {
   messagesState,
   // mySocket as socket,
   myStreamState,
   PeerDataInterface,
   peerDataListState,
-  roomIdState,
   videoStreamsState,
 } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
@@ -30,15 +33,6 @@ interface ConnectParams {
   video: boolean;
 }
 
-// const myPeerUniqueID = nanoid();
-// const myPeer = new Peer(myPeerUniqueID, {
-//   debug: 2,
-//   // host: 'localhost',
-//   // path: '/myapp',
-//   // port: 9000,
-// });
-const concertId = 1111;
-
 //@ts-ignore
 const getUserMedia =
   //@ts-ignore
@@ -49,6 +43,9 @@ const getUserMedia =
   navigator.mozGetUserMedia;
 
 const WithSocketEventLayout: FC = ({ children }) => {
+  const concertId = useRecoilValue(enterConcertState)?.id;
+  const roomId = useRecoilValue(enterRoomIdState);
+
   const socket = useSocket();
   const user = useUser();
   const myPeer = useMyPeer();
@@ -59,7 +56,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
     video: true,
   });
 
-  const roomId = useRecoilValue(roomIdState);
   const setVideoStreams = useSetRecoilState(videoStreamsState);
   const setPeerDataList = useSetRecoilState(peerDataListState);
   const setMyStream = useSetRecoilState(myStreamState);

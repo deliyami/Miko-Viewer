@@ -9,3 +9,7 @@ export const categoryArray = ['콘서트', '음악'];
 export const USER_TICKET_COOKIE = 'userTicket';
 
 // export { PORT, LARAVEL_URL };
+
+
+// URL 
+export const URL_USER_TICKET = '/user_tickets';

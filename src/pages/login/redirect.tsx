@@ -1,9 +1,10 @@
 import { Box, Center, Text, VStack } from '@chakra-ui/react';
+import BasicLayout from '@src/layout/BasicLayout';
 import { useOAuthLogin } from '@src/state/swr/useUser';
 import { useRouter } from 'next/dist/client/router';
-import { useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
-export default function redirect() {
+export default function RedirectPage() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -80,3 +81,7 @@ export default function redirect() {
     </Center>
   );
 }
+
+RedirectPage.getLayout = function getLayout(page: ReactElement) {
+  return <BasicLayout>{page}</BasicLayout>;
+};

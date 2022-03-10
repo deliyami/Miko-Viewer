@@ -1,14 +1,9 @@
 import { UserTicket } from '@src/types/share/UserTicket';
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
 
 const enterRoomIdState = atom<string>({
   key: 'enterRoomId',
   default: undefined,
-});
-
-const enterConcertIdState = atom<number>({
-  key: 'enterConcert',
-  default: 1111,
 });
 
 const curUserTicketState = atom<UserTicket>({
@@ -16,4 +11,11 @@ const curUserTicketState = atom<UserTicket>({
   default: undefined,
 });
 
-export { enterConcertIdState, enterRoomIdState, curUserTicketState };
+const enterConcertState = selector({
+  key: 'enterConcert',
+  get: ({ get }) => {
+    return get(curUserTicketState)?.concert;
+  },
+});
+
+export { enterConcertState, enterRoomIdState, curUserTicketState };

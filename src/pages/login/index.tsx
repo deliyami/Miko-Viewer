@@ -13,11 +13,12 @@ import {
 } from '@chakra-ui/react';
 import { LARAVEL_URL } from '@src/const';
 import useColorStore from '@src/hooks/useColorStore';
+import BasicLayout from '@src/layout/BasicLayout';
 import { useLogin, useUser } from '@src/state/swr/useUser';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 
 const LoginPage = () => {
@@ -152,6 +153,10 @@ const LoginPage = () => {
       </Flex>
     </>
   );
+};
+
+LoginPage.getLayout = function getLayout(page: ReactElement) {
+  return <BasicLayout>{page}</BasicLayout>;
 };
 
 export default LoginPage;

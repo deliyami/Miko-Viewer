@@ -1,4 +1,4 @@
-import { Box, Button, HStack, Text } from '@chakra-ui/react';
+import { Box, Button, HStack } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import * as ivs from 'amazon-ivs-player';
 import { useEffect, useRef, useState } from 'react';
@@ -26,8 +26,6 @@ const Video = styled.video`
 
 const VideoPlayer = (props) => {
   const { IVSPlayer } = window;
-
-  const { isPlayerSupported } = IVSPlayer;
 
   const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -59,7 +57,7 @@ const VideoPlayer = (props) => {
   useEffect(() => {
     const { ENDED, PLAYING, READY } = IVSPlayer.PlayerState;
     const { ERROR } = IVSPlayer.PlayerEventType;
-
+    const { isPlayerSupported } = IVSPlayer;
     if (!isPlayerSupported) {
       return console.warn('현재 브라우저는 ivs player를 지원하지 않습니다.');
     }
@@ -89,7 +87,7 @@ const VideoPlayer = (props) => {
       console.log('Timed metadata: ', cue.text);
       console.log(player.current.getPosition().toFixed(2));
     };
-
+    //@ts-ignore
     player.current = IVSPlayer.create(); // web 버전이어서 wasm 넣어줄 필요는 없음.
     player.current.attachHTMLVideoElement(videoEl.current);
 
@@ -150,9 +148,9 @@ const VideoPlayer = (props) => {
     setMuted(shouldMute);
   };
 
-  if (!isPlayerSupported) {
-    return <Text> 지원되지 않는 브라우저 입니다. </Text>;
-  }
+  // if (!isPlayerSupported) {
+  //   return <Text> 지원되지 않는 브라우저 입니다. </Text>;
+  // }
 
   return (
     <Box

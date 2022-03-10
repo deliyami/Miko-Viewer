@@ -109,7 +109,17 @@ const CurEnterInfo: FC<{ ticket: Ticket; concert: Concert }> = ({
 };
 
 const RoomEnterPage = (props) => {
+  const router = useRouter();
   const curUserTicket = useRecoilValue(curUserTicketState);
+
+  useEffect(() => {
+    if (router.isReady) {
+      if (!curUserTicket) {
+        router.push('/my/lists/1');
+      }
+    }
+    return () => {};
+  }, [router.isReady]);
 
   return (
     <Container>
@@ -132,6 +142,3 @@ RoomEnterPage.getLayout = function getLayout(page: ReactElement) {
 };
 
 export default RoomEnterPage;
-function useSetRecoil() {
-  throw new Error('Function not implemented.');
-}
