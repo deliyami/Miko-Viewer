@@ -9,12 +9,13 @@ import {
   myStreamState,
   peerDataListState,
 } from "@src/state/recoil/viewingState";
+import { useUser } from "@src/state/swr/useUser";
 import { ChatMotionInterface } from "@src/types/ChatMotionType";
 import { FaceDirection } from "@src/types/FaceDirectionType";
 import { Model } from "@src/types/ModelType";
 import * as BABYLON from "babylonjs";
 import * as Kalidokit from "kalidokit";
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useRef } from "react";
 import { useRecoilValue } from "recoil";
 import { model } from "./GlobalModel";
 import { motion } from "./GlobalMotion";
@@ -156,12 +157,12 @@ const setBorn = (
   userBorns.scene.render();
 };
 
-const ModelMotion: FC = () => {
+const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   const webcamRef = useRef<HTMLVideoElement | null>(null);
   const camera = useRef<cam.Camera | null>(null);
   const peers = useRecoilValue(peerDataListState);
+  const user = useUser();
   const myStream = useRecoilValue(myStreamState);
-  const [mediaStream, setMediaStream] = useState<MediaStream>();
   const myPeerId = "kirari";
 
   const onResults = (results: Results) => {
@@ -184,7 +185,7 @@ const ModelMotion: FC = () => {
       };
       setBorn(model, myPeerId, poseRig, faceRig);
       const data: ChatMotionInterface = {
-        sender: myPeerId,
+        sender: user.data.name,
         motion: { pose: poseRig, face: faceRig },
       };
       if (peers) sendToAllPeers(peers, { type: "motion", data });
@@ -201,37 +202,16 @@ const ModelMotion: FC = () => {
   };
 
   useEffect(() => {
-    setupWebcamVideo();
-  }, [mediaStream]);
-
-  async function setupWebcamVideo() {
-    if (!mediaStream) {
-      await setupMediaStream();
-    } else {
+    if (mediaStream) {
       const videoCurr = webcamRef.current;
       if (!videoCurr) return;
       const video = videoCurr! as HTMLVideoElement;
       if (!video.srcObject) {
         video.srcObject = mediaStream;
         setupMediapipe();
-        // makeConnection();
       }
     }
-  }
-  async function setupMediaStream() {
-    try {
-      // const ms = await navigator.mediaDevices.getUserMedia({
-      //   video: {
-      //     facingMode: "user",
-      //   },
-      //   audio: true,
-      // });
-      setMediaStream(myStream);
-    } catch (e) {
-      alert("Camera is disabled");
-      throw e;
-    }
-  }
+  }, [mediaStream]);
   function setupMediapipe() {
     const pose = new Pose({
       locateFile: (file) => {

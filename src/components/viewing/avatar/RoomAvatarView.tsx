@@ -102,7 +102,7 @@ const MyUserBox: FC = () => {
         peerId={"kirari"}
         antialias
       ></AvatarModel>
-      {myStream ? <ModelMotion></ModelMotion> : <></>}
+      {myStream ? <ModelMotion mediaStream={myStream}></ModelMotion> : <></>}
       <Text fontSize="6xl" id={uuid + "chat"}></Text>
       <Text fontSize="6xl" id={uuid + "motion"}></Text>
     </Center>
