@@ -17,7 +17,6 @@ const Category = () => {
     const router = useRouter();
 
     const setCategory = (id) => {
-
         router.push(`/concerts?category_id=${id}`);
 
     };
