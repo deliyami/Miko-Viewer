@@ -1,8 +1,8 @@
 import { createStandaloneToast } from '@chakra-ui/react';
 import { LARAVEL_URL } from '@src/const';
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
-const config = {
+const config: AxiosRequestConfig<any> = {
   baseURL: 'http://' + LARAVEL_URL,
   withCredentials: true,
   timeout: 5000,

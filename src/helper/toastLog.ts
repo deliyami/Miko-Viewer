@@ -4,7 +4,7 @@ const toast = createStandaloneToast();
 type toastLogType = (
   type: 'error' | 'info' | 'warning' | 'success',
   title: string,
-  desc: string,
+  desc?: string,
   err?: Error
 ) => void;
 export const toastLog: toastLogType = (type, title, desc, err) => {

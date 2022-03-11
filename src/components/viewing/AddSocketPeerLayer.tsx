@@ -4,7 +4,7 @@ import useMyPeer from '@src/hooks/useMyPeer';
 import useSocket from '@src/hooks/useSocket';
 import {
   enterConcertState,
-  enterRoomIdState,
+  enterRoomIdAsyncState,
 } from '@src/state/recoil/concertState';
 import {
   messagesState,
@@ -42,8 +42,8 @@ const getUserMedia =
 
 const WithSocketEventLayout: FC = ({ children }) => {
   const concertId = useRecoilValue(enterConcertState)?.id;
-  const roomId = useRecoilValue(enterRoomIdState);
-
+  const roomId = useRecoilValue(enterRoomIdAsyncState);
+  console.log('roomId', roomId);
   const socket = useSocket();
   const user = useUser();
   const myPeer = useMyPeer();
