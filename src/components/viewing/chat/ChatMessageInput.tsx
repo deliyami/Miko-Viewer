@@ -1,30 +1,13 @@
-import {
-  Box,
-  Button,
-  Center,
-  FormControl,
-  Input,
-  ScaleFade,
-} from '@chakra-ui/react';
-import sendToAllPeers from '@src/helper/sendToAllPeers';
-import showChatToRoom from '@src/helper/showChatToRoom';
-import useSocket from '@src/hooks/useSocket';
-import { enterRoomIdState } from '@src/state/recoil/concertState';
-import {
-  chatModeState,
-  isShowChatInputState,
-  peerDataListState,
-} from '@src/state/recoil/viewingState';
-import { useUser } from '@src/state/swr/useUser';
-import { ChatMessageInterface } from '@src/types/ChatMessageType';
-import {
-  FormEvent,
-  KeyboardEventHandler,
-  useCallback,
-  useRef,
-  useState,
-} from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { Box, Button, Center, FormControl, Input, ScaleFade } from "@chakra-ui/react";
+import sendToAllPeers from "@src/helper/sendToAllPeers";
+import showChatToRoom from "@src/helper/showChatToRoom";
+import useSocket from "@src/hooks/useSocket";
+import { enterRoomIdState } from "@src/state/recoil/concertState";
+import { chatModeState, isShowChatInputState, peerDataListState } from "@src/state/recoil/viewingState";
+import { useUser } from "@src/state/swr/useUser";
+import { ChatMessageInterface } from "@src/types/ChatMessageType";
+import { FormEvent, KeyboardEventHandler, useCallback, useRef, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 const ChatMessageInput = () => {
   const socket = useSocket();
@@ -34,7 +17,7 @@ const ChatMessageInput = () => {
   const roomId = useRecoilValue(enterRoomIdState);
   const peers = useRecoilValue(peerDataListState);
   const inputRef = useRef<HTMLInputElement>();
-  const [newMessage, setNewMessage] = useState<string>('');
+  const [newMessage, setNewMessage] = useState<string>("");
 
   const sendMessage = useCallback(() => {
     if (!newMessage) return;
@@ -45,14 +28,14 @@ const ChatMessageInput = () => {
       timestamp: Date.now(),
     };
 
-    sendToAllPeers(peers, { type: 'chat', data });
+    sendToAllPeers(peers, { type: "chat", data });
     showChatToRoom(user.data.uuid, newMessage, 5);
 
-    if (chatMode === 'public') {
-      socket.emit('fe-send-message', data, roomId);
+    if (chatMode === "public") {
+      socket.emit("fe-send-message", data, roomId);
     }
 
-    setNewMessage('');
+    setNewMessage("");
     inputRef.current.focus();
   }, [newMessage, user.data]);
 
@@ -61,12 +44,12 @@ const ChatMessageInput = () => {
     sendMessage();
   };
 
-  const onKeyDownHandler: KeyboardEventHandler<HTMLInputElement> = (e) => {
+  const onKeyDownHandler: KeyboardEventHandler<HTMLInputElement> = e => {
     e.stopPropagation();
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       sendMessage();
     }
-    if (e.key === 'Esc' || e.key === 'Escape') {
+    if (e.key === "Esc" || e.key === "Escape") {
       setIsShow(false);
     }
   };
@@ -78,13 +61,13 @@ const ChatMessageInput = () => {
             colorScheme="facebook"
             width="12"
             onClick={() =>
-              setChatMode((prev) => {
-                if (prev === 'private') return 'public';
-                return 'private';
+              setChatMode(prev => {
+                if (prev === "private") return "public";
+                return "private";
               })
             }
           >
-            {chatMode === 'public' ? '전체' : ' 방 '}
+            {chatMode === "public" ? "전체" : " 방 "}
           </Button>
           <FormControl>
             <Input
@@ -96,7 +79,7 @@ const ChatMessageInput = () => {
               type="text"
               name="message"
               value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
+              onChange={e => setNewMessage(e.target.value)}
               placeholder="Message"
               onKeyUp={onKeyDownHandler}
             />

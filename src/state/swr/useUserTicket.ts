@@ -1,28 +1,20 @@
-import {
-  CommonDataResponse,
-  CommonFSW,
-  Pagination,
-} from '@src/types/share/common/common';
-import useSWR from 'swr';
-import { fetcher } from '../fetcher';
-import { UserTicket } from './../../types/share/UserTicket';
-import { createFSWQueryString } from './createQueryStringKey';
-import laggy from './middleware/laggy';
+import { CommonDataResponse, CommonFSW, Pagination } from "@src/types/share/common/common";
+import useSWR from "swr";
+import { fetcher } from "../fetcher";
+import { UserTicket } from "./../../types/share/UserTicket";
+import { createFSWQueryString } from "./createQueryStringKey";
+import laggy from "./middleware/laggy";
 
-const URL_USER_TICKETS = '/user_tickets';
+const URL_USER_TICKETS = "/user_tickets";
 
 const useUserTickets = (query?: CommonFSW) => {
-  let url = URL_USER_TICKETS + '?';
+  let url = URL_USER_TICKETS + "?";
   query && (url += createFSWQueryString(query));
 
-  const swrResponses = useSWR<Pagination<UserTicket>>(
-    query ? url : null,
-    fetcher,
-    {
-      use: [laggy],
-      suspense: true,
-    }
-  );
+  const swrResponses = useSWR<Pagination<UserTicket>>(query ? url : null, fetcher, {
+    use: [laggy],
+    suspense: true,
+  });
 
   return swrResponses;
 };

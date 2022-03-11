@@ -1,7 +1,7 @@
-import { Box, Text } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
+import { Box, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
-const CoinPage = (second) => {
+const CoinPage = second => {
   const router = useRouter();
   return (
     <Box>

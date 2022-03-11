@@ -5,10 +5,7 @@ import "@mediapipe/drawing_utils";
 import "@mediapipe/pose";
 import { Pose, Results } from "@mediapipe/pose";
 import sendToAllPeers from "@src/helper/sendToAllPeers";
-import {
-  myStreamState,
-  peerDataListState,
-} from "@src/state/recoil/viewingState";
+import { myStreamState, peerDataListState } from "@src/state/recoil/viewingState";
 import { useUser } from "@src/state/swr/useUser";
 import { ChatMotionInterface } from "@src/types/ChatMotionType";
 import { FaceDirection } from "@src/types/FaceDirectionType";
@@ -20,10 +17,7 @@ import { useRecoilValue } from "recoil";
 import { model } from "./GlobalModel";
 import { motion } from "./GlobalMotion";
 
-const bornReset = (
-  borns: BABYLON.TransformNode[],
-  originalBorns: BABYLON.Quaternion[]
-) => {
+const bornReset = (borns: BABYLON.TransformNode[], originalBorns: BABYLON.Quaternion[]) => {
   for (let i = 0; i < borns.length; i++) {
     borns[i].rotationQuaternion = originalBorns[i].clone();
   }
@@ -36,12 +30,7 @@ const bornReset = (
  * @param kalidoRig 관절 회전 값의 오브젝트, xyz키를 가진 배열...?
  * @param direction 팔 좌우 방향
  */
-const bornTurn = (
-  transBorn: BABYLON.TransformNode[],
-  bornNum: number,
-  kalidoRig: Kalidokit.TPose,
-  direction: number
-) => {
+const bornTurn = (transBorn: BABYLON.TransformNode[], bornNum: number, kalidoRig: Kalidokit.TPose, direction: number) => {
   const bornX: number[] = [];
   const bornY: number[] = [];
   const bornZ: number[] = [];
@@ -72,28 +61,12 @@ const bornTurn = (
   if (bornX[0] && bornY[0] && bornZ[0]) {
     //왼팔 보정
     if (direction === 0) {
-      transBorn[bornNum].rotate(
-        new BABYLON.Vector3(1, 0, 0),
-        bornZ[0] + (Math.PI - 0.5) / 2,
-        2
-      );
-      transBorn[bornNum].rotate(
-        new BABYLON.Vector3(0, 1, 0),
-        -bornY[0] + (Math.PI - 0.5) / 2,
-        2
-      );
+      transBorn[bornNum].rotate(new BABYLON.Vector3(1, 0, 0), bornZ[0] + (Math.PI - 0.5) / 2, 2);
+      transBorn[bornNum].rotate(new BABYLON.Vector3(0, 1, 0), -bornY[0] + (Math.PI - 0.5) / 2, 2);
       transBorn[bornNum].rotate(new BABYLON.Vector3(0, 0, 1), bornX[0], 2);
     } else {
-      transBorn[bornNum].rotate(
-        new BABYLON.Vector3(1, 0, 0),
-        -bornZ[0] + (Math.PI - 0.5) / 2,
-        2
-      );
-      transBorn[bornNum].rotate(
-        new BABYLON.Vector3(0, 1, 0),
-        -bornY[0] - (Math.PI - 0.5) / 2,
-        2
-      );
+      transBorn[bornNum].rotate(new BABYLON.Vector3(1, 0, 0), -bornZ[0] + (Math.PI - 0.5) / 2, 2);
+      transBorn[bornNum].rotate(new BABYLON.Vector3(0, 1, 0), -bornY[0] - (Math.PI - 0.5) / 2, 2);
       transBorn[bornNum].rotate(new BABYLON.Vector3(0, 0, 1), -bornX[0], 2);
     }
   }
@@ -105,55 +78,28 @@ const bornTurn = (
     // x y z
     // 왼팔 보정
     if (direction === 0) {
-      transBorn[bornNum - 1].rotate(
-        new BABYLON.Vector3(1, 0, 0),
-        bornZ[1] * 2,
-        2
-      );
+      transBorn[bornNum - 1].rotate(new BABYLON.Vector3(1, 0, 0), bornZ[1] * 2, 2);
     } else {
-      transBorn[bornNum - 1].rotate(
-        new BABYLON.Vector3(1, 0, 0),
-        -bornZ[1] * 2,
-        2
-      );
+      transBorn[bornNum - 1].rotate(new BABYLON.Vector3(1, 0, 0), -bornZ[1] * 2, 2);
     }
     // transBorn[bornNum-1].rotate(new BABYLON.Vector3(0,1,0),bornY[1],2)
     // transBorn[bornNum-1].rotate(new BABYLON.Vector3(0,0,1),bornX[1],2)
   }
 };
 
-const faceTurn = (
-  transBorn: BABYLON.TransformNode[],
-  faceFront: number,
-  faceLeft: number,
-  faceRight: number
-) => {
+const faceTurn = (transBorn: BABYLON.TransformNode[], faceFront: number, faceLeft: number, faceRight: number) => {
   const avg = (faceLeft + faceRight) / 2;
 
   // console.log(Math.atan2(avg, faceFront)-(Math.PI/4)-0.02)
-  transBorn[7].rotate(
-    new BABYLON.Vector3(0, 1, 0),
-    -(Math.atan2(avg, faceFront) - Math.PI / 4) * 10,
-    2
-  );
+  transBorn[7].rotate(new BABYLON.Vector3(0, 1, 0), -(Math.atan2(avg, faceFront) - Math.PI / 4) * 10, 2);
 };
 
-const setBorn = (
-  model: { [peerId: string]: Model },
-  peerId: string,
-  poseRig: Kalidokit.TPose,
-  faceRig: FaceDirection<"left" | "center" | "right", number>
-) => {
+const setBorn = (model: { [peerId: string]: Model }, peerId: string, poseRig: Kalidokit.TPose, faceRig: FaceDirection<"left" | "center" | "right", number>) => {
   const userBorns = model[peerId];
   bornReset(userBorns.borns, userBorns.originalBorns);
   bornTurn(userBorns.borns, 15, poseRig, 0);
   bornTurn(userBorns.borns, 11, poseRig, 1);
-  faceTurn(
-    userBorns.borns,
-    faceRig["center"],
-    faceRig["left"],
-    faceRig["right"]
-  );
+  faceTurn(userBorns.borns, faceRig["center"], faceRig["left"], faceRig["right"]);
   userBorns.scene.render();
 };
 
@@ -169,15 +115,11 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
     if (model) {
       // 0번 사용자 results를 window에 저장
 
-      const poseRig = Kalidokit.Pose.solve(
-        results.poseWorldLandmarks,
-        results.poseLandmarks,
-        {
-          runtime: "mediapipe",
-          video: webcamRef?.current,
-          enableLegs: false,
-        }
-      );
+      const poseRig = Kalidokit.Pose.solve(results.poseWorldLandmarks, results.poseLandmarks, {
+        runtime: "mediapipe",
+        video: webcamRef?.current,
+        enableLegs: false,
+      });
       const faceRig = {
         center: results.poseLandmarks[0].x,
         left: results.poseLandmarks[7].x,
@@ -214,7 +156,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   }, [mediaStream]);
   function setupMediapipe() {
     const pose = new Pose({
-      locateFile: (file) => {
+      locateFile: file => {
         return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
       },
     });

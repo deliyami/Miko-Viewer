@@ -1,18 +1,12 @@
-import {
-  Button,
-  Popover,
-  PopoverBody,
-  PopoverContent,
-  PopoverTrigger,
-} from '@chakra-ui/react';
-import * as ivs from 'amazon-ivs-player';
-import { FC, MouseEventHandler, MutableRefObject } from 'react';
+import { Button, Popover, PopoverBody, PopoverContent, PopoverTrigger } from "@chakra-ui/react";
+import * as ivs from "amazon-ivs-player";
+import { FC, MouseEventHandler, MutableRefObject } from "react";
 
 const VideoQualitySelect: FC<{
   player: MutableRefObject<ivs.MediaPlayer>;
   selectableQuality: ivs.Quality[];
 }> = ({ player, selectableQuality }) => {
-  const setQuality: MouseEventHandler<HTMLDivElement> = (event) => {
+  const setQuality: MouseEventHandler<HTMLDivElement> = event => {
     if (event.target instanceof HTMLDivElement) {
       const idx = parseInt(event.target.dataset.idx);
       console.log(idx);

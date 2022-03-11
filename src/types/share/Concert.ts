@@ -1,4 +1,4 @@
-import { CommonProps } from './common/common';
+import { CommonProps } from "./common/common";
 
 export interface Concert extends CommonProps {
   categoryId: number;
@@ -17,14 +17,4 @@ export interface Concert extends CommonProps {
   allConcertEndDate: string;
 }
 
-export type CreateConcertData = Pick<
-  Concert,
-  | 'coverImage'
-  | 'title'
-  | 'artist'
-  | 'detail'
-  | 'content'
-  | 'categoryId'
-  | 'allConcertStartDate'
-  | 'allConcertEndDate'
->;
+export type CreateConcertData = Pick<Concert, "coverImage" | "title" | "artist" | "detail" | "content" | "categoryId" | "allConcertStartDate" | "allConcertEndDate">;

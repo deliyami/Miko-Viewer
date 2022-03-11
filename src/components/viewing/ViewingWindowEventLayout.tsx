@@ -1,6 +1,6 @@
-import { isShowChatInputState } from '@src/state/recoil/viewingState';
-import { FC, useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { isShowChatInputState } from "@src/state/recoil/viewingState";
+import { FC, useEffect } from "react";
+import { useSetRecoilState } from "recoil";
 
 const ViewingWindowEventLayout: FC = ({ children }) => {
   const setIsShowChatInputState = useSetRecoilState(isShowChatInputState);
@@ -8,11 +8,11 @@ const ViewingWindowEventLayout: FC = ({ children }) => {
   useEffect(() => {
     const keyupEventHandler = (e: KeyboardEvent) => {
       switch (e.key) {
-        case 'c':
-        case 'C':
-          setIsShowChatInputState((prev) => {
+        case "c":
+        case "C":
+          setIsShowChatInputState(prev => {
             if (!prev === true) {
-              document.getElementById('chat-input')?.focus();
+              document.getElementById("chat-input")?.focus();
             }
             return !prev;
           });
@@ -22,10 +22,10 @@ const ViewingWindowEventLayout: FC = ({ children }) => {
       }
     };
 
-    window.addEventListener('keyup', keyupEventHandler);
+    window.addEventListener("keyup", keyupEventHandler);
 
     return () => {
-      window.removeEventListener('keyup', keyupEventHandler);
+      window.removeEventListener("keyup", keyupEventHandler);
     };
   }, []);
 

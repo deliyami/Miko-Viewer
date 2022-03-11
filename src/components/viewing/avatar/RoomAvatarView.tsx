@@ -1,9 +1,5 @@
 import { Button, Center, HStack, Tag, Text } from "@chakra-ui/react";
-import {
-  myStreamState,
-  PeerDataInterface,
-  peerDataListState,
-} from "@src/state/recoil/viewingState";
+import { myStreamState, PeerDataInterface, peerDataListState } from "@src/state/recoil/viewingState";
 import { useUser } from "@src/state/swr/useUser";
 import { createRef, FC, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -16,7 +12,7 @@ const RoomAvatarView = () => {
   return (
     <HStack width="full" backgroundColor="blue.400">
       <MyUserBox />
-      {peerDataList.map((peer) => (
+      {peerDataList.map(peer => (
         <UserBox peer={peer} key={peer.id} />
       ))}
     </HStack>
@@ -40,27 +36,13 @@ const UserBox: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
   }, [mediaStream]);
 
   const handleMute = () => {
-    setMuted((prev) => !prev);
+    setMuted(prev => !prev);
   };
 
   return (
-    <Center
-      width="300px"
-      height="300px"
-      bgColor="blackAlpha.500"
-      id={id + "box"}
-      position="relative"
-    >
+    <Center width="300px" height="300px" bgColor="blackAlpha.500" id={id + "box"} position="relative">
       <Text> {data.email} </Text>
-      <AvatarModel
-        width={300}
-        height={300}
-        path={
-          "http://localhost:3000/resources/babylonjs/models/proseka/proseka.glb"
-        }
-        peerId={peer.id}
-        antialias
-      ></AvatarModel>
+      <AvatarModel width={300} height={300} path={"http://localhost:3000/resources/babylonjs/models/proseka/proseka.glb"} peerId={peer.id} antialias></AvatarModel>
       <Text fontSize="6xl" id={id + "chat"}></Text>
       <Text fontSize="6xl" id={id + "motion"}></Text>
       <Button onClick={handleMute}>
@@ -85,23 +67,9 @@ const MyUserBox: FC = () => {
   console.log("myStream", myStream);
 
   return (
-    <Center
-      width="300px"
-      height="300px"
-      bgColor="blackAlpha.500"
-      id={uuid + "box"}
-      position="relative"
-    >
+    <Center width="300px" height="300px" bgColor="blackAlpha.500" id={uuid + "box"} position="relative">
       <Text> {email} </Text>
-      <AvatarModel
-        width={300}
-        height={300}
-        path={
-          "http://localhost:3000/resources/babylonjs/models/proseka/proseka.glb"
-        }
-        peerId={"kirari"}
-        antialias
-      ></AvatarModel>
+      <AvatarModel width={300} height={300} path={"http://localhost:3000/resources/babylonjs/models/proseka/proseka.glb"} peerId={"kirari"} antialias></AvatarModel>
       {myStream ? <ModelMotion mediaStream={myStream}></ModelMotion> : <></>}
       <Text fontSize="6xl" id={uuid + "chat"}></Text>
       <Text fontSize="6xl" id={uuid + "motion"}></Text>

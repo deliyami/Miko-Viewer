@@ -1,4 +1,4 @@
-import { ComponentType, Suspense, SuspenseProps } from 'react';
+import { ComponentType, Suspense, SuspenseProps } from "react";
 
 /**
  * Wraps the provide component in a `Suspense`, with the provided fallback.
@@ -10,10 +10,7 @@ import { ComponentType, Suspense, SuspenseProps } from 'react';
  * @example
  * const SomeScreen = withSuspense(React.lazy(() => import("path/to/some/screen")));
  */
-export function withSuspense<P extends string | number | object>(
-  WrappedComponent: ComponentType<P>,
-  fallback: SuspenseProps['fallback'] = null
-) {
+export function withSuspense<P extends string | number | object>(WrappedComponent: ComponentType<P>, fallback: SuspenseProps["fallback"] = null) {
   function ComponentWithSuspense(props: P) {
     return (
       <Suspense fallback={fallback}>

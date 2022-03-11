@@ -1,15 +1,8 @@
-import {
-  Box,
-  Heading,
-  Image,
-  SimpleGrid,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
-import { S3_URL } from '@src/const';
-import { Concert } from '@src/types/share/Concert';
-import Link from 'next/link';
-import { FC } from 'react';
+import { Box, Heading, Image, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import { S3_URL } from "@src/const";
+import { Concert } from "@src/types/share/Concert";
+import Link from "next/link";
+import { FC } from "react";
 
 const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
   return (
@@ -63,7 +56,7 @@ const ConcertList: FC<{ data: Concert[] }> = ({ data }) => {
     <div>
       <SimpleGrid columns={[2, null, 3]} spacing={10} width="full">
         {concerts.length > 0 &&
-          concerts?.map((concert) => (
+          concerts?.map(concert => (
             <div key={concert.id}>
               <ConcertCard concert={concert} />
             </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 interface videoStreamInterface {
   stream: MediaStream;
@@ -7,12 +7,7 @@ interface videoStreamInterface {
   controls: boolean;
 }
 
-const Streamer: React.FC<videoStreamInterface> = ({
-  stream,
-  muted,
-  fullName,
-  controls = false,
-}: videoStreamInterface) => {
+const Streamer: React.FC<videoStreamInterface> = ({ stream, muted, fullName, controls = false }: videoStreamInterface) => {
   const [videoMuted, setVideoMuted] = useState<Boolean>(false);
   const [audioMuted, setAudioMuted] = useState<Boolean>(false);
   const [showMuteIcon, setShowMuteIcon] = useState<Boolean>(false);

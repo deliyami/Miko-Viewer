@@ -1,13 +1,12 @@
-import { Box, Button, HStack } from '@chakra-ui/react';
-import styled from '@emotion/styled';
-import * as ivs from 'amazon-ivs-player';
-import { useEffect, useRef, useState } from 'react';
-import VideoQualitySelect from './VideoQualitySelect';
-const streamUrl =
-  'https://de853ef2a345.us-east-1.playback.live-video.net/api/video/v1/us-east-1.121323684128.channel.Cj5ynk97sEJv.m3u8';
+import { Box, Button, HStack } from "@chakra-ui/react";
+import styled from "@emotion/styled";
+import * as ivs from "amazon-ivs-player";
+import { useEffect, useRef, useState } from "react";
+import VideoQualitySelect from "./VideoQualitySelect";
+const streamUrl = "https://de853ef2a345.us-east-1.playback.live-video.net/api/video/v1/us-east-1.121323684128.channel.Cj5ynk97sEJv.m3u8";
 
 const jwt =
-  'eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9.eyJhd3M6Y2hhbm5lbC1hcm4iOiJhcm46YXdzOml2czp1cy1lYXN0LTE6MTIxMzIzNjg0MTI4OmNoYW5uZWwvQ2o1eW5rOTdzRUp2IiwiYXdzOmFjY2Vzcy1jb250cm9sLWFsbG93LW9yaWdpbiI6IioiLCJleHAiOjE2NDY4MDg2MjQsImlhdCI6MTY0NDM4OTg2OX0.fmdaERbkxkNAThbJtFNv-JScxNl0dy1TSsS7gYWZmOWokUS-teTlZrMKwRvfaIXrUPRpBH7KQoI0n6wOOuOqwODM24mOpgv7OrUb6GBfTllKFes0XZ3sMCpey6bnkzya';
+  "eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9.eyJhd3M6Y2hhbm5lbC1hcm4iOiJhcm46YXdzOml2czp1cy1lYXN0LTE6MTIxMzIzNjg0MTI4OmNoYW5uZWwvQ2o1eW5rOTdzRUp2IiwiYXdzOmFjY2Vzcy1jb250cm9sLWFsbG93LW9yaWdpbiI6IioiLCJleHAiOjE2NDY4MDg2MjQsImlhdCI6MTY0NDM4OTg2OX0.fmdaERbkxkNAThbJtFNv-JScxNl0dy1TSsS7gYWZmOWokUS-teTlZrMKwRvfaIXrUPRpBH7KQoI0n6wOOuOqwODM24mOpgv7OrUb6GBfTllKFes0XZ3sMCpey6bnkzya";
 
 // NOTE aws cli 실행할때 region 설정 주의
 // aws ivs put-metadata --channel-arn arn:aws:ivs:us-east-1:121323684128:channel/Cj5ynk97sEJv --metadata '{"question": "What does IVS stand for?", "correctIndex": 0, "answers": ["interactive video service", "interesting video service", "ingenious video service"]}'
@@ -26,7 +25,7 @@ const Video = styled.video`
 `;
 
 //  TODO  브라우저에 따라서 window에 IVSPlayer 없음
-const VideoPlayer = (props) => {
+const VideoPlayer = props => {
   const { IVSPlayer } = window;
 
   const [loading, setLoading] = useState(true);
@@ -51,9 +50,9 @@ const VideoPlayer = (props) => {
   }, [loading]);
 
   if (IVSPlayer?.isPlayerSupported) {
-    console.log('yes');
+    console.log("yes");
   } else {
-    console.log('no');
+    console.log("no");
   }
 
   useEffect(() => {
@@ -61,7 +60,7 @@ const VideoPlayer = (props) => {
     const { ERROR } = IVSPlayer.PlayerEventType;
     const { isPlayerSupported } = IVSPlayer;
     if (!isPlayerSupported) {
-      return console.warn('현재 브라우저는 ivs player를 지원하지 않습니다.');
+      return console.warn("현재 브라우저는 ivs player를 지원하지 않습니다.");
     }
 
     const onStateChange = () => {
@@ -70,7 +69,7 @@ const VideoPlayer = (props) => {
       switch (playerState) {
         case READY:
           setSelectableQuality(player.current.getQualities());
-          console.log('aaa', player.current.getQualities());
+          console.log("aaa", player.current.getQualities());
           break;
         default:
           break;
@@ -80,13 +79,13 @@ const VideoPlayer = (props) => {
       setLoading(playerState !== PLAYING);
     };
 
-    const onError = (err) => {
-      console.warn('Player Event - ERROR:', err);
+    const onError = err => {
+      console.warn("Player Event - ERROR:", err);
     };
 
-    const onTimeMetaData = (cue) => {
+    const onTimeMetaData = cue => {
       console.log(cue);
-      console.log('Timed metadata: ', cue.text);
+      console.log("Timed metadata: ", cue.text);
       console.log(player.current.getPosition().toFixed(2));
     };
     //@ts-ignore
@@ -96,27 +95,21 @@ const VideoPlayer = (props) => {
     player.current.setAutoplay(true);
     player.current.setVolume(1);
 
-    player.current.load(streamUrl + '?token=' + jwt);
+    player.current.load(streamUrl + "?token=" + jwt);
     player.current.play();
 
     player.current.addEventListener(READY, onStateChange);
     player.current.addEventListener(PLAYING, onStateChange);
     player.current.addEventListener(ENDED, onStateChange);
     player.current.addEventListener(ERROR, onError);
-    player.current.addEventListener(
-      IVSPlayer.PlayerEventType.TEXT_METADATA_CUE,
-      onTimeMetaData
-    );
+    player.current.addEventListener(IVSPlayer.PlayerEventType.TEXT_METADATA_CUE, onTimeMetaData);
 
     return () => {
       player.current.removeEventListener(READY, onStateChange);
       player.current.removeEventListener(PLAYING, onStateChange);
       player.current.removeEventListener(ENDED, onStateChange);
       player.current.removeEventListener(ERROR, onError);
-      player.current.removeEventListener(
-        IVSPlayer.PlayerEventType.TEXT_METADATA_CUE,
-        onTimeMetaData
-      );
+      player.current.removeEventListener(IVSPlayer.PlayerEventType.TEXT_METADATA_CUE, onTimeMetaData);
       player.current.delete();
     };
   }, []);
@@ -139,7 +132,7 @@ const VideoPlayer = (props) => {
     window.scrollTo({
       top: offsetTop - 20,
       left: offsetLeft,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   };
 
@@ -155,13 +148,7 @@ const VideoPlayer = (props) => {
   // }
 
   return (
-    <Box
-      id="player-wrapper"
-      width="90%"
-      position="relative"
-      overflow="hidden"
-      role="group"
-    >
+    <Box id="player-wrapper" width="90%" position="relative" overflow="hidden" role="group">
       <Box id="aspect-spacer" pb="56.25%"></Box>
       <Box height="100%" width="100%" position="absolute" top="0">
         <Box
@@ -173,25 +160,14 @@ const VideoPlayer = (props) => {
           zIndex="1"
           visibility="hidden"
           _groupHover={{
-            visibility: 'visible',
+            visibility: "visible",
           }}
         >
-          <HStack
-            id="control-bottom"
-            position="absolute"
-            width="full"
-            bottom="0"
-            pd="2rem"
-          >
-            <Button onClick={toggleMute}>
-              {muted ? '소리켜기' : '뮤트하기'}
-            </Button>
-            <Button onClick={pause}>{isPlaying ? '정지' : '재생'}</Button>
+          <HStack id="control-bottom" position="absolute" width="full" bottom="0" pd="2rem">
+            <Button onClick={toggleMute}>{muted ? "소리켜기" : "뮤트하기"}</Button>
+            <Button onClick={pause}>{isPlaying ? "정지" : "재생"}</Button>
             <Box flexGrow="1"></Box>
-            <VideoQualitySelect
-              player={player}
-              selectableQuality={selectableQuality}
-            ></VideoQualitySelect>
+            <VideoQualitySelect player={player} selectableQuality={selectableQuality}></VideoQualitySelect>
           </HStack>
         </Box>
         <Video ref={videoEl} playsInline></Video>

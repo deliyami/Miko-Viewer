@@ -10,11 +10,7 @@ let motion: ChatMotionInterface = {
   },
 };
 
-const setMotion = (
-  peerId: string,
-  pose: Kalidokit.TPose,
-  face: FaceDirection<"left" | "center" | "right", number>
-) => {
+const setMotion = (peerId: string, pose: Kalidokit.TPose, face: FaceDirection<"left" | "center" | "right", number>) => {
   motion = {
     sender: peerId,
     motion: {

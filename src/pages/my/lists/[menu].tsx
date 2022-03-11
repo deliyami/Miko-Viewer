@@ -1,20 +1,20 @@
-import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
-import BasicLayout from '@src/layout/BasicLayout';
-import { curUserTicketState } from '@src/state/recoil/concertState';
-import { useUser } from '@src/state/swr/useUser';
-import { useUserTickets } from '@src/state/swr/useUserTicket';
-import { Ticket } from '@src/types/share/Ticket';
-import { UserTicket } from '@src/types/share/UserTicket';
-import { useRouter } from 'next/router';
-import { FC, ReactElement } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import BasicLayout from "@src/layout/BasicLayout";
+import { curUserTicketState } from "@src/state/recoil/concertState";
+import { useUser } from "@src/state/swr/useUser";
+import { useUserTickets } from "@src/state/swr/useUserTicket";
+import { Ticket } from "@src/types/share/Ticket";
+import { UserTicket } from "@src/types/share/UserTicket";
+import { useRouter } from "next/router";
+import { FC, ReactElement } from "react";
+import { useSetRecoilState } from "recoil";
 
 const Ticket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   const router = useRouter();
   const setCurUseTicket = useSetRecoilState(curUserTicketState);
   const useTicketHandler = () => {
     setCurUseTicket(userTicket);
-    router.push('/live/enter');
+    router.push("/live/enter");
   };
 
   return <Box onClick={useTicketHandler}>{userTicket.id}</Box>;
@@ -23,14 +23,14 @@ const Ticket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
 const UserTicketList: FC<{ userTickets: UserTicket[] }> = ({ userTickets }) => {
   return (
     <Box>
-      {userTickets.map((userTicket) => (
+      {userTickets.map(userTicket => (
         <Ticket key={userTicket.id} userTicket={userTicket} />
       ))}
     </Box>
   );
 };
 
-const MyListPage = (second) => {
+const MyListPage = second => {
   const router = useRouter();
   const {
     data: { id },
@@ -39,11 +39,11 @@ const MyListPage = (second) => {
   const { menu } = router.query as { menu: string };
 
   const { data } = useUserTickets({
-    with: ['ticket', 'concert'],
-    filter: [['user_id', id]],
+    with: ["ticket", "concert"],
+    filter: [["user_id", id]],
   });
 
-  console.log('ticket', data);
+  console.log("ticket", data);
 
   return (
     <Box>

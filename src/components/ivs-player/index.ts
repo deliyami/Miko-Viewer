@@ -1,2 +1,2 @@
-export * from './config';
-export { default } from './VideoPlayer';
+export * from "./config";
+export { default } from "./VideoPlayer";

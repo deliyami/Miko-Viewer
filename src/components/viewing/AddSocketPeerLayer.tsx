@@ -3,17 +3,13 @@ import showChatToRoom from "@src/helper/showChatToRoom";
 import { toastLog } from "@src/helper/toastLog";
 import useMyPeer from "@src/hooks/useMyPeer";
 import useSocket from "@src/hooks/useSocket";
-import {
-  enterConcertState,
-  enterRoomIdAsyncState,
-} from "@src/state/recoil/concertState";
+import { enterConcertState, enterRoomIdAsyncState } from "@src/state/recoil/concertState";
 import {
   messagesState,
   // mySocket as socket,
   myStreamState,
   PeerDataInterface,
   peerDataListState,
-  videoStreamsState,
 } from "@src/state/recoil/viewingState";
 import { useUser } from "@src/state/swr/useUser";
 import { ChatMessageInterface } from "@src/types/ChatMessageType";
@@ -57,42 +53,33 @@ const WithSocketEventLayout: FC = ({ children }) => {
     video: false,
   });
 
-  const setVideoStreams = useSetRecoilState(videoStreamsState);
   const setPeerDataList = useSetRecoilState(peerDataListState);
   const setMyStream = useSetRecoilState(myStreamState);
   const setMessages = useSetRecoilState(messagesState);
 
-  const addDataConnectionToPeersDataList = useCallback(
-    (dataConnection: DataConnection) => {
-      setPeerDataList(
-        produce((peers) => {
-          const idx = peers.findIndex(
-            (peer) => peer.id === dataConnection.peer
-          );
-          if (idx >= 0) peers[idx].dataConnection = dataConnection;
-        })
-      );
-    },
-    []
-  );
-
-  const addMediaStreamToPeersDataList = useCallback(
-    (mediaStream: MediaStream, id) => {
-      setPeerDataList(
-        produce((peers) => {
-          const idx = peers.findIndex((peer) => peer.id === id);
-          if (idx >= 0) peers[idx].mediaStream = mediaStream;
-        })
-      );
-    },
-    []
-  );
-
-  const removePeerById = useCallback((id) => {
+  const addDataConnectionToPeersDataList = useCallback((dataConnection: DataConnection) => {
     setPeerDataList(
-      produce((peers) => {
-        return peers.filter((peer) => peer.id !== id);
-      })
+      produce(peers => {
+        const idx = peers.findIndex(peer => peer.id === dataConnection.peer);
+        if (idx >= 0) peers[idx].dataConnection = dataConnection;
+      }),
+    );
+  }, []);
+
+  const addMediaStreamToPeersDataList = useCallback((mediaStream: MediaStream, id) => {
+    setPeerDataList(
+      produce(peers => {
+        const idx = peers.findIndex(peer => peer.id === id);
+        if (idx >= 0) peers[idx].mediaStream = mediaStream;
+      }),
+    );
+  }, []);
+
+  const removePeerById = useCallback(id => {
+    setPeerDataList(
+      produce(peers => {
+        return peers.filter(peer => peer.id !== id);
+      }),
     );
   }, []);
 
@@ -124,89 +111,65 @@ const WithSocketEventLayout: FC = ({ children }) => {
       return;
     }
 
-    socket.emit(
-      "fe-new-user-request-join",
-      myPeerUniqueID,
-      roomId,
-      user.data,
-      concertId
-    );
+    socket.emit("fe-new-user-request-join", myPeerUniqueID, roomId, user.data, concertId);
 
-    myPeer.on("connection", (dataConnection) => {
+    myPeer.on("connection", dataConnection => {
       addDataConnectionToPeersDataList(dataConnection);
       addEventToDataConnection(dataConnection);
     });
 
     myPeer.on("disconnected", () => {
       myPeer.reconnect();
-      toastLog(
-        "error",
-        "myPeer disconnected",
-        "peer가 시그널링 서버와 끊겼습니다."
-      );
+      toastLog("error", "myPeer disconnected", "peer가 시그널링 서버와 끊겼습니다.");
     });
 
-    myPeer.on("error", (err) => {
+    myPeer.on("error", err => {
       toastLog("error", "myPeer error", "심각한 에러발생 로그창 확인.");
     });
 
-    const newUserCome = (
-      otherPeerId: string,
-      roomID: string,
-      otherUserData: PeerDataInterface["data"]
-    ) => {
+    const newUserCome = (otherPeerId: string, roomID: string, otherUserData: PeerDataInterface["data"]) => {
       console.log("newUserCome", otherPeerId), "emit";
 
       setPeerDataList(
-        produce((prevPeers) => {
-          const notFound = !prevPeers.some((peer) => peer.id === otherPeerId);
-          if (notFound && otherPeerId !== myPeerUniqueID)
-            prevPeers.push({ id: otherPeerId, data: otherUserData });
+        produce(prevPeers => {
+          const notFound = !prevPeers.some(peer => peer.id === otherPeerId);
+          if (notFound && otherPeerId !== myPeerUniqueID) prevPeers.push({ id: otherPeerId, data: otherUserData });
           return prevPeers;
-        })
+        }),
       );
       console.log("getUser Media");
       getUserMedia(
         streamOptions,
-        (stream) => {
+        stream => {
           console.log("getUser Media2");
           setMyStream(stream);
           if (otherPeerId !== myPeerUniqueID) {
-            socket.emit(
-              "fe-answer-send-peer-id",
-              roomID,
-              myPeerUniqueID,
-              user.data
-            );
+            socket.emit("fe-answer-send-peer-id", roomID, myPeerUniqueID, user.data);
             const call = myPeer.call(otherPeerId, stream);
-            call.on("stream", (remoteStream) => {
+            call.on("stream", remoteStream => {
               addMediaStreamToPeersDataList(remoteStream, call.peer);
             });
           }
         },
-        (err) => {
+        err => {
           console.error("Failed to get local stream", err);
-          toastLog(
-            "error",
-            "Failed to get local stream",
-            "미디어에 대한 접근 권한을 얻지 못 했습니다."
-          );
-        }
+          toastLog("error", "Failed to get local stream", "미디어에 대한 접근 권한을 얻지 못 했습니다.");
+        },
       );
 
-      myPeer.on("call", (mediaConnection) => {
+      myPeer.on("call", mediaConnection => {
         getUserMedia(
           { video: true, audio: true },
-          (myStream) => {
+          myStream => {
             setMyStream(myStream);
             mediaConnection.answer(myStream);
-            mediaConnection.on("stream", (otherStream) => {
+            mediaConnection.on("stream", otherStream => {
               addMediaStreamToPeersDataList(otherStream, mediaConnection.peer);
             });
           },
-          (err) => {
+          err => {
             console.error("Failed to get stream", err);
-          }
+          },
         );
       });
 
@@ -218,30 +181,27 @@ const WithSocketEventLayout: FC = ({ children }) => {
         dataConnection.send("Hello! I am" + myPeerUniqueID);
       });
     };
-    const broadcastPeerId = (
-      peerId: string,
-      otherUserData: PeerDataInterface["data"]
-    ) => {
+    const broadcastPeerId = (peerId: string, otherUserData: PeerDataInterface["data"]) => {
       console.log("broadcastPeerId", peerId);
       setPeerDataList(
-        produce((prevPeers) => {
-          const notFound = !prevPeers.some((peer) => peer.id === peerId);
+        produce(prevPeers => {
+          const notFound = !prevPeers.some(peer => peer.id === peerId);
           if (notFound && peerId !== myPeerUniqueID)
             prevPeers.push({
               id: peerId,
               data: otherUserData,
             });
           return prevPeers;
-        })
+        }),
       );
     };
     const broadcastNewMessage = (data: ChatMessageInterface) => {
       console.log("broadcastNewMessage", data);
       setMessages(
-        produce((prevMsgs) => {
+        produce(prevMsgs => {
           prevMsgs.push(data);
           return prevMsgs;
-        })
+        }),
       );
     };
 
@@ -253,7 +213,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
       removePeerById(peerId);
     };
 
-    myPeer.on("open", (id) => {
+    myPeer.on("open", id => {
       // NOTE  peer.conncet 는  peer open 상태가 아니면 undefined 리턴
       console.log("emit new user come");
       socket.on("be-new-user-come", newUserCome);
@@ -292,7 +252,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
       window.removeEventListener("unload", windowBeforeUnloadEvent);
       myPeer.destroy();
       setPeerDataList([]);
-      setVideoStreams([]);
       setMessages([]);
     };
   }, [user.data, socket]);

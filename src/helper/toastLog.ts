@@ -1,18 +1,13 @@
-import { createStandaloneToast } from '@chakra-ui/react';
+import { createStandaloneToast } from "@chakra-ui/react";
 const toast = createStandaloneToast();
 
-type toastLogType = (
-  type: 'error' | 'info' | 'warning' | 'success',
-  title: string,
-  desc?: string,
-  err?: Error
-) => void;
+type toastLogType = (type: "error" | "info" | "warning" | "success", title: string, desc?: string, err?: Error) => void;
 export const toastLog: toastLogType = (type, title, desc, err) => {
   switch (type) {
-    case 'error':
+    case "error":
       console.error(title, desc, err);
       break;
-    case 'info':
+    case "info":
       console.info(title, desc);
       break;
     default:

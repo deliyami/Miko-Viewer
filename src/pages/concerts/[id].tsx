@@ -1,28 +1,20 @@
-import {
-  Box,
-  Button,
-  Collapse,
-  Heading,
-  HStack,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
-import Footer from '@src/components/home/Footer';
-import MenuBar from '@src/components/home/MenuBar';
-import { S3_URL } from '@src/const';
-import { Concert } from '@src/types/share/Concert';
-import { Ticket } from '@src/types/share/Ticket';
-import axios from 'axios';
-import React, { FC } from 'react';
+import { Box, Button, Collapse, Heading, HStack, Text, VStack } from "@chakra-ui/react";
+import Footer from "@src/components/home/Footer";
+import MenuBar from "@src/components/home/MenuBar";
+import { S3_URL } from "@src/const";
+import { Concert } from "@src/types/share/Concert";
+import { Ticket } from "@src/types/share/Ticket";
+import axios from "axios";
+import React, { FC } from "react";
 
 const TicketDate: FC<{ ticket: Ticket }> = ({ ticket }) => {
-  const concert_start_date = ticket.concertStartDate.split('T');
-  const date = concert_start_date[0].split('-');
-  const time = concert_start_date[1].split(':', 2);
+  const concert_start_date = ticket.concertStartDate.split("T");
+  const date = concert_start_date[0].split("-");
+  const time = concert_start_date[1].split(":", 2);
   // console.log(time);
   //@ts-ignore
   const d = new Date(concert_start_date);
-  const week = new Array('日', '月', '火', '水', '木', '金', '土');
+  const week = new Array("日", "月", "火", "水", "木", "金", "土");
   const day = week[d.getDay()];
 
   return (
@@ -41,22 +33,22 @@ const TicketDate: FC<{ ticket: Ticket }> = ({ ticket }) => {
 
 const TicketDetail: FC<{ ticket: Ticket }> = ({ ticket }) => {
   // console.log(ticket);
-  const week = new Array('日', '月', '火', '水', '木', '金', '土');
+  const week = new Array("日", "月", "火", "水", "木", "金", "土");
 
-  const start_date = ticket.concertStartDate.split('.', 1);
-  const sdate = start_date[0].split('T')[0].split('-');
-  const stime = start_date[0].split('T')[1].split(':', 2);
+  const start_date = ticket.concertStartDate.split(".", 1);
+  const sdate = start_date[0].split("T")[0].split("-");
+  const stime = start_date[0].split("T")[1].split(":", 2);
   //@ts-ignore
   const sd = new Date(start_date);
   const sday = week[sd.getDay()];
 
-  const end_date = ticket.concertEndDate.split('.', 1);
-  const etime = end_date[0].split('T')[1].split(':', 2);
+  const end_date = ticket.concertEndDate.split(".", 1);
+  const etime = end_date[0].split("T")[1].split(":", 2);
 
-  const archive_end = ticket.archiveEndTime.split('.', 1);
-  const adate = archive_end[0].split('T')[0].split('-');
+  const archive_end = ticket.archiveEndTime.split(".", 1);
+  const adate = archive_end[0].split("T")[0].split("-");
   //@ts-ignore
-  const atime = archive_end[0].split('T')[1].split(':', 2);
+  const atime = archive_end[0].split("T")[1].split(":", 2);
   //@ts-ignore
   const ad = new Date(start_date);
   const aday = week[ad.getDay()];
@@ -71,49 +63,31 @@ const TicketDetail: FC<{ ticket: Ticket }> = ({ ticket }) => {
         <>
           {sale_start_date < today && today < sale_end_date ? (
             <div>
-              <Box
-                as="span"
-                backgroundColor="#638dff"
-                borderRadius="2px"
-                fontSize="10px"
-                fontWeight="bold"
-                color="white"
-              >
+              <Box as="span" backgroundColor="#638dff" borderRadius="2px" fontSize="10px" fontWeight="bold" color="white">
                 販売中
               </Box>
             </div>
           ) : (
             <div>
-              <Box
-                as="span"
-                borderRadius="2px"
-                fontSize="10px"
-                fontWeight="bold"
-              >
+              <Box as="span" borderRadius="2px" fontSize="10px" fontWeight="bold">
                 販売終了
               </Box>
             </div>
           )}
           <div>
-            <a href="https://viewing.live.line.me/channels/6104428/upcoming/18486965">
-              配信チケット
-            </a>
+            <a href="https://viewing.live.line.me/channels/6104428/upcoming/18486965">配信チケット</a>
           </div>
           <dl>
             <dt>販売期間</dt>
             <dd>
-              {sdate[0]}/{sdate[1]}/{sdate[2]}({sday}) {stime[0]}:{stime[1]} -{' '}
-              {etime[0]}:{etime[1]}
+              {sdate[0]}/{sdate[1]}/{sdate[2]}({sday}) {stime[0]}:{stime[1]} - {etime[0]}:{etime[1]}
             </dd>
             <dt>アーカイブ視聴期間</dt>
             <dd>
-              {adate[0]}/{adate[1]}/{adate[2]}({aday}) {atime[0]}:{atime[1]}{' '}
-              まで
+              {adate[0]}/{adate[1]}/{adate[2]}({aday}) {atime[0]}:{atime[1]} まで
             </dd>
           </dl>
-          <div>
-            ※チケット代(3,500円)に別途システム利用料(220円)が必要となります。
-          </div>
+          <div>※チケット代(3,500円)に別途システム利用料(220円)が必要となります。</div>
         </>
       ) : (
         <div>
@@ -148,12 +122,7 @@ const TicketBox = ({ ticket }) => {
 
   return (
     <>
-      <HStack
-        as="li"
-        width="full"
-        border="1px solid #efefef"
-        borderRadius="10px"
-      >
+      <HStack as="li" width="full" border="1px solid #efefef" borderRadius="10px">
         <TicketDate ticket={ticket} />
         <TicketDetail ticket={ticket} />
         <TicketPrice ticket={ticket} />
@@ -168,9 +137,9 @@ const LiveInformation = ({ data }) => {
   const handleToggle = () => setShow(!show);
 
   // console.log(concert);
-  const week = new Array('日', '月', '火', '水', '木', '金', '土');
-  const start_date = concert.allConcertStartDate.split('T');
-  const date = start_date[0].split('T')[0].split('-');
+  const week = new Array("日", "月", "火", "水", "木", "金", "土");
+  const start_date = concert.allConcertStartDate.split("T");
+  const date = start_date[0].split("T")[0].split("-");
   //@ts-ignore
   const d = new Date(start_date);
   const day = week[d.getDay()];
@@ -182,11 +151,7 @@ const LiveInformation = ({ data }) => {
       </Heading>
       <HStack justifyContent="center">
         <Box w="400px" mb="20px">
-          <img
-            src={S3_URL + concert.coverImage}
-            srcSet={S3_URL + concert.coverImage}
-            alt="ディズニー・オン・クラシック ～まほうの夜の音楽会 2021"
-          />
+          <img src={S3_URL + concert.coverImage} srcSet={S3_URL + concert.coverImage} alt="ディズニー・オン・クラシック ～まほうの夜の音楽会 2021" />
         </Box>
         <Box w="800px" mr="20px">
           <div>
@@ -200,7 +165,7 @@ const LiveInformation = ({ data }) => {
                 {concert.detail}
               </Collapse>
               <Button size="sm" onClick={handleToggle} mt="1rem">
-                Show {show ? 'Less' : 'More'}
+                Show {show ? "Less" : "More"}
               </Button>
             </div>
           </div>
@@ -227,7 +192,7 @@ const LiveDetailPage = ({ concert, tickets }) => {
             チケット一覧
           </Text>
           {ticket_data.length > 0 &&
-            ticket_data?.map((ticket) => (
+            ticket_data?.map(ticket => (
               <>
                 <div key={ticket.id}>
                   <TicketBox ticket={ticket} />
@@ -241,14 +206,10 @@ const LiveDetailPage = ({ concert, tickets }) => {
   );
 };
 
-LiveDetailPage.getInitialProps = async (context) => {
+LiveDetailPage.getInitialProps = async context => {
   const { id } = context.query;
-  const { data: concert } = await axios.get(
-    `http://localhost:8080/api/concerts/${id}`
-  );
-  const { data: tickets } = await axios.get(
-    `http://localhost:8080/api/tickets?filter=concert_id%3A${id}`
-  );
+  const { data: concert } = await axios.get(`http://localhost:8080/api/concerts/${id}`);
+  const { data: tickets } = await axios.get(`http://localhost:8080/api/tickets?filter=concert_id%3A${id}`);
   return { concert, tickets };
 };
 

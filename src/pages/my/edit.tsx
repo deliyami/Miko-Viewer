@@ -1,9 +1,9 @@
-import { Box, Flex, Heading, Text, VStack } from '@chakra-ui/react';
-import Footer from '@src/components/home/Footer';
-import MenuBar from '@src/components/home/MenuBar';
-import { useRouter } from 'next/router';
+import { Box, Flex, Heading, Text, VStack } from "@chakra-ui/react";
+import Footer from "@src/components/home/Footer";
+import MenuBar from "@src/components/home/MenuBar";
+import { useRouter } from "next/router";
 
-const Edit = (params) => {
+const Edit = params => {
   return (
     <Box>
       <MenuBar />
@@ -21,7 +21,7 @@ const Edit = (params) => {
   );
 };
 
-const EditPage = (second) => {
+const EditPage = second => {
   const router = useRouter();
   return (
     <Box>

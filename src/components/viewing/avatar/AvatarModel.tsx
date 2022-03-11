@@ -17,34 +17,19 @@ export const AvatarModel: FC<{
     if (reactCanvas.current) {
       const onSceneReady = (scene: BABYLON.Scene) => {
         if (BABYLON && BABYLON.SceneLoader) {
-          const camera = new BABYLON.ArcRotateCamera(
-            "camera",
-            Math.PI / 2,
-            Math.PI / 2.5,
-            10,
-            new BABYLON.Vector3(0, 0, 0),
-            scene
-          );
+          const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2.5, 10, new BABYLON.Vector3(0, 0, 0), scene);
 
           camera.setTarget(new BABYLON.Vector3(0, 2.5, 0));
           camera.setPosition(new BABYLON.Vector3(0, 2.5, 5));
 
           camera.attachControl(true);
 
-          const light = new BABYLON.HemisphericLight(
-            "light",
-            new BABYLON.Vector3(0, 1, -1),
-            scene
-          );
+          const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, -1), scene);
 
           // Default intensity is 1. Let's dim the light a small amount
           light.intensity = 0.7;
 
-          BABYLON.MeshBuilder.CreateGround(
-            "ground",
-            { width: 30, height: 6 },
-            scene
-          );
+          BABYLON.MeshBuilder.CreateGround("ground", { width: 30, height: 6 }, scene);
           BABYLON.SceneLoader.ImportMesh(
             "",
             path,
@@ -71,7 +56,7 @@ export const AvatarModel: FC<{
                 scene: scene,
               });
               scene.render();
-            }
+            },
           );
         }
       };
@@ -81,7 +66,7 @@ export const AvatarModel: FC<{
         scene.getEngine().setSize(width, height);
         onSceneReady(scene);
       } else {
-        scene.onReadyObservable.addOnce((scene) => onSceneReady(scene));
+        scene.onReadyObservable.addOnce(scene => onSceneReady(scene));
       }
 
       const resize = () => {
@@ -109,7 +94,7 @@ export const AvatarModel: FC<{
     <>
       <canvas ref={reactCanvas} {...rest}></canvas>
       <Button
-        onClick={(e) => {
+        onClick={e => {
           console.log("yaho");
         }}
       ></Button>

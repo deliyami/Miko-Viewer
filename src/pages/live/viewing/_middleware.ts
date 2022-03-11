@@ -1,9 +1,9 @@
-import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
-import { USER_TICKET_COOKIE } from './../../../const';
+import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
+import { USER_TICKET_COOKIE } from "./../../../const";
 
-const allowedParams = ['roomId'];
+const allowedParams = ["roomId"];
 
-const LARAVEL_SESSION = 'laravel_session';
+const LARAVEL_SESSION = "laravel_session";
 
 export async function middleware(req: NextRequest, ev: NextFetchEvent) {
   // Check Login Cookie
@@ -11,11 +11,11 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
   const userTicketId = req.cookies[USER_TICKET_COOKIE];
 
   if (!isLogin) {
-    return NextResponse.redirect('/login');
+    return NextResponse.redirect("/login");
   }
 
   if (!userTicketId) {
-    return NextResponse.redirect('/');
+    return NextResponse.redirect("/");
   }
 
   // const { data } = await getDataFromLaravel<CommonDataResponse<UserTicket>>(

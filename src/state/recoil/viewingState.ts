@@ -1,62 +1,49 @@
-import { ChatMessageInterface } from '@src/types/ChatMessageType';
-import { User } from '@src/types/share/User';
-import { DataConnection } from 'peerjs';
-import { atom } from 'recoil';
-const videoStreamsState = atom<MediaStream[]>({
-  key: 'videoStreams',
-  default: [],
-});
+import { ChatMessageInterface } from "@src/types/ChatMessageType";
+import { User } from "@src/types/share/User";
+import { DataConnection } from "peerjs";
+import { atom } from "recoil";
 
 const peersArrayState = atom<string[]>({
-  key: 'peersArray',
+  key: "peersArray",
   default: [],
 });
 
 const myStreamState = atom<MediaStream>({
-  key: 'myStream',
+  key: "myStream",
   default: undefined,
 });
 
 const newMessageState = atom<string>({
-  key: 'newMessage',
-  default: '',
+  key: "newMessage",
+  default: "",
 });
 
 const messagesState = atom<ChatMessageInterface[]>({
-  key: 'messages',
+  key: "messages",
   default: [],
 });
 
-type ChatMode = 'public' | 'private';
+type ChatMode = "public" | "private";
 
 const chatModeState = atom<ChatMode>({
-  key: 'chatMode',
-  default: 'public',
+  key: "chatMode",
+  default: "public",
 });
 
 const isShowChatInputState = atom<boolean>({
-  key: 'isShowChatInput',
+  key: "isShowChatInput",
   default: true,
 });
 export type PeerDataInterface = {
   id: string;
   dataConnection?: DataConnection;
   mediaStream?: MediaStream;
-  data?: Pick<User, 'id' | 'avatar' | 'email' | 'name'>;
+  data?: Pick<User, "id" | "avatar" | "email" | "name">;
 };
 
 const peerDataListState = atom<PeerDataInterface[]>({
-  key: 'peerDataList',
+  key: "peerDataList",
   default: [],
 });
 
-export {
-  videoStreamsState,
-  peersArrayState,
-  myStreamState,
-  newMessageState,
-  messagesState,
-  chatModeState,
-  peerDataListState,
-  isShowChatInputState,
-};
+export { peersArrayState, myStreamState, newMessageState, messagesState, chatModeState, peerDataListState, isShowChatInputState };
