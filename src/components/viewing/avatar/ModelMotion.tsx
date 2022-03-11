@@ -112,7 +112,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   const myPeerId = "kirari";
 
   const onResults = (results: Results) => {
-    if (model) {
+    if (model && results && results.poseLandmarks && results.poseWorldLandmarks && results.segmentationMask) {
       // 0번 사용자 results를 window에 저장
 
       const poseRig = Kalidokit.Pose.solve(results.poseWorldLandmarks, results.poseLandmarks, {
