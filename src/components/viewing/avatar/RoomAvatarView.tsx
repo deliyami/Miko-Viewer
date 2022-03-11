@@ -8,6 +8,7 @@ import { useUser } from "@src/state/swr/useUser";
 import { createRef, FC, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { AvatarModel } from "./AvatarModel";
+import ModelMotion from "./ModelMotion";
 
 const RoomAvatarView = () => {
   const peerDataList = useRecoilValue(peerDataListState);
@@ -51,6 +52,15 @@ const UserBox: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
       position="relative"
     >
       <Text> {data.email} </Text>
+      <AvatarModel
+        width={300}
+        height={300}
+        path={
+          "http://localhost:3000/resources/babylonjs/models/proseka/proseka.glb"
+        }
+        peerId={peer.id}
+        antialias
+      ></AvatarModel>
       <Text fontSize="6xl" id={id + "chat"}></Text>
       <Text fontSize="6xl" id={id + "motion"}></Text>
       <Button onClick={handleMute}>
@@ -72,6 +82,7 @@ const MyUserBox: FC = () => {
     data: { uuid, email },
   } = useUser();
   const [myStream, setMyStream] = useRecoilState(myStreamState);
+  console.log("myStream", myStream);
 
   return (
     <Center
@@ -91,6 +102,7 @@ const MyUserBox: FC = () => {
         peerId={"kirari"}
         antialias
       ></AvatarModel>
+      {myStream ? <ModelMotion></ModelMotion> : <></>}
       <Text fontSize="6xl" id={uuid + "chat"}></Text>
       <Text fontSize="6xl" id={uuid + "motion"}></Text>
     </Center>

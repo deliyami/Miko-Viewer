@@ -1,4 +1,5 @@
 import { createStandaloneToast } from "@chakra-ui/react";
+import setMotionToAvatar from "@src/helper/setMotionToAvatar";
 import showChatToRoom from "@src/helper/showChatToRoom";
 import useMyPeer from "@src/hooks/useMyPeer";
 import useSocket from "@src/hooks/useSocket";
@@ -107,7 +108,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
           showChatToRoom(id, event.data.text, 5);
           break;
         case "motion":
-          // showChatToRoom(id, event.data, 5);
+          setMotionToAvatar(id, event.data);
           break;
         default:
           break;
