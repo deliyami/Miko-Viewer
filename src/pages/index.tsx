@@ -32,12 +32,12 @@ export const getStaticProps: GetStaticProps<{
 
 export default function HomePage({ data }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <>
+    <Box>
       <Carousel />
-      <Flex pt={50} width="full" justifyContent="center">
+      <Flex pt="50" width="full" justifyContent="center">
         <VStack align="start">
           {tab.map(({ name }) => (
-            <Box mb={9}>
+            <Box mb={9} key={name}>
               <Heading size="xl" fontSize="50px" my={5}>
                 {name}
               </Heading>
@@ -51,7 +51,7 @@ export default function HomePage({ data }: InferGetStaticPropsType<typeof getSta
           ))}
         </VStack>
       </Flex>
-    </>
+    </Box>
   );
 }
 
