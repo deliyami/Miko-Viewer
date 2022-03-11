@@ -4,6 +4,7 @@ import ChatBox from "@src/components/viewing/chat/ChatBox";
 import WithSocketEventLayout from "./AddSocketPeerLayer";
 import RoomAvatarView from "./avatar/RoomAvatarView";
 import ChatMessageInput from "./chat/ChatMessageInput";
+import MyCamera from "./menu/MyCamera";
 import ViewingWindowEventLayout from "./ViewingWindowEventLayout";
 
 const ViewingCSRPage = () => {
@@ -18,6 +19,9 @@ const ViewingCSRPage = () => {
           <RoomAvatarView />
         </HStack>
         <ChatMessageInput />
+        <>
+          <MyCamera />
+        </>
       </WithSocketEventLayout>
     </ViewingWindowEventLayout>
   );
