@@ -59,7 +59,6 @@ const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
 
 const ConcertList: FC<{ data: Concert[] }> = ({ data }) => {
   const concerts = data;
-  console.log(concerts);
   return (
     <div>
       <SimpleGrid columns={[2, null, 3]} spacing={10} width="full">

@@ -1,10 +1,11 @@
-import { Box, Button, HStack, Text } from '@chakra-ui/react';
+import { Box, Button, HStack } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import * as ivs from 'amazon-ivs-player';
 import { useEffect, useRef, useState } from 'react';
 import VideoQualitySelect from './VideoQualitySelect';
 const streamUrl =
   'https://de853ef2a345.us-east-1.playback.live-video.net/api/video/v1/us-east-1.121323684128.channel.Cj5ynk97sEJv.m3u8';
+
 const jwt =
   'eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9.eyJhd3M6Y2hhbm5lbC1hcm4iOiJhcm46YXdzOml2czp1cy1lYXN0LTE6MTIxMzIzNjg0MTI4OmNoYW5uZWwvQ2o1eW5rOTdzRUp2IiwiYXdzOmFjY2Vzcy1jb250cm9sLWFsbG93LW9yaWdpbiI6IioiLCJleHAiOjE2NDY4MDg2MjQsImlhdCI6MTY0NDM4OTg2OX0.fmdaERbkxkNAThbJtFNv-JScxNl0dy1TSsS7gYWZmOWokUS-teTlZrMKwRvfaIXrUPRpBH7KQoI0n6wOOuOqwODM24mOpgv7OrUb6GBfTllKFes0XZ3sMCpey6bnkzya';
 
@@ -24,10 +25,9 @@ const Video = styled.video`
   top: 0;
 `;
 
+//  TODO  브라우저에 따라서 window에 IVSPlayer 없음
 const VideoPlayer = (props) => {
   const { IVSPlayer } = window;
-
-  const { isPlayerSupported } = IVSPlayer;
 
   const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -50,7 +50,7 @@ const VideoPlayer = (props) => {
     setMuted(player.current.isMuted());
   }, [loading]);
 
-  if (IVSPlayer.isPlayerSupported) {
+  if (IVSPlayer?.isPlayerSupported) {
     console.log('yes');
   } else {
     console.log('no');
@@ -59,7 +59,7 @@ const VideoPlayer = (props) => {
   useEffect(() => {
     const { ENDED, PLAYING, READY } = IVSPlayer.PlayerState;
     const { ERROR } = IVSPlayer.PlayerEventType;
-
+    const { isPlayerSupported } = IVSPlayer;
     if (!isPlayerSupported) {
       return console.warn('현재 브라우저는 ivs player를 지원하지 않습니다.');
     }
@@ -89,7 +89,7 @@ const VideoPlayer = (props) => {
       console.log('Timed metadata: ', cue.text);
       console.log(player.current.getPosition().toFixed(2));
     };
-
+    //@ts-ignore
     player.current = IVSPlayer.create(); // web 버전이어서 wasm 넣어줄 필요는 없음.
     player.current.attachHTMLVideoElement(videoEl.current);
 
@@ -150,9 +150,9 @@ const VideoPlayer = (props) => {
     setMuted(shouldMute);
   };
 
-  if (!isPlayerSupported) {
-    return <Text> 지원되지 않는 브라우저 입니다. </Text>;
-  }
+  // if (!isPlayerSupported) {
+  //   return <Text> 지원되지 않는 브라우저 입니다. </Text>;
+  // }
 
   return (
     <Box

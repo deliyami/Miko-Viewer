@@ -1,7 +1,16 @@
 import { CommonFSW } from '@src/types/share/common/common';
 
 const createFSWQueryString = (query: CommonFSW): string => {
-  const { filter, sort, start, end, with: aWith, per_page, page } = query;
+  const {
+    filter,
+    sort,
+    start,
+    end,
+    with: aWith,
+    per_page,
+    page,
+    search,
+  } = query;
   const url = new URLSearchParams();
   if (filter) {
     let filterString = '';
@@ -27,7 +36,11 @@ const createFSWQueryString = (query: CommonFSW): string => {
   }
 
   if (page) {
-    url.set('per_page', page.toString());
+    url.set('page', page.toString());
+  }
+
+  if (search) {
+    url.set('search', search);
   }
 
   return url.toString() + '&';

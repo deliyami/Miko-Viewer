@@ -20,6 +20,7 @@ const TicketDate: FC<{ ticket: Ticket }> = ({ ticket }) => {
   const date = concert_start_date[0].split('-');
   const time = concert_start_date[1].split(':', 2);
   // console.log(time);
+  //@ts-ignore
   const d = new Date(concert_start_date);
   const week = new Array('日', '月', '火', '水', '木', '金', '土');
   const day = week[d.getDay()];
@@ -45,6 +46,7 @@ const TicketDetail: FC<{ ticket: Ticket }> = ({ ticket }) => {
   const start_date = ticket.concertStartDate.split('.', 1);
   const sdate = start_date[0].split('T')[0].split('-');
   const stime = start_date[0].split('T')[1].split(':', 2);
+  //@ts-ignore
   const sd = new Date(start_date);
   const sday = week[sd.getDay()];
 
@@ -53,7 +55,9 @@ const TicketDetail: FC<{ ticket: Ticket }> = ({ ticket }) => {
 
   const archive_end = ticket.archiveEndTime.split('.', 1);
   const adate = archive_end[0].split('T')[0].split('-');
+  //@ts-ignore
   const atime = archive_end[0].split('T')[1].split(':', 2);
+  //@ts-ignore
   const ad = new Date(start_date);
   const aday = week[ad.getDay()];
 
@@ -167,6 +171,7 @@ const LiveInformation = ({ data }) => {
   const week = new Array('日', '月', '火', '水', '木', '金', '土');
   const start_date = concert.allConcertStartDate.split('T');
   const date = start_date[0].split('T')[0].split('-');
+  //@ts-ignore
   const d = new Date(start_date);
   const day = week[d.getDay()];
 

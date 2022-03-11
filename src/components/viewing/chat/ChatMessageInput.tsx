@@ -9,11 +9,11 @@ import {
 import sendToAllPeers from '@src/helper/sendToAllPeers';
 import showChatToRoom from '@src/helper/showChatToRoom';
 import useSocket from '@src/hooks/useSocket';
+import { enterRoomIdState } from '@src/state/recoil/concertState';
 import {
   chatModeState,
   isShowChatInputState,
   peerDataListState,
-  roomIdState,
 } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
@@ -31,7 +31,7 @@ const ChatMessageInput = () => {
   const user = useUser();
   const [isShow, setIsShow] = useRecoilState(isShowChatInputState);
   const [chatMode, setChatMode] = useRecoilState(chatModeState);
-  const roomId = useRecoilValue(roomIdState);
+  const roomId = useRecoilValue(enterRoomIdState);
   const peers = useRecoilValue(peerDataListState);
   const inputRef = useRef<HTMLInputElement>();
   const [newMessage, setNewMessage] = useState<string>('');

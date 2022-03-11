@@ -27,11 +27,6 @@ const messagesState = atom<ChatMessageInterface[]>({
   default: [],
 });
 
-const roomIdState = atom<string>({
-  key: 'roomId',
-  default: '3333',
-});
-
 type ChatMode = 'public' | 'private';
 
 const chatModeState = atom<ChatMode>({
@@ -55,25 +50,12 @@ const peerDataListState = atom<PeerDataInterface[]>({
   default: [],
 });
 
-// const mySocket = io('http://localhost:3001', {
-//   // autoConnect: true,
-//   // forceNew: true,
-//   transports: ['websocket', 'polling'],
-// })
-//   .on('connect', () => {
-//     console.log('connect 👌 ', window.sockets.connected);
-//   })
-//   .on('error', (err) => {
-//     console.log(err);
-//   });
-
 export {
   videoStreamsState,
   peersArrayState,
   myStreamState,
   newMessageState,
   messagesState,
-  roomIdState,
   chatModeState,
   peerDataListState,
   isShowChatInputState,
