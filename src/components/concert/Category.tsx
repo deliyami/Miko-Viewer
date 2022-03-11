@@ -11,21 +11,21 @@ const cateName = [
 ];
 
 const Category = () => {
-  const router = useRouter();
 
-  const setCategory = id => {
-    router.push(`/concerts?category_id=${id}`);
-  };
+    const router = useRouter();
 
-  return (
-    <Box>
-      {cateName.map(({ name, id }) => (
-        <Button onClick={() => setCategory(id)} m="10px" colorScheme="blue">
-          {name}
-        </Button>
-      ))}
-    </Box>
-  );
+    const setCategory = (id) => {
+        router.push(`/concerts?category_id=${id}`);
+
+    };
+
+    return (
+        <Box>
+            {cateName.map(({ name, id }) => (
+                <Button onClick={() => setCategory(id)} m="10px" colorScheme='blue'>{name}</Button>
+            ))}
+        </Box>
+    );
 };
 
 export default Category;
