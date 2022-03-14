@@ -5,6 +5,7 @@ import WithSocketEventLayout from "./AddSocketPeerLayer";
 import RoomAvatarView from "./avatar/RoomAvatarView";
 import ChatMessageInput from "./chat/ChatMessageInput";
 import MyCamera from "./menu/MyCamera";
+import ViewingDrawer from "./menu/ViewingDrawer";
 import ViewingWindowEventLayout from "./ViewingWindowEventLayout";
 
 const ViewingCSRPage = () => {
@@ -21,6 +22,7 @@ const ViewingCSRPage = () => {
         <ChatMessageInput />
         <>
           <MyCamera />
+          <ViewingDrawer />
         </>
       </WithSocketEventLayout>
     </ViewingWindowEventLayout>

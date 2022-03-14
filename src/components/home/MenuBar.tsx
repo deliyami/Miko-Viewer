@@ -47,7 +47,7 @@ const MenuBar = params => {
         <Box
           backgroundImage={"url(https://static.line-scdn.net/line_live/17d6ec1a9df/img/viewing/logo_viewing_pc_0923.png)"}
           backgroundRepeat="no-repeat"
-          href="https://viewing.live.line.me"
+          // href="https://viewing.live.line.me"
           width="272px"
           height="60px"
         ></Box>
