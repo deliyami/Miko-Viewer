@@ -1,0 +1,156 @@
+$surface: #ffffff
+$background: #f7fafc
+$primary: #39c7bb
+$weekPrimary: #39c7bb33
+$red: #b00020
+$yellow: #fff323
+$weekGray: #2d3748
+$textHigh: #000000
+$textMedium: #000000dd
+$textDisabled: #00000055
+$bodyColor: #47c8c0
+$innerBorder: #e1e1e1
+$outerBorder: #55557b
+
+.home 
+  background-color: yellowgreen
+#dot
+  background-color: aqua
+#testdiv
+  background-color: blueviolet
+
+
+// color
+#ballon 
+  --inner-color: #e1e1e1
+  --outer-color: #55557b
+
+  #dot 
+    fill: var(--inner-color)
+  
+  #inner 
+    fill: var(--inner-color)
+    // fill: #e1e1e1;
+  
+  #outer 
+    fill: var(--outer-color)
+  
+
+
+#body 
+  --body-color: #47c8c0
+  fill: var(--body-color)
+
+// animation
+// 위로 이동
+// .donateRoot {
+//   .all {
+//     transition: all 1s ease;
+//     fill: brown;
+//     transform: translateY(3%);
+//     opacity: 100;
+//   }
+// }
+// .donateRoot :hover {
+//   // animation: wheel 1s ease-in infinite;
+//   // transform-origin: center; // 회전 센터 정하기
+//   // transform-box: fill-box; //회전 센터의 보정?
+//   .all {
+//     transition: all 1s ease;
+//     fill: brown;
+//     transform: translateY(-3%);
+//     opacity: 0;
+//   }
+//   // .all {
+//   // }
+//   // transform: translateY(-100%);
+//   // cursor: pointer;
+// }
+// 위로 이동2
+.donateFadeIn 
+  // animation: fadeIn 1s;
+  animation-name: fadeIn
+  animation-duration: 1s
+
+.donateFadeOut 
+  animation-name: fadeOut
+  animation-duration: 1s
+  animation-delay: 5000ms
+
+
+//circle animation
+$front: 7
+$back: 5
+
+@mixin front-x() 
+  @for $i from 1 through 7
+    #front#{$i} 
+      fill: #55557b
+      opacity:0
+      // animation-name: randomShot
+      // animation-delay: calc(random(1000))+ms
+      // animation-duration: 1s
+      // animation-fill-mode: forwards
+
+.hideCircle
+  animation-name: hide
+  animation-duration:1s
+  animation-delay:1500ms
+  animation-fill-mode: forwards
+  
+
+
+@mixin back-x() 
+  @for $i from 1 through 5
+    #back#{$i}
+      fill: #55557b
+    
+  
+
+
+@include front-x()
+@include back-x()
+
+
+//animation function
+
+@keyframes wheel 
+  from 
+    transform: rotateZ(360deg)
+  
+  to 
+    transform: rotateZ(0deg)
+  
+
+
+@keyframes fadeIn 
+  0% 
+    transform: translateY(3%)
+    opacity: 0
+  
+  100% 
+    transform: translateY(0%)
+    opacity: 100
+  
+
+@keyframes fadeOut 
+  0% 
+    transform: translateY(0%)
+    opacity: 100
+  100%
+    transform: translateY(-3%)
+    opacity: 0
+  
+@keyframes randomShot
+  0%
+    opacity:0
+    transform: translateY(0%)
+  100%
+    opacity:1
+    transform: translateY(3%)
+
+@keyframes hide
+  0%
+    opacity:1
+  100%
+    opacity:0
