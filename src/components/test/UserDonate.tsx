@@ -1,18 +1,7 @@
-import { Button } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import useColorStore from "@src/hooks/useColorStore";
-import Image from "next/image";
 import { FC, useRef, useState } from "react";
-import { keyframes } from "styled-components";
 import donate from "./donate.module.sass";
-
-const moveRandomly = keyframes`
-  0%{
-    transform: translateY(0)
-  }
-  100%{
-    transform: translateY(-5%)
-  }
-`;
 
 const UserDonate: FC<{ path: string }> = ({ path }) => {
   const [colorName, setColorName] = useState<"yellow" | "red">("yellow");
@@ -38,20 +27,33 @@ const UserDonate: FC<{ path: string }> = ({ path }) => {
       >
         change button 1회용
       </Button>
-      <div className={donate.donateFadeIn}>
-        <div className={donate.donateFadeOut}>
+      <Box className={donate.donateFadeIn} style={{ cursor: "default" }}>
+        <Box className={donate.donateFadeOut}>
+          <div className={donate.textDrag}>
+            <span className={donate.header}>
+              <span className={donate.empfont}>たまねぎ </span>
+              donated
+              <span className={donate.empfont}> 100 </span>
+              coin
+            </span>
+            <span className={donate.content}>Hello, World!</span>
+          </div>
           <svg className={donate.svg} width="600" height="400" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g>
               <g className={donate.hideCircle}>
-                <circle id={donate.back1} cx="215.5" cy="326.5" r="7.5" fill="#47c8c0" />
-                <circle id={donate.back2} cx="359.5" cy="331.5" r="7.5" fill="#47c8c0" />
-                <circle id={donate.back3} cx="347" cy="340" r="5" fill="#47c8c0" />
-                <circle id={donate.back4} cx="268" cy="338" r="5" fill="#47c8c0" />
+                <circle id={donate.back4} cx="200" cy="320" r="7.5" fill="#47c8c0" />
+                <circle id={donate.back3} cx="220" cy="326.5" r="7.5" fill="#47c8c0" />
+                <circle id={donate.back2} cx="245" cy="315" r="5" fill="#47c8c0" />
+                <circle id={donate.back1} cx="268" cy="338" r="5" fill="#47c8c0" />
                 <circle id={donate.back5} cx="314" cy="334" r="5" fill="#47c8c0" />
+                <circle id={donate.back6} cx="347" cy="340" r="5" fill="#47c8c0" />
+                <circle id={donate.back7} cx="359.5" cy="331.5" r="7.5" fill="#47c8c0" />
+                <circle id={donate.back8} cx="380" cy="315" r="5" fill="#47c8c0" />
+                <circle id={donate.back9} cx="395" cy="340" r="7.5" fill="#47c8c0" />
               </g>
               <g id="donate_2">
                 <g id="avatar">
-                  <g ref={svgRef} className={donate.all} id={donate.body}>
+                  <g ref={svgRef} className={donate.all} id={donate.avatarBody}>
                     <path
                       id="Exclude"
                       fillRule="evenodd"
@@ -489,19 +491,24 @@ const UserDonate: FC<{ path: string }> = ({ path }) => {
                 </g>
               </g>
               <g className={donate.hideCircle}>
-                <circle id={donate.front1} cx="228" cy="348" r="5" fill="#47c8c0" />
-                <circle id={donate.front2} cx="162.5" cy="350.5" r="7.5" fill="#47c8c0" />
+                <circle id={donate.front6} cx="162.5" cy="350.5" r="10" fill="#47c8c0" />
+                <circle id={donate.front5} cx="195" cy="365" r="7.5" fill="#47c8c0" />
+                <circle id={donate.front4} cx="228" cy="348" r="5" fill="#47c8c0" />
                 <circle id={donate.front3} cx="240.5" cy="375.5" r="7.5" fill="#47c8c0" />
-                <circle id={donate.front4} cx="409.5" cy="362.5" r="7.5" fill="#47c8c0" />
-                <circle id={donate.front5} cx="260" cy="358" r="5" fill="#47c8c0" />
-                <circle id={donate.front6} cx="316" cy="363" r="5" fill="#47c8c0" />
-                <circle id={donate.front7} cx="370" cy="353" r="5" fill="#47c8c0" />
+                <circle id={donate.front2} cx="260" cy="358" r="5" fill="#47c8c0" />
+                <circle id={donate.front1} cx="280" cy="370" r="5" fill="#47c8c0" />
+                <circle id={donate.front7} cx="316" cy="363" r="5" fill="#47c8c0" />
+                <circle id={donate.front8} cx="365" cy="375" r="7.5" fill="#47c8c0" />
+                <circle id={donate.front9} cx="370" cy="353" r="5" fill="#47c8c0" />
+                <circle id={donate.front10} cx="408" cy="362.5" r="7.5" fill="#47c8c0" />
+                <circle id={donate.front11} cx="420" cy="353" r="7.5" fill="#47c8c0" />
               </g>
             </g>
           </svg>
-          <Image src="/resources/Fire.webp" width={300} height={300}></Image>
-        </div>
-      </div>
+          {/* <Image className={donate.spinImage} src="http://localhost:3000/resources/flash_blue.png"></Image> */}
+        </Box>
+      </Box>
+
       <Button
         onClick={e => {
           e.preventDefault();
