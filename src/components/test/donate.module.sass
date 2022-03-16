@@ -131,13 +131,16 @@ $outerBorder: #55557b
 
 //circle animation
 .hideCircle
+  fill:#47c8c0
   animation-name: hide
   animation-duration:1s
   animation-delay:1500ms
   animation-fill-mode: forwards
 
-$front: 11
-$back: 9
+$front: 14
+$front-middle: 8
+$back: 18
+$back-middle: 9
 
 @mixin front-x() 
   @for $i from 1 through $front
@@ -147,10 +150,10 @@ $back: 9
         transform: translateY(0%)
       100%
         opacity:1
-        @if $i<7
-          transform: translateY(-((random(50)+20)*1%)) translateX(-((random($i*10)+$i)*1%))
+        @if $i<$front-middle
+          transform: translateY(-((random(50)+20)*1%)) translateX(-((random($i*6)+$i)*1%))
         @else
-          transform: translateY(-((random(50)+20)*1%)) translateX(((random($i*5)+$i)*1%))
+          transform: translateY(-((random(50)+20)*1%)) translateX(((random($i*3)+$i)*1%))
     #front#{$i} 
       fill: #55557b
       opacity:0
