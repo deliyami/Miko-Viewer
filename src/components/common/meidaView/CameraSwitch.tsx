@@ -1,14 +1,13 @@
-import { Box } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { Box, Select } from "@chakra-ui/react";
+import { toastLog } from "@src/helper/toastLog";
+import { ChangeEventHandler, useEffect, useState } from "react";
 
-//@ts-ignore
-const getUserMedia =
-  //@ts-ignore
-  navigator.getUserMedia ||
-  //@ts-ignore
-  navigator.webkitGetUserMedia ||
-  //@ts-ignore
-  navigator.mozGetUserMedia;
+// NOTE Navigator.getUserMedia() deprecated
+const getUserMedia = navigator.mediaDevices.getUserMedia;
+// //@ts-ignore
+// navigator.webkitGetUserMedia ||
+// //@ts-ignore
+// navigator.mozGetUserMedia;
 
 async function getConnectedDevices(type: MediaDeviceKind) {
   const devices = await navigator.mediaDevices.enumerateDevices();
@@ -36,7 +35,26 @@ const CameraSwitch = params => {
     };
   }, []);
 
-  return <Box>{cameras.map(camera => camera.label)}</Box>;
+  const handelCameraChange: ChangeEventHandler<HTMLSelectElement> = e => {
+    getUserMedia({ video: { deviceId: e.target.value } })
+      .then(stream => {
+        console.log("aaa", stream);
+      })
+      .catch(err => {
+        toastLog("error", "get stream fail", "", err);
+      });
+  };
+
+  return (
+    <Box>
+      <label htmlFor="cameraSelect">카메라 선택</label>
+      <Select id="cameraSelect" aria-label="카메라 선택" placeholder="Select option" onChange={handelCameraChange}>
+        {cameras.map(camera => (
+          <option value={camera.deviceId}>{camera.label}</option>
+        ))}
+      </Select>
+    </Box>
+  );
 };
 
 export default CameraSwitch;

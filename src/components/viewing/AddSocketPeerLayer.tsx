@@ -28,14 +28,11 @@ interface ConnectParams {
   video: boolean;
 }
 
-//@ts-ignore
-const getUserMedia =
-  //@ts-ignore
-  navigator.getUserMedia ||
-  //@ts-ignore
-  navigator.webkitGetUserMedia ||
-  //@ts-ignore
-  navigator.mozGetUserMedia;
+const getUserMedia = navigator.mediaDevices.getUserMedia;
+// //@ts-ignore
+// navigator.webkitGetUserMedia ||
+// //@ts-ignore
+// navigator.mozGetUserMedia;
 
 const WithSocketEventLayout: FC = ({ children }) => {
   const concertId = useRecoilValue(enterConcertState)?.id;
@@ -127,15 +124,13 @@ const WithSocketEventLayout: FC = ({ children }) => {
       toastLog("error", "myPeer error", "심각한 에러발생 로그창 확인.");
     });
 
-    getUserMedia(
-      streamOptions,
-      stream => {
+    getUserMedia(streamOptions)
+      .then(stream => {
         setMyStream(stream);
-      },
-      err => {
+      })
+      .catch(err => {
         toastLog("error", "get stream fail", "", err);
-      },
-    );
+      });
 
     const newUserCome = (otherPeerId: string, roomID: string, otherUserData: PeerDataInterface["data"]) => {
       console.log("newUserCome", otherPeerId), "emit";
@@ -148,9 +143,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
         }),
       );
       console.log("getUser Media");
-      getUserMedia(
-        streamOptions,
-        stream => {
+      getUserMedia(streamOptions)
+        .then(stream => {
           console.log("getUser Media2");
           setMyStream(stream);
           if (otherPeerId !== myPeerUniqueID) {
@@ -160,27 +154,24 @@ const WithSocketEventLayout: FC = ({ children }) => {
               addMediaStreamToPeersDataList(remoteStream, call.peer);
             });
           }
-        },
-        err => {
+        })
+        .catch(err => {
           console.error("Failed to get local stream", err);
           toastLog("error", "Failed to get local stream", "미디어에 대한 접근 권한을 얻지 못 했습니다.");
-        },
-      );
+        });
 
       myPeer.on("call", mediaConnection => {
-        getUserMedia(
-          { video: true, audio: true },
-          myStream => {
+        getUserMedia({ video: true, audio: true })
+          .then(myStream => {
             setMyStream(myStream);
             mediaConnection.answer(myStream);
             mediaConnection.on("stream", otherStream => {
               addMediaStreamToPeersDataList(otherStream, mediaConnection.peer);
             });
-          },
-          err => {
+          })
+          .catch(err => {
             console.error("Failed to get stream", err);
-          },
-        );
+          });
       });
 
       const dataConnection = myPeer.connect(otherPeerId);
