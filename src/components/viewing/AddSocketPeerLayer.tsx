@@ -50,7 +50,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
   // getUserMedia의 callback이 실행되지 않아서 먼저 들어온 사람의 영상이 안 보일 수 있음.
   const [streamOptions, _] = useState<ConnectParams>({
     audio: true,
-    video: false,
+    video: true,
   });
 
   const setPeerDataList = useSetRecoilState(peerDataListState);
@@ -126,6 +126,16 @@ const WithSocketEventLayout: FC = ({ children }) => {
     myPeer.on("error", err => {
       toastLog("error", "myPeer error", "심각한 에러발생 로그창 확인.");
     });
+
+    getUserMedia(
+      streamOptions,
+      stream => {
+        setMyStream(stream);
+      },
+      err => {
+        toastLog("error", "get stream fail", "", err);
+      },
+    );
 
     const newUserCome = (otherPeerId: string, roomID: string, otherUserData: PeerDataInterface["data"]) => {
       console.log("newUserCome", otherPeerId), "emit";

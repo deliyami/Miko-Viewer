@@ -8,10 +8,19 @@ $weekGray: #2d3748
 $textHigh: #000000
 $textMedium: #000000dd
 $textDisabled: #00000055
-$bodyColor: #47c8c0
+$mikuColor: #47c8c0
+$bandColor: #FF629D
 $innerBorder: #e1e1e1
 $outerBorder: #55557b
+$kirariColor: #F49859
+$blind: #FEEACB
 
+@use 'sass:list'
+@use 'sass:math'
+
+$colorList: $surface, $background, $primary, $weekPrimary, $red, $yellow, $weekGray, $mikuColor, $bandColor, $innerBorder, $outerBorder, $kirariColor, $blind
+
+  
 // font
 @font-face 
   font-family: negichan
@@ -69,7 +78,7 @@ $outerBorder: #55557b
 .header, .content
   position: absolute
   left: 50%
-  width: 325px
+  width: 625px
   transform: translate(-50%, -50%)
   text-align: center
 
@@ -111,8 +120,9 @@ $outerBorder: #55557b
 // }
 // 위로 이동2
 .donateFadeIn 
+  // top: 400px
   position: absolute
-  rigth: 100px
+  // rigth: 100px
   overflow: hidden
   // display: table
   // animation: fadeIn 1s;
@@ -121,17 +131,17 @@ $outerBorder: #55557b
 
 .donateFadeOut 
   // display: table
-  width: 600px
-  height: 400px
+  width: 900px
+  // height: 325px
   animation-name: fadeOut
   animation-duration: 1s
-  animation-delay: 5000ms
-  // animation-fill-mode: forwards
+  animation-delay: 7500ms
+  animation-fill-mode: forwards
 
 
 //circle animation
 .hideCircle
-  fill:#47c8c0
+  // fill:#47c8c0 
   animation-name: hide
   animation-duration:1s
   animation-delay:1500ms
@@ -151,11 +161,11 @@ $back-middle: 9
       100%
         opacity:1
         @if $i<$front-middle
-          transform: translateY(-((random(50)+20)*1%)) translateX(-((random($i*6)+$i)*1%))
+          transform: translateY(-((random(60)+15)*1%)) translateX(-((random($i*6)+$i)*1%))
         @else
-          transform: translateY(-((random(50)+20)*1%)) translateX(((random($i*3)+$i)*1%))
+          transform: translateY(-((random(60)+15)*1%)) translateX(((random($i*3)+$i)*1%))
     #front#{$i} 
-      fill: #55557b
+      // fill: #55557b
       opacity:0
       animation-name: randomShotFront#{$i}
       animation-delay: calc(random(500))+ms
@@ -170,12 +180,12 @@ $back-middle: 9
         transform: translateY(0%)
       100%
         opacity:1
-        @if $i<5
-          transform: translateY(-((random(50)+20)*1%)) translateX(-((random($i*10)+$i)*1%))
+        @if $i<$back-middle
+          transform: translateY(-((random(50)+20)*1%)) translateX(-((random($i*6)+$i)*1%))
         @else
-          transform: translateY(-((random(50)+20)*1%)) translateX(((random($i*5)+$i)*1%))
+          transform: translateY(-((random(50)+20)*1%)) translateX(((random($i*3)+$i)*1%))
     #back#{$i}
-      fill: #55557b
+      // fill: #55557b
       opacity:0
       animation-name: randomShotBack#{$i}
       animation-delay: calc(random(500))+ms
@@ -185,31 +195,16 @@ $back-middle: 9
 @include front-x()
 @include back-x()
 
-.spinImage
-  width: 100%
-  height: 100%
-  // object-fit: cover
-  z-index: -1
-  top: 25%
-  left: -2%
-  position: absolute
-  animation: spin 25s ease-in infinite
-  transform-origin: 52%
-  transform-box: fill-b
-  // animation-name: spin
-  // animation-iteration-count: infinite
-  // animation-duration: 180s
-  // animation-duration: 1s
 
 
 //animation function
 
-@keyframes wheel 
-  from 
-    transform: rotateZ(360deg)
+// @keyframes wheel 
+//   from 
+//     transform: rotateZ(360deg)
   
-  to 
-    transform: rotateZ(0deg)
+//   to 
+//     transform: rotateZ(0deg)
 
 @keyframes fadeIn 
   0% 
@@ -233,14 +228,6 @@ $back-middle: 9
     opacity:1
   100%
     opacity:0
-
-@keyframes spin
-  0%
-    transform: rotateZ(0)
-  100%
-    transform: rotateZ(360deg)
-
-
 
 
 

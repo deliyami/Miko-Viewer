@@ -1,9 +1,9 @@
 import { Box, Button, FormLabel, Input, Text, VStack } from "@chakra-ui/react";
-import UserDonate from "@src/components/test/UserDonate";
+import UserDonate from "@src/components/test/UserDonate2";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 
-const CoinPage = second => {
+const donate2 = second => {
   const router = useRouter();
   const nicknameInputRef = useRef(null);
   const coinInputRef = useRef(null);
@@ -15,6 +15,11 @@ const CoinPage = second => {
   );
   return (
     <Box>
+      <style>{`
+        p {
+          background-color:yellow
+        }
+      `}</style>
       {router.asPath}
       <Text>donate</Text>
       <UserDonate nickname={nickname} coin={coin} content={content}></UserDonate>
@@ -40,4 +45,4 @@ const CoinPage = second => {
   );
 };
 
-export default CoinPage;
+export default donate2;

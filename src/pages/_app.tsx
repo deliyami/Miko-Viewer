@@ -1,8 +1,8 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { Box, ChakraProvider } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Peer from "peerjs";
-import { ReactElement, ReactNode, useEffect } from "react";
+import { ReactElement, ReactNode, Suspense, useEffect } from "react";
 import { RecoilRoot } from "recoil";
 import { Socket } from "socket.io-client";
 import theme from "../theme";
@@ -48,9 +48,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   return getLayout(
     <ChakraProvider resetCSS theme={theme}>
-      <RecoilRoot>
-        <Component {...pageProps} />
-      </RecoilRoot>
+      <Suspense fallback={<Box>로딩</Box>}>
+        <RecoilRoot>
+          <Component {...pageProps} />
+        </RecoilRoot>
+      </Suspense>
     </ChakraProvider>,
   );
 }

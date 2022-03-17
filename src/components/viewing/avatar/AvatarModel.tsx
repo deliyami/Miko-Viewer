@@ -1,4 +1,3 @@
-import { Button } from "@chakra-ui/react";
 import * as BABYLON from "babylonjs";
 import "babylonjs-loaders";
 import { FC, useEffect, useRef } from "react";
@@ -40,6 +39,7 @@ export const AvatarModel: FC<{
               if (peerId) {
                 console.log("나는야 신나고 즐겁지");
               }
+
               args[4][27].rotate(new BABYLON.Vector3(0, 1, 0), Math.PI, 2);
               const borns = args[4];
               const originalBorns = [];
@@ -62,6 +62,7 @@ export const AvatarModel: FC<{
       };
       const engine = new BABYLON.Engine(reactCanvas.current);
       const scene = new BABYLON.Scene(engine);
+      scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
       if (scene.isReady()) {
         scene.getEngine().setSize(width, height);
         onSceneReady(scene);
@@ -93,11 +94,6 @@ export const AvatarModel: FC<{
   return (
     <>
       <canvas ref={reactCanvas} {...rest}></canvas>
-      <Button
-        onClick={e => {
-          console.log("yaho");
-        }}
-      ></Button>
     </>
   );
 };

@@ -18,13 +18,15 @@ const tab = [
 export const getStaticProps: GetStaticProps<{
   data: Concert[];
 }> = async context => {
-  const { data } = await getDataFromLaravel<Pagination<Concert>>("/concerts", {
+  // NOTE  undefined를 구조부해 할당할려고 해서 에러 났었음.
+  //  getStaticProps에 대해서는 서버 에러일때를 생각하고 에러 핸들링
+  const result = await getDataFromLaravel<Pagination<Concert>>("/concerts", {
     per_page: 3,
   });
 
   return {
     props: {
-      data: data.data,
+      data: result ? result.data.data : [],
     },
     revalidate: 60 * 30, // 30분 마다 재생성
   };
@@ -32,12 +34,12 @@ export const getStaticProps: GetStaticProps<{
 
 export default function HomePage({ data }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <>
+    <Box>
       <Carousel />
-      <Flex pt={50} width="full" justifyContent="center">
+      <Flex pt="50" width="full" justifyContent="center">
         <VStack align="start">
           {tab.map(({ name }) => (
-            <Box mb={9}>
+            <Box mb={9} key={name}>
               <Heading size="xl" fontSize="50px" my={5}>
                 {name}
               </Heading>
@@ -51,7 +53,7 @@ export default function HomePage({ data }: InferGetStaticPropsType<typeof getSta
           ))}
         </VStack>
       </Flex>
-    </>
+    </Box>
   );
 }
 

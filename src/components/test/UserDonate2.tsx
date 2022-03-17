@@ -1,7 +1,9 @@
-import { Box, Button } from "@chakra-ui/react";
+import { Button, theme } from "@chakra-ui/react";
+import { css } from "@emotion/react";
 import useColorStore from "@src/hooks/useColorStore";
 import { FC, useRef, useState } from "react";
 import donate from "./donate.module.sass";
+import { Circle, Content, Div, FadeInBox, FadeOutBox, Header, HideCircle, SecDiv } from "./styledTag";
 
 type props = {
   nickname: string;
@@ -9,7 +11,15 @@ type props = {
   content: string | number;
 };
 
-const UserDonate: FC<props> = props => {
+// export const Div = styled.div`
+//   display: flex;
+//   background-color: #e229e3;
+// `;
+const Css = css({
+  backgroundColor: "#1e33e4",
+});
+
+const UserDonate2: FC<props> = props => {
   const { nickname, coin, content } = props;
   const [colorName, setColorName] = useState<"yellow" | "red">("yellow");
   const svgRef = useRef<SVGGElement>(null);
@@ -20,12 +30,15 @@ const UserDonate: FC<props> = props => {
     "red",
     "yellow",
   ];
-  console.log(useColorStore(colorArray[Math.floor(Math.random() * colorArray.length)]));
+  console.log(theme);
+  // console.log(useColorStore(colorArray[Math.floor(Math.random() * colorArray.length)]));
   return (
     <>
       <div className={donate.home}>아무것도 안적으면 아무것도 안보이지</div>
       <div id={donate.testdiv}>아무것도 안적으면 아무것도 안보이지</div>
       <div style={{ backgroundColor: defaultColor }}>아무것도 안적으면 아무것도 안보이지</div>
+      <Div {...{ push: "#654321" }}>아무것도 안적으면 아무것도 안보이지</Div>
+      <SecDiv {...{ test: "test" }}>아무것도 안적으면 아무것도 안보이지</SecDiv>
       <Button
         onClick={e => {
           e.preventDefault();
@@ -34,43 +47,41 @@ const UserDonate: FC<props> = props => {
       >
         change button 1회용
       </Button>
-      <Box className={donate.donateFadeIn} style={{ cursor: "default" }}>
-        <Box className={donate.donateFadeOut}>
-          <div className={donate.textDrag}>
-            <span className={donate.header}>
-              <span className={donate.empfont}>{nickname} </span>
-              donated
-              <span className={donate.empfont}> {coin} </span>
-              coin
-            </span>
-            <span className={donate.content}>{content}</span>
-          </div>
+      <FadeInBox style={{ cursor: "default" }}>
+        <FadeOutBox>
+          <Header>
+            <span className={donate.empfont}>{nickname} </span>
+            donated
+            <span className={donate.empfont}> {coin} </span>
+            coin
+          </Header>
+          <Content>{content}</Content>
 
-          <svg className={donate.svg} width="900" height="400" viewBox="0 0 900 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="900" height="400" viewBox="0 0 900 400" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="donate">
-              <g className={donate.hideCircle}>
-                <circle id={donate.back18} cx="615" cy="335" r="5" />
-                <circle id={donate.back17} cx="596.5" cy="315.5" r="2.5" />
-                <circle id={donate.back16} cx="569" cy="326" r="5" />
-                <circle id={donate.back15} cx="555.5" cy="310.5" r="7.5" />
-                <circle id={donate.back14} cx="520.5" cy="331.5" r="7.5" />
-                <circle id={donate.back13} cx="515.75" cy="315.75" r="3.75" />
-                <circle id={donate.back12} cx="508" cy="340" r="5" />
-                <circle id={donate.back11} cx="499.25" cy="301.25" r="6.25" />
-                <circle id={donate.back10} cx="488" cy="322" r="5" />
-                <circle id={donate.back9} cx="465.5" cy="334.5" r="2.5" />
-                <circle id={donate.back1} cx="439" cy="330" r="5" />
-                <circle id={donate.back2} cx="423.5" cy="322.5" r="2.5" />
-                <circle id={donate.back3} cx="413.25" cy="329.25" r="6.25" />
-                <circle id={donate.back4} cx="390" cy="318" r="5" />
-                <circle id={donate.back5} cx="375" cy="303" r="5" />
-                <circle id={donate.back6} cx="366.5" cy="326.5" r="7.5" />
-                <circle id={donate.back7} cx="337.5" cy="312.5" r="7.5" />
-                <circle id={donate.back8} cx="292.75" cy="316.75" r="3.75" />
-              </g>
+              <HideCircle>
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "18", cx: "615", cy: "335", r: "5" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "17", cx: "596", cy: "315", r: "2.5" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "16", cx: "569", cy: "326", r: "5" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "15", cx: "555", cy: "310", r: "7.5" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "14", cx: "520", cy: "331", r: "7.5" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "13", cx: "515", cy: "315", r: "3.75" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "12", cx: "508", cy: "340", r: "5" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "11", cx: "499", cy: "301", r: "6.25" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "10", cx: "488", cy: "322", r: "5" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "9", cx: "465", cy: "334", r: "2.5" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "1", cx: "439", cy: "330", r: "5" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "2", cx: "423", cy: "322", r: "2.5" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "3", cx: "413", cy: "329", r: "6.25" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "4", cx: "390", cy: "318", r: "5" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "5", cx: "375", cy: "303", r: "5" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "6", cx: "366", cy: "326", r: "7.5" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "7", cx: "337", cy: "312", r: "7.5" }} />
+                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "8", cx: "292", cy: "316", r: "3.75" }} />
+              </HideCircle>
               <g id="donate_2">
                 <g id="avatar">
-                  <g ref={svgRef} className={donate.avatar} id={donate.avatarBody}>
+                  <g ref={svgRef} id={donate.avatarBody}>
                     <path
                       id="Exclude"
                       fillRule="evenodd"
@@ -827,27 +838,27 @@ const UserDonate: FC<props> = props => {
                   </g>
                 </g>
               </g>
-              <g className={donate.hideCircle}>
-                <circle id={donate.front14} cx="580" cy="358" r="5" />
-                <circle id={donate.front13} cx="555" cy="346" r="5" />
-                <circle id={donate.front12} cx="533.5" cy="356.5" r="7.5" />
-                <circle id={donate.front11} cx="516" cy="373" r="5" />
-                <circle id={donate.front10} cx="495.5" cy="348.5" r="2.5" />
-                <circle id={donate.front9} cx="486.25" cy="364.25" r="6.25" />
-                <circle id={donate.front8} cx="466" cy="358" r="5" />
-                <circle id={donate.front1} cx="429" cy="371" r="5" />
-                <circle id={donate.front2} cx="418" cy="358" r="5" />
-                <circle id={donate.front3} cx="398.5" cy="377.5" r="7.5" />
-                <circle id={donate.front4} cx="389" cy="348" r="5" />
-                <circle id={donate.front5} cx="367" cy="368" r="10" />
-                <circle id={donate.front6} cx="352.5" cy="341.5" r="2.5" />
-                <circle id={donate.front7} cx="323.5" cy="350.5" r="7.5" />
-              </g>
+              <HideCircle>
+                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "14", cx: "580", cy: "358", r: "5" }} />
+                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "13", cx: "555", cy: "346", r: "5" }} />
+                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "12", cx: "533", cy: "356", r: "7.5" }} />
+                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "11", cx: "516", cy: "373", r: "5" }} />
+                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "10", cx: "495", cy: "348", r: "2.5" }} />
+                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "9", cx: "486", cy: "364", r: "6.25" }} />
+                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "8", cx: "466", cy: "358", r: "5" }} />
+                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "1", cx: "429", cy: "371", r: "5" }} />
+                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "2", cx: "418", cy: "358", r: "5" }} />
+                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "3", cx: "398", cy: "377", r: "7.5" }} />
+                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "4", cx: "389", cy: "348", r: "5" }} />
+                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "5", cx: "367", cy: "368", r: "10" }} />
+                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "7", cx: "323", cy: "350", r: "7.5" }} />
+                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "6", cx: "352", cy: "341", r: "2.5" }} />
+              </HideCircle>
             </g>
           </svg>
           {/* <Image className={donate.spinImage} src="http://localhost:3000/resources/flash_blue.png"></Image> */}
-        </Box>
-      </Box>
+        </FadeOutBox>
+      </FadeInBox>
 
       <Button
         onClick={e => {
@@ -869,4 +880,4 @@ const UserDonate: FC<props> = props => {
   );
 };
 
-export default UserDonate;
+export default UserDonate2;

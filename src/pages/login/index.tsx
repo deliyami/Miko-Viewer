@@ -1,5 +1,4 @@
 import { Box, Button, Checkbox, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link, Stack } from "@chakra-ui/react";
-import { LARAVEL_URL } from "@src/const";
 import useColorStore from "@src/hooks/useColorStore";
 import BasicLayout from "@src/layout/BasicLayout";
 import { useLogin, useUser } from "@src/state/swr/useUser";
@@ -110,7 +109,7 @@ const LoginPage = () => {
                     type="submit"
                     isLoading={isSubmitting}
                     onClick={() => {
-                      router.push(`http://${LARAVEL_URL}/login/google`);
+                      router.push(`http://${process.env.LARAVEL_URL}/login/google`);
                     }}
                   >
                     Google
