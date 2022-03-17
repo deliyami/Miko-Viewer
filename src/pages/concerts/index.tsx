@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import { KeyboardEventHandler, ReactElement, useState } from "react";
 
 type Data = {
-  data: Pagination<Concert>;
+  data?: Pagination<Concert>;
   categoryId: number;
 };
 
@@ -48,7 +48,7 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
   const page = context.query.page as string;
   const search = context.query.search as string;
 
-  const { data } = await getDataFromLaravel<Pagination<Concert>>(URL_CONCERTS, {
+  const result = await getDataFromLaravel<Pagination<Concert>>(URL_CONCERTS, {
     filter: [["category_id", categoryId]],
     page: parseInt(page),
     per_page: 3,
@@ -57,7 +57,7 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
 
   return {
     props: {
-      data: data,
+      data: result?.data ?? null,
       categoryId,
     },
   };
@@ -72,8 +72,14 @@ export default function ConcertPage({ data, categoryId }: InferGetServerSideProp
         </Heading>
         <SearchBox />
         <Category />
-        <ConcertList data={data.data} />
-        <PaginationBtn data={data.meta} url={`/concerts?category_id=${categoryId}`} />
+        {data ? (
+          <>
+            <ConcertList data={data.data} />
+            <PaginationBtn data={data.meta} url={`/concerts?category_id=${categoryId}`} />
+          </>
+        ) : (
+          "no data"
+        )}
       </VStack>
     </Flex>
   );

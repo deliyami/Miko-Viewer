@@ -45,13 +45,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   }, []);
 
   const getLayout = Component?.getLayout || (page => page);
-
-  return getLayout(
+  //  NOTE getLayout을 recoilRoot보다 밖에 두면 Layout이 동일하지 않는 이상 초기화됨.
+  return (
     <ChakraProvider resetCSS theme={theme}>
-      <RecoilRoot>
-        <Component {...pageProps} />
-      </RecoilRoot>
-    </ChakraProvider>,
+      <RecoilRoot>{getLayout(<Component {...pageProps} />)}</RecoilRoot>
+    </ChakraProvider>
   );
 }
 

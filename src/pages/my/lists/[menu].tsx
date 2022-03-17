@@ -32,15 +32,13 @@ const UserTicketList: FC<{ userTickets: UserTicket[] }> = ({ userTickets }) => {
 
 const MyListPage = second => {
   const router = useRouter();
-  const {
-    data: { id },
-  } = useUser();
+  const { data: userData } = useUser();
 
   const { menu } = router.query as { menu: string };
 
   const { data } = useUserTickets({
     with: ["ticket", "concert"],
-    filter: [["user_id", id]],
+    filter: [["user_id", userData.id]],
   });
 
   console.log("ticket", data);
