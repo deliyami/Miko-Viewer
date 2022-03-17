@@ -1,7 +1,14 @@
 import { Box, Button, HStack } from "@chakra-ui/react";
 import styled from "@emotion/styled";
+import { enterConcertState } from "@src/state/recoil/concertState";
+import { msgMetaDataState, quizMetaDataState, quizResultMetaDataState } from "@src/state/recoil/timeMetaDataState";
+import { AllMetaData } from "@src/types/share/TimeMetadataFormat";
 import * as ivs from "amazon-ivs-player";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import QuizResultView from "./QuizResultView";
+import QuizView from "./QuizView";
 import VideoQualitySelect from "./VideoQualitySelect";
 const streamUrl = "https://de853ef2a345.us-east-1.playback.live-video.net/api/video/v1/us-east-1.121323684128.channel.Cj5ynk97sEJv.m3u8";
 
@@ -27,16 +34,22 @@ const Video = styled.video`
 //  TODO  브라우저에 따라서 window에 IVSPlayer 없음
 const VideoPlayer = props => {
   const { IVSPlayer } = window;
+  const enterConcertData = useRecoilValue(enterConcertState);
+  const router = useRouter();
+  if (!enterConcertData) router.push("/");
 
   const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
-
   const [selectableQuality, setSelectableQuality] = useState<ivs.Quality[]>([]);
   // const [isMiniPlayer, setIsMiniPlayer] = useState(false);
   const [muted, setMuted] = useState(false);
 
   // const [playerPosition, setPlayerPosition] = useState({});
   // const [playerSize, setPlayerSize] = useState({});
+
+  const setQuizMetaDataState = useSetRecoilState(quizMetaDataState);
+  const setQuizResultMetaDataState = useSetRecoilState(quizResultMetaDataState);
+  const setMsgMetaDataState = useSetRecoilState(msgMetaDataState);
 
   const player = useRef<ivs.MediaPlayer>(null);
   const playerBaseEl = useRef(null);
@@ -84,8 +97,17 @@ const VideoPlayer = props => {
     };
 
     const onTimeMetaData = cue => {
-      console.log(cue);
-      console.log("Timed metadata: ", cue.text);
+      const result = JSON.parse(cue.text) as AllMetaData;
+      if (result.type === "q") {
+        setQuizMetaDataState(result);
+      }
+      if (result.type === "m") {
+        setMsgMetaDataState(result);
+      }
+      if (result.type === "qr") {
+        setQuizResultMetaDataState(result);
+      }
+
       console.log(player.current.getPosition().toFixed(2));
     };
     //@ts-ignore
@@ -95,7 +117,7 @@ const VideoPlayer = props => {
     player.current.setAutoplay(true);
     player.current.setVolume(1);
 
-    player.current.load(streamUrl + "?token=" + jwt);
+    player.current.load(enterConcertData?.playbackUrl + "?token=" + jwt);
     player.current.play();
 
     player.current.addEventListener(READY, onStateChange);
@@ -112,7 +134,7 @@ const VideoPlayer = props => {
       player.current.removeEventListener(IVSPlayer.PlayerEventType.TEXT_METADATA_CUE, onTimeMetaData);
       player.current.delete();
     };
-  }, []);
+  }, [enterConcertData]);
 
   const pause = () => {
     const isPaused = player.current.isPaused();
@@ -151,6 +173,8 @@ const VideoPlayer = props => {
     <Box id="player-wrapper" width="90%" position="relative" overflow="hidden" role="group">
       <Box id="aspect-spacer" pb="56.25%"></Box>
       <Box height="100%" width="100%" position="absolute" top="0">
+        <QuizView />
+        <QuizResultView />
         <Box
           position="absolute"
           top="0"
@@ -163,7 +187,7 @@ const VideoPlayer = props => {
             visibility: "visible",
           }}
         >
-          <HStack id="control-bottom" position="absolute" width="full" bottom="0" pd="2rem">
+          <HStack id="control-bottom" position="absolute" width="full" bottom="0" p="2rem">
             <Button onClick={toggleMute}>{muted ? "소리켜기" : "뮤트하기"}</Button>
             <Button onClick={pause}>{isPlaying ? "정지" : "재생"}</Button>
             <Box flexGrow="1"></Box>
