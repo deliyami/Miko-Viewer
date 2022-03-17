@@ -11,7 +11,7 @@ const CameraScreen: FC<{ stream: MediaStream }> = ({ stream }) => {
     return () => {};
   }, [stream]);
 
-  return <video ref={videoRef} width="full" height="full"></video>;
+  return <video ref={videoRef} width="100%" height="auto"></video>;
 };
 
 export default CameraScreen;

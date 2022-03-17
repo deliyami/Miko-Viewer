@@ -170,7 +170,7 @@ const VideoPlayer = props => {
   // }
 
   return (
-    <Box id="player-wrapper" width="90%" position="relative" overflow="hidden" role="group">
+    <Box id="player-wrapper" width="80%" position="relative" overflow="hidden" role="group">
       <Box id="aspect-spacer" pb="56.25%"></Box>
       <Box height="100%" width="100%" position="absolute" top="0">
         <QuizView />

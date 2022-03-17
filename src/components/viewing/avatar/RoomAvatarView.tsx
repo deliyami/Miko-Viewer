@@ -1,4 +1,4 @@
-import { Button, Center, HStack, Tag, Text } from "@chakra-ui/react";
+import { Box, Button, Center, HStack, Tag, Text } from "@chakra-ui/react";
 import { myStreamState, PeerDataInterface, peerDataListState } from "@src/state/recoil/viewingState";
 import { useUser } from "@src/state/swr/useUser";
 import { createRef, FC, useEffect, useState } from "react";
@@ -78,3 +78,27 @@ const MyUserBox: FC = () => {
 };
 
 export default RoomAvatarView;
+
+const TempRoomAvatarView = () => {
+  return (
+    <Center gap="5">
+      {new Array(5).fill(0).map((_, idx) => {
+        return (
+          <Box position="relative" width={200} height={200} bg="red" backgroundImage="url('/image/temp/avatar.png')" backgroundRepeat="no-repeat" backgroundSize="cover">
+            <Text>아바타</Text>
+            <Center width="full" position="absolute" bottom="0.5" h="2rem" color="white">
+              <Text as="span" fontSize="1xl">
+                Score{" "}
+              </Text>
+              <Text as="span" fontSize="2xl">
+                12345
+              </Text>
+            </Center>
+          </Box>
+        );
+      })}
+    </Center>
+  );
+};
+
+export { TempRoomAvatarView };
