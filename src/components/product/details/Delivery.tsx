@@ -1,8 +1,9 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, Image } from "@chakra-ui/react";
 
 const Delivery = ()=>{
     return(
-        <Box w={"40%"}>
+        <Box w={"40.5%"}>
+            <Image src="/delivery.svg"></Image>
             <Text border={"1px"} p={"3%"} fontSize={"2xl"}>送料について
             通常の送料は一律¥429（税込）となります。
             沖縄・各離島も一律¥429（税込）です。

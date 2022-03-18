@@ -1,14 +1,13 @@
 import { Box, Flex, Text, Image, Select, CloseButton, Button } from "@chakra-ui/react";
 import Footer from "@src/components/home/Footer";
 import MenuBar from "@src/components/home/MenuBar";
-import { Router, useRouter, withRouter } from "next/router";
+import { useRouter, withRouter } from "next/router";
 import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 const cart = ({ router: { query } }) => {
-    const items = [1, 2, 3, 4, 5, 6];
-    console.log(query.item);
+    console.log("item : " + query.item);
     const router = useRouter();
-    const [selectedCount, setSelectedCount] = useState(1);
+    const [selectedCount, setSelectedCount] = useState(query.count);
     const item = JSON.parse(query.item);
     function onSelectChange(e) {
         setSelectedCount(e.target.value);
@@ -30,7 +29,7 @@ const cart = ({ router: { query } }) => {
                                 </Text>
                             </Flex>
                             <Flex w={800} mt={"3%"} overflow={"auto"} h={600} flexDirection={"column"}>
-                                <Flex h={"25%"} m={"5%"}>
+                                <Flex h={"25%"} m={"5%"} justifyContent={"space-evenly"} w={"100%"}>
                                     <Image w="20%" h="100%" src={item.image} rounded={"30%"}></Image>
                                     <Flex m={"2%"} flexDirection={"column"}>
                                         <Text fontSize={"xl"}>
@@ -43,11 +42,13 @@ const cart = ({ router: { query } }) => {
                                             サイズ : {query.size}
                                         </Text>
                                     </Flex>
-                                    <Flex w={"20%"} justifyContent={"center"} alignItems="center">
-                                        <Select w={"55%"} value={selectedCount} onChange={onSelectChange}>
+                                    <Flex w={"20%"} ml={"5%"} mr={"5%"} justifyContent={"center"} alignItems="center">
+                                        <Select value={selectedCount} onChange={onSelectChange}>
                                             <option>1</option>
                                             <option>2</option>
                                             <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
                                         </Select>
                                     </Flex>
                                     <Flex w={"20%"} justifyContent={"center"} alignItems="center">

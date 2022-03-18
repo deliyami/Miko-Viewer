@@ -16,7 +16,9 @@ const Post = ({ item, allItem }) => {
                     <Text color={'gray.300'} fontSize={"5xl"} cursor="default">このコンサートの賞品は用意しておりません。</Text>
                 }
             </Box>
+            {allItem.length<=1 ? null :
             <AllItem allItem={allItem}></AllItem>
+            }
             <Details item={item}></Details>
         </Flex>
     )

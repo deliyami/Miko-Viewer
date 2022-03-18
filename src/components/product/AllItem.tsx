@@ -8,29 +8,31 @@ const AllItem: FC<{ allItem: Product[] }> = ({ allItem }) => {
             <Text fontSize={"3xl"} fontWeight={"bold"}>
                 このコンサートの他の商品
             </Text>
-            <SimpleGrid spacing={20} p={"2%"} columns={5}>
-                {allItem.map((item, key) => {
-                    if (key > 5) {
-                        return (
-                            <Flex flexDirection={"column"} key={key}>
-                                <Box>
+            <Flex>
+                <SimpleGrid spacing={20} p={"2%"} columns={5}>
+                    {allItem.map((item, key) => {
+                        if (key > 5) {
+                            return (
+                                <Flex cursor={"pointer"} rounded="3%" _hover={{boxShadow:"2xl"}} flexDirection={"column"} key={key}>
                                     <Box>
-                                        <Image src={item.image}></Image>
+                                        <Box>
+                                            <Image src={item.image}></Image>
+                                        </Box>
+                                        <Text textAlign={"right"}>{item.name}</Text>
+                                        <Text textAlign={"right"}>¥{item.price}</Text>
                                     </Box>
-                                    <Text textAlign={"right"}>{item.name}</Text>
-                                    <Text textAlign={"right"}>¥{item.price}</Text>
-                                </Box>
-                            </Flex>
-                        )
-                    }
-                })}
-            </SimpleGrid>
-            <Flex justifyContent={"end"} mr={"2%"}>
-                <Button w={"10%"}>
-                    <Text fontWeight={"bold"} fontSize={"xl"}>
-                        全ての商品へ &#10132;
-                    </Text>
-                </Button>
+                                </Flex>
+                            )
+                        }
+                    })}
+                </SimpleGrid>
+                <Flex alignItems={"end"} ml={"3%"}>
+                    <Button>
+                        <Text fontWeight={"bold"} fontSize={"xl"}>
+                            全ての商品へ &#10132;
+                        </Text>
+                    </Button>
+                </Flex>
             </Flex>
         </Flex>
     )

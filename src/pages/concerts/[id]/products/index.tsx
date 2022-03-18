@@ -67,13 +67,13 @@ const ProductsPage = (second) => {
   }
 
   return (
-    <Flex flexDirection={"column"} justifyContent={"space-between"}>
+    <Flex flexDirection={"column"} alignItems={"center"} h="full" w={"full"} justifyContent={"center"} p={"2%"}>
       {isLoading ?
         <Flex alignItems={"center"} justifyContent="center"><Spinner size={"xl"}></Spinner></Flex> :
         data.length === 0 ?
-          <Text textAlign={'center'} color={'gray.300'} fontSize={"4xl"} cursor="default">このコンサートの賞品は用意しておりません。</Text> :
+          <Text color={'gray.300'} fontSize={"4xl"} cursor="default">このコンサートの賞品は用意しておりません。</Text> :
           <Flex flexDirection={"column"}>
-            <Text mb={"3%"} fontSize={"5xl"}>コンサート{router.query.id}</Text>
+            <Text mb={"3%"} fontSize={"5xl"}>{router.query.id}번 콘서트의 상품</Text>
             <Select mb={"3%"} alignSelf={"end"} textAlign={"center"} w={"15%"} size={"md"} value={selected} onChange={onSelectedChanged}>
               <option>新着順</option>
               <option>売れている順</option>

@@ -4,28 +4,28 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 
-const Cart = (props) => {
+const Cart = ({cartCount,count, size, color, item}) => {
     const router = useRouter();
-    console.log("??" + props.item);
+    // console.log(props);
     return (
         <Link href={{
             pathname: `/concerts/${router.query.id}/products/cart`,
             query: {
-                cartCount: props.cartCount,
-                count: props.count,
-                size: props.size,
-                color: props.color,
-                item: JSON.stringify(props.item) 
+                cartCount: cartCount,
+                count: count,
+                size: size,
+                color: color,
+                item: JSON.stringify(item) 
             }
         }}>
             <Flex flexDirection={"column"}>
-                {props.cartCount !== 0 ?
+                {cartCount == 0 ?
+                    null :
                     <Flex justifyContent={"end"}>
-                        <Text color={"white"} pl={3} pr={3} align="center" rounded="100%" bg={"tomato"}>{props.cartCount}</Text>
+                        <Text color={"white"} pl={2} pr={2} align="center" rounded="100%" bg={"tomato"}>{cartCount}</Text>
                     </Flex>
-                    : null
                 }
-                <Button aria-label="cart" icon={<Image src='/cart.svg' alt='next' />} mb={5} w={82.5} h={82.5} shadow={"2xl"} _hover={{ bg: "blue.100" }} borderRadius={"100%"} colorScheme={"blue"} bg={"white"} ><Image src="/cart.svg"></Image></Button>
+                <Button aria-label="cart" icon={<Image src='/cart.svg' alt='next' />} mb={5} w={92.5} h={92.5} shadow={"2xl"} _hover={{ bg: "blue.100" }} borderRadius={"100%"} colorScheme={"blue"} bg={"white"} ><Image src="/cart.svg"></Image></Button>
             </Flex>
         </Link>
     )

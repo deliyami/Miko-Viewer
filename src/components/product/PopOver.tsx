@@ -1,14 +1,12 @@
 import { ArrowForwardIcon, PlusSquareIcon } from "@chakra-ui/icons";
-import { Box, Popover, PopoverTrigger, ButtonGroup, Button, IconButton, PopoverContent, PopoverBody, PopoverFooter, color } from "@chakra-ui/react";
-import { count } from "console";
+import { Flex, Popover, PopoverTrigger, ButtonGroup, Button, IconButton, PopoverContent, PopoverBody, PopoverFooter, color } from "@chakra-ui/react";
 import router from "next/router";
 import { useState } from "react";
 
-const PopOver = ({count, color, size}) => {
+const PopOver = ({count, color, size, cartCount,setCartCount}) => {
     const [isOpen, setIsOpen] = useState(false)
     const open = () => setIsOpen(true)
     const close = () => setIsOpen(false)
-
     const [cartIsOpen, setCartIsOpen] = useState(false)
     const cartOpen = () => setCartIsOpen(true)
     const cartClose = () => setCartIsOpen(false)
@@ -17,7 +15,7 @@ const PopOver = ({count, color, size}) => {
         if (count == 0 || color == "" || size == "") {
             alert("オプションを全部選択して下さい。");
         } else if (count !== 0 && color !== "" && size !== "") {
-            // setCartCount(cartCount + 1);
+            setCartCount(cartCount+1);
         }
         
     }
@@ -30,33 +28,7 @@ const PopOver = ({count, color, size}) => {
         }
     }
     return (
-        <Box mt={47}>
-            <Popover
-                isOpen={isOpen}
-                onClose={close}
-                returnFocusOnClose={false}
-                placement='bottom'
-                closeOnBlur={false}
-            >
-                <PopoverTrigger>
-                    <ButtonGroup float={"right"} _hover={{ shadow: "xl" }} onClick={() => { open(); cartClose() }} isAttached variant={"outline"}>
-                        <Button bg={"gray.100"}>注文する</Button>
-                        <IconButton bg={"gray.100"} aria-label="Buy" icon={<ArrowForwardIcon></ArrowForwardIcon>}></IconButton>
-                    </ButtonGroup>
-                </PopoverTrigger>
-                <PopoverContent>
-                    <PopoverBody>
-                        レージに進みますか？
-                    </PopoverBody>
-                    <PopoverFooter d='flex' justifyContent='flex-end'>
-                        <ButtonGroup size='sm'>
-                            <Button variant='outline' onClick={close}>キャンセル</Button>
-                            <Button colorScheme='blue' onClick={() => { onBuy(); close() }}>レージに進む</Button>
-                        </ButtonGroup>
-                    </PopoverFooter>
-                </PopoverContent>
-            </Popover>
-
+        <Flex justifyContent={"space-evenly"}>
             <Popover
                 isOpen={cartIsOpen}
                 onClose={cartClose}
@@ -65,7 +37,7 @@ const PopOver = ({count, color, size}) => {
                 closeOnBlur={false}
             >
                 <PopoverTrigger>
-                    <ButtonGroup mr={7} _hover={{ shadow: "xl" }} float={"right"} onClick={() => { cartOpen(); close() }} isAttached variant={"outline"}>
+                    <ButtonGroup _hover={{ shadow: "xl" }} float={"right"} onClick={() => { cartOpen(); close() }} isAttached variant={"outline"}>
                         <Button bg={"gray.100"}>カートに入れる</Button>
                         <IconButton bg={"gray.100"} aria-label="Cart" icon={<PlusSquareIcon></PlusSquareIcon>}></IconButton>
                     </ButtonGroup>
@@ -82,7 +54,32 @@ const PopOver = ({count, color, size}) => {
                     </PopoverFooter>
                 </PopoverContent>
             </Popover>
-        </Box>
+            <Popover
+                isOpen={isOpen}
+                onClose={close}
+                returnFocusOnClose={false}
+                placement='bottom'
+                closeOnBlur={false}
+            >
+                <PopoverTrigger>
+                    <ButtonGroup _hover={{ shadow: "xl" }} onClick={() => { open(); cartClose() }} isAttached variant={"outline"}>
+                        <Button bg={"gray.100"}>注文する</Button>
+                        <IconButton bg={"gray.100"} aria-label="Buy" icon={<ArrowForwardIcon></ArrowForwardIcon>}></IconButton>
+                    </ButtonGroup>
+                </PopoverTrigger>
+                <PopoverContent>
+                    <PopoverBody>
+                        レージに進みますか？
+                    </PopoverBody>
+                    <PopoverFooter d='flex' justifyContent='flex-end'>
+                        <ButtonGroup size='sm'>
+                            <Button variant='outline' onClick={close}>キャンセル</Button>
+                            <Button colorScheme='blue' onClick={() => { onBuy(); close() }}>レージに進む</Button>
+                        </ButtonGroup>
+                    </PopoverFooter>
+                </PopoverContent>
+            </Popover>
+        </Flex>
     )
 }
 
