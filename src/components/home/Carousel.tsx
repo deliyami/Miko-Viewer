@@ -23,9 +23,7 @@ const Carousel: FC<{ data: Concert[] }> = ({ data }) => {
         </Center>
         <GridItem colStart={2} colEnd={5}>
           <AspectRatio maxW="100%" maxH="350px" ratio={5 / 4}>
-            <Center>
-              <Image src={S3_URL + concerts[1].coverImage} alt="naruto" objectFit="cover" />
-            </Center>
+            <Center>{concerts?.[1] && <Image src={S3_URL + concerts[1].coverImage} alt="naruto" objectFit="cover" />}</Center>
           </AspectRatio>
         </GridItem>
         <Center>

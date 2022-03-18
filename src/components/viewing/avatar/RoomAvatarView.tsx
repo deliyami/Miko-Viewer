@@ -116,8 +116,18 @@ const TempRoomAvatarView = () => {
 
       {peers.map((peer, idx) => {
         const score = scores?.[peer.id] ?? 0;
+        console.log("peer other in avatar", peer);
         return (
-          <Box position="relative" width={200} height={200} bg="red" backgroundImage="url('/image/temp/avatar.png')" backgroundRepeat="no-repeat" backgroundSize="cover">
+          <Box
+            position="relative"
+            key={peer.id}
+            width={200}
+            height={200}
+            bg="red"
+            backgroundImage="url('/image/temp/avatar.png')"
+            backgroundRepeat="no-repeat"
+            backgroundSize="cover"
+          >
             <Text>아바타</Text>
             <Center width="full" position="absolute" bottom="0.5" h="2rem" color="white">
               <Text as="span" fontSize="1xl">

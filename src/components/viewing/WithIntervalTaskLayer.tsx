@@ -20,7 +20,6 @@ export const WithIntervalTaskLayer: FC = ({ children }) => {
       setLatestScoreState(
         produce(draft => {
           const updatedScore = (draft?.[data.uuid] ?? 0) + addedScore;
-          console.log("send to all peer new score", updatedScore);
           sendToAllPeers(peers, { type: "scoreUpdate", data: updatedScore });
           draft[data.uuid] = updatedScore;
         }),
@@ -28,6 +27,8 @@ export const WithIntervalTaskLayer: FC = ({ children }) => {
     }, 1000);
 
     const updateRoomMemberScoreId = setInterval(() => {
+      console.log("peers", peers);
+      console.log("roomMemberScores", roomMemberScores);
       setLatestScoreState(
         produce(draft => {
           for (const key in roomMemberScores) {
@@ -43,7 +44,8 @@ export const WithIntervalTaskLayer: FC = ({ children }) => {
       clearInterval(updateLatestScoreIntervalId);
       clearInterval(updateRoomMemberScoreId);
     };
-  }, []);
+    // NOTE 또 이거 까먹어서 고생함.
+  }, [peers, data.uuid, setLatestScoreState]);
 
   return <>{children}</>;
 };

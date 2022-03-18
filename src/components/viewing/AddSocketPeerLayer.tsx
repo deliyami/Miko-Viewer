@@ -47,31 +47,43 @@ const WithSocketEventLayout: FC = ({ children }) => {
   const setMyStream = useSetRecoilState(myStreamState);
   const setMessages = useSetRecoilState(messagesState);
 
-  const addDataConnectionToPeersDataList = useCallback((dataConnection: DataConnection) => {
-    setPeerDataList(
-      produce(peers => {
-        const idx = peers.findIndex(peer => peer.id === dataConnection.peer);
-        if (idx >= 0) peers[idx].dataConnection = dataConnection;
-      }),
-    );
-  }, []);
+  const addDataConnectionToPeersDataList = useCallback(
+    (dataConnection: DataConnection) => {
+      setPeerDataList(
+        produce(peers => {
+          const idx = peers.findIndex(peer => peer.id === dataConnection.peer);
+          if (idx >= 0) peers[idx].dataConnection = dataConnection;
+        }),
+      );
+    },
+    [setPeerDataList],
+  );
 
-  const addMediaStreamToPeersDataList = useCallback((mediaStream: MediaStream, id) => {
-    setPeerDataList(
-      produce(peers => {
-        const idx = peers.findIndex(peer => peer.id === id);
-        if (idx >= 0) peers[idx].mediaStream = mediaStream;
-      }),
-    );
-  }, []);
+  const addMediaStreamToPeersDataList = useCallback(
+    (mediaStream: MediaStream, id) => {
+      setPeerDataList(
+        produce(peers => {
+          const idx = peers.findIndex(peer => peer.id === id);
+          if (idx >= 0) peers[idx].mediaStream = mediaStream;
+        }),
+      );
+    },
+    [setPeerDataList],
+  );
 
-  const removePeerById = useCallback(id => {
-    setPeerDataList(
-      produce(peers => {
-        return peers.filter(peer => peer.id !== id);
-      }),
-    );
-  }, []);
+  const removePeerById = useCallback(
+    id => {
+      setPeerDataList(
+        produce(peers => {
+          const idx = peers.findIndex(peer => peer.id === id);
+          if (idx !== 1) {
+            peers.splice(idx, 1);
+          }
+        }),
+      );
+    },
+    [setPeerDataList],
+  );
 
   const addEventToDataConnection = (dataConnection: DataConnection) => {
     const id = dataConnection.peer;
@@ -86,6 +98,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
           break;
         case "scoreUpdate":
           updateUserScore(id, event.data);
+          break;
         default:
           break;
       }
@@ -130,8 +143,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
         console.error(err);
       });
 
-    const newUserCome = (otherPeerId: string, roomID: string, otherUserData: PeerDataInterface["data"]) => {
-      console.log("newUserCome", otherPeerId), "emit";
+    const newUserCome = (otherPeerId: string, roomID: string, otherUserData: PeerDataInterface["data"], otherSocketId) => {
+      console.log("newUserCome", otherPeerId, otherUserData.email);
 
       setPeerDataList(
         produce(prevPeers => {
@@ -140,13 +153,12 @@ const WithSocketEventLayout: FC = ({ children }) => {
           return prevPeers;
         }),
       );
-      console.log("getUser Media");
+
       getUserMedia(streamOptions)
         .then(stream => {
-          console.log("getUser Media2");
           setMyStream(stream);
           if (otherPeerId !== myPeerUniqueID) {
-            socket.emit("fe-answer-send-peer-id", roomID, myPeerUniqueID, user.data);
+            socket.emit("fe-answer-send-peer-id", otherSocketId);
             const call = myPeer.call(otherPeerId, stream);
             call.on("stream", remoteStream => {
               addMediaStreamToPeersDataList(remoteStream, call.peer);
@@ -154,7 +166,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
           }
         })
         .catch(err => {
-          console.error("Failed to get local stream", err);
           toastLog("error", "Failed to get local stream", "미디어에 대한 접근 권한을 얻지 못 했습니다.");
         });
 
@@ -180,8 +191,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
         dataConnection.send("Hello! I am" + myPeerUniqueID);
       });
     };
-    const broadcastPeerId = (peerId: string, otherUserData: PeerDataInterface["data"]) => {
-      console.log("broadcastPeerId", peerId);
+    const getPeerIdFromBroadcast = (peerId: string, otherUserData: PeerDataInterface["data"]) => {
+      console.log("getPeerIdFromBroadcast", peerId);
       setPeerDataList(
         produce(prevPeers => {
           const notFound = !prevPeers.some(peer => peer.id === peerId);
@@ -205,6 +216,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
 
     const failEnterRoom = () => {
       console.log("fail enter room");
+      // TODO 새로운 방 번호를 얻고 입장.
     };
 
     const userLeft = (peerId: string) => {
@@ -216,7 +228,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
       console.log("emit new user come");
       socket.on("be-new-user-come", newUserCome);
     });
-    socket.on("be-broadcast-peer-id", broadcastPeerId);
+    socket.on("be-broadcast-peer-id", getPeerIdFromBroadcast);
     socket.on("be-broadcast-new-message", broadcastNewMessage);
     socket.on("be-fail-enter-room", failEnterRoom);
     socket.on("be-user-left", userLeft);
@@ -230,7 +242,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
           isFired = true;
           const exit = confirm("Are you sure you want to leave?");
           if (exit) {
-            socket.emit("fe-user-left", myPeerUniqueID, roomId, concertId);
+            socket.emit("fe-user-left");
             myPeer.destroy();
             window.close();
           }
@@ -242,13 +254,15 @@ const WithSocketEventLayout: FC = ({ children }) => {
 
     return () => {
       socket.off("be-new-user-come", newUserCome);
-      socket.off("be-broadcast-peer-id", broadcastPeerId);
+      socket.off("be-broadcast-peer-id", getPeerIdFromBroadcast);
       socket.off("be-broadcast-new-message", broadcastNewMessage);
       socket.off("be-broadcast-new-message", userLeft);
-      socket.emit("fe-user-left", myPeerUniqueID, roomId, concertId);
+      socket.emit("fe-user-left");
       window.removeEventListener("beforeunload", windowBeforeUnloadEvent);
       window.removeEventListener("unload", windowBeforeUnloadEvent);
       myPeer.destroy();
+      socket.disconnect();
+      setMyStream(undefined);
       setPeerDataList([]);
       setMessages([]);
     };
