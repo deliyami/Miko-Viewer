@@ -5,11 +5,11 @@ import { withSuspense } from "./withSuspenseHOC";
 
 const Layout = ({ children }) => {
   return (
-    <Flex h="100vh" flexDirection="column">
+    <Flex h="110vh" flexDirection="column">
       <MenuBar />
-      <Flex alignItems={"center"} flexGrow="1">
+      <Box my={30} pb={20} flexGrow="1">
         {children}
-      </Flex>
+      </Box>
       <Footer />
     </Flex>
   );
