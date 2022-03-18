@@ -25,7 +25,9 @@ const VideoQualitySelect: FC<{
         {/* <PopoverHeader>Confirmation!</PopoverHeader> */}
         <PopoverBody onClick={setQuality}>
           {selectableQuality.map((obj, i) => (
-            <div data-idx={`${i}`}>{obj.name}</div>
+            <div key={obj.name} data-idx={`${i}`}>
+              {obj.name}
+            </div>
           ))}
         </PopoverBody>
       </PopoverContent>

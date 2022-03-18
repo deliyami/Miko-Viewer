@@ -11,6 +11,11 @@ interface MotionEvent {
   data: ChatMotionInterface;
 }
 
-type DataConnectionEvent = ChatEvent | MotionEvent;
+interface UpdateScoreEvent {
+  type: "scoreUpdate";
+  data: number;
+}
+
+type DataConnectionEvent = ChatEvent | MotionEvent | UpdateScoreEvent;
 
 export type { DataConnectionEvent };

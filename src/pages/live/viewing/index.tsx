@@ -16,7 +16,7 @@ const ViewingPage = () => {
   console.log("userTicket- viewing page", userTicket);
   return (
     <Container height="auto" width="full">
-      <Script src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js" strategy="beforeInteractive" async defer />
+      <Script src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js" strategy="beforeInteractive" />
       <DynamicViewingPage />
     </Container>
   );

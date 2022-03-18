@@ -1,6 +1,7 @@
 import setMotionToAvatar from "@src/helper/setMotionToAvatar";
 import showChatToRoom from "@src/helper/showChatToRoom";
 import { toastLog } from "@src/helper/toastLog";
+import { updateUserScore } from "@src/helper/updateUserScore";
 import useMyPeer from "@src/hooks/useMyPeer";
 import useSocket from "@src/hooks/useSocket";
 import { enterConcertState, enterRoomIdAsyncState } from "@src/state/recoil/concertState";
@@ -90,6 +91,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
         case "motion":
           setMotionToAvatar(id, event.data);
           break;
+        case "scoreUpdate":
+          updateUserScore(id, event.data);
         default:
           break;
       }

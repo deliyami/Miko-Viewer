@@ -1,4 +1,4 @@
-import { Box, Button, HStack } from "@chakra-ui/react";
+import { Box, Button, HStack, Text } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { enterConcertState } from "@src/state/recoil/concertState";
 import { msgMetaDataState, quizMetaDataState, quizResultMetaDataState } from "@src/state/recoil/timeMetaDataState";
@@ -69,7 +69,7 @@ const VideoPlayer = props => {
   }
 
   useEffect(() => {
-    const { ENDED, PLAYING, READY } = IVSPlayer.PlayerState;
+    const { ENDED, PLAYING, READY, BUFFERING, IDLE } = IVSPlayer.PlayerState;
     const { ERROR } = IVSPlayer.PlayerEventType;
     const { isPlayerSupported } = IVSPlayer;
     if (!isPlayerSupported) {
@@ -116,6 +116,7 @@ const VideoPlayer = props => {
 
     player.current.setAutoplay(true);
     player.current.setVolume(1);
+    player.current.setLiveLowLatencyEnabled(true);
 
     player.current.load(enterConcertData?.playbackUrl + "?token=" + jwt);
     player.current.play();
@@ -126,13 +127,38 @@ const VideoPlayer = props => {
     player.current.addEventListener(ERROR, onError);
     player.current.addEventListener(IVSPlayer.PlayerEventType.TEXT_METADATA_CUE, onTimeMetaData);
 
+    const intercvalId = setInterval(() => {
+      player.current.setLiveLowLatencyEnabled(true);
+      // player.current.setAutoMaxBitrate(true);
+      // player.current.setAutoMaxQuality(true);
+      player.current.play();
+      // console.log("-------------------------------", Date.now());
+      // console.log("getBufferDuration", player.current.getBufferDuration()); // 현재 재생 위치보다, 남은 버퍼가  몇초 있는지
+      // console.log("getBuffered", player.current.getBuffered()); // 메모리에 저장중이 버퍼 데이터의 시작 초 ~ 끝나는 초
+      // console.log("getDuration", player.current.getDuration()); // 총 길이
+      // console.log("getLiveLatency", player.current.getLiveLatency()); // 재생 속도
+      // console.log("getPosition", player.current.getPosition()); //  현재 실 재생 위치
+      // console.log("getPlaybackRate", player.current.getPlaybackRate()); //
+      // console.log("getState", player.current.getState());
+      // console.log("isAutoplay", player.current.isAutoplay());
+      // console.log("isAutoQualityMode", player.current.isAutoQualityMode());
+      // console.log("isLiveLowLatency", player.current.isLiveLowLatency());
+      if (player.current.getBufferDuration() > 7) {
+        player.current.seekTo(player.current.getPosition() + 5.0);
+      }
+
+      console.log("-------------------------------");
+    }, 1000);
+
     return () => {
+      player.current.play();
       player.current.removeEventListener(READY, onStateChange);
       player.current.removeEventListener(PLAYING, onStateChange);
       player.current.removeEventListener(ENDED, onStateChange);
       player.current.removeEventListener(ERROR, onError);
       player.current.removeEventListener(IVSPlayer.PlayerEventType.TEXT_METADATA_CUE, onTimeMetaData);
       player.current.delete();
+      clearInterval(intercvalId);
     };
   }, [enterConcertData]);
 
@@ -187,6 +213,8 @@ const VideoPlayer = props => {
             visibility: "visible",
           }}
         >
+          <Text color="white">{enterConcertData?.playbackUrl}</Text>
+
           <HStack id="control-bottom" position="absolute" width="full" bottom="0" p="2rem">
             <Button onClick={toggleMute}>{muted ? "소리켜기" : "뮤트하기"}</Button>
             <Button onClick={pause}>{isPlaying ? "정지" : "재생"}</Button>
