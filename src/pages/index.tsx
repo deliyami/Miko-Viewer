@@ -9,9 +9,10 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import { ReactElement } from "react";
 
-const tab = [
-  { id: "ranking", name: "RANKING" },
-  { id: "new", name: "NEW" },
+const tabs = [
+  { id: 'recommend', name: 'RECOMMEND' },
+  { id: 'ranking', name: 'RANKING' },
+  { id: 'new', name: 'NEW' },
 ];
 
 // TIP 무조건 서버에서 실행됨, Dev모드에서는 매번 실행
@@ -32,16 +33,22 @@ export const getStaticProps: GetStaticProps<{
   };
 };
 
-export default function HomePage({ data }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function HomePage({
+  data,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+
   return (
-    <Box>
-      <Carousel />
-      <Flex pt="50" width="full" justifyContent="center">
+    <>
+      <Heading size="xl" fontSize="50px" my={5}>
+        RECOMMEND
+      </Heading>
+      <Carousel data={data} />
+      <Flex pt={50} width="full" justifyContent="center">
         <VStack align="start">
-          {tab.map(({ name }) => (
-            <Box mb={9} key={name}>
+          {tabs.map((tab, idx) => (
+            <Box mb={9} key={idx}>
               <Heading size="xl" fontSize="50px" my={5}>
-                {name}
+                {tab.name}
               </Heading>
               <ConcertList data={data} />
               <Link href={`/concerts`}>
@@ -53,7 +60,7 @@ export default function HomePage({ data }: InferGetStaticPropsType<typeof getSta
           ))}
         </VStack>
       </Flex>
-    </Box>
+    </>
   );
 }
 

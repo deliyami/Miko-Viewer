@@ -1,12 +1,24 @@
-import { Box, Button, Checkbox, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link, Stack } from "@chakra-ui/react";
-import useColorStore from "@src/hooks/useColorStore";
-import BasicLayout from "@src/layout/BasicLayout";
-import { useLogin, useUser } from "@src/state/swr/useUser";
-import Head from "next/head";
-import NextLink from "next/link";
-import { useRouter } from "next/router";
-import React, { ReactElement } from "react";
-import { useForm } from "react-hook-form";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Heading,
+  Input,
+  Link,
+  Stack
+} from '@chakra-ui/react';
+import useColorStore from '@src/hooks/useColorStore';
+import BasicLayout from '@src/layout/BasicLayout';
+import { useLogin, useUser } from '@src/state/swr/useUser';
+import Head from 'next/head';
+import NextLink from 'next/link';
+import { useRouter } from 'next/router';
+import React, { ReactElement } from 'react';
+import { useForm } from 'react-hook-form';
 
 const LoginPage = () => {
   const {
@@ -85,8 +97,8 @@ const LoginPage = () => {
                     <NextLink href="./user/password">
                       <Link color={"blue.400"}>비밀번호 찾기</Link>
                     </NextLink>
-                    <NextLink href="./user/sign-up">
-                      <Link color={"blue.400"}>회원가입</Link>
+                    <NextLink href="./login/sign">
+                      <Link color={'blue.400'}>회원가입</Link>
                     </NextLink>
                   </Stack>
                   <Button

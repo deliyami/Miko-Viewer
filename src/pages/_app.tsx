@@ -1,11 +1,11 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react/node_modules/@chakra-ui/provider";
+import theme from "@src/theme";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Peer from "peerjs";
 import { ReactElement, ReactNode, useEffect } from "react";
 import { RecoilRoot } from "recoil";
 import { Socket } from "socket.io-client";
-import theme from "../theme";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -18,7 +18,6 @@ type AppPropsWithLayout = AppProps & {
 if (process.env.NEXT_PUBLIC_API_MOCKING === "enabled") {
   require("@src/mocks");
 }
-
 declare global {
   interface Window {
     socket: Socket;
