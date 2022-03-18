@@ -7,7 +7,6 @@ import laggy from "./middleware/laggy";
 
 const URL_CONCERTS = "/concerts";
 
-
 const useConcerts = (query?: CommonFSW) => {
   let url = URL_CONCERTS + "?";
   query && (url += createFSWQueryString(query));

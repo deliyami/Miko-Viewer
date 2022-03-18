@@ -1,19 +1,11 @@
-import {
-  Box,
-  Button,
-  Collapse,
-  Heading,
-  HStack,
-  Text,
-  VStack
-} from '@chakra-ui/react';
-import Footer from '@src/components/home/Footer';
-import MenuBar from '@src/components/home/MenuBar';
-import { S3_URL } from '@src/const';
-import { Concert } from '@src/types/share/Concert';
-import { Ticket } from '@src/types/share/Ticket';
-import axios from 'axios';
-import React, { FC } from 'react';
+import { Box, Button, Collapse, Heading, HStack, Text, VStack } from "@chakra-ui/react";
+import Footer from "@src/components/home/Footer";
+import MenuBar from "@src/components/home/MenuBar";
+import { S3_URL } from "@src/const";
+import { Concert } from "@src/types/share/Concert";
+import { Ticket } from "@src/types/share/Ticket";
+import axios from "axios";
+import React, { FC } from "react";
 
 const TicketDate: FC<{ ticket: Ticket }> = ({ ticket }) => {
   const concert_start_date = ticket.concertStartDate.split("T");

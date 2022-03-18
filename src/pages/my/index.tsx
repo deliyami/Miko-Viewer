@@ -1,15 +1,12 @@
-import {
-  Box, Button, Center, Flex, Heading, HStack, Image, Input
-} from '@chakra-ui/react';
-import { S3_URL } from '@src/const';
-import MyLayout from '@src/layout/MyLayout';
-import { useUser } from '@src/state/swr/useUser';
-import { User } from '@src/types/share/User';
-import Link from 'next/link';
-import { FC, ReactElement } from 'react';
+import { Box, Button, Center, Flex, Heading, HStack, Image, Input } from "@chakra-ui/react";
+import { S3_URL } from "@src/const";
+import MyLayout from "@src/layout/MyLayout";
+import { useUser } from "@src/state/swr/useUser";
+import { User } from "@src/types/share/User";
+import Link from "next/link";
+import { FC, ReactElement } from "react";
 
 const MyCard: FC<{ data: User }> = ({ data }) => {
-
   // console.log(data);
   return (
     <Flex width="full" justifyContent="center" p={4}>
@@ -18,34 +15,35 @@ const MyCard: FC<{ data: User }> = ({ data }) => {
           My Page
         </Heading>
         <HStack spacing={20} p={12} mt={6} boxShadow="lg">
-          <Image src={S3_URL + data.avatar} fallbackSrc='https://via.placeholder.com/300' />
+          <Image src={S3_URL + data.avatar} fallbackSrc="https://via.placeholder.com/300" />
           <Box>
-            <Heading as='h5' size='sm' my={2}>
+            <Heading as="h5" size="sm" my={2}>
               Name
             </Heading>
             <Input mb={2} value={data.name} isReadOnly />
-            <Heading as='h5' size='sm' my={2}>
+            <Heading as="h5" size="sm" my={2}>
               Email
             </Heading>
             <Input mb={2} value={data.email} isReadOnly />
-            <Heading as='h5' size='sm' my={2}>
+            <Heading as="h5" size="sm" my={2}>
               Coin
             </Heading>
             <Input mb={2} value={`${data.coin}`} isReadOnly />
             <Center>
-              <Link href={`/my/edit`}><a>
-                <Button>Edit</Button>
-              </a></Link>
+              <Link href={`/my/edit`}>
+                <a>
+                  <Button>Edit</Button>
+                </a>
+              </Link>
             </Center>
           </Box>
         </HStack>
-      </Box >
-    </Flex >
+      </Box>
+    </Flex>
   );
 };
 
 export default function MyPage() {
-
   const { data: userData } = useUser();
   // console.log(userData);
   return (
@@ -53,7 +51,7 @@ export default function MyPage() {
       <MyCard data={userData} />
     </Box>
   );
-};
+}
 
 MyPage.getLayout = function getLayout(page: ReactElement) {
   return <MyLayout>{page}</MyLayout>;

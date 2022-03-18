@@ -1,18 +1,10 @@
-import {
-  Box,
-  Heading,
-  Image,
-  SimpleGrid,
-  Text,
-  VStack
-} from '@chakra-ui/react';
-import { S3_URL } from '@src/const';
-import { Concert } from '@src/types/share/Concert';
-import Link from 'next/link';
-import { FC } from 'react';
+import { Box, Heading, Image, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import { S3_URL } from "@src/const";
+import { Concert } from "@src/types/share/Concert";
+import Link from "next/link";
+import { FC } from "react";
 
 const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
-
   // console.log(concert);
   return (
     <Box className="movie">

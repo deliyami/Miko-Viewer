@@ -1,22 +1,20 @@
-import { Box, Button, Center, Circle, Divider, Flex, Heading, HStack, Spacer, Spinner, Text, VStack } from '@chakra-ui/react';
-import PaginationBtn from '@src/components/common/button/PaginationBtn';
-import MyLayout from '@src/layout/MyLayout';
-import { fetcher } from '@src/state/fetcher';
-import { useUser } from '@src/state/swr/useUser';
-import { Coin } from '@src/types/share/Coin';
-import { User } from '@src/types/share/User';
-import { useRouter } from 'next/router';
-import { FC, ReactElement, useEffect, useState } from 'react';
-import useSWR from 'swr';
-
+import { Box, Button, Center, Circle, Divider, Flex, Heading, HStack, Spacer, Spinner, Text, VStack } from "@chakra-ui/react";
+import PaginationBtn from "@src/components/common/button/PaginationBtn";
+import MyLayout from "@src/layout/MyLayout";
+import { fetcher } from "@src/state/fetcher";
+import { useUser } from "@src/state/swr/useUser";
+import { Coin } from "@src/types/share/Coin";
+import { User } from "@src/types/share/User";
+import { useRouter } from "next/router";
+import { FC, ReactElement, useEffect, useState } from "react";
+import useSWR from "swr";
 
 const CoinHeader: FC<{ data: User }> = ({ data }) => {
-
   // console.log(data);
   return (
     <Flex>
-      <Box p='2'>
-        <Heading size='md'>{data.name}님의 Coin</Heading>
+      <Box p="2">
+        <Heading size="md">{data.name}님의 Coin</Heading>
       </Box>
       <Spacer />
       <Box>
@@ -30,21 +28,22 @@ const CoinHeader: FC<{ data: User }> = ({ data }) => {
 };
 
 const CoinHistory: FC<{ data: Coin }> = ({ data }) => {
-
   // const date = dayjs(time.createdAt);
   // console.log(data);
   return (
     <>
       <Flex>
-        <Box p='2'>
+        <Box p="2">
           <HStack>
-            {data.type == 0 ?
-              <Circle size='50px' bg='teal' color='white'>
+            {data.type == 0 ? (
+              <Circle size="50px" bg="teal" color="white">
                 <Text>충전</Text>
-              </Circle> :
-              <Circle size='50px' bg='tomato' color='white' >
+              </Circle>
+            ) : (
+              <Circle size="50px" bg="tomato" color="white">
                 <Text>사용</Text>
-              </Circle>}
+              </Circle>
+            )}
             <Box>
               <Text>날짜</Text>
               <Text>코인 사용(콘서트 예매)</Text>
@@ -54,15 +53,17 @@ const CoinHistory: FC<{ data: Coin }> = ({ data }) => {
         <Spacer />
         <Box>
           <HStack>
-            <Text> {data.type == 0 ? "+" : "-"} {data.variation}C</Text>
+            <Text>
+              {" "}
+              {data.type == 0 ? "+" : "-"} {data.variation}C
+            </Text>
           </HStack>
         </Box>
       </Flex>
     </>
   );
-}
+};
 export default function CoinPage() {
-
   const { data: userData } = useUser(); // 현재 로그인 user 정보
   const [pageIndex, setPageIndex] = useState(1);
   const router = useRouter();
@@ -72,7 +73,7 @@ export default function CoinPage() {
     if (page) {
       setPageIndex(page);
     }
-  })
+  });
   const { data: coinData } = useSWR(`/coin_histories?per_page=3&filter=user_id:${userData.id}&page=${pageIndex}`, fetcher);
   // console.log(coinData);
 
@@ -84,20 +85,14 @@ export default function CoinPage() {
             <Heading fontWeight="700" size="2xl" my="20px">
               마이페이지/내코인
             </Heading>
-            <Box p={5} shadow='md' width='100%'>
+            <Box p={5} shadow="md" width="100%">
               <CoinHeader data={userData} />
-              <Divider my={6} orientation='horizontal' />
-              {!coinData ?
+              <Divider my={6} orientation="horizontal" />
+              {!coinData ? (
                 <Center>
-                  <Spinner
-                    thickness='4px'
-                    speed='0.65s'
-                    emptyColor='gray.200'
-                    color='blue.500'
-                    size='xl'
-                  />
+                  <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
                 </Center>
-                :
+              ) : (
                 <Box>
                   {coinData.data?.map((coinInfo, index) => (
                     <Box key={index}>
@@ -105,25 +100,18 @@ export default function CoinPage() {
                     </Box>
                   ))}
                   <Center>
-                    <PaginationBtn
-                      data={coinData.meta}
-                      url={`/my/coin?`}
-                    />
+                    <PaginationBtn data={coinData.meta} url={`/my/coin?`} />
                   </Center>
                 </Box>
-              }
-
+              )}
             </Box>
           </VStack>
         </Box>
-      </Flex >
-
+      </Flex>
     </>
   );
-};
+}
 
 CoinPage.getLayout = function getLayout(page: ReactElement) {
   return <MyLayout>{page}</MyLayout>;
 };
-
-
