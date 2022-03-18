@@ -1,4 +1,4 @@
-import { Flex, Divider } from '@chakra-ui/react/node_modules/@chakra-ui/layout';
+import { Flex, Divider } from "@chakra-ui/react";
 
 const CommonDivider = () => {
   return (
