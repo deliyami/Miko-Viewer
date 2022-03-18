@@ -1,6 +1,7 @@
 import setMotionToAvatar from "@src/helper/setMotionToAvatar";
 import showChatToRoom from "@src/helper/showChatToRoom";
 import { toastLog } from "@src/helper/toastLog";
+import { updateUserScore } from "@src/helper/updateUserScore";
 import useMyPeer from "@src/hooks/useMyPeer";
 import useSocket from "@src/hooks/useSocket";
 import { enterConcertState, enterRoomIdAsyncState } from "@src/state/recoil/concertState";
@@ -28,14 +29,11 @@ interface ConnectParams {
   video: boolean;
 }
 
-//@ts-ignore
-const getUserMedia =
-  //@ts-ignore
-  navigator.getUserMedia ||
-  //@ts-ignore
-  navigator.webkitGetUserMedia ||
-  //@ts-ignore
-  navigator.mozGetUserMedia;
+const getUserMedia = navigator.mediaDevices.getUserMedia;
+// //@ts-ignore
+// navigator.webkitGetUserMedia ||
+// //@ts-ignore
+// navigator.mozGetUserMedia;
 
 const WithSocketEventLayout: FC = ({ children }) => {
   const concertId = useRecoilValue(enterConcertState)?.id;
@@ -50,7 +48,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
   // getUserMedia의 callback이 실행되지 않아서 먼저 들어온 사람의 영상이 안 보일 수 있음.
   const [streamOptions, _] = useState<ConnectParams>({
     audio: true,
-    video: false,
+    video: true,
   });
 
   const setPeerDataList = useSetRecoilState(peerDataListState);
@@ -93,6 +91,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
         case "motion":
           setMotionToAvatar(id, event.data);
           break;
+        case "scoreUpdate":
+          updateUserScore(id, event.data);
         default:
           break;
       }
@@ -127,6 +127,14 @@ const WithSocketEventLayout: FC = ({ children }) => {
       toastLog("error", "myPeer error", "심각한 에러발생 로그창 확인.");
     });
 
+    getUserMedia(streamOptions)
+      .then(stream => {
+        setMyStream(stream);
+      })
+      .catch(err => {
+        toastLog("error", "get stream fail", "", err);
+      });
+
     const newUserCome = (otherPeerId: string, roomID: string, otherUserData: PeerDataInterface["data"]) => {
       console.log("newUserCome", otherPeerId), "emit";
 
@@ -138,9 +146,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
         }),
       );
       console.log("getUser Media");
-      getUserMedia(
-        streamOptions,
-        stream => {
+      getUserMedia(streamOptions)
+        .then(stream => {
           console.log("getUser Media2");
           setMyStream(stream);
           if (otherPeerId !== myPeerUniqueID) {
@@ -150,27 +157,24 @@ const WithSocketEventLayout: FC = ({ children }) => {
               addMediaStreamToPeersDataList(remoteStream, call.peer);
             });
           }
-        },
-        err => {
+        })
+        .catch(err => {
           console.error("Failed to get local stream", err);
           toastLog("error", "Failed to get local stream", "미디어에 대한 접근 권한을 얻지 못 했습니다.");
-        },
-      );
+        });
 
       myPeer.on("call", mediaConnection => {
-        getUserMedia(
-          { video: true, audio: true },
-          myStream => {
+        getUserMedia({ video: true, audio: true })
+          .then(myStream => {
             setMyStream(myStream);
             mediaConnection.answer(myStream);
             mediaConnection.on("stream", otherStream => {
               addMediaStreamToPeersDataList(otherStream, mediaConnection.peer);
             });
-          },
-          err => {
+          })
+          .catch(err => {
             console.error("Failed to get stream", err);
-          },
-        );
+          });
       });
 
       const dataConnection = myPeer.connect(otherPeerId);

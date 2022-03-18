@@ -1,5 +1,6 @@
 import { useColorModeValue } from "@chakra-ui/react";
 
+// 첫번째 화이트, 두번째 블랙.
 const COLOR = {
   surface: ["#FFFFFF", "#2D3748"], // white , gray.700
   background: ["gray.50", "#121212"], // gray.50 , material black

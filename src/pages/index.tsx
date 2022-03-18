@@ -9,37 +9,46 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import { ReactElement } from "react";
 
-const tab = [
-  { id: "ranking", name: "RANKING" },
-  { id: "new", name: "NEW" },
+const tabs = [
+  { id: 'recommend', name: 'RECOMMEND' },
+  { id: 'ranking', name: 'RANKING' },
+  { id: 'new', name: 'NEW' },
 ];
 
 // TIP 무조건 서버에서 실행됨, Dev모드에서는 매번 실행
 export const getStaticProps: GetStaticProps<{
   data: Concert[];
 }> = async context => {
-  const { data } = await getDataFromLaravel<Pagination<Concert>>("/concerts", {
+  // NOTE  undefined를 구조부해 할당할려고 해서 에러 났었음.
+  //  getStaticProps에 대해서는 서버 에러일때를 생각하고 에러 핸들링
+  const result = await getDataFromLaravel<Pagination<Concert>>("/concerts", {
     per_page: 3,
   });
 
   return {
     props: {
-      data: data.data,
+      data: result ? result.data.data : [],
     },
     revalidate: 60 * 30, // 30분 마다 재생성
   };
 };
 
-export default function HomePage({ data }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function HomePage({
+  data,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+
   return (
     <>
-      <Carousel />
+      <Heading size="xl" fontSize="50px" my={5}>
+        RECOMMEND
+      </Heading>
+      <Carousel data={data} />
       <Flex pt={50} width="full" justifyContent="center">
         <VStack align="start">
-          {tab.map(({ name }) => (
-            <Box mb={9}>
+          {tabs.map((tab, idx) => (
+            <Box mb={9} key={idx}>
               <Heading size="xl" fontSize="50px" my={5}>
-                {name}
+                {tab.name}
               </Heading>
               <ConcertList data={data} />
               <Link href={`/concerts`}>

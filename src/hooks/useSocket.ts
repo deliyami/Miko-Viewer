@@ -1,10 +1,11 @@
+import { SOCKET_URL } from "@src/const";
 import { useEffect, useRef } from "react";
 import io, { Socket } from "socket.io-client";
 
 const useSocket = () => {
   const socket = useRef<Socket>(
     window.socket ??
-      io("http://localhost:3002", {
+      io(SOCKET_URL, {
         autoConnect: true,
         // forceNew: true,
         transports: ["websocket", "polling"],

@@ -1,9 +1,8 @@
 import { createStandaloneToast } from "@chakra-ui/react";
-import { LARAVEL_URL } from "@src/const";
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 
 const config: AxiosRequestConfig<any> = {
-  baseURL: "http://" + LARAVEL_URL,
+  baseURL: "http://" + process.env.NEXT_PUBLIC_LARAVEL_URL,
   withCredentials: true,
   timeout: 5000,
 };
@@ -58,7 +57,9 @@ const fetcher = (url: string) =>
       return res.data;
     })
     .catch(err => {
-      throw new Error("An error occurred while fetching the data.");
+      // throw new Error("An error occurred while fetching the data.");
+      console.log("error in fetcher", err);
+      return undefined;
     });
 
 const fetcherForInfinite = (url: string) =>

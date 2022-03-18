@@ -1,17 +1,46 @@
-import { Box, Image } from "@chakra-ui/react";
+import { ArrowLeftIcon, ArrowRightIcon } from '@chakra-ui/icons';
+import { AspectRatio, Box, Center, Flex, Grid, GridItem, Icon, Image } from '@chakra-ui/react';
+import { S3_URL } from '@src/const';
+import { Concert } from '@src/types/share/Concert';
+import { FC } from 'react';
 
-const posterList = [{ name: "방탄소년단", show: true, url: "http://file6.instiz.net/data/cached_img/upload/2016/03/21/0/6d295bb95b9a85accddc49640327f174.jpg" }];
+const Carousel: FC<{ data: Concert[] }> = ({ data }) => {
 
-const Carousel = params => {
-  return (
-    <Box>
-      {/* <Link href=""> */}
-      {posterList.map(({ name, show, url }) => (
-        <Image width="100%" objectFit="cover" height="350px" objectPosition="0px -1200px" src={url} alt={name} />
-      ))}
-      {/* </Link> */}
-    </Box>
-  );
-};
+    const concerts = data;
+    // console.log(S3_URL + concerts[0].coverImage);
+    const onBeforePageHandler = () => {
 
+    }
+
+    const onNextPageHandler = () => {
+
+    }
+
+    return (
+        <Box>
+            <Grid templateColumns='repeat(5, 1fr)' gap={4}>
+                <Center>
+                    <GridItem colStart={1} >
+                        <Flex justify='end'>
+                            <Icon as={ArrowLeftIcon} onClick={onBeforePageHandler} />
+                        </Flex>
+                    </GridItem>
+                </Center>
+                <GridItem colStart={2} colEnd={5}>
+                    <AspectRatio maxW="100%" maxH="350px" ratio={5 / 4}>
+                        <Center>
+                            <Image src={S3_URL + concerts[1].coverImage} alt='naruto' objectFit='cover' />
+                        </Center>
+                    </AspectRatio>
+                </GridItem>
+                <Center>
+                    <GridItem colStart={5}>
+                        <Icon as={ArrowRightIcon} onClick={onNextPageHandler} />
+                    </GridItem>
+                </Center>
+            </Grid>
+
+        </Box >
+    );
+}
 export default Carousel;

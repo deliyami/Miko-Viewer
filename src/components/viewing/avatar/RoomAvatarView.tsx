@@ -1,5 +1,7 @@
-import { Button, Center, HStack, Tag, Text } from "@chakra-ui/react";
+import { Box, Button, Center, HStack, Tag, Text } from "@chakra-ui/react";
+import { latestScoreStateF } from "@src/state/recoil/scoreState";
 import { myStreamState, PeerDataInterface, peerDataListState } from "@src/state/recoil/viewingState";
+import { addedScoreForSeconds } from "@src/state/shareObject/shareObject";
 import { useUser } from "@src/state/swr/useUser";
 import { createRef, FC, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -78,3 +80,44 @@ const MyUserBox: FC = () => {
 };
 
 export default RoomAvatarView;
+
+const TempAddScoreLogic = () => {
+  useEffect(() => {
+    const setIntervalId = setInterval(() => {
+      addedScoreForSeconds.addScore(Math.round(Math.random() * 10));
+    }, 1000);
+    return () => {
+      clearInterval(setIntervalId);
+    };
+  }, []);
+
+  return <Box></Box>;
+};
+
+const TempRoomAvatarView = () => {
+  const { data } = useUser();
+
+  return (
+    <Center gap="5">
+      {new Array(5).fill(0).map((_, idx) => {
+        const score = useRecoilValue(latestScoreStateF(idx === 0 ? data.uuid : idx + ""));
+        return (
+          <Box position="relative" width={200} height={200} bg="red" backgroundImage="url('/image/temp/avatar.png')" backgroundRepeat="no-repeat" backgroundSize="cover">
+            <Text>아바타</Text>
+            <Center width="full" position="absolute" bottom="0.5" h="2rem" color="white">
+              <Text as="span" fontSize="1xl">
+                Score{" "}
+              </Text>
+              <Text as="span" fontSize="2xl" id={idx === 0 ? `{score-${data.uuid}}` : idx + ""}>
+                {score}
+              </Text>
+            </Center>
+          </Box>
+        );
+      })}
+      <TempAddScoreLogic />
+    </Center>
+  );
+};
+
+export { TempRoomAvatarView };

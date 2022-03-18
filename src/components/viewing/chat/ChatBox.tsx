@@ -21,7 +21,7 @@ const ChatBox = () => {
   };
   console.log("message", messages);
   return (
-    <VStack backgroundColor="#181818" width="20vw" textColor="white">
+    <VStack backgroundColor="#202020" border="2px" borderColor="#262626" width="20vw" textColor="white">
       <Text>채팅</Text>
       <VStack height="75vh" width="full" overflow="scroll" p="4">
         {messages.length > 0

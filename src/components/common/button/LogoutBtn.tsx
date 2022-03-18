@@ -10,8 +10,10 @@ const LogoutBtn = () => {
     const isLogoutSuccess = await axiosI.get<boolean>("/logout");
 
     if (isLogoutSuccess) {
-      mutate(null, { revalidate: false });
       router.push("/");
+      setTimeout(() => {
+        mutate(null, { revalidate: false });
+      }, 0);
     }
   };
 

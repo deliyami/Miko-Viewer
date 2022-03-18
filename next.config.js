@@ -21,6 +21,10 @@ module.exports = {
   //       },
   //     ];
   //   },
+  experimental: {
+    reactMode: "concurrent",
+    reactRoot: true,
+  },
   typescript: {
     ignoreBuildErrors: true,
   },

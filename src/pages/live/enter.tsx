@@ -13,10 +13,10 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 const EnterRoomBtn = () => {
   const router = useRouter();
   const curUserTicket = useRecoilValue(curUserTicketState);
-
+  console.log("enter room btn", curUserTicket);
   const enterHandler = () => {
     setCookie(USER_TICKET_COOKIE, curUserTicket.id + "", 6);
-    router.push("/live/viewing");
+    router.push("/live/viewing", "", { shallow: false });
   };
 
   return <Button onClick={enterHandler}>입장하기</Button>;

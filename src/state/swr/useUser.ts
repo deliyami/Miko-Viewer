@@ -32,6 +32,7 @@ const useUser = () => {
   useEffect(() => {
     if (userResult.data?.uuid) {
       window.localStorage.setItem("uuid", userResult.data.uuid);
+      // console.log(userResult.data);
     } else {
       window.localStorage.removeItem("uuid");
     }
