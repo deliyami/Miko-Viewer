@@ -19,9 +19,9 @@ const Category = () => {
 
   return (
     <Box>
-      {cateName.map((name, idx) => (
-        <Button key={idx} onClick={() => setCategory(name.id)} m="10px" colorScheme='blue'>
-          {name.name}
+      {cateName.map(({ name, id }) => (
+        <Button onClick={() => setCategory(id)} m="10px" colorScheme="blue">
+          {name}
         </Button>
       ))}
     </Box>
