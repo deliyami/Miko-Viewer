@@ -5,11 +5,7 @@ import { ChangeEventHandler, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 
 // NOTE Navigator.getUserMedia() deprecated
-const getUserMedia = navigator.mediaDevices.getUserMedia;
-// //@ts-ignore
-// navigator.webkitGetUserMedia ||
-// //@ts-ignore
-// navigator.mozGetUserMedia;
+const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices) as typeof navigator.mediaDevices.getUserMedia;
 
 async function getConnectedDevices(type: MediaDeviceKind) {
   const devices = await navigator.mediaDevices.enumerateDevices();

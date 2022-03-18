@@ -17,23 +17,14 @@ import { ChatMessageInterface } from "@src/types/ChatMessageType";
 import { DataConnectionEvent } from "@src/types/DataConnectionEventType";
 import produce from "immer";
 import { DataConnection } from "peerjs";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 const motionStore = {
   peerId: { data: "data" },
 }; // 60times
 
-interface ConnectParams {
-  audio: boolean;
-  video: boolean;
-}
-
-const getUserMedia = navigator.mediaDevices.getUserMedia;
-// //@ts-ignore
-// navigator.webkitGetUserMedia ||
-// //@ts-ignore
-// navigator.mozGetUserMedia;
+const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices) as typeof navigator.mediaDevices.getUserMedia;
 
 const WithSocketEventLayout: FC = ({ children }) => {
   const concertId = useRecoilValue(enterConcertState)?.id;
@@ -46,10 +37,12 @@ const WithSocketEventLayout: FC = ({ children }) => {
   console.log("user uuid", user.data.uuid);
   // NOTE video를 true로 할경우 여러 브라우저에서 카메로 리소스 접근할때 보안상의 이유로 에러가 나올 확률이 높음
   // getUserMedia의 callback이 실행되지 않아서 먼저 들어온 사람의 영상이 안 보일 수 있음.
-  const [streamOptions, _] = useState<ConnectParams>({
-    audio: true,
-    video: true,
-  });
+  //  const getUserMedia = navigator.mediaDevices.getUserMedia; 으로 뺴주면 왜 오류가 나는걸까, this binding 문제?
+  // const [streamOptions, _] = useState<MediaStreamConstraints>({
+  //   audio: true,
+  //   video: true,
+  // });
+  const streamOptions: MediaStreamConstraints = { audio: true, video: true };
 
   const setPeerDataList = useSetRecoilState(peerDataListState);
   const setMyStream = useSetRecoilState(myStreamState);
@@ -84,6 +77,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
   const addEventToDataConnection = (dataConnection: DataConnection) => {
     const id = dataConnection.peer;
     dataConnection.on("data", (event: DataConnectionEvent) => {
+      console.log("data from peer", id);
       switch (event.type) {
         case "chat":
           showChatToRoom(id, event.data.text, 5);
@@ -127,12 +121,14 @@ const WithSocketEventLayout: FC = ({ children }) => {
       toastLog("error", "myPeer error", "심각한 에러발생 로그창 확인.");
     });
 
+    // navigator.mediaDevices.
     getUserMedia(streamOptions)
       .then(stream => {
         setMyStream(stream);
       })
       .catch(err => {
         toastLog("error", "get stream fail", "", err);
+        console.error(err);
       });
 
     const newUserCome = (otherPeerId: string, roomID: string, otherUserData: PeerDataInterface["data"]) => {
