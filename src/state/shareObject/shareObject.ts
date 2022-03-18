@@ -24,3 +24,5 @@ class AddedScoreForSeconds {
 }
 
 export const addedScoreForSeconds = new AddedScoreForSeconds();
+export const roomMemberScores = {} as { [key: string]: number };
+export const hideChatSetTimeOut = {};

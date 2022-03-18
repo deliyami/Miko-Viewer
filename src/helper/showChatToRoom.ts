@@ -1,4 +1,4 @@
-import { hideChatSetTimeOut } from "@src/shareObject";
+import { hideChatSetTimeOut } from "@src/state/shareObject/shareObject";
 
 const showChatToRoom = (id: string, text: string, time: number = 5) => {
   const chatDiv = document.getElementById(id + "chat");

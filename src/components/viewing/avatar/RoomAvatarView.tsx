@@ -1,5 +1,5 @@
 import { Box, Button, Center, HStack, Tag, Text } from "@chakra-ui/react";
-import { latestScoreStateF } from "@src/state/recoil/scoreState";
+import { latestScoreState } from "@src/state/recoil/scoreState";
 import { myStreamState, PeerDataInterface, peerDataListState } from "@src/state/recoil/viewingState";
 import { addedScoreForSeconds } from "@src/state/shareObject/shareObject";
 import { useUser } from "@src/state/swr/useUser";
@@ -96,11 +96,25 @@ const TempAddScoreLogic = () => {
 
 const TempRoomAvatarView = () => {
   const { data } = useUser();
+  const peers = useRecoilValue(peerDataListState);
+  const scores = useRecoilValue(latestScoreState);
 
   return (
     <Center gap="5">
-      {new Array(5).fill(0).map((_, idx) => {
-        const score = useRecoilValue(latestScoreStateF(idx === 0 ? data.uuid : idx + ""));
+      <Box position="relative" width={200} height={200} bg="red" backgroundImage="url('/image/temp/avatar.png')" backgroundRepeat="no-repeat" backgroundSize="cover">
+        <Text>나</Text>
+        <Center width="full" position="absolute" bottom="0.5" h="2rem" color="white">
+          <Text as="span" fontSize="1xl">
+            내 Score
+          </Text>
+          <Text as="span" fontSize="2xl">
+            {scores?.[data.uuid] ?? 0}
+          </Text>
+        </Center>
+      </Box>
+
+      {peers.map((peer, idx) => {
+        const score = scores?.[peer.id] ?? 0;
         return (
           <Box position="relative" width={200} height={200} bg="red" backgroundImage="url('/image/temp/avatar.png')" backgroundRepeat="no-repeat" backgroundSize="cover">
             <Text>아바타</Text>
@@ -108,7 +122,7 @@ const TempRoomAvatarView = () => {
               <Text as="span" fontSize="1xl">
                 Score{" "}
               </Text>
-              <Text as="span" fontSize="2xl" id={idx === 0 ? `{score-${data.uuid}}` : idx + ""}>
+              <Text as="span" fontSize="2xl">
                 {score}
               </Text>
             </Center>

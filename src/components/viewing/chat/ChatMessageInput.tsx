@@ -1,6 +1,5 @@
 import { Box, Button, Center, FormControl, Input, ScaleFade } from "@chakra-ui/react";
 import sendToAllPeers from "@src/helper/sendToAllPeers";
-import showChatToRoom from "@src/helper/showChatToRoom";
 import useSocket from "@src/hooks/useSocket";
 import { enterRoomIdState } from "@src/state/recoil/concertState";
 import { chatModeState, isShowChatInputState, peerDataListState } from "@src/state/recoil/viewingState";
@@ -29,7 +28,7 @@ const ChatMessageInput = () => {
     };
 
     sendToAllPeers(peers, { type: "chat", data });
-    showChatToRoom(user.data.uuid, newMessage, 5);
+    // showChatToRoom(user.data.uuid, newMessage, 5);
 
     if (chatMode === "public") {
       socket.emit("fe-send-message", data, roomId);

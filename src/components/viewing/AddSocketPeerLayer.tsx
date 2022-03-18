@@ -23,7 +23,9 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 const motionStore = {
   peerId: { data: "data" },
 }; // 60times
-
+// NOTE video를 true로 할경우 여러 브라우저에서 카메로 리소스 접근할때 보안상의 이유로 에러가 나올 확률이 높음
+// getUserMedia의 callback이 실행되지 않아서 먼저 들어온 사람의 영상이 안 보일 수 있음.
+// Bind 해주지 않으면 this 에러남.
 const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices) as typeof navigator.mediaDevices.getUserMedia;
 
 const WithSocketEventLayout: FC = ({ children }) => {
@@ -34,10 +36,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
   const user = useUser();
   const myPeer = useMyPeer();
   const myPeerUniqueID = user.data.uuid;
-  console.log("user uuid", user.data.uuid);
-  // NOTE video를 true로 할경우 여러 브라우저에서 카메로 리소스 접근할때 보안상의 이유로 에러가 나올 확률이 높음
-  // getUserMedia의 callback이 실행되지 않아서 먼저 들어온 사람의 영상이 안 보일 수 있음.
-  //  const getUserMedia = navigator.mediaDevices.getUserMedia; 으로 뺴주면 왜 오류가 나는걸까, this binding 문제?
+
   // const [streamOptions, _] = useState<MediaStreamConstraints>({
   //   audio: true,
   //   video: true,
@@ -196,7 +195,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
       );
     };
     const broadcastNewMessage = (data: ChatMessageInterface) => {
-      console.log("broadcastNewMessage", data);
       setMessages(
         produce(prevMsgs => {
           prevMsgs.push(data);

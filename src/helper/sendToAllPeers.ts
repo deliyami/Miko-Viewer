@@ -4,6 +4,7 @@ import { DataConnectionEvent } from "@src/types/DataConnectionEventType";
 const sendToAllPeers = (peers: PeerDataInterface[], data: DataConnectionEvent) => {
   peers.forEach(({ dataConnection }) => {
     dataConnection?.send(data);
+    console.log("sendTopper", dataConnection);
   });
 };
 
