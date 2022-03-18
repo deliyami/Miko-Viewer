@@ -1,11 +1,11 @@
-import { ChakraProvider } from "@chakra-ui/react";
-import theme from "@src/theme";
-import { NextPage } from "next";
-import { AppProps } from "next/app";
-import Peer from "peerjs";
-import { ReactElement, ReactNode, useEffect } from "react";
-import { RecoilRoot } from "recoil";
-import { Socket } from "socket.io-client";
+import { ChakraProvider } from '@chakra-ui/react';
+import theme from '@src/theme';
+import { NextPage } from 'next';
+import { AppProps } from 'next/app';
+import Peer from 'peerjs';
+import { ReactElement, ReactNode, useEffect } from 'react';
+import { RecoilRoot } from 'recoil';
+import { Socket } from 'socket.io-client';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -15,8 +15,8 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-if (process.env.NEXT_PUBLIC_API_MOCKING === "enabled") {
-  require("@src/mocks");
+if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
+  require('@src/mocks');
 }
 declare global {
   interface Window {

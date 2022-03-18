@@ -1,18 +1,18 @@
-import { Box, Button, Flex, Heading, VStack } from "@chakra-ui/react";
-import Carousel from "@src/components/home/Carousel";
-import ConcertList from "@src/components/home/ConcertList";
-import { getDataFromLaravel } from "@src/helper/getDataFromLaravel";
-import BasicLayout from "@src/layout/BasicLayout";
-import { Pagination } from "@src/types/share/common/common";
-import { Concert } from "@src/types/share/Concert";
-import { GetStaticProps, InferGetStaticPropsType } from "next";
-import Link from "next/link";
-import { ReactElement } from "react";
+import { Box, Button, Flex, Heading, VStack } from '@chakra-ui/react';
+import Carousel from '@src/components/home/Carousel';
+import ConcertList from '@src/components/home/ConcertList';
+import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
+import BasicLayout from '@src/layout/BasicLayout';
+import { Pagination } from '@src/types/share/common/common';
+import { Concert } from '@src/types/share/Concert';
+import { GetStaticProps, InferGetStaticPropsType } from 'next';
+import Link from 'next/link';
+import { ReactElement } from 'react';
 
 const tabs = [
-  { id: "recommend", name: "RECOMMEND" },
-  { id: "ranking", name: "RANKING" },
-  { id: "new", name: "NEW" },
+  { id: 'recommend', name: 'RECOMMEND' },
+  { id: 'ranking', name: 'RANKING' },
+  { id: 'new', name: 'NEW' },
 ];
 
 // TIP 무조건 서버에서 실행됨, Dev모드에서는 매번 실행
@@ -21,7 +21,7 @@ export const getStaticProps: GetStaticProps<{
 }> = async context => {
   // NOTE  undefined를 구조부해 할당할려고 해서 에러 났었음.
   //  getStaticProps에 대해서는 서버 에러일때를 생각하고 에러 핸들링
-  const result = await getDataFromLaravel<Pagination<Concert>>("/concerts", {
+  const result = await getDataFromLaravel<Pagination<Concert>>('/concerts', {
     per_page: 3,
   });
 

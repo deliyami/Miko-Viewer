@@ -1,5 +1,5 @@
-import { Center, Text } from "@chakra-ui/react";
-import { withSuspense } from "./withSuspenseHOC";
+import { Center, Text } from '@chakra-ui/react';
+import { withSuspense } from './withSuspenseHOC';
 
 const Layout = ({ children }) => {
   return (

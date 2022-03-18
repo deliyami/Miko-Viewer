@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+import { atom } from 'recoil';
 
 // export const latestScoreStateF = atomFamily<number, string>({
 //   key: "latestScoreStateF",
@@ -8,6 +8,6 @@ import { atom } from "recoil";
 // });
 
 export const latestScoreState = atom<{ [key: string]: number }>({
-  key: "latestScoreStateF",
+  key: 'latestScoreStateF',
   default: {},
 });

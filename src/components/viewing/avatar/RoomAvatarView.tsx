@@ -1,12 +1,12 @@
-import { Box, Button, Center, HStack, Tag, Text } from "@chakra-ui/react";
-import { latestScoreState } from "@src/state/recoil/scoreState";
-import { myStreamState, PeerDataInterface, peerDataListState } from "@src/state/recoil/viewingState";
-import { addedScoreForSeconds } from "@src/state/shareObject/shareObject";
-import { useUser } from "@src/state/swr/useUser";
-import { createRef, FC, useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { AvatarModel } from "./AvatarModel";
-import ModelMotion from "./ModelMotion";
+import { Box, Button, Center, HStack, Tag, Text } from '@chakra-ui/react';
+import { latestScoreState } from '@src/state/recoil/scoreState';
+import { myStreamState, PeerDataInterface, peerDataListState } from '@src/state/recoil/viewingState';
+import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
+import { useUser } from '@src/state/swr/useUser';
+import { createRef, FC, useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { AvatarModel } from './AvatarModel';
+import ModelMotion from './ModelMotion';
 
 const RoomAvatarView = () => {
   const peerDataList = useRecoilValue(peerDataListState);
@@ -42,13 +42,13 @@ const UserBox: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
   };
 
   return (
-    <Center width="300px" height="300px" bgColor="blackAlpha.500" id={id + "box"} position="relative">
+    <Center width="300px" height="300px" bgColor="blackAlpha.500" id={id + 'box'} position="relative">
       <Text> {data.email} </Text>
-      <AvatarModel width={300} height={300} path={"http://localhost:3000/resources/babylonjs/models/proseka/proseka.glb"} peerId={peer.id} antialias></AvatarModel>
-      <Text fontSize="6xl" id={id + "chat"}></Text>
-      <Text fontSize="6xl" id={id + "motion"}></Text>
+      <AvatarModel width={300} height={300} path={'http://localhost:3000/resources/babylonjs/models/proseka/proseka.glb'} peerId={peer.id} antialias></AvatarModel>
+      <Text fontSize="6xl" id={id + 'chat'}></Text>
+      <Text fontSize="6xl" id={id + 'motion'}></Text>
       <Button onClick={handleMute}>
-        {muted ? "뮤트됨" : "재생중"}
+        {muted ? '뮤트됨' : '재생중'}
         <audio autoPlay muted={muted} ref={audioRef}>
           audio
         </audio>
@@ -66,15 +66,15 @@ const MyUserBox: FC = () => {
     data: { uuid, email },
   } = useUser();
   const [myStream, setMyStream] = useRecoilState(myStreamState);
-  console.log("myStream", myStream);
+  console.log('myStream', myStream);
 
   return (
-    <Center width="300px" height="300px" bgColor="blackAlpha.500" id={uuid + "box"} position="relative">
+    <Center width="300px" height="300px" bgColor="blackAlpha.500" id={uuid + 'box'} position="relative">
       <Text> {email} </Text>
-      <AvatarModel width={300} height={300} path={"http://localhost:3000/resources/babylonjs/models/proseka/proseka.glb"} peerId={"kirari"} antialias></AvatarModel>
+      <AvatarModel width={300} height={300} path={'http://localhost:3000/resources/babylonjs/models/proseka/proseka.glb'} peerId={'kirari'} antialias></AvatarModel>
       {myStream ? <ModelMotion mediaStream={myStream}></ModelMotion> : <></>}
-      <Text fontSize="6xl" id={uuid + "chat"}></Text>
-      <Text fontSize="6xl" id={uuid + "motion"}></Text>
+      <Text fontSize="6xl" id={uuid + 'chat'}></Text>
+      <Text fontSize="6xl" id={uuid + 'motion'}></Text>
     </Center>
   );
 };
@@ -110,13 +110,13 @@ const TempRoomAvatarView = () => {
           <Text as="span" fontSize="2xl">
             {scores?.[data.uuid] ?? 0}
           </Text>
-          <Text fontSize="6xl" id={data.id + "chat"}></Text>
+          <Text fontSize="6xl" id={data.id + 'chat'}></Text>
         </Center>
       </Box>
 
       {peers.map((peer, idx) => {
         const score = scores?.[peer.id] ?? 0;
-        console.log("peer other in avatar", peer);
+        console.log('peer other in avatar', peer);
         return (
           <Box
             position="relative"
@@ -131,12 +131,12 @@ const TempRoomAvatarView = () => {
             <Text>아바타</Text>
             <Center width="full" position="absolute" bottom="0.5" h="2rem" color="white">
               <Text as="span" fontSize="1xl">
-                Score{" "}
+                Score{' '}
               </Text>
               <Text as="span" fontSize="2xl">
                 {score}
               </Text>
-              <Text fontSize="6xl" id={peer.id + "chat"}></Text>
+              <Text fontSize="6xl" id={peer.id + 'chat'}></Text>
             </Center>
           </Box>
         );

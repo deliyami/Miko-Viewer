@@ -1,7 +1,7 @@
-import { Box, Center, SimpleGrid, Text } from "@chakra-ui/react";
-import { quizResultMetaDataState } from "@src/state/recoil/timeMetaDataState";
-import { memo, useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { Box, Center, SimpleGrid, Text } from '@chakra-ui/react';
+import { quizResultMetaDataState } from '@src/state/recoil/timeMetaDataState';
+import { memo, useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 
 const Timer = memo<{ durationTime: number }>(({ children, durationTime }) => {
   const [remainTime, setRemainTime] = useState(durationTime);
@@ -50,7 +50,7 @@ const QuizResultView = () => {
       <SimpleGrid columns={2} spacingX="10px" spacingY="10px" height="60%" width="50%">
         {choices.map(({ id, value }, idx) => (
           <Center
-            _hover={{ boxShadow: "0 0 0 3px white inset", backgroundColor: "#000000AA" }}
+            _hover={{ boxShadow: '0 0 0 3px white inset', backgroundColor: '#000000AA' }}
             bg="#00000055"
             color="white"
             borderRadius="base"

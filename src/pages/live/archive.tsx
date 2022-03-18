@@ -1,5 +1,5 @@
-import { Box, Text } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { Box, Text } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 
 const ArchivePage = second => {
   const router = useRouter();

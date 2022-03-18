@@ -1,18 +1,18 @@
-import { ChatMessageInterface } from "./ChatMessageType";
-import { ChatMotionInterface } from "./ChatMotionType";
+import { ChatMessageInterface } from './ChatMessageType';
+import { ChatMotionInterface } from './ChatMotionType';
 
 interface ChatEvent {
-  type: "chat";
+  type: 'chat';
   data: ChatMessageInterface;
 }
 
 interface MotionEvent {
-  type: "motion";
+  type: 'motion';
   data: ChatMotionInterface;
 }
 
 interface UpdateScoreEvent {
-  type: "scoreUpdate";
+  type: 'scoreUpdate';
   data: number;
 }
 

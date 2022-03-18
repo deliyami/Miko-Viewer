@@ -1,14 +1,14 @@
-import { HStack, VStack } from "@chakra-ui/react";
-import VideoPlayer from "@src/components/ivs-player/VideoPlayer";
-import ChatBox from "@src/components/viewing/chat/ChatBox";
-import { useEffect, useState } from "react";
-import WithSocketEventLayout from "./AddSocketPeerLayer";
-import { TempRoomAvatarView } from "./avatar/RoomAvatarView";
-import ChatMessageInput from "./chat/ChatMessageInput";
-import ViewingDrawer from "./menu/ViewingDrawer";
-import ViewingSideMenuBar from "./menu/ViewingSideMenuBar";
-import ViewingWindowEventLayout from "./ViewingWindowEventLayout";
-import { WithIntervalTaskLayer } from "./WithIntervalTaskLayer";
+import { HStack, VStack } from '@chakra-ui/react';
+import VideoPlayer from '@src/components/ivs-player/VideoPlayer';
+import ChatBox from '@src/components/viewing/chat/ChatBox';
+import { useEffect, useState } from 'react';
+import WithSocketEventLayout from './AddSocketPeerLayer';
+import { TempRoomAvatarView } from './avatar/RoomAvatarView';
+import ChatMessageInput from './chat/ChatMessageInput';
+import ViewingDrawer from './menu/ViewingDrawer';
+import ViewingSideMenuBar from './menu/ViewingSideMenuBar';
+import ViewingWindowEventLayout from './ViewingWindowEventLayout';
+import { WithIntervalTaskLayer } from './WithIntervalTaskLayer';
 
 const ViewingCSRPage = () => {
   const { IVSPlayer } = window;
@@ -17,7 +17,7 @@ const ViewingCSRPage = () => {
     let intervalId = null;
     if (!scriptLoaded) {
       intervalId = setInterval(() => {
-        console.log("ivs player Loaded?", IVSPlayer ? "Yes" : "NO");
+        console.log('ivs player Loaded?', IVSPlayer ? 'Yes' : 'NO');
         if (IVSPlayer) {
           setScriptLoaded(true);
           clearInterval(intervalId);
@@ -37,7 +37,7 @@ const ViewingCSRPage = () => {
           <HStack width="100vw" minH="100vh" backgroundColor="#181818">
             <ViewingSideMenuBar />
             <VStack width="full">
-              {IVSPlayer ? <VideoPlayer /> : "loading"}
+              {IVSPlayer ? <VideoPlayer /> : 'loading'}
               <TempRoomAvatarView />
             </VStack>
             <ChatBox />

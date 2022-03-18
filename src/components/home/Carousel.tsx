@@ -1,8 +1,8 @@
-import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
-import { AspectRatio, Box, Center, Flex, Grid, GridItem, Icon, Image } from "@chakra-ui/react";
-import { S3_URL } from "@src/const";
-import { Concert } from "@src/types/share/Concert";
-import { FC } from "react";
+import { ArrowLeftIcon, ArrowRightIcon } from '@chakra-ui/icons';
+import { AspectRatio, Box, Center, Flex, Grid, GridItem, Icon, Image } from '@chakra-ui/react';
+import { S3_URL } from '@src/const';
+import { Concert } from '@src/types/share/Concert';
+import { FC } from 'react';
 
 const Carousel: FC<{ data: Concert[] }> = ({ data }) => {
   const concerts = data;

@@ -1,19 +1,19 @@
-import { Box, Button, HStack, Text } from "@chakra-ui/react";
-import styled from "@emotion/styled";
-import { enterConcertState } from "@src/state/recoil/concertState";
-import { msgMetaDataState, quizMetaDataState, quizResultMetaDataState } from "@src/state/recoil/timeMetaDataState";
-import { AllMetaData } from "@src/types/share/TimeMetadataFormat";
-import * as ivs from "amazon-ivs-player";
-import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import QuizResultView from "./QuizResultView";
-import QuizView from "./QuizView";
-import VideoQualitySelect from "./VideoQualitySelect";
-const streamUrl = "https://de853ef2a345.us-east-1.playback.live-video.net/api/video/v1/us-east-1.121323684128.channel.Cj5ynk97sEJv.m3u8";
+import { Box, Button, HStack, Text } from '@chakra-ui/react';
+import styled from '@emotion/styled';
+import { enterConcertState } from '@src/state/recoil/concertState';
+import { msgMetaDataState, quizMetaDataState, quizResultMetaDataState } from '@src/state/recoil/timeMetaDataState';
+import { AllMetaData } from '@src/types/share/TimeMetadataFormat';
+import * as ivs from 'amazon-ivs-player';
+import { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import QuizResultView from './QuizResultView';
+import QuizView from './QuizView';
+import VideoQualitySelect from './VideoQualitySelect';
+const streamUrl = 'https://de853ef2a345.us-east-1.playback.live-video.net/api/video/v1/us-east-1.121323684128.channel.Cj5ynk97sEJv.m3u8';
 
 const jwt =
-  "eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9.eyJhd3M6Y2hhbm5lbC1hcm4iOiJhcm46YXdzOml2czp1cy1lYXN0LTE6MTIxMzIzNjg0MTI4OmNoYW5uZWwvQ2o1eW5rOTdzRUp2IiwiYXdzOmFjY2Vzcy1jb250cm9sLWFsbG93LW9yaWdpbiI6IioiLCJleHAiOjE2NDY4MDg2MjQsImlhdCI6MTY0NDM4OTg2OX0.fmdaERbkxkNAThbJtFNv-JScxNl0dy1TSsS7gYWZmOWokUS-teTlZrMKwRvfaIXrUPRpBH7KQoI0n6wOOuOqwODM24mOpgv7OrUb6GBfTllKFes0XZ3sMCpey6bnkzya";
+  'eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9.eyJhd3M6Y2hhbm5lbC1hcm4iOiJhcm46YXdzOml2czp1cy1lYXN0LTE6MTIxMzIzNjg0MTI4OmNoYW5uZWwvQ2o1eW5rOTdzRUp2IiwiYXdzOmFjY2Vzcy1jb250cm9sLWFsbG93LW9yaWdpbiI6IioiLCJleHAiOjE2NDY4MDg2MjQsImlhdCI6MTY0NDM4OTg2OX0.fmdaERbkxkNAThbJtFNv-JScxNl0dy1TSsS7gYWZmOWokUS-teTlZrMKwRvfaIXrUPRpBH7KQoI0n6wOOuOqwODM24mOpgv7OrUb6GBfTllKFes0XZ3sMCpey6bnkzya';
 
 // NOTE aws cli 실행할때 region 설정 주의
 // aws ivs put-metadata --channel-arn arn:aws:ivs:us-east-1:121323684128:channel/Cj5ynk97sEJv --metadata '{"question": "What does IVS stand for?", "correctIndex": 0, "answers": ["interactive video service", "interesting video service", "ingenious video service"]}'
@@ -36,7 +36,7 @@ const VideoPlayer = props => {
   const { IVSPlayer } = window;
   const enterConcertData = useRecoilValue(enterConcertState);
   const router = useRouter();
-  if (!enterConcertData) router.push("/");
+  if (!enterConcertData) router.push('/');
 
   const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -63,9 +63,9 @@ const VideoPlayer = props => {
   }, [loading]);
 
   if (IVSPlayer?.isPlayerSupported) {
-    console.log("yes");
+    console.log('yes');
   } else {
-    console.log("no");
+    console.log('no');
   }
 
   useEffect(() => {
@@ -73,7 +73,7 @@ const VideoPlayer = props => {
     const { ERROR } = IVSPlayer.PlayerEventType;
     const { isPlayerSupported } = IVSPlayer;
     if (!isPlayerSupported) {
-      return console.warn("현재 브라우저는 ivs player를 지원하지 않습니다.");
+      return console.warn('현재 브라우저는 ivs player를 지원하지 않습니다.');
     }
 
     const onStateChange = () => {
@@ -82,7 +82,7 @@ const VideoPlayer = props => {
       switch (playerState) {
         case READY:
           setSelectableQuality(player.current.getQualities());
-          console.log("aaa", player.current.getQualities());
+          console.log('aaa', player.current.getQualities());
           break;
         default:
           break;
@@ -93,18 +93,18 @@ const VideoPlayer = props => {
     };
 
     const onError = err => {
-      console.warn("Player Event - ERROR:", err);
+      console.warn('Player Event - ERROR:', err);
     };
 
     const onTimeMetaData = cue => {
       const result = JSON.parse(cue.text) as AllMetaData;
-      if (result.type === "q") {
+      if (result.type === 'q') {
         setQuizMetaDataState(result);
       }
-      if (result.type === "m") {
+      if (result.type === 'm') {
         setMsgMetaDataState(result);
       }
-      if (result.type === "qr") {
+      if (result.type === 'qr') {
         setQuizResultMetaDataState(result);
       }
 
@@ -118,7 +118,7 @@ const VideoPlayer = props => {
     player.current.setVolume(1);
     player.current.setLiveLowLatencyEnabled(true);
 
-    player.current.load(enterConcertData?.playbackUrl + "?token=" + jwt);
+    player.current.load(enterConcertData?.playbackUrl + '?token=' + jwt);
     player.current.play();
 
     player.current.addEventListener(READY, onStateChange);
@@ -147,7 +147,7 @@ const VideoPlayer = props => {
         player.current.seekTo(player.current.getPosition() + 5.0);
       }
 
-      console.log("-------------------------------");
+      console.log('-------------------------------');
     }, 1000);
 
     return () => {
@@ -180,7 +180,7 @@ const VideoPlayer = props => {
     window.scrollTo({
       top: offsetTop - 20,
       left: offsetLeft,
-      behavior: "smooth",
+      behavior: 'smooth',
     });
   };
 
@@ -210,14 +210,14 @@ const VideoPlayer = props => {
           zIndex="1"
           visibility="hidden"
           _groupHover={{
-            visibility: "visible",
+            visibility: 'visible',
           }}
         >
           <Text color="white">{enterConcertData?.playbackUrl}</Text>
 
           <HStack id="control-bottom" position="absolute" width="full" bottom="0" p="2rem">
-            <Button onClick={toggleMute}>{muted ? "소리켜기" : "뮤트하기"}</Button>
-            <Button onClick={pause}>{isPlaying ? "정지" : "재생"}</Button>
+            <Button onClick={toggleMute}>{muted ? '소리켜기' : '뮤트하기'}</Button>
+            <Button onClick={pause}>{isPlaying ? '정지' : '재생'}</Button>
             <Box flexGrow="1"></Box>
             <VideoQualitySelect player={player} selectableQuality={selectableQuality}></VideoQualitySelect>
           </HStack>

@@ -1,26 +1,26 @@
-import { Box, Button, Center, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Image, Input } from "@chakra-ui/react";
-import { S3_URL } from "@src/const";
-import MyLayout from "@src/layout/MyLayout";
-import { useUser } from "@src/state/swr/useUser";
-import { ReactElement, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Box, Button, Center, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Image, Input } from '@chakra-ui/react';
+import { S3_URL } from '@src/const';
+import MyLayout from '@src/layout/MyLayout';
+import { useUser } from '@src/state/swr/useUser';
+import { ReactElement, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 export default function EditPage() {
   const {
     formState: { errors, isSubmitting },
     register,
-  } = useForm<{ email: string; name: string }>({ mode: "all" });
+  } = useForm<{ email: string; name: string }>({ mode: 'all' });
   const { data: userData } = useUser();
 
   const [userName, setName] = useState(userData.name);
   const [userEmail, setEmail] = useState(userData.email);
 
   const onChangeEmail = e => {
-    console.log("dd");
+    console.log('dd');
     setEmail(e.target.value);
   };
   const onChangeName = e => {
-    console.log("dd");
+    console.log('dd');
     setName(e.target.value);
   };
 
@@ -40,11 +40,11 @@ export default function EditPage() {
                 value={userName}
                 type="text"
                 id="name"
-                {...register("name", {
-                  required: "This is required",
+                {...register('name', {
+                  required: 'This is required',
                   minLength: {
                     value: 1,
-                    message: "Minimum length should be 1",
+                    message: 'Minimum length should be 1',
                   },
                 })}
               />
@@ -57,11 +57,11 @@ export default function EditPage() {
                 value={userEmail}
                 type="email"
                 id="email"
-                {...register("email", {
-                  required: "This is required",
+                {...register('email', {
+                  required: 'This is required',
                   minLength: {
                     value: 4,
-                    message: "Minimum length should be 4",
+                    message: 'Minimum length should be 4',
                   },
                 })}
               />
@@ -74,10 +74,10 @@ export default function EditPage() {
             <Input mb={4} value={`${userData.coin}`} isReadOnly />
             <Center>
               <Button
-                bg={"blue.400"}
-                color={"white"}
+                bg={'blue.400'}
+                color={'white'}
                 _hover={{
-                  bg: "blue.500",
+                  bg: 'blue.500',
                 }}
                 type="submit"
                 isLoading={isSubmitting}

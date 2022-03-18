@@ -1,13 +1,13 @@
-import { Box, Button, Center, Circle, Divider, Flex, Heading, HStack, Spacer, Spinner, Text, VStack } from "@chakra-ui/react";
-import PaginationBtn from "@src/components/common/button/PaginationBtn";
-import MyLayout from "@src/layout/MyLayout";
-import { fetcher } from "@src/state/fetcher";
-import { useUser } from "@src/state/swr/useUser";
-import { Coin } from "@src/types/share/Coin";
-import { User } from "@src/types/share/User";
-import { useRouter } from "next/router";
-import { FC, ReactElement, useEffect, useState } from "react";
-import useSWR from "swr";
+import { Box, Button, Center, Circle, Divider, Flex, Heading, HStack, Spacer, Spinner, Text, VStack } from '@chakra-ui/react';
+import PaginationBtn from '@src/components/common/button/PaginationBtn';
+import MyLayout from '@src/layout/MyLayout';
+import { fetcher } from '@src/state/fetcher';
+import { useUser } from '@src/state/swr/useUser';
+import { Coin } from '@src/types/share/Coin';
+import { User } from '@src/types/share/User';
+import { useRouter } from 'next/router';
+import { FC, ReactElement, useEffect, useState } from 'react';
+import useSWR from 'swr';
 
 const CoinHeader: FC<{ data: User }> = ({ data }) => {
   // console.log(data);
@@ -54,8 +54,8 @@ const CoinHistory: FC<{ data: Coin }> = ({ data }) => {
         <Box>
           <HStack>
             <Text>
-              {" "}
-              {data.type == 0 ? "+" : "-"} {data.variation}C
+              {' '}
+              {data.type == 0 ? '+' : '-'} {data.variation}C
             </Text>
           </HStack>
         </Box>

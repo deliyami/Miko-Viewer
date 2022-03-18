@@ -1,8 +1,8 @@
-import { Box, Select } from "@chakra-ui/react";
-import { toastLog } from "@src/helper/toastLog";
-import { myStreamState } from "@src/state/recoil/viewingState";
-import { ChangeEventHandler, useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { Box, Select } from '@chakra-ui/react';
+import { toastLog } from '@src/helper/toastLog';
+import { myStreamState } from '@src/state/recoil/viewingState';
+import { ChangeEventHandler, useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 
 // NOTE Navigator.getUserMedia() deprecated
 const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices) as typeof navigator.mediaDevices.getUserMedia;
@@ -24,17 +24,17 @@ const CameraSwitch = params => {
 
   useEffect(() => {
     const deviceChangeHandler = async () => {
-      const initCameras = await getConnectedDevices("videoinput");
-      const initAudios = await getConnectedDevices("audioinput");
+      const initCameras = await getConnectedDevices('videoinput');
+      const initAudios = await getConnectedDevices('audioinput');
       setCameras(initCameras);
       setCAudios(initAudios);
     };
 
     deviceChangeHandler();
-    navigator.mediaDevices.addEventListener("devicechange", deviceChangeHandler);
+    navigator.mediaDevices.addEventListener('devicechange', deviceChangeHandler);
 
     return () => {
-      navigator.mediaDevices.removeEventListener("devicechange", deviceChangeHandler);
+      navigator.mediaDevices.removeEventListener('devicechange', deviceChangeHandler);
     };
   }, []);
 
@@ -46,7 +46,7 @@ const CameraSwitch = params => {
         setCurCameraId(deviceId);
       })
       .catch(err => {
-        toastLog("error", "get stream fail", "", err);
+        toastLog('error', 'get stream fail', '', err);
       });
   };
 
@@ -58,7 +58,7 @@ const CameraSwitch = params => {
         setCurAudioId(deviceId);
       })
       .catch(err => {
-        toastLog("error", "get stream fail", "", err);
+        toastLog('error', 'get stream fail', '', err);
       });
   };
 

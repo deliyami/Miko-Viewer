@@ -1,8 +1,8 @@
-import { Box, Center, SimpleGrid, Text } from "@chakra-ui/react";
-import useSocket from "@src/hooks/useSocket";
-import { quizMetaDataState } from "@src/state/recoil/timeMetaDataState";
-import { memo, useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { Box, Center, SimpleGrid, Text } from '@chakra-ui/react';
+import useSocket from '@src/hooks/useSocket';
+import { quizMetaDataState } from '@src/state/recoil/timeMetaDataState';
+import { memo, useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 
 const Timer = memo<{ durationTime: number }>(({ children, durationTime }) => {
   const [remainTime, setRemainTime] = useState(durationTime);
@@ -23,7 +23,7 @@ const QuizView = () => {
   const socket = useSocket();
 
   const sendQuizChoice = (idx: number) => {
-    socket.emit("fe-send-quiz-choice", quizMetaData.createdAt, idx);
+    socket.emit('fe-send-quiz-choice', quizMetaData.createdAt, idx);
     setQuizMetaData(undefined);
   };
 
@@ -57,7 +57,7 @@ const QuizView = () => {
       <SimpleGrid columns={2} spacingX="10px" spacingY="10px" height="60%" width="50%">
         {choices.map((text, idx) => (
           <Center
-            _hover={{ boxShadow: "0 0 0 3px white inset", backgroundColor: "#000000AA" }}
+            _hover={{ boxShadow: '0 0 0 3px white inset', backgroundColor: '#000000AA' }}
             bg="#00000055"
             color="white"
             borderRadius="base"

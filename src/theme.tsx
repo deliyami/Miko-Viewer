@@ -1,17 +1,17 @@
-import { extendTheme, ThemeConfig } from "@chakra-ui/react";
-import { createBreakpoints } from "@chakra-ui/theme-tools";
+import { extendTheme, ThemeConfig } from '@chakra-ui/react';
+import { createBreakpoints } from '@chakra-ui/theme-tools';
 
 const fonts = { mono: `'Menlo', monospace` };
 
 const breakpoints = createBreakpoints({
-  sm: "40em",
-  md: "52em",
-  lg: "64em",
-  xl: "80em",
+  sm: '40em',
+  md: '52em',
+  lg: '64em',
+  xl: '80em',
 });
 
 const config: ThemeConfig = {
-  initialColorMode: "light",
+  initialColorMode: 'light',
   useSystemColorMode: false,
 };
 
@@ -21,69 +21,69 @@ const theme = extendTheme({
   config,
   layerStyles: {
     base: {
-      bg: "gray.50",
-      border: "2px solid",
-      borderColor: "gray.500",
+      bg: 'gray.50',
+      border: '2px solid',
+      borderColor: 'gray.500',
     },
     selected: {
-      bg: "teal.500",
-      color: "teal.700",
-      borderColor: "orange.500",
+      bg: 'teal.500',
+      color: 'teal.700',
+      borderColor: 'orange.500',
     },
   },
   textStyles: {
     h1: {
       // you can also use responsive styles
-      fontSize: ["56px", "72px"],
-      fontWeight: "bold",
-      lineHeight: "110%",
-      letterSpacing: "-2%",
+      fontSize: ['56px', '72px'],
+      fontWeight: 'bold',
+      lineHeight: '110%',
+      letterSpacing: '-2%',
     },
     h2: {
-      fontSize: ["40px", "56px"],
-      fontWeight: "semibold",
-      lineHeight: "110%",
-      letterSpacing: "-1%",
+      fontSize: ['40px', '56px'],
+      fontWeight: 'semibold',
+      lineHeight: '110%',
+      letterSpacing: '-1%',
     },
     h3: {
-      fontSize: ["28px", "40px"],
-      fontWeight: "semibold",
-      lineHeight: "110%",
-      letterSpacing: "-1%",
+      fontSize: ['28px', '40px'],
+      fontWeight: 'semibold',
+      lineHeight: '110%',
+      letterSpacing: '-1%',
     },
     h4: {
-      fontSize: ["26px", "32px"],
-      fontWeight: "semibold",
-      lineHeight: "110%",
-      letterSpacing: "-1%",
+      fontSize: ['26px', '32px'],
+      fontWeight: 'semibold',
+      lineHeight: '110%',
+      letterSpacing: '-1%',
     },
     h5: {
-      fontSize: ["22px", "32px"],
-      fontWeight: "semibold",
-      lineHeight: "110%",
-      letterSpacing: "-1%",
+      fontSize: ['22px', '32px'],
+      fontWeight: 'semibold',
+      lineHeight: '110%',
+      letterSpacing: '-1%',
     },
     h6: {
-      fontSize: ["20px", "28px"],
-      fontWeight: "semibold",
-      lineHeight: "110%",
-      letterSpacing: "-1%",
+      fontSize: ['20px', '28px'],
+      fontWeight: 'semibold',
+      lineHeight: '110%',
+      letterSpacing: '-1%',
     },
     st: {
-      fontSize: ["20px", "16px"],
-      fontWeight: "semibold",
-      lineHeight: "110%",
-      letterSpacing: "-1%",
+      fontSize: ['20px', '16px'],
+      fontWeight: 'semibold',
+      lineHeight: '110%',
+      letterSpacing: '-1%',
     },
     body: {
-      fontSize: ["20px", "16px"],
-      fontWeight: "semibold",
-      lineHeight: "110%",
-      letterSpacing: "-1%",
+      fontSize: ['20px', '16px'],
+      fontWeight: 'semibold',
+      lineHeight: '110%',
+      letterSpacing: '-1%',
     },
   },
   colors: {
-    black: "#16161D",
+    black: '#16161D',
   },
   fonts,
   breakpoints,

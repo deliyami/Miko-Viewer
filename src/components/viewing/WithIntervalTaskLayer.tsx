@@ -1,11 +1,11 @@
-import sendToAllPeers from "@src/helper/sendToAllPeers";
-import { latestScoreState } from "@src/state/recoil/scoreState";
-import { peerDataListState } from "@src/state/recoil/viewingState";
-import { addedScoreForSeconds, roomMemberScores } from "@src/state/shareObject/shareObject";
-import { useUser } from "@src/state/swr/useUser";
-import produce from "immer";
-import { FC, useEffect } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import sendToAllPeers from '@src/helper/sendToAllPeers';
+import { latestScoreState } from '@src/state/recoil/scoreState';
+import { peerDataListState } from '@src/state/recoil/viewingState';
+import { addedScoreForSeconds, roomMemberScores } from '@src/state/shareObject/shareObject';
+import { useUser } from '@src/state/swr/useUser';
+import produce from 'immer';
+import { FC, useEffect } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 export const WithIntervalTaskLayer: FC = ({ children }) => {
   const { data } = useUser();
@@ -20,15 +20,15 @@ export const WithIntervalTaskLayer: FC = ({ children }) => {
       setLatestScoreState(
         produce(draft => {
           const updatedScore = (draft?.[data.uuid] ?? 0) + addedScore;
-          sendToAllPeers(peers, { type: "scoreUpdate", data: updatedScore });
+          sendToAllPeers(peers, { type: 'scoreUpdate', data: updatedScore });
           draft[data.uuid] = updatedScore;
         }),
       );
     }, 1000);
 
     const updateRoomMemberScoreId = setInterval(() => {
-      console.log("peers", peers);
-      console.log("roomMemberScores", roomMemberScores);
+      console.log('peers', peers);
+      console.log('roomMemberScores', roomMemberScores);
       setLatestScoreState(
         produce(draft => {
           for (const key in roomMemberScores) {

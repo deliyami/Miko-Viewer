@@ -1,4 +1,4 @@
-import { Box, Flex, Text, Image } from "@chakra-ui/react";
+import { Box, Flex, Text, Image } from '@chakra-ui/react';
 
 const Detail = item => {
   console.log(item.item.detail);
@@ -7,8 +7,8 @@ const Detail = item => {
     // </Flex>
     // <Flex flexDirection={"column"}>
     // </Flex>
-    <Flex justifyContent={"center"} flexDirection="column" alignItems={"center"}>
-      <Text w={"50%"} border={"1px"} p="2%">
+    <Flex justifyContent={'center'} flexDirection="column" alignItems={'center'}>
+      <Text w={'50%'} border={'1px'} p="2%">
         {item.item.detail}
       </Text>
       <Image src={item.item.image}></Image>

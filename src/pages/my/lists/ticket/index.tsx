@@ -1,7 +1,7 @@
-import { Box, Flex, Heading, VStack } from "@chakra-ui/react";
-import { default as ConcertTicket } from "@src/components/ConcertTicket";
-import Footer from "@src/components/home/Footer";
-import MenuBar from "@src/components/home/MenuBar";
+import { Box, Flex, Heading, VStack } from '@chakra-ui/react';
+import { default as ConcertTicket } from '@src/components/ConcertTicket';
+import Footer from '@src/components/home/Footer';
+import MenuBar from '@src/components/home/MenuBar';
 
 const Index = params => {
   return (

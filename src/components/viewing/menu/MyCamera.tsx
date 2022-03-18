@@ -1,9 +1,9 @@
-import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from "@chakra-ui/react";
-import CameraScreen from "@src/components/common/meidaView/CameraScreen";
-import CameraSwitch from "@src/components/common/meidaView/CameraSwitch";
-import { myStreamState } from "@src/state/recoil/viewingState";
-import { forwardRef, useImperativeHandle } from "react";
-import { useRecoilValue } from "recoil";
+import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react';
+import CameraScreen from '@src/components/common/meidaView/CameraScreen';
+import CameraSwitch from '@src/components/common/meidaView/CameraSwitch';
+import { myStreamState } from '@src/state/recoil/viewingState';
+import { forwardRef, useImperativeHandle } from 'react';
+import { useRecoilValue } from 'recoil';
 
 const MyCamera = forwardRef(({ children }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();

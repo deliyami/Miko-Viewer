@@ -1,6 +1,7 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /**
  * @type {import('next').NextConfig}
- **/
+ * */
 module.exports = {
   // reactStrictMod: true,
   //   async redirects() {

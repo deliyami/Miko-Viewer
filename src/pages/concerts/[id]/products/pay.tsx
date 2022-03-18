@@ -1,51 +1,51 @@
-import { Button, Flex, Input, Radio, RadioGroup, Select, Text } from "@chakra-ui/react";
-import CommonDivider from "@src/components/common/divider/CommonDivider";
-import Status from "@src/components/product/Status";
-import BasicLayout from "@src/layout/BasicLayout";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { ReactElement, useState } from "react";
+import { Button, Flex, Input, Radio, RadioGroup, Select, Text } from '@chakra-ui/react';
+import CommonDivider from '@src/components/common/divider/CommonDivider';
+import Status from '@src/components/product/Status';
+import BasicLayout from '@src/layout/BasicLayout';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { ReactElement, useState } from 'react';
 
 const pay = () => {
-  const [radio, setRadio] = useState("0");
+  const [radio, setRadio] = useState('0');
   const router = useRouter();
   return (
-    <Flex flexDirection={"column"} w={"50%"} h="100vh" p={"2%"} ml={"25%"}>
+    <Flex flexDirection={'column'} w={'50%'} h="100vh" p={'2%'} ml={'25%'}>
       <Status status={2}></Status>
-      <Text fontWeight={"bold"} fontSize="3xl" alignSelf={"center"} mb="7%">
+      <Text fontWeight={'bold'} fontSize="3xl" alignSelf={'center'} mb="7%">
         お客様情報の入力
       </Text>
-      <Flex justifyContent={"space-between"} alignItems={"center"}>
-        <Text w={"15%"}>
-          お名前<span style={{ color: "red", fontSize: "1px", marginLeft: "10%" }}>必要</span>
+      <Flex justifyContent={'space-between'} alignItems={'center'}>
+        <Text w={'15%'}>
+          お名前<span style={{ color: 'red', fontSize: '1px', marginLeft: '10%' }}>必要</span>
         </Text>
-        <Flex w={"70%"} justifyContent={"space-around"}>
-          <Input required w={"45%"} placeholder="性" />
-          <Input required w={"45%"} placeholder="名" />
+        <Flex w={'70%'} justifyContent={'space-around'}>
+          <Input required w={'45%'} placeholder="性" />
+          <Input required w={'45%'} placeholder="名" />
         </Flex>
       </Flex>
       <CommonDivider></CommonDivider>
-      <Flex justifyContent={"space-between"} alignItems={"center"}>
-        <Text w={"16%"}>
-          お名前(ふりがな)<span style={{ color: "red", fontSize: "1px", marginLeft: "10%" }}>必要</span>
+      <Flex justifyContent={'space-between'} alignItems={'center'}>
+        <Text w={'16%'}>
+          お名前(ふりがな)<span style={{ color: 'red', fontSize: '1px', marginLeft: '10%' }}>必要</span>
         </Text>
-        <Flex w={"70%"} justifyContent={"space-around"}>
-          <Input required w={"45%"} placeholder="セイ" />
-          <Input required w={"45%"} placeholder="メイ" />
+        <Flex w={'70%'} justifyContent={'space-around'}>
+          <Input required w={'45%'} placeholder="セイ" />
+          <Input required w={'45%'} placeholder="メイ" />
         </Flex>
       </Flex>
       <CommonDivider></CommonDivider>
-      <Flex justifyContent={"space-between"} alignItems={"center"}>
-        <Text w={"16%"}>
-          住所<span style={{ color: "red", fontSize: "1px", marginLeft: "10%" }}>必要</span>
+      <Flex justifyContent={'space-between'} alignItems={'center'}>
+        <Text w={'16%'}>
+          住所<span style={{ color: 'red', fontSize: '1px', marginLeft: '10%' }}>必要</span>
         </Text>
-        <Flex w={"48%"} mr="20%" alignContent={"center"} alignItems="center" justifyContent={"space-around"}>
-          〒<Input required w={"20%"} />-
-          <Input required w={"20%"} />?<Button onClick={() => window.open("https://www.post.japanpost.jp/zipcode/", "_blank")}>郵便番号検索</Button>
+        <Flex w={'48%'} mr="20%" alignContent={'center'} alignItems="center" justifyContent={'space-around'}>
+          〒<Input required w={'20%'} />-
+          <Input required w={'20%'} />?<Button onClick={() => window.open('https://www.post.japanpost.jp/zipcode/', '_blank')}>郵便番号検索</Button>
         </Flex>
       </Flex>
-      <Flex py={"2%"} ml={"32%"} w={"50%"} flexDirection={"column"}>
-        <Select pb={"2%"} w={"35%"} required>
+      <Flex py={'2%'} ml={'32%'} w={'50%'} flexDirection={'column'}>
+        <Select pb={'2%'} w={'35%'} required>
           <option>都道府県を選択</option>
           <option value="1">北海道</option>
           <option value="1">青森県</option>
@@ -95,54 +95,54 @@ const pay = () => {
           <option value="46">鹿児島県</option>
           <option value="47">沖縄県</option>
         </Select>
-        <Input required mb={"2%"} placeholder="市区町村名(例 : 千台田区神田神保町)" />
+        <Input required mb={'2%'} placeholder="市区町村名(例 : 千台田区神田神保町)" />
         <Input required placeholder="番地・ビル名(例 : 1-3-5)" />
       </Flex>
       <CommonDivider></CommonDivider>
-      <Flex justifyContent={"space-between"} alignItems={"center"}>
-        <Text w={"16%"}>
-          電話番号<span style={{ color: "red", fontSize: "1px", marginLeft: "10%" }}>必要</span>
+      <Flex justifyContent={'space-between'} alignItems={'center'}>
+        <Text w={'16%'}>
+          電話番号<span style={{ color: 'red', fontSize: '1px', marginLeft: '10%' }}>必要</span>
         </Text>
-        <Flex alignItems={"center"} w="68%">
-          <Input required type={"number"} w={"12%"} mr={"1%"} />
+        <Flex alignItems={'center'} w="68%">
+          <Input required type={'number'} w={'12%'} mr={'1%'} />
           -
-          <Input required type={"number"} w={"12%"} mx={"1%"} />
+          <Input required type={'number'} w={'12%'} mx={'1%'} />
           -
-          <Input required type={"number"} w={"12%"} ml={"1%"} />
+          <Input required type={'number'} w={'12%'} ml={'1%'} />
         </Flex>
       </Flex>
 
       <CommonDivider></CommonDivider>
-      <Flex justifyContent={"space-between"} alignItems={"center"}>
-        <Text w={"16%"}>
-          メールアドレス<span style={{ color: "red", fontSize: "1px", marginLeft: "10%" }}>必要</span>
+      <Flex justifyContent={'space-between'} alignItems={'center'}>
+        <Text w={'16%'}>
+          メールアドレス<span style={{ color: 'red', fontSize: '1px', marginLeft: '10%' }}>必要</span>
         </Text>
-        <Flex w={"50%"} mr={"18%"} flexDirection={"column"} justifyContent={"space-around"}>
-          <Input required type={"text"} mb={"2%"} />
-          <Input required type={"text"} placeholder="確認のためにもう一度入力してください。" />
+        <Flex w={'50%'} mr={'18%'} flexDirection={'column'} justifyContent={'space-around'}>
+          <Input required type={'text'} mb={'2%'} />
+          <Input required type={'text'} placeholder="確認のためにもう一度入力してください。" />
         </Flex>
       </Flex>
       <CommonDivider></CommonDivider>
-      <Flex justifyContent={"space-between"} alignItems={"center"}>
-        <Text w={"16%"}>
-          メルマガ配信<span style={{ color: "red", fontSize: "1px", marginLeft: "10%" }}>必要</span>
+      <Flex justifyContent={'space-between'} alignItems={'center'}>
+        <Text w={'16%'}>
+          メルマガ配信<span style={{ color: 'red', fontSize: '1px', marginLeft: '10%' }}>必要</span>
         </Text>
-        <RadioGroup w={"68%"} onChange={setRadio} value={radio}>
+        <RadioGroup w={'68%'} onChange={setRadio} value={radio}>
           <Radio required value="1">
             配信
           </Radio>
-          <Radio required value="2" ml={"10px"}>
+          <Radio required value="2" ml={'10px'}>
             解除
           </Radio>
         </RadioGroup>
       </Flex>
 
-      <Flex justifyContent={"space-between"} h="100px" mt={"10%"}>
-        <Button w="23%" fontSize={"2xl"} onClick={() => router.back()}>
+      <Flex justifyContent={'space-between'} h="100px" mt={'10%'}>
+        <Button w="23%" fontSize={'2xl'} onClick={() => router.back()}>
           ← 戻る
         </Button>
         <Link href={`/concerts/${router.query.id}/products/check`}>
-          <Button fontSize={"2xl"} w="23%">
+          <Button fontSize={'2xl'} w="23%">
             次へ →
           </Button>
         </Link>

@@ -1,6 +1,6 @@
-import { Box, Flex, Heading, Image, VStack } from "@chakra-ui/react";
-import Footer from "@src/components/home/Footer";
-import MenuBar from "@src/components/home/MenuBar";
+import { Box, Flex, Heading, Image, VStack } from '@chakra-ui/react';
+import Footer from '@src/components/home/Footer';
+import MenuBar from '@src/components/home/MenuBar';
 
 const Ticket = params => {
   return (

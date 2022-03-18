@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef } from 'react';
 
 const CameraScreen: FC<{ stream: MediaStream }> = ({ stream }) => {
   const videoRef = useRef<HTMLVideoElement>();

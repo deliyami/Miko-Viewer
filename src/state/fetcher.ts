@@ -1,8 +1,8 @@
-import { createStandaloneToast } from "@chakra-ui/react";
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import { createStandaloneToast } from '@chakra-ui/react';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
 const config: AxiosRequestConfig<any> = {
-  baseURL: "http://" + process.env.NEXT_PUBLIC_LARAVEL_URL,
+  baseURL: 'http://' + process.env.NEXT_PUBLIC_LARAVEL_URL,
   withCredentials: true,
   timeout: 5000,
 };
@@ -18,11 +18,11 @@ const requestInterceptor = axiosI.interceptors.request.use(
   },
   function (error) {
     // 오류 요청을 보내기전 수행할 일
-    console.error("❌ response error", error.toJSON());
+    console.error('❌ response error', error.toJSON());
     toast({
       title: error.name,
       description: error.message,
-      status: "error",
+      status: 'error',
       duration: 1000,
       isClosable: true,
     });
@@ -38,11 +38,11 @@ const responseInterceptor = axiosI.interceptors.response.use(
   },
   function (error: AxiosError) {
     // 오류 응답을 처리
-    console.error("❌ response error", error.toJSON());
+    console.error('❌ response error', error.toJSON());
     toast({
       title: error.name,
       description: error.message,
-      status: "error",
+      status: 'error',
       duration: 1000,
       isClosable: true,
     });
@@ -58,7 +58,7 @@ const fetcher = (url: string) =>
     })
     .catch(err => {
       // throw new Error("An error occurred while fetching the data.");
-      console.log("error in fetcher", err);
+      console.log('error in fetcher', err);
       return undefined;
     });
 
@@ -69,7 +69,7 @@ const fetcherForInfinite = (url: string) =>
       return res.data;
     })
     .catch(err => {
-      throw new Error("An error occurred while fetching the data.");
+      throw new Error('An error occurred while fetching the data.');
     });
 
 export { fetcher, axiosI };

@@ -1,8 +1,8 @@
-import { Box, Center, Grid, GridItem, Text } from "@chakra-ui/react";
-import Footer from "@src/components/home/Footer";
-import MenuBar from "@src/components/home/MenuBar";
-import NavBar from "@src/components/my/Navbar";
-import { withSuspense } from "./withSuspenseHOC";
+import { Box, Center, Grid, GridItem, Text } from '@chakra-ui/react';
+import Footer from '@src/components/home/Footer';
+import MenuBar from '@src/components/home/MenuBar';
+import NavBar from '@src/components/my/Navbar';
+import { withSuspense } from './withSuspenseHOC';
 
 const Layout = ({ children }) => {
   return (

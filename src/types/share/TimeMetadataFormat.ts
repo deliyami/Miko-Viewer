@@ -1,7 +1,7 @@
 export type PositionNumberRange = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 // export type PositionNumberRange = 1 | 2 | 3;
 
-export type MetadataType = "m" | "q";
+export type MetadataType = 'm' | 'q';
 
 // 내용, 크기, 볼드, 폰트, 컬러
 // type MsgTextData = [string, number, number, string, Color];
@@ -34,7 +34,7 @@ export type MessageMainMetadata = {
   /**
    * data type:  메세지
    */
-  dataType: "m";
+  dataType: 'm';
   /**
    * Box: 박스 데이터
    */
@@ -69,7 +69,7 @@ export type QuizMainMetadata = {
   /**
    * data type:  퀴즈
    */
-  dataType: "q";
+  dataType: 'q';
   /**
    * Main Text:  큰 타이틀
    */
@@ -97,12 +97,12 @@ type CommonMetaData = {
 
 export type QuizMetaData = {
   data: QuizMainMetadata;
-  type: "q";
+  type: 'q';
 } & CommonMetaData;
 
 export type MessageMetadata = {
   data: MessageMainMetadata;
-  type: "m";
+  type: 'm';
 } & CommonMetaData;
 
 export type QuizResultMetaData = {
@@ -114,7 +114,7 @@ export type QuizResultMetaData = {
       value: number;
     }[];
   };
-  type: "qr";
+  type: 'qr';
 };
 
 export type MetaData = QuizMetaData | MessageMetadata;

@@ -1,21 +1,21 @@
-import "@mediapipe/camera_utils";
-import * as cam from "@mediapipe/camera_utils";
-import "@mediapipe/control_utils";
-import "@mediapipe/drawing_utils";
-import "@mediapipe/pose";
-import { Pose, Results } from "@mediapipe/pose";
-import sendToAllPeers from "@src/helper/sendToAllPeers";
-import { myStreamState, peerDataListState } from "@src/state/recoil/viewingState";
-import { useUser } from "@src/state/swr/useUser";
-import { ChatMotionInterface } from "@src/types/ChatMotionType";
-import { FaceDirection } from "@src/types/FaceDirectionType";
-import { Model } from "@src/types/ModelType";
-import * as BABYLON from "babylonjs";
-import * as Kalidokit from "kalidokit";
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { model } from "./GlobalModel";
-import { motion } from "./GlobalMotion";
+import '@mediapipe/camera_utils';
+import * as cam from '@mediapipe/camera_utils';
+import '@mediapipe/control_utils';
+import '@mediapipe/drawing_utils';
+import '@mediapipe/pose';
+import { Pose, Results } from '@mediapipe/pose';
+import sendToAllPeers from '@src/helper/sendToAllPeers';
+import { myStreamState, peerDataListState } from '@src/state/recoil/viewingState';
+import { useUser } from '@src/state/swr/useUser';
+import { ChatMotionInterface } from '@src/types/ChatMotionType';
+import { FaceDirection } from '@src/types/FaceDirectionType';
+import { Model } from '@src/types/ModelType';
+import * as BABYLON from 'babylonjs';
+import * as Kalidokit from 'kalidokit';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { model } from './GlobalModel';
+import { motion } from './GlobalMotion';
 
 const bornReset = (borns: BABYLON.TransformNode[], originalBorns: BABYLON.Quaternion[]) => {
   for (let i = 0; i < borns.length; i++) {
@@ -95,12 +95,12 @@ const faceTurn = (transBorn: BABYLON.TransformNode[], faceFront: number, faceLef
   transBorn[7].rotate(new BABYLON.Vector3(0, 1, 0), -(Math.atan2(avg, faceFront) - Math.PI / 4) * 10, 2);
 };
 
-const setBorn = (model: { [peerId: string]: Model }, peerId: string, poseRig: Kalidokit.TPose, faceRig: FaceDirection<"left" | "center" | "right", number>) => {
+const setBorn = (model: { [peerId: string]: Model }, peerId: string, poseRig: Kalidokit.TPose, faceRig: FaceDirection<'left' | 'center' | 'right', number>) => {
   const userBorns = model[peerId];
   bornReset(userBorns.borns, userBorns.originalBorns);
   bornTurn(userBorns.borns, 15, poseRig, 0);
   bornTurn(userBorns.borns, 11, poseRig, 1);
-  faceTurn(userBorns.borns, faceRig["center"], faceRig["left"], faceRig["right"]);
+  faceTurn(userBorns.borns, faceRig['center'], faceRig['left'], faceRig['right']);
   userBorns.scene.render();
 };
 
@@ -113,16 +113,16 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
 
   const user = useUser();
   const myStream = useRecoilValue(myStreamState);
-  const myPeerId = "kirari";
+  const myPeerId = 'kirari';
 
   const onResults = useCallback(
     (results: Results) => {
       if (
         model &&
-        model["kirari"] &&
-        model["kirari"].borns &&
-        model["kirari"].originalBorns &&
-        model["kirari"].scene &&
+        model['kirari'] &&
+        model['kirari'].borns &&
+        model['kirari'].originalBorns &&
+        model['kirari'].scene &&
         results &&
         results.poseLandmarks &&
         results.poseWorldLandmarks &&
@@ -131,7 +131,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
         // 0번 사용자 results를 window에 저장
 
         const poseRig = Kalidokit.Pose.solve(results.poseWorldLandmarks, results.poseLandmarks, {
-          runtime: "mediapipe",
+          runtime: 'mediapipe',
           video: webcamRef?.current,
           enableLegs: false,
         });
@@ -146,13 +146,13 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
           motion: { pose: poseRig, face: faceRig },
         };
         console.log(peers);
-        if (peers) sendToAllPeers(peers, { type: "motion", data });
+        if (peers) sendToAllPeers(peers, { type: 'motion', data });
 
         // kalido에서 나온 값을 기반으로... vector의 계산이 있음, (0,-1,0)에서 rotation각도 구하고 BABYLON.Vector3(x,y,z)방향으로 나온 각도만큼 굴려보기
         // 손에서 어깨 방향으로 역으로 계산, 팔꿈치>손 각도 계산>굴리기, (0,-1,0)에서 팔꿈치 각도 계산, 아니면 어깨 위치 계산해서 모두다 어깨 위치 값만큼 뺀 뒤에 계산...
         const anotherPeerId = motion.sender;
         for (let peerId in model) {
-          if (peerId === anotherPeerId && peerId !== "kirari") {
+          if (peerId === anotherPeerId && peerId !== 'kirari') {
             setBorn(model, peerId, motion.motion.pose, motion.motion.face);
           }
         }
@@ -209,7 +209,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
     };
   }
   useEffect(() => {
-    console.log("onResults tnwjdehla");
+    console.log('onResults tnwjdehla');
     poseRef.current.onResults(onResults);
   }, [peerChange, onResults]);
 
@@ -218,8 +218,8 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
       <video
         ref={webcamRef}
         style={{
-          visibility: "hidden",
-          position: "absolute",
+          visibility: 'hidden',
+          position: 'absolute',
           width: 320,
           height: 240,
         }}

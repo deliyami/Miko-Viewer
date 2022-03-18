@@ -1,5 +1,5 @@
-import { ChatMotionInterface } from "@src/types/ChatMotionType";
-import { atom } from "recoil";
+import { ChatMotionInterface } from '@src/types/ChatMotionType';
+import { atom } from 'recoil';
 
 // const modelState = atom<{ [peerId: string]: Model }>({
 //   key: "model",
@@ -14,9 +14,9 @@ import { atom } from "recoil";
 // });
 
 const motionState = atom<ChatMotionInterface>({
-  key: "motion",
+  key: 'motion',
   default: {
-    sender: "kirari",
+    sender: 'kirari',
     motion: {
       pose: undefined,
       face: { left: 0, center: 0, right: 0 },

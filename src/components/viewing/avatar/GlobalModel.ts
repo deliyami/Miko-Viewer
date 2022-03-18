@@ -1,4 +1,4 @@
-import { Model } from "@src/types/ModelType";
+import { Model } from '@src/types/ModelType';
 
 const model: { [peerId: string]: Model } = {
   kirari: {

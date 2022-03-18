@@ -7,7 +7,7 @@ export type User = {
   coin: number;
 };
 
-export type CreteUserData = Pick<User, "name" | "email"> & {
+export type CreteUserData = Pick<User, 'name' | 'email'> & {
   password: string;
   confirm: string;
 };

@@ -1,10 +1,10 @@
-import { Box, Button, Center, Flex, Heading, HStack, Image, Input } from "@chakra-ui/react";
-import { S3_URL } from "@src/const";
-import MyLayout from "@src/layout/MyLayout";
-import { useUser } from "@src/state/swr/useUser";
-import { User } from "@src/types/share/User";
-import Link from "next/link";
-import { FC, ReactElement } from "react";
+import { Box, Button, Center, Flex, Heading, HStack, Image, Input } from '@chakra-ui/react';
+import { S3_URL } from '@src/const';
+import MyLayout from '@src/layout/MyLayout';
+import { useUser } from '@src/state/swr/useUser';
+import { User } from '@src/types/share/User';
+import Link from 'next/link';
+import { FC, ReactElement } from 'react';
 
 const MyCard: FC<{ data: User }> = ({ data }) => {
   // console.log(data);

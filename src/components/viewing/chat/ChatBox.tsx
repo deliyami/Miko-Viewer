@@ -1,8 +1,8 @@
-import { Box, Text, VStack } from "@chakra-ui/react";
-import { messagesState } from "@src/state/recoil/viewingState";
-import { useEffect, useRef } from "react";
-import { useRecoilValue } from "recoil";
-import Message from "./Message";
+import { Box, Text, VStack } from '@chakra-ui/react';
+import { messagesState } from '@src/state/recoil/viewingState';
+import { useEffect, useRef } from 'react';
+import { useRecoilValue } from 'recoil';
+import Message from './Message';
 
 const ChatBox = () => {
   const messages = useRecoilValue(messagesState);
@@ -14,12 +14,12 @@ const ChatBox = () => {
 
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "start",
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'start',
     });
   };
-  console.log("message", messages);
+  console.log('message', messages);
   return (
     <VStack backgroundColor="#202020" border="2px" borderColor="#262626" width="20vw" textColor="white">
       <Text>채팅</Text>
@@ -28,8 +28,8 @@ const ChatBox = () => {
           ? messages.map((data, idx) => {
               return <Message key={idx} data={data} />;
             })
-          : "Chat is empty"}
-        <Box float="left" id="end-of-chatbox" style={{ clear: "both" }} ref={messagesEndRef} />
+          : 'Chat is empty'}
+        <Box float="left" id="end-of-chatbox" style={{ clear: 'both' }} ref={messagesEndRef} />
       </VStack>
     </VStack>
   );

@@ -1,8 +1,8 @@
-import { Box, HStack, Image, Text, VStack } from "@chakra-ui/react";
-import { S3_URL } from "@src/const";
-import { useUser } from "@src/state/swr/useUser";
-import Link from "next/link";
-import { FC, Suspense } from "react";
+import { Box, HStack, Image, Text, VStack } from '@chakra-ui/react';
+import { S3_URL } from '@src/const';
+import { useUser } from '@src/state/swr/useUser';
+import Link from 'next/link';
+import { FC, Suspense } from 'react';
 
 const MenuLink: FC<{ name: string; url: string }> = ({ name, url }) => {
   return (
@@ -46,10 +46,10 @@ const UserData = () => {
 
 const NavBar = params => {
   const linkList = [
-    { name: "나의 정보", url: "/my" },
-    { name: "나의 정보 수정", url: "/my/edit" },
-    { name: "코인 내역", url: "/my/coin" },
-    { name: "티켓 내역", url: "/my/lists/1" },
+    { name: '나의 정보', url: '/my' },
+    { name: '나의 정보 수정', url: '/my/edit' },
+    { name: '코인 내역', url: '/my/coin' },
+    { name: '티켓 내역', url: '/my/lists/1' },
   ];
 
   return (

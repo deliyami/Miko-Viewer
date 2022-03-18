@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Box, Image } from "@chakra-ui/react";
+import React, { useEffect } from 'react';
+import { Box, Image } from '@chakra-ui/react';
 // declare global{
 //     interface Window{
 //         Kakao: object;
@@ -16,16 +16,16 @@ const KakaoShareButton = () => {
       // 중복 initialization 방지
       if (!kakao.isInitialized()) {
         // 두번째 step 에서 가져온 javascript key 를 이용하여 initialize
-        kakao.init("e5a20ee967b726904571b9eb3c4db540");
+        kakao.init('e5a20ee967b726904571b9eb3c4db540');
       }
       kakao.Link.createDefaultButton({
         // Render 부분 id=kakao-link-btn 을 찾아 그부분에 렌더링을 합니다
-        container: "#kakao-link-btn",
-        objectType: "feed",
+        container: '#kakao-link-btn',
+        objectType: 'feed',
         content: {
-          title: "콘서트 결과",
-          description: "#과연 몇등일까요?",
-          imageUrl: "IMAGE_URL", // i.e. process.env.FETCH_URL + '/logo.png'
+          title: '콘서트 결과',
+          description: '#과연 몇등일까요?',
+          imageUrl: 'IMAGE_URL', // i.e. process.env.FETCH_URL + '/logo.png'
           link: {
             mobileWebUrl: window.location.href,
             webUrl: window.location.href,
@@ -33,7 +33,7 @@ const KakaoShareButton = () => {
         },
         buttons: [
           {
-            title: "웹으로 보기",
+            title: '웹으로 보기',
             link: {
               mobileWebUrl: window.location.href,
               webUrl: window.location.href,
@@ -44,8 +44,8 @@ const KakaoShareButton = () => {
     }
   };
   return (
-    <Box id="kakao-link-btn" cursor={"pointer"} w={"10%"} h={"50%"}>
-      <Image boxSize={"full"} src="/KakaoTalk_logo.svg"></Image>
+    <Box id="kakao-link-btn" cursor={'pointer'} w={'10%'} h={'50%'}>
+      <Image boxSize={'full'} src="/KakaoTalk_logo.svg"></Image>
     </Box>
   );
 };

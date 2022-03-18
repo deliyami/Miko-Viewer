@@ -1,9 +1,9 @@
-import { Box, HStack, Image, Spacer, Text } from "@chakra-ui/react";
-import { S3_URL } from "@src/const";
-import { useUser } from "@src/state/swr/useUser";
-import Link from "next/link";
-import { FC, Suspense } from "react";
-import LogoutBtn from "../common/button/LogoutBtn";
+import { Box, HStack, Image, Spacer, Text } from '@chakra-ui/react';
+import { S3_URL } from '@src/const';
+import { useUser } from '@src/state/swr/useUser';
+import Link from 'next/link';
+import { FC, Suspense } from 'react';
+import LogoutBtn from '../common/button/LogoutBtn';
 
 const MenuLink: FC<{ name: string; url: string }> = ({ name, url }) => {
   return (
@@ -52,9 +52,9 @@ const MenuBar = params => {
   // const devList = [{name: '챗팅', url: '/live/viewing' }];
 
   const linkList = [
-    { name: "콘서트 검색", url: "/concerts" },
-    { name: "이용자", url: "/my" },
-    { name: "챗팅", url: "/live/viewing" },
+    { name: '콘서트 검색', url: '/concerts' },
+    { name: '이용자', url: '/my' },
+    { name: '챗팅', url: '/live/viewing' },
     // {name: '로그인', url: '/login' },
     // ...devList,
   ];
@@ -64,7 +64,7 @@ const MenuBar = params => {
       <HStack as="ul" width="full" alignItems="center" padding="20px">
         <Link href="/">
           <a>
-            <Image src={"https://static.line-scdn.net/line_live/17d6ec1a9df/img/viewing/logo_viewing_pc_0923.png"} width="250px" objectFit="contain" />
+            <Image src={'https://static.line-scdn.net/line_live/17d6ec1a9df/img/viewing/logo_viewing_pc_0923.png'} width="250px" objectFit="contain" />
           </a>
         </Link>
         <Spacer />

@@ -1,5 +1,5 @@
-import { setMotion } from "@src/components/viewing/avatar/GlobalMotion";
-import { ChatMotionInterface } from "@src/types/ChatMotionType";
+import { setMotion } from '@src/components/viewing/avatar/GlobalMotion';
+import { ChatMotionInterface } from '@src/types/ChatMotionType';
 
 const setMotionToAvatar = (id: string, motionData: ChatMotionInterface) => {
   setMotion(id, motionData.motion.pose, motionData.motion.face);

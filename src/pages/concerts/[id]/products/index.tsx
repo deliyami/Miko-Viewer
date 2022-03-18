@@ -1,17 +1,17 @@
-import { Text, Spinner, useMediaQuery, Flex, Select } from "@chakra-ui/react";
-import BasicLayout from "@src/layout/BasicLayout";
-import axios from "axios";
-import { useRouter } from "next/router";
-import { ReactElement, useEffect, useState } from "react";
-import ProductsList from "../../../../components/product/ProductsList";
+import { Text, Spinner, useMediaQuery, Flex, Select } from '@chakra-ui/react';
+import BasicLayout from '@src/layout/BasicLayout';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import { ReactElement, useEffect, useState } from 'react';
+import ProductsList from '../../../../components/product/ProductsList';
 
 const ProductsPage = second => {
   const router = useRouter();
   // let rId = router.query.id;
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isLargerThan960] = useMediaQuery("(min-width: 960px)");
-  const [selected, setSelected] = useState("新着順");
+  const [isLargerThan960] = useMediaQuery('(min-width: 960px)');
+  const [selected, setSelected] = useState('新着順');
 
   function onSelectedChanged(event) {
     setSelected(event.target.value);
@@ -30,7 +30,7 @@ const ProductsPage = second => {
     data.sort(function (a, b) {
       return a.id - b.id;
     });
-    console.log("sortForLatest");
+    console.log('sortForLatest');
   }
   function sortForSold() {}
   function sortForLowPrice() {
@@ -65,21 +65,21 @@ const ProductsPage = second => {
   }
 
   return (
-    <Flex flexDirection={"column"} alignItems={"center"} h="full" w={"full"} justifyContent={"center"} p={"2%"}>
+    <Flex flexDirection={'column'} alignItems={'center'} h="full" w={'full'} justifyContent={'center'} p={'2%'}>
       {isLoading ? (
-        <Flex alignItems={"center"} justifyContent="center">
-          <Spinner size={"xl"}></Spinner>
+        <Flex alignItems={'center'} justifyContent="center">
+          <Spinner size={'xl'}></Spinner>
         </Flex>
       ) : data.length === 0 ? (
-        <Text color={"gray.300"} fontSize={"4xl"} cursor="default">
+        <Text color={'gray.300'} fontSize={'4xl'} cursor="default">
           このコンサートの賞品は用意しておりません。
         </Text>
       ) : (
-        <Flex flexDirection={"column"}>
-          <Text mb={"3%"} fontSize={"5xl"}>
+        <Flex flexDirection={'column'}>
+          <Text mb={'3%'} fontSize={'5xl'}>
             {router.query.id}번 콘서트의 상품
           </Text>
-          <Select mb={"3%"} alignSelf={"end"} textAlign={"center"} w={"15%"} size={"md"} value={selected} onChange={onSelectedChanged}>
+          <Select mb={'3%'} alignSelf={'end'} textAlign={'center'} w={'15%'} size={'md'} value={selected} onChange={onSelectedChanged}>
             <option>新着順</option>
             <option>売れている順</option>
             <option>価格が安い順</option>

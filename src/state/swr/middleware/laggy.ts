@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from 'react';
 
 // 키가 변경되더라도 데이터를 유지하기 위한 SWR 미들웨어입니다.
 export default function laggy(useSWRNext) {

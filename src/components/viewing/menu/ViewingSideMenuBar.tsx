@@ -1,10 +1,10 @@
-import { Center, Text, VStack } from "@chakra-ui/react";
-import { Children, cloneElement, FC, ReactElement, useRef } from "react";
-import { BiCamera } from "react-icons/bi";
-import { IoSettingsOutline } from "react-icons/io5";
-import { IconType } from "react-icons/lib";
-import MyCamera from "./MyCamera";
-import ViewingDrawer from "./ViewingDrawer";
+import { Center, Text, VStack } from '@chakra-ui/react';
+import { Children, cloneElement, FC, ReactElement, useRef } from 'react';
+import { BiCamera } from 'react-icons/bi';
+import { IoSettingsOutline } from 'react-icons/io5';
+import { IconType } from 'react-icons/lib';
+import MyCamera from './MyCamera';
+import ViewingDrawer from './ViewingDrawer';
 
 const IconBox: FC<{ text: string; icon: IconType }> = ({ children, text, icon }) => {
   const imperativeRef = useRef(null);
@@ -17,9 +17,9 @@ const IconBox: FC<{ text: string; icon: IconType }> = ({ children, text, icon })
         imperativeRef.current.open();
       }}
       cursor="pointer"
-      _hover={{ color: "#39c5bb" }}
+      _hover={{ color: '#39c5bb' }}
     >
-      {icon({ size: "100%", style: { padding: "0.5rem" } })}
+      {icon({ size: '100%', style: { padding: '0.5rem' } })}
       <Text>{text} </Text>
 
       {Children.map(children, (child, index) =>
