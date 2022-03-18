@@ -1,16 +1,14 @@
-import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
-import ConcertTicket from '@src/components/ConcertTicket';
-import MyLayout from '@src/layout/MyLayout';
-import { withSuspense } from '@src/layout/withSuspenseHOC';
-import { curUserTicketState } from '@src/state/recoil/concertState';
-import { useUser } from '@src/state/swr/useUser';
-import { useUserTickets } from '@src/state/swr/useUserTicket';
-import { Ticket } from '@src/types/share/Ticket';
-import { UserTicket } from '@src/types/share/UserTicket';
-import { useRouter } from 'next/router';
-import { FC, ReactElement } from 'react';
-import { useSetRecoilState } from 'recoil';
-
+import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import ConcertTicket from "@src/components/ConcertTicket";
+import BasicLayout from "@src/layout/BasicLayout";
+import { curUserTicketState } from "@src/state/recoil/concertState";
+import { useUser } from "@src/state/swr/useUser";
+import { useUserTickets } from "@src/state/swr/useUserTicket";
+import { Ticket } from "@src/types/share/Ticket";
+import { UserTicket } from "@src/types/share/UserTicket";
+import { useRouter } from "next/router";
+import { FC, ReactElement } from "react";
+import { useSetRecoilState } from "recoil";
 
 const Ticket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   const router = useRouter();
@@ -67,9 +65,8 @@ const MyListPage = second => {
 };
 
 MyListPage.getLayout = function getLayout(page: ReactElement) {
-  return <MyLayout>{page}</MyLayout>;
+  return <BasicLayout>{page}</BasicLayout>;
 };
 
 // export default MyListPage;
-export default withSuspense(MyListPage);
-
+export default MyListPage;
