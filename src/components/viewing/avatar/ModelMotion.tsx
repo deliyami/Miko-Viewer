@@ -12,13 +12,14 @@ import { FaceDirection } from "@src/types/FaceDirectionType";
 import { Model } from "@src/types/ModelType";
 import * as BABYLON from "babylonjs";
 import * as Kalidokit from "kalidokit";
-import React, { FC, useEffect, useRef } from "react";
-import { useRecoilValue } from "recoil";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { model } from "./GlobalModel";
 import { motion } from "./GlobalMotion";
 
 const bornReset = (borns: BABYLON.TransformNode[], originalBorns: BABYLON.Quaternion[]) => {
   for (let i = 0; i < borns.length; i++) {
+    if (!(borns[i] && originalBorns[i])) continue;
     borns[i].rotationQuaternion = originalBorns[i].clone();
   }
 };
@@ -106,42 +107,59 @@ const setBorn = (model: { [peerId: string]: Model }, peerId: string, poseRig: Ka
 const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   const webcamRef = useRef<HTMLVideoElement | null>(null);
   const camera = useRef<cam.Camera | null>(null);
-  const peers = useRecoilValue(peerDataListState);
+  const [peers, setPeers] = useRecoilState(peerDataListState);
+  const [peerChange, setPeerChange] = useState(false);
+  const poseRef = useRef<Pose>(null);
+
   const user = useUser();
   const myStream = useRecoilValue(myStreamState);
   const myPeerId = "kirari";
 
-  const onResults = (results: Results) => {
-    if (model) {
-      // 0번 사용자 results를 window에 저장
+  const onResults = useCallback(
+    (results: Results) => {
+      if (
+        model &&
+        model["kirari"] &&
+        model["kirari"].borns &&
+        model["kirari"].originalBorns &&
+        model["kirari"].scene &&
+        results &&
+        results.poseLandmarks &&
+        results.poseWorldLandmarks &&
+        results.segmentationMask
+      ) {
+        // 0번 사용자 results를 window에 저장
 
-      const poseRig = Kalidokit.Pose.solve(results.poseWorldLandmarks, results.poseLandmarks, {
-        runtime: "mediapipe",
-        video: webcamRef?.current,
-        enableLegs: false,
-      });
-      const faceRig = {
-        center: results.poseLandmarks[0].x,
-        left: results.poseLandmarks[7].x,
-        right: results.poseLandmarks[8].x,
-      };
-      setBorn(model, myPeerId, poseRig, faceRig);
-      const data: ChatMotionInterface = {
-        sender: user.data.name,
-        motion: { pose: poseRig, face: faceRig },
-      };
-      if (peers) sendToAllPeers(peers, { type: "motion", data });
+        const poseRig = Kalidokit.Pose.solve(results.poseWorldLandmarks, results.poseLandmarks, {
+          runtime: "mediapipe",
+          video: webcamRef?.current,
+          enableLegs: false,
+        });
+        const faceRig = {
+          center: results.poseLandmarks[0].x,
+          left: results.poseLandmarks[7].x,
+          right: results.poseLandmarks[8].x,
+        };
+        setBorn(model, myPeerId, poseRig, faceRig);
+        const data: ChatMotionInterface = {
+          sender: user.data.name,
+          motion: { pose: poseRig, face: faceRig },
+        };
+        console.log(peers);
+        if (peers) sendToAllPeers(peers, { type: "motion", data });
 
-      // kalido에서 나온 값을 기반으로... vector의 계산이 있음, (0,-1,0)에서 rotation각도 구하고 BABYLON.Vector3(x,y,z)방향으로 나온 각도만큼 굴려보기
-      // 손에서 어깨 방향으로 역으로 계산, 팔꿈치>손 각도 계산>굴리기, (0,-1,0)에서 팔꿈치 각도 계산, 아니면 어깨 위치 계산해서 모두다 어깨 위치 값만큼 뺀 뒤에 계산...
-      const anotherPeerId = motion.sender;
-      for (let peerId in model) {
-        if (peerId === anotherPeerId) {
-          setBorn(model, peerId, motion.motion.pose, motion.motion.face);
+        // kalido에서 나온 값을 기반으로... vector의 계산이 있음, (0,-1,0)에서 rotation각도 구하고 BABYLON.Vector3(x,y,z)방향으로 나온 각도만큼 굴려보기
+        // 손에서 어깨 방향으로 역으로 계산, 팔꿈치>손 각도 계산>굴리기, (0,-1,0)에서 팔꿈치 각도 계산, 아니면 어깨 위치 계산해서 모두다 어깨 위치 값만큼 뺀 뒤에 계산...
+        const anotherPeerId = motion.sender;
+        for (let peerId in model) {
+          if (peerId === anotherPeerId && peerId !== "kirari") {
+            setBorn(model, peerId, motion.motion.pose, motion.motion.face);
+          }
         }
       }
-    }
-  };
+    },
+    [peers, user.data],
+  );
 
   useEffect(() => {
     if (mediaStream) {
@@ -160,6 +178,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
         return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
       },
     });
+    poseRef.current = pose;
     //   let pose = new Holistic({locateFile: (file) => {
     //     return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic@0.4.1633559476/${file}`;
     // }});
@@ -182,12 +201,17 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
       });
       camera.current.start();
     }
+    setPeerChange(true);
     return () => {
       camera.current?.stop();
       webcamRef.current = null;
       camera.current = null;
     };
   }
+  useEffect(() => {
+    console.log("onResults tnwjdehla");
+    poseRef.current.onResults(onResults);
+  }, [peerChange, onResults]);
 
   return (
     <>
