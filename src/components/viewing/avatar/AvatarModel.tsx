@@ -22,7 +22,7 @@ export const AvatarModel: FC<{
           camera.setTarget(new BABYLON.Vector3(0, 2.5, 0));
           camera.setPosition(new BABYLON.Vector3(0, 2.5, 5));
 
-          camera.attachControl(true);
+          // camera.attachControl(true);
 
           const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, -1), scene);
 
@@ -62,6 +62,7 @@ export const AvatarModel: FC<{
       };
       const engine = new BABYLON.Engine(reactCanvas.current);
       const scene = new BABYLON.Scene(engine);
+      scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
       if (scene.isReady()) {
         scene.getEngine().setSize(width, height);
         onSceneReady(scene);
