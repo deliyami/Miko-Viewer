@@ -103,15 +103,11 @@ const TempRoomAvatarView = () => {
     <Center gap="5">
       <Box position="relative" width={200} height={200} bg="red" backgroundImage="url('/image/temp/avatar.png')" backgroundRepeat="no-repeat" backgroundSize="cover">
         <Text>나</Text>
-        <Center width="full" position="absolute" bottom="0.5" h="2rem" color="white">
-          <Text as="span" fontSize="1xl">
-            내 Score
-          </Text>
-          <Text as="span" fontSize="2xl">
-            {scores?.[data.uuid] ?? 0}
-          </Text>
-          <Text fontSize="6xl" width="auto" id={data.uuid + 'chat'}></Text>
-        </Center>
+        <Box width="full" position="absolute" top="0" h="2rem" color="white">
+          <Text fontSize="1xl">내 Score</Text>
+          <Text fontSize="2xl">{scores?.[data.uuid] ?? 0}</Text>
+          <Text fontSize="3xl" width="30vw" id={data.uuid + 'chat'}></Text>
+        </Box>
       </Box>
 
       {peers.map((peer, idx) => {
