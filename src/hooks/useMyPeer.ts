@@ -1,6 +1,6 @@
-import { useUser } from "@src/state/swr/useUser";
-import Peer from "peerjs";
-import { useRef } from "react";
+import { useUser } from '@src/state/swr/useUser';
+import Peer from 'peerjs';
+import { useRef } from 'react';
 const useMyPeer = () => {
   const { data } = useUser();
   const myPeer = useRef(

@@ -1,16 +1,16 @@
-import { Box, Heading, HStack, Image } from "@chakra-ui/react";
-import Link from "next/link";
+import { Box, Heading, HStack, Image } from '@chakra-ui/react';
+import Link from 'next/link';
 
 const concert = [
   {
     id: 1,
-    name: "東京ヤクルトスワローズ公式マスコットつばみ",
-    url: "https://obs.line-scdn.net/0haRQfol8DPn1sHyoT35pBKjxCOAoVMSRsCGciGhkZaR0VfXguAy4kTh5IMEQVLXopVHh5GUoYZU9EKHksVXx4Gk0WZU5BJyt7VH53GAweN0hFe315Uw/f640x640",
+    name: '東京ヤクルトスワローズ公式マスコットつばみ',
+    url: 'https://obs.line-scdn.net/0haRQfol8DPn1sHyoT35pBKjxCOAoVMSRsCGciGhkZaR0VfXguAy4kTh5IMEQVLXopVHh5GUoYZU9EKHksVXx4Gk0WZU5BJyt7VH53GAweN0hFe315Uw/f640x640',
   },
   {
     id: 2,
-    name: "fripSide",
-    url: "https://obs.line-scdn.net/0hBj2461zQHUUPTQranmZiEl8QGzJ2YwdUazUGJy1OQXQnL14TNi4BI31OSnElKFkVMnhXIX5EQSEnf1oUNilVKilFRnQidQhDOixaIW9MFHcnL1gUYQ/f640x640",
+    name: 'fripSide',
+    url: 'https://obs.line-scdn.net/0hBj2461zQHUUPTQranmZiEl8QGzJ2YwdUazUGJy1OQXQnL14TNi4BI31OSnElKFkVMnhXIX5EQSEnf1oUNilVKilFRnQidQhDOixaIW9MFHcnL1gUYQ/f640x640',
   },
 ];
 

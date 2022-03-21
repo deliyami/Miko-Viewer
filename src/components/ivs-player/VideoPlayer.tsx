@@ -1,12 +1,19 @@
-import { Box, Button, HStack } from "@chakra-ui/react";
-import styled from "@emotion/styled";
-import * as ivs from "amazon-ivs-player";
-import { useEffect, useRef, useState } from "react";
-import VideoQualitySelect from "./VideoQualitySelect";
-const streamUrl = "https://de853ef2a345.us-east-1.playback.live-video.net/api/video/v1/us-east-1.121323684128.channel.Cj5ynk97sEJv.m3u8";
+import { Box, Button, HStack, Text } from '@chakra-ui/react';
+import styled from '@emotion/styled';
+import { enterConcertState } from '@src/state/recoil/concertState';
+import { msgMetaDataState, quizMetaDataState, quizResultMetaDataState } from '@src/state/recoil/timeMetaDataState';
+import { AllMetaData } from '@src/types/share/TimeMetadataFormat';
+import * as ivs from 'amazon-ivs-player';
+import { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import QuizResultView from './QuizResultView';
+import QuizView from './QuizView';
+import VideoQualitySelect from './VideoQualitySelect';
+const streamUrl = 'https://de853ef2a345.us-east-1.playback.live-video.net/api/video/v1/us-east-1.121323684128.channel.Cj5ynk97sEJv.m3u8';
 
 const jwt =
-  "eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9.eyJhd3M6Y2hhbm5lbC1hcm4iOiJhcm46YXdzOml2czp1cy1lYXN0LTE6MTIxMzIzNjg0MTI4OmNoYW5uZWwvQ2o1eW5rOTdzRUp2IiwiYXdzOmFjY2Vzcy1jb250cm9sLWFsbG93LW9yaWdpbiI6IioiLCJleHAiOjE2NDY4MDg2MjQsImlhdCI6MTY0NDM4OTg2OX0.fmdaERbkxkNAThbJtFNv-JScxNl0dy1TSsS7gYWZmOWokUS-teTlZrMKwRvfaIXrUPRpBH7KQoI0n6wOOuOqwODM24mOpgv7OrUb6GBfTllKFes0XZ3sMCpey6bnkzya";
+  'eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9.eyJhd3M6Y2hhbm5lbC1hcm4iOiJhcm46YXdzOml2czp1cy1lYXN0LTE6MTIxMzIzNjg0MTI4OmNoYW5uZWwvQ2o1eW5rOTdzRUp2IiwiYXdzOmFjY2Vzcy1jb250cm9sLWFsbG93LW9yaWdpbiI6IioiLCJleHAiOjE2NDY4MDg2MjQsImlhdCI6MTY0NDM4OTg2OX0.fmdaERbkxkNAThbJtFNv-JScxNl0dy1TSsS7gYWZmOWokUS-teTlZrMKwRvfaIXrUPRpBH7KQoI0n6wOOuOqwODM24mOpgv7OrUb6GBfTllKFes0XZ3sMCpey6bnkzya';
 
 // NOTE aws cli 실행할때 region 설정 주의
 // aws ivs put-metadata --channel-arn arn:aws:ivs:us-east-1:121323684128:channel/Cj5ynk97sEJv --metadata '{"question": "What does IVS stand for?", "correctIndex": 0, "answers": ["interactive video service", "interesting video service", "ingenious video service"]}'
@@ -27,16 +34,22 @@ const Video = styled.video`
 //  TODO  브라우저에 따라서 window에 IVSPlayer 없음
 const VideoPlayer = props => {
   const { IVSPlayer } = window;
+  const enterConcertData = useRecoilValue(enterConcertState);
+  const router = useRouter();
+  if (!enterConcertData) router.push('/');
 
   const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
-
   const [selectableQuality, setSelectableQuality] = useState<ivs.Quality[]>([]);
   // const [isMiniPlayer, setIsMiniPlayer] = useState(false);
   const [muted, setMuted] = useState(false);
 
   // const [playerPosition, setPlayerPosition] = useState({});
   // const [playerSize, setPlayerSize] = useState({});
+
+  const setQuizMetaDataState = useSetRecoilState(quizMetaDataState);
+  const setQuizResultMetaDataState = useSetRecoilState(quizResultMetaDataState);
+  const setMsgMetaDataState = useSetRecoilState(msgMetaDataState);
 
   const player = useRef<ivs.MediaPlayer>(null);
   const playerBaseEl = useRef(null);
@@ -50,17 +63,17 @@ const VideoPlayer = props => {
   }, [loading]);
 
   if (IVSPlayer?.isPlayerSupported) {
-    console.log("yes");
+    console.log('yes');
   } else {
-    console.log("no");
+    console.log('no');
   }
 
   useEffect(() => {
-    const { ENDED, PLAYING, READY } = IVSPlayer.PlayerState;
+    const { ENDED, PLAYING, READY, BUFFERING, IDLE } = IVSPlayer.PlayerState;
     const { ERROR } = IVSPlayer.PlayerEventType;
     const { isPlayerSupported } = IVSPlayer;
     if (!isPlayerSupported) {
-      return console.warn("현재 브라우저는 ivs player를 지원하지 않습니다.");
+      return console.warn('현재 브라우저는 ivs player를 지원하지 않습니다.');
     }
 
     const onStateChange = () => {
@@ -69,7 +82,7 @@ const VideoPlayer = props => {
       switch (playerState) {
         case READY:
           setSelectableQuality(player.current.getQualities());
-          console.log("aaa", player.current.getQualities());
+          console.log('aaa', player.current.getQualities());
           break;
         default:
           break;
@@ -80,12 +93,21 @@ const VideoPlayer = props => {
     };
 
     const onError = err => {
-      console.warn("Player Event - ERROR:", err);
+      console.warn('Player Event - ERROR:', err);
     };
 
     const onTimeMetaData = cue => {
-      console.log(cue);
-      console.log("Timed metadata: ", cue.text);
+      const result = JSON.parse(cue.text) as AllMetaData;
+      if (result.type === 'q') {
+        setQuizMetaDataState(result);
+      }
+      if (result.type === 'm') {
+        setMsgMetaDataState(result);
+      }
+      if (result.type === 'qr') {
+        setQuizResultMetaDataState(result);
+      }
+
       console.log(player.current.getPosition().toFixed(2));
     };
     //@ts-ignore
@@ -94,8 +116,9 @@ const VideoPlayer = props => {
 
     player.current.setAutoplay(true);
     player.current.setVolume(1);
+    player.current.setLiveLowLatencyEnabled(true);
 
-    player.current.load(streamUrl + "?token=" + jwt);
+    player.current.load(enterConcertData?.playbackUrl + '?token=' + jwt);
     player.current.play();
 
     player.current.addEventListener(READY, onStateChange);
@@ -104,15 +127,40 @@ const VideoPlayer = props => {
     player.current.addEventListener(ERROR, onError);
     player.current.addEventListener(IVSPlayer.PlayerEventType.TEXT_METADATA_CUE, onTimeMetaData);
 
+    const intercvalId = setInterval(() => {
+      player.current.setLiveLowLatencyEnabled(true);
+      // player.current.setAutoMaxBitrate(true);
+      // player.current.setAutoMaxQuality(true);
+      player.current.play();
+      // console.log("-------------------------------", Date.now());
+      // console.log("getBufferDuration", player.current.getBufferDuration()); // 현재 재생 위치보다, 남은 버퍼가  몇초 있는지
+      // console.log("getBuffered", player.current.getBuffered()); // 메모리에 저장중이 버퍼 데이터의 시작 초 ~ 끝나는 초
+      // console.log("getDuration", player.current.getDuration()); // 총 길이
+      // console.log("getLiveLatency", player.current.getLiveLatency()); // 재생 속도
+      // console.log("getPosition", player.current.getPosition()); //  현재 실 재생 위치
+      // console.log("getPlaybackRate", player.current.getPlaybackRate()); //
+      // console.log("getState", player.current.getState());
+      // console.log("isAutoplay", player.current.isAutoplay());
+      // console.log("isAutoQualityMode", player.current.isAutoQualityMode());
+      // console.log("isLiveLowLatency", player.current.isLiveLowLatency());
+      if (player.current.getBufferDuration() > 7) {
+        player.current.seekTo(player.current.getPosition() + 5.0);
+      }
+
+      console.log('-------------------------------');
+    }, 1000);
+
     return () => {
+      player.current.play();
       player.current.removeEventListener(READY, onStateChange);
       player.current.removeEventListener(PLAYING, onStateChange);
       player.current.removeEventListener(ENDED, onStateChange);
       player.current.removeEventListener(ERROR, onError);
       player.current.removeEventListener(IVSPlayer.PlayerEventType.TEXT_METADATA_CUE, onTimeMetaData);
       player.current.delete();
+      clearInterval(intercvalId);
     };
-  }, []);
+  }, [enterConcertData]);
 
   const pause = () => {
     const isPaused = player.current.isPaused();
@@ -132,7 +180,7 @@ const VideoPlayer = props => {
     window.scrollTo({
       top: offsetTop - 20,
       left: offsetLeft,
-      behavior: "smooth",
+      behavior: 'smooth',
     });
   };
 
@@ -148,9 +196,11 @@ const VideoPlayer = props => {
   // }
 
   return (
-    <Box id="player-wrapper" width="90%" position="relative" overflow="hidden" role="group">
+    <Box id="player-wrapper" width="80%" position="relative" overflow="hidden" role="group">
       <Box id="aspect-spacer" pb="56.25%"></Box>
       <Box height="100%" width="100%" position="absolute" top="0">
+        <QuizView />
+        <QuizResultView />
         <Box
           position="absolute"
           top="0"
@@ -160,12 +210,14 @@ const VideoPlayer = props => {
           zIndex="1"
           visibility="hidden"
           _groupHover={{
-            visibility: "visible",
+            visibility: 'visible',
           }}
         >
-          <HStack id="control-bottom" position="absolute" width="full" bottom="0" pd="2rem">
-            <Button onClick={toggleMute}>{muted ? "소리켜기" : "뮤트하기"}</Button>
-            <Button onClick={pause}>{isPlaying ? "정지" : "재생"}</Button>
+          <Text color="white">{enterConcertData?.playbackUrl}</Text>
+
+          <HStack id="control-bottom" position="absolute" width="full" bottom="0" p="2rem">
+            <Button onClick={toggleMute}>{muted ? '소리켜기' : '뮤트하기'}</Button>
+            <Button onClick={pause}>{isPlaying ? '정지' : '재생'}</Button>
             <Box flexGrow="1"></Box>
             <VideoQualitySelect player={player} selectableQuality={selectableQuality}></VideoQualitySelect>
           </HStack>

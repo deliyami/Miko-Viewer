@@ -1,17 +1,18 @@
-import { useColorModeValue } from "@chakra-ui/react";
+import { useColorModeValue } from '@chakra-ui/react';
 
+// 첫번째 화이트, 두번째 블랙.
 const COLOR = {
-  surface: ["#FFFFFF", "#2D3748"], // white , gray.700
-  background: ["gray.50", "#121212"], // gray.50 , material black
+  surface: ['#FFFFFF', '#2D3748'], // white , gray.700
+  background: ['gray.50', '#121212'], // gray.50 , material black
   // surfaceShadow: ['#FFFFFF', '#2D3748'], // gray.50 , material black
-  primary: ["#39c7bb", "#A0C1B8"],
-  weekPrimary: ["#39c7bb33", "#A0C1B833"],
-  red: ["#b00020", "#cf6679"],
-  yellow: ["#FFF323", "#FFBD69"],
-  weekGray: ["gray.700", "gray.300"],
-  textHigh: ["#000000", "#FFFFFF"],
-  textMedium: ["#000000DD", "#FFFFFFDD"],
-  textDisabled: ["#00000055", "#FFFFFF55"],
+  primary: ['#39c7bb', '#A0C1B8'],
+  weekPrimary: ['#39c7bb33', '#A0C1B833'],
+  red: ['#b00020', '#cf6679'],
+  yellow: ['#FFF323', '#FFBD69'],
+  weekGray: ['gray.700', 'gray.300'],
+  textHigh: ['#000000', '#FFFFFF'],
+  textMedium: ['#000000DD', '#FFFFFFDD'],
+  textDisabled: ['#00000055', '#FFFFFF55'],
 };
 
 const useColorStore = (colorKey: keyof typeof COLOR) => {

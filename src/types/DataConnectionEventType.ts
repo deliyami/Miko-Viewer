@@ -1,16 +1,21 @@
-import { ChatMessageInterface } from "./ChatMessageType";
-import { ChatMotionInterface } from "./ChatMotionType";
+import { ChatMessageInterface } from './ChatMessageType';
+import { ChatMotionInterface } from './ChatMotionType';
 
 interface ChatEvent {
-  type: "chat";
+  type: 'chat';
   data: ChatMessageInterface;
 }
 
 interface MotionEvent {
-  type: "motion";
+  type: 'motion';
   data: ChatMotionInterface;
 }
 
-type DataConnectionEvent = ChatEvent | MotionEvent;
+interface UpdateScoreEvent {
+  type: 'scoreUpdate';
+  data: number;
+}
+
+type DataConnectionEvent = ChatEvent | MotionEvent | UpdateScoreEvent;
 
 export type { DataConnectionEvent };

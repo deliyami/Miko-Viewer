@@ -1,11 +1,11 @@
-import { Box, ChakraProvider } from "@chakra-ui/react";
-import { NextPage } from "next";
-import { AppProps } from "next/app";
-import Peer from "peerjs";
-import { ReactElement, ReactNode, Suspense, useEffect } from "react";
-import { RecoilRoot } from "recoil";
-import { Socket } from "socket.io-client";
-import theme from "../theme";
+import { ChakraProvider } from '@chakra-ui/react';
+import theme from '@src/theme';
+import { NextPage } from 'next';
+import { AppProps } from 'next/app';
+import Peer from 'peerjs';
+import { ReactElement, ReactNode, useEffect } from 'react';
+import { RecoilRoot } from 'recoil';
+import { Socket } from 'socket.io-client';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -15,10 +15,9 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-if (process.env.NEXT_PUBLIC_API_MOCKING === "enabled") {
-  require("@src/mocks");
+if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
+  require('@src/mocks');
 }
-
 declare global {
   interface Window {
     socket: Socket;
@@ -45,15 +44,20 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   }, []);
 
   const getLayout = Component?.getLayout || (page => page);
-
-  return getLayout(
+  //  NOTE getLayout을 recoilRoot보다 밖에 두면 Layout이 동일하지 않는 이상 초기화됨.
+  return (
     <ChakraProvider resetCSS theme={theme}>
+<<<<<<< HEAD
       <Suspense fallback={<Box>로딩</Box>}>
         <RecoilRoot>
           <Component {...pageProps} />
         </RecoilRoot>
       </Suspense>
     </ChakraProvider>,
+=======
+      <RecoilRoot>{getLayout(<Component {...pageProps} />)}</RecoilRoot>
+    </ChakraProvider>
+>>>>>>> main
   );
 }
 

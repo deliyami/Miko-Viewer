@@ -1,3 +1,0 @@
-const hideChatSetTimeOut = {};
-
-export { hideChatSetTimeOut };

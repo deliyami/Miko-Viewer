@@ -1,8 +1,8 @@
-import { Box, Center, Text, VStack } from "@chakra-ui/react";
-import BasicLayout from "@src/layout/BasicLayout";
-import { useOAuthLogin } from "@src/state/swr/useUser";
-import { useRouter } from "next/dist/client/router";
-import { ReactElement, useEffect, useState } from "react";
+import { Box, Center, Text, VStack } from '@chakra-ui/react';
+import BasicLayout from '@src/layout/BasicLayout';
+import { useOAuthLogin } from '@src/state/swr/useUser';
+import { useRouter } from 'next/dist/client/router';
+import { ReactElement, useEffect, useState } from 'react';
 
 export default function RedirectPage() {
   const [error, setError] = useState(false);
@@ -28,13 +28,13 @@ export default function RedirectPage() {
   useEffect(() => {
     if (!loading) {
       setTimeout(() => {
-        router.push(`/${error ? "login" : "/"}`);
+        router.push(`/${error ? 'login' : '/'}`);
       }, 100);
     }
   }, [loading]);
 
   useEffect(() => {
-    router.prefetch("/");
+    router.prefetch('/');
   }, []);
 
   return (

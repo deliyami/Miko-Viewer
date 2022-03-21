@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 interface videoStreamInterface {
   stream: MediaStream;
@@ -14,9 +14,9 @@ const Streamer: React.FC<videoStreamInterface> = ({ stream, muted, fullName, con
   const videoEl = React.createRef<HTMLVideoElement>();
 
   useEffect(() => {
-    let video = videoEl.current;
-    let showVideo = true,
-      showAudio = true;
+    const video = videoEl.current;
+    let showVideo = true;
+    let showAudio = true;
 
     if (video) {
       if (controls) {

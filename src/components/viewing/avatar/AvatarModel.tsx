@@ -1,7 +1,7 @@
-import * as BABYLON from "babylonjs";
-import "babylonjs-loaders";
-import { FC, useEffect, useRef } from "react";
-import { setModel } from "./GlobalModel";
+import * as BABYLON from 'babylonjs';
+import 'babylonjs-loaders';
+import { FC, useEffect, useRef } from 'react';
+import { setModel } from './GlobalModel';
 
 export const AvatarModel: FC<{
   width: number;
@@ -10,34 +10,34 @@ export const AvatarModel: FC<{
   peerId?: string | undefined;
   antialias?: boolean | undefined;
 }> = ({ ...props }) => {
-  const { width, height, path, peerId, antialias, ...rest } = props;
+  const { width, height, path, peerId, ...rest } = props;
   const reactCanvas = useRef(null);
   useEffect(() => {
     if (reactCanvas.current) {
       const onSceneReady = (scene: BABYLON.Scene) => {
         if (BABYLON && BABYLON.SceneLoader) {
-          const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2.5, 10, new BABYLON.Vector3(0, 0, 0), scene);
+          const camera = new BABYLON.ArcRotateCamera('camera', Math.PI / 2, Math.PI / 2.5, 10, new BABYLON.Vector3(0, 0, 0), scene);
 
           camera.setTarget(new BABYLON.Vector3(0, 2.5, 0));
           camera.setPosition(new BABYLON.Vector3(0, 2.5, 5));
 
-          camera.attachControl(true);
+          // camera.attachControl(true);
 
-          const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, -1), scene);
+          const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, -1), scene);
 
           // Default intensity is 1. Let's dim the light a small amount
           light.intensity = 0.7;
 
-          BABYLON.MeshBuilder.CreateGround("ground", { width: 30, height: 6 }, scene);
+          BABYLON.MeshBuilder.CreateGround('ground', { width: 30, height: 6 }, scene);
           BABYLON.SceneLoader.ImportMesh(
-            "",
+            '',
             path,
             // "/test",
-            "",
+            '',
             scene,
             (...args) => {
               if (peerId) {
-                console.log("나는야 신나고 즐겁지");
+                console.log('나는야 신나고 즐겁지');
               }
 
               args[4][27].rotate(new BABYLON.Vector3(0, 1, 0), Math.PI, 2);
@@ -51,9 +51,9 @@ export const AvatarModel: FC<{
                 animations[j].stop();
               }
               setModel(peerId, {
-                borns: borns,
-                originalBorns: originalBorns,
-                scene: scene,
+                borns,
+                originalBorns,
+                scene,
               });
               scene.render();
             },
@@ -67,12 +67,8 @@ export const AvatarModel: FC<{
         scene.getEngine().setSize(width, height);
         onSceneReady(scene);
       } else {
-        scene.onReadyObservable.addOnce(scene => onSceneReady(scene));
+        scene.onReadyObservable.addOnce(newScene => onSceneReady(newScene));
       }
-
-      const resize = () => {
-        scene.getEngine().resize();
-      };
 
       if (engine) {
         engine.runRenderLoop(() => {
@@ -90,7 +86,7 @@ export const AvatarModel: FC<{
     }
     return () => {};
   }, [reactCanvas]);
-  console.log("modeling?");
+  console.log('modeling?');
   return (
     <>
       <canvas ref={reactCanvas} {...rest}></canvas>

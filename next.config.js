@@ -1,33 +1,20 @@
+/* eslint-disable import/no-extraneous-dependencies */
+const withPlugins = require('next-compose-plugins');
+const withBundleAnalyzer = require('@next/bundle-analyzer');
+
 /**
  * @type {import('next').NextConfig}
- **/
-module.exports = {
-  // reactStrictMod: true,
-  //   async redirects() {
-  //     return [
-  //       {
-  //         source: '/contact/:aaa*',
-  //         destination: '/form/:aaa*',
-  //         permanent: false,
-  //       },
-  //     ];
-  //   },
-  //   async rewrites() {
-  //     return [
-  //       {
-  //         source: '/api/something',
-  //         destination: 'https://abcd.com/apiSite?apiKey=abcd',
-  //         permanent: false,
-  //       },
-  //     ];
-  //   },
-
-  experimental: {
-    reactMode: "concurrent",
-    reactRoot: true,
+ */
+const nextConfig = {
+  images: {
+    domains: ['miko-image.s3.ap-northeast-2.amazonaws.com'],
   },
   typescript: {
     ignoreBuildErrors: true,
+  },
+  experimental: {
+    reactMode: 'concurrent',
+    reactRoot: true,
   },
   images: {
     domains: ["localhost:3000"],
@@ -35,4 +22,25 @@ module.exports = {
   },
 };
 
-//  Ctc를 통해 query나 params 분석 가능
+const withPWA = require('next-pwa');
+
+module.exports = withPlugins([
+  [
+    withBundleAnalyzer,
+    {
+      enabled: process.env.ANALYZE === 'true',
+    },
+  ],
+  [
+    withPWA,
+    {
+      pwa: {
+        dest: 'public',
+        register: true,
+        skipWaiting: true,
+        disable: process.env.NODE_ENV === 'development',
+      },
+    },
+  ],
+  nextConfig,
+]);

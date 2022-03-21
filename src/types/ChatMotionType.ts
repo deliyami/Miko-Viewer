@@ -1,11 +1,11 @@
-import * as Kalidokit from "kalidokit";
-import { FaceDirection } from "./FaceDirectionType";
+import * as Kalidokit from 'kalidokit';
+import { FaceDirection } from './FaceDirectionType';
 
 interface ChatMotionInterface {
   sender: string;
   motion: {
     pose: Kalidokit.TPose;
-    face: FaceDirection<"left" | "center" | "right", number>;
+    face: FaceDirection<'left' | 'center' | 'right', number>;
     // face: { [key in "left" | "center" | "right"]: number };
   };
   amount?: number;

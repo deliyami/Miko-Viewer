@@ -1,7 +1,7 @@
-import { Button, Center, HStack } from "@chakra-ui/react";
-import { Meta } from "@src/types/share/common/common";
-import { useRouter } from "next/router";
-import { ComponentProps, FC } from "react";
+import { Button, Center, HStack } from '@chakra-ui/react';
+import { Meta } from '@src/types/share/common/common';
+import { useRouter } from 'next/router';
+import { ComponentProps, FC } from 'react';
 
 type Props = {
   data: Meta;

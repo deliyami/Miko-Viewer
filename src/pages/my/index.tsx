@@ -1,52 +1,58 @@
-import { Box, Flex, Heading, HStack, Input, Text, VStack } from "@chakra-ui/react";
-import Footer from "@src/components/home/Footer";
-import MenuBar from "@src/components/home/MenuBar";
-import { useRouter } from "next/router";
+import { Box, Button, Center, Flex, Heading, HStack, Image, Input } from '@chakra-ui/react';
+import { S3_URL } from '@src/const';
+import MyLayout from '@src/layout/MyLayout';
+import { useUser } from '@src/state/swr/useUser';
+import { User } from '@src/types/share/User';
+import Link from 'next/link';
+import { FC, ReactElement } from 'react';
 
-const myinfo = [
-  { name: "name", info: "구나현" },
-  { name: "id", info: "agunacoco" },
-  { name: "password", info: "111111111" },
-  { name: "email", info: "agunaco3994@gmail.com" },
-  { name: "phone number", info: "010-8732-3962" },
-  { name: "birthday", info: "2001년 4월 16일" },
-  { name: "coin", info: "500coin" },
-];
-
-const Index = params => {
-  const router = useRouter();
-
+const MyCard: FC<{ data: User }> = ({ data }) => {
+  // console.log(data);
   return (
-    <Box>
-      <MenuBar />
-      <Box mb={30} pb={20}>
-        <Flex pt={50} width="full" justifyContent="center">
-          <VStack>
-            <Heading fontWeight="700" size="2xl" my="20px">
-              my page
+    <Flex width="full" justifyContent="center" p={4}>
+      <Box>
+        <Heading fontWeight="700" size="2xl" my="5px">
+          My Page
+        </Heading>
+        <HStack spacing={20} p={12} mt={6} boxShadow="lg">
+          <Image src={S3_URL + data.avatar} fallbackSrc="https://via.placeholder.com/300" />
+          <Box>
+            <Heading as="h5" size="sm" my={2}>
+              Name
             </Heading>
-            {myinfo.map(({ name, info }) => (
-              <HStack>
-                <Text>{name}</Text>
-                <Input value={info} />
-              </HStack>
-            ))}
-          </VStack>
-        </Flex>
+            <Input mb={2} value={data.name} isReadOnly />
+            <Heading as="h5" size="sm" my={2}>
+              Email
+            </Heading>
+            <Input mb={2} value={data.email} isReadOnly />
+            <Heading as="h5" size="sm" my={2}>
+              Coin
+            </Heading>
+            <Input mb={2} value={`${data.coin}`} isReadOnly />
+            <Center>
+              <Link href={`/my/edit`}>
+                <a>
+                  <Button>Edit</Button>
+                </a>
+              </Link>
+            </Center>
+          </Box>
+        </HStack>
       </Box>
-      <Footer />
-    </Box>
+    </Flex>
   );
 };
 
-const MyPage = second => {
-  const router = useRouter();
+export default function MyPage() {
+  const { data: userData } = useUser();
+  // console.log(userData);
   return (
     <Box>
-      {router.asPath}
-      <Text>개인 정보 페이지</Text>
+      <MyCard data={userData} />
     </Box>
   );
-};
+}
 
-export default MyPage;
+MyPage.getLayout = function getLayout(page: ReactElement) {
+  return <MyLayout>{page}</MyLayout>;
+};

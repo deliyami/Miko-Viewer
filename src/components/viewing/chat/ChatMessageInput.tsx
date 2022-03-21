@@ -1,43 +1,54 @@
-import { Box, Button, Center, FormControl, Input, ScaleFade } from "@chakra-ui/react";
-import sendToAllPeers from "@src/helper/sendToAllPeers";
-import showChatToRoom from "@src/helper/showChatToRoom";
-import useSocket from "@src/hooks/useSocket";
-import { enterRoomIdState } from "@src/state/recoil/concertState";
-import { chatModeState, isShowChatInputState, peerDataListState } from "@src/state/recoil/viewingState";
-import { useUser } from "@src/state/swr/useUser";
-import { ChatMessageInterface } from "@src/types/ChatMessageType";
-import { FormEvent, KeyboardEventHandler, useCallback, useRef, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { Box, Button, Center, FormControl, Input, ScaleFade } from '@chakra-ui/react';
+import sendToAllPeers from '@src/helper/sendToAllPeers';
+import showChatToRoom from '@src/helper/showChatToRoom';
+import useSocket from '@src/hooks/useSocket';
+import { chatModeState, isShowChatInputState, peerDataListState } from '@src/state/recoil/viewingState';
+import { useUser } from '@src/state/swr/useUser';
+import { ChatMessageInterface } from '@src/types/ChatMessageType';
+import { FormEvent, KeyboardEventHandler, useRef, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { SuperChatOption } from './SuperChatOption';
 
 const ChatMessageInput = () => {
   const socket = useSocket();
   const user = useUser();
   const [isShow, setIsShow] = useRecoilState(isShowChatInputState);
   const [chatMode, setChatMode] = useRecoilState(chatModeState);
-  const roomId = useRecoilValue(enterRoomIdState);
   const peers = useRecoilValue(peerDataListState);
   const inputRef = useRef<HTMLInputElement>();
-  const [newMessage, setNewMessage] = useState<string>("");
+  const [newMessage, setNewMessage] = useState<string>('');
+  const [amount, setAmount] = useState<number>(0);
+  const [itemId, setItemId] = useState<number>(-1);
 
-  const sendMessage = useCallback(() => {
+  const chatModeCompute = () => {
+    if (amount !== 0) return 'public';
+    if (chatMode === 'public') return 'public';
+    return 'private';
+  };
+
+  const sendMessage = () => {
     if (!newMessage) return;
 
     const data: ChatMessageInterface = {
       sender: user.data.name,
       text: newMessage,
+      amount,
+      itemId,
       timestamp: Date.now(),
     };
 
-    sendToAllPeers(peers, { type: "chat", data });
+    sendToAllPeers(peers, { type: 'chat', data });
     showChatToRoom(user.data.uuid, newMessage, 5);
 
-    if (chatMode === "public") {
-      socket.emit("fe-send-message", data, roomId);
+    if (chatModeCompute() === 'public') {
+      socket.emit('fe-send-message', data);
     }
 
-    setNewMessage("");
+    setNewMessage('');
+    setAmount(0);
+    setItemId(-1);
     inputRef.current.focus();
-  }, [newMessage, user.data]);
+  };
 
   const onSubmitHandler = (e: FormEvent) => {
     e.preventDefault();
@@ -46,13 +57,14 @@ const ChatMessageInput = () => {
 
   const onKeyDownHandler: KeyboardEventHandler<HTMLInputElement> = e => {
     e.stopPropagation();
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       sendMessage();
     }
-    if (e.key === "Esc" || e.key === "Escape") {
+    if (e.key === 'Esc' || e.key === 'Escape') {
       setIsShow(false);
     }
   };
+
   return (
     <Box bottom="2" position="fixed" zIndex={100}>
       <ScaleFade in={isShow}>
@@ -62,12 +74,12 @@ const ChatMessageInput = () => {
             width="12"
             onClick={() =>
               setChatMode(prev => {
-                if (prev === "private") return "public";
-                return "private";
+                if (prev === 'private') return 'public';
+                return 'private';
               })
             }
           >
-            {chatMode === "public" ? "전체" : " 방 "}
+            {chatModeCompute() === 'public' ? '全体へ' : 'ルームへ'}
           </Button>
           <FormControl>
             <Input
@@ -83,8 +95,9 @@ const ChatMessageInput = () => {
               placeholder="Message"
               onKeyUp={onKeyDownHandler}
             />
-            <Button type="submit" onClick={onSubmitHandler}>
-              보내기
+            <SuperChatOption amount={amount} setAmount={setAmount} itemId={itemId} setItemId={setItemId} />
+            <Button type="submit" onClick={onSubmitHandler} colorScheme={amount === 0 ? 'cyan' : 'messenger'}>
+              送る
             </Button>
           </FormControl>
         </Center>

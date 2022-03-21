@@ -1,6 +1,6 @@
-import { Button, Popover, PopoverBody, PopoverContent, PopoverTrigger } from "@chakra-ui/react";
-import * as ivs from "amazon-ivs-player";
-import { FC, MouseEventHandler, MutableRefObject } from "react";
+import { Button, Popover, PopoverBody, PopoverContent, PopoverTrigger } from '@chakra-ui/react';
+import * as ivs from 'amazon-ivs-player';
+import { FC, MouseEventHandler, MutableRefObject } from 'react';
 
 const VideoQualitySelect: FC<{
   player: MutableRefObject<ivs.MediaPlayer>;
@@ -25,7 +25,9 @@ const VideoQualitySelect: FC<{
         {/* <PopoverHeader>Confirmation!</PopoverHeader> */}
         <PopoverBody onClick={setQuality}>
           {selectableQuality.map((obj, i) => (
-            <div data-idx={`${i}`}>{obj.name}</div>
+            <div key={obj.name} data-idx={`${i}`}>
+              {obj.name}
+            </div>
           ))}
         </PopoverBody>
       </PopoverContent>

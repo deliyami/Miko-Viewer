@@ -1,22 +1,22 @@
-import { Box, Button, Container, Input, Radio, RadioGroup, Stack, Text } from "@chakra-ui/react";
-import { USER_TICKET_COOKIE } from "@src/const";
-import { setCookie } from "@src/helper/setCookie";
-import BasicLayout from "@src/layout/BasicLayout";
-import { curUserTicketState, enterRoomIdState } from "@src/state/recoil/concertState";
-import { Concert } from "@src/types/share/Concert";
-import { Ticket } from "@src/types/share/Ticket";
-import { nanoid } from "nanoid";
-import { useRouter } from "next/router";
-import React, { FC, ReactElement, useEffect, useMemo, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { Box, Button, Container, Input, Radio, RadioGroup, Stack, Text } from '@chakra-ui/react';
+import { USER_TICKET_COOKIE } from '@src/const';
+import { setCookie } from '@src/helper/setCookie';
+import BasicLayout from '@src/layout/BasicLayout';
+import { curUserTicketState, enterRoomIdState } from '@src/state/recoil/concertState';
+import { Concert } from '@src/types/share/Concert';
+import { Ticket } from '@src/types/share/Ticket';
+import { nanoid } from 'nanoid';
+import { useRouter } from 'next/router';
+import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 const EnterRoomBtn = () => {
   const router = useRouter();
   const curUserTicket = useRecoilValue(curUserTicketState);
-
+  console.log('enter room btn', curUserTicket);
   const enterHandler = () => {
-    setCookie(USER_TICKET_COOKIE, curUserTicket.id + "", 6);
-    router.push("/live/viewing");
+    setCookie(USER_TICKET_COOKIE, curUserTicket.id + '', 6);
+    router.push('/live/viewing', '', { shallow: false });
   };
 
   return <Button onClick={enterHandler}>입장하기</Button>;
@@ -45,12 +45,12 @@ const PrivateRoomIdInput = () => {
 };
 
 const RoomSelect = () => {
-  const [radioValue, setRadioValue] = useState("public");
+  const [radioValue, setRadioValue] = useState('public');
   const setEnterRoomId = useSetRecoilState(enterRoomIdState);
-  const isPublicRoom = useMemo(() => (radioValue === "public" ? true : false), [radioValue]);
+  const isPublicRoom = useMemo(() => (radioValue === 'public' ? true : false), [radioValue]);
 
   const radioChangeHandler = (value: string) => {
-    if (value === "public") {
+    if (value === 'public') {
       setEnterRoomId(undefined);
     }
     setRadioValue(value);
@@ -74,7 +74,7 @@ const RoomSelect = () => {
 };
 
 const CurEnterInfo: FC<{ ticket: Ticket; concert: Concert }> = ({ ticket, concert }) => {
-  console.log("concert", concert);
+  console.log('concert', concert);
   return (
     <Box>
       <Text>{concert.title}</Text>
@@ -92,7 +92,7 @@ const RoomEnterPage = props => {
   useEffect(() => {
     if (router.isReady) {
       if (!curUserTicket) {
-        router.push("/my/lists/1");
+        router.push('/my/lists/1');
       }
     }
     return () => {};
@@ -100,7 +100,7 @@ const RoomEnterPage = props => {
 
   return (
     <Container>
-      {curUserTicket ? <CurEnterInfo ticket={curUserTicket.ticket} concert={curUserTicket.concert} /> : "no"}
+      {curUserTicket ? <CurEnterInfo ticket={curUserTicket.ticket} concert={curUserTicket.concert} /> : 'no'}
       <RoomSelect />
       <EnterRoomBtn />
     </Container>

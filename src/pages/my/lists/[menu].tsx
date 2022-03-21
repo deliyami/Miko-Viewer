@@ -1,20 +1,21 @@
-import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
-import BasicLayout from "@src/layout/BasicLayout";
-import { curUserTicketState } from "@src/state/recoil/concertState";
-import { useUser } from "@src/state/swr/useUser";
-import { useUserTickets } from "@src/state/swr/useUserTicket";
-import { Ticket } from "@src/types/share/Ticket";
-import { UserTicket } from "@src/types/share/UserTicket";
-import { useRouter } from "next/router";
-import { FC, ReactElement } from "react";
-import { useSetRecoilState } from "recoil";
+import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import ConcertTicket from '@src/components/ConcertTicket';
+import BasicLayout from '@src/layout/BasicLayout';
+import { curUserTicketState } from '@src/state/recoil/concertState';
+import { useUser } from '@src/state/swr/useUser';
+import { useUserTickets } from '@src/state/swr/useUserTicket';
+import { Ticket } from '@src/types/share/Ticket';
+import { UserTicket } from '@src/types/share/UserTicket';
+import { useRouter } from 'next/router';
+import { FC, ReactElement } from 'react';
+import { useSetRecoilState } from 'recoil';
 
 const Ticket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   const router = useRouter();
   const setCurUseTicket = useSetRecoilState(curUserTicketState);
   const useTicketHandler = () => {
     setCurUseTicket(userTicket);
-    router.push("/live/enter");
+    router.push('/live/enter');
   };
 
   return <Box onClick={useTicketHandler}>{userTicket.id}</Box>;
@@ -32,18 +33,16 @@ const UserTicketList: FC<{ userTickets: UserTicket[] }> = ({ userTickets }) => {
 
 const MyListPage = second => {
   const router = useRouter();
-  const {
-    data: { id },
-  } = useUser();
+  const { data: userData } = useUser();
 
   const { menu } = router.query as { menu: string };
 
   const { data } = useUserTickets({
-    with: ["ticket", "concert"],
-    filter: [["user_id", id]],
+    with: ['ticket', 'concert'],
+    filter: [['user_id', userData.id]],
   });
 
-  console.log("ticket", data);
+  console.log('ticket', data);
 
   return (
     <Box>
@@ -57,7 +56,7 @@ const MyListPage = second => {
             <UserTicketList userTickets={data.data} />
           </TabPanel>
           <TabPanel>
-            <p>two!</p>
+            <ConcertTicket />
           </TabPanel>
         </TabPanels>
       </Tabs>
@@ -69,4 +68,5 @@ MyListPage.getLayout = function getLayout(page: ReactElement) {
   return <BasicLayout>{page}</BasicLayout>;
 };
 
+// export default MyListPage;
 export default MyListPage;
