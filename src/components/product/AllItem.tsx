@@ -1,34 +1,37 @@
-import { Image, Flex, Text, Box, SimpleGrid, Button } from '@chakra-ui/react';
-import { Product } from '@src/types/share/Product';
-import { FC } from 'react';
+import { Image, Flex, Text, Box, SimpleGrid, Button } from "@chakra-ui/react";
+import { Pagination } from "@src/types/share/common/common";
+import { Product } from "@src/types/share/Product";
+import { useRouter } from "next/router";
+import { FC } from "react";
 
-const AllItem: FC<{ allItem: Product[] }> = ({ allItem }) => {
+const AllItem: FC<{ allItem: Pagination<Product> }> = ({ allItem }) => {
+  const router = useRouter();
   return (
     <Flex flexDir={'column'} w={'82%'}>
       <Text fontSize={'3xl'} fontWeight={'bold'}>
         このコンサートの他の商品
       </Text>
       <Flex>
-        <SimpleGrid spacing={20} p={'2%'} columns={5}>
-          {allItem.map((item, key) => {
+        <SimpleGrid spacing={20} p={"2%"} columns={5}>
+          {allItem.data.map((item, key) => {
             if (key > 5) {
               return (
-                <Flex cursor={'pointer'} rounded="3%" _hover={{ boxShadow: '2xl' }} flexDirection={'column'} key={key}>
+                <Flex onClick={()=>window.open(`/concerts/${router.query.id}/products/${item.id}`,'_self')} cursor={"pointer"} rounded="3%" _hover={{ boxShadow: "2xl" }} flexDirection={"column"} key={key}>
                   <Box>
                     <Box>
                       <Image src={item.image}></Image>
                     </Box>
-                    <Text textAlign={'right'}>{item.name}</Text>
-                    <Text textAlign={'right'}>¥{item.price}</Text>
+                    <Text textAlign={"right"}>{item.name}</Text>
+                    <Text textAlign={"right"} fontWeight={"bold"}>¥{item.price}</Text>
                   </Box>
                 </Flex>
               );
             }
           })}
         </SimpleGrid>
-        <Flex alignItems={'end'} ml={'3%'}>
-          <Button>
-            <Text fontWeight={'bold'} fontSize={'xl'}>
+        <Flex alignItems={"end"} ml={"3%"}>
+          <Button onClick={()=>window.open(`/concerts/${router.query.id}/products`,'_self')}>
+            <Text fontWeight={"bold"} fontSize={"xl"}>
               全ての商品へ &#10132;
             </Text>
           </Button>

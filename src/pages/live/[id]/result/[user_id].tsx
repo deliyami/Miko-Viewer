@@ -1,33 +1,35 @@
-import { Box, Button, Flex, Grid, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, SimpleGrid, Text, useDisclosure } from '@chakra-ui/react';
-import MenuBar from '@src/components/home/MenuBar';
-import Footer from '@src/components/home/Footer';
-import KakaoShareButton from '@src/components/result/KakaoShareButton';
-import { useRouter } from 'next/router';
-import { ReactElement, useEffect, useRef, useState } from 'react';
-import SNSModal from '@src/components/result/SNSModal';
-import Score from '@src/components/result/Score';
-import BasicLayout from '@src/layout/BasicLayout';
-import Charts from '@src/components/result/Charts';
-import axios from 'axios';
-import Ranking from '@src/components/result/Ranking';
+import { Flex, Image, Text } from "@chakra-ui/react";
+import Charts from "@src/components/result/Charts";
+import Ranking from "@src/components/result/Ranking";
+import SNSModal from "@src/components/result/SNSModal";
+import BasicLayout from "@src/layout/BasicLayout";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { ReactElement, useEffect, useState } from "react";
 
 const result = () => {
   const router = useRouter();
-  const users = ['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8'];
-  const score = [];
+  const users = ["1","2","3","4","5","6","7","8","9","10"];
+  // const users = [{id:1,name:"u1"}, {id:2,name:"u2"}, {id:3,name:"u3"}, {id:4,name:"u4"}, {id:5,name:"u5"}, {id:6,name:"u6"}, {id:7,name:"u7"}, {id:8,name:"u8"}, {id:9,name:"u9"}, {id:10,name:"u10"}];
+  // const u = null;
+  
   const [rank, setRank] = useState([]);
   useEffect(() => {
     const script = document.createElement('script');
     script.src = '//developers.kakao.com/sdk/js/kakao.min.js';
     script.async = true;
     // ranking();
-
     document.body.appendChild(script);
     if (!router.isReady) return;
     return () => {
       document.body.removeChild(script);
     };
   }, [router.isReady]);
+  // axios.get("http://localhost:8080/api/user").then((res)=>{
+  //   console.log(res.data);
+  //   // u = res.data;
+
+  // })
 
   //   function ranking(){
   //       axios.get(``).then( (res) =>{
@@ -38,26 +40,35 @@ const result = () => {
   //       )
 
   return (
-    <Box w={'100vw'} h={'100vh'}>
-      <Flex h="72%" flexDirection={'column'} justifyContent={'space-evenly'}>
-        <Text ml={'5%'} h={'1%'} fontWeight={'bold'} fontSize={'6xl'}>
-          ユーザ{router.query.user_id}の結果
-        </Text>
-        <Flex h={'80%'} justifyContent={'space-around'} alignItems={'center'}>
-          <Flex justifyContent={'center'} h={'70%'} alignItems={'center'} rounded={'3%'} border={'solid'} w="25%" borderColor="teal.300">
-            아바타 or 프로필 사진
+    <Flex h="72%" flexDirection={"column"} justifyContent={"space-evenly"}>
+      <Text ml={"5%"} h={"1%"} fontWeight={"bold"} fontSize={"6xl"}>
+        ユーザ{router.query.user_id}の結果
+      </Text>
+      <Flex h={"70%"} justifyContent={"space-around"} alignItems={"center"}>
+        <Flex h={"80%"} w="25%" flexDirection={"column"} justifyContent="space-between">
+          <Flex justifyContent={"center"} h={"60%"} alignItems={"center"} rounded={"3%"} border={"solid"} w="60%" borderColor="teal.300">
+            <Image boxSize={"full"} src="" alt="avatar or profile icon"></Image>
           </Flex>
-          <Flex mb={'3%'} flexDirection={'column'} alignItems={'center'} h={'100%'} borderColor={'teal.300'} justifyContent={'space-evenly'} rounded={'3%'} w="22%">
-            <Text fontSize={'3xl'} fontWeight={'bold'}>
-              SCORE
-            </Text>
-            <Charts></Charts>
-            <SNSModal></SNSModal>
-          </Flex>
-          <Ranking users={users} cId={router.query.id}></Ranking>
+          <Text align={"left"} fontSize={"3xl"}>
+            ユーザ{router.query.user_id}information
+          </Text>
+          <Text align={"center"} fontSize={"2xl"}>
+            ユーザ{router.query.user_id}ランキング : 2位
+          </Text>
+          <Text align={"center"} fontSize={"2xl"}>
+            ユーザ{router.query.user_id}ランキング : 2位
+          </Text>
         </Flex>
+        <Flex mb={"3%"} flexDirection={"column"} alignItems={"center"} h={"100%"} borderColor={"teal.300"} justifyContent={"space-evenly"} rounded={"3%"} w="22%">
+          <Text fontSize={"3xl"} fontWeight={"bold"}>
+            SCORE
+          </Text>
+          <Charts></Charts>
+          <SNSModal></SNSModal>
+        </Flex>
+        <Ranking users={users}></Ranking>
       </Flex>
-    </Box>
+    </Flex>
   );
 };
 export default result;

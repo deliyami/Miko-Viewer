@@ -1,16 +1,35 @@
-import { Flex, SimpleGrid, Text } from '@chakra-ui/react';
-const Ranking = ({ users, cId }) => {
+import { Flex, SimpleGrid, Text } from "@chakra-ui/react";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+const Ranking = ({ users }) => {
+  // function diffUserResult(userId) {}
+  const [rank, setRank] = useState([]);
+  const router = useRouter();
+  useEffect(() => {
+    if (!router.isReady) return;
+      getRank();
+  }, [router.isReady]);
+
   function diffUserResult(userId) {}
 
+  function getRank() {
+    axios.get(`http://localhost:3001/api/${router.query.id}/getRank`).then(res => {
+      console.log(res.data);
+      setRank(res.data);
+      console.log("겟 랭크!!!", res.data);
+    });
+  }
+
   return (
-    <Flex mb={'3%'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'} rounded={'3%'} h="full" w="30%">
-      <Text fontSize={'5xl'}>ランキング</Text>
-      <SimpleGrid h={'80%'} w={'full'} columns={1} spacing={2} overflow={'auto'}>
+    <Flex mb={"4.2%"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"} rounded={"3%"} h="full" w="30%">
+      <Text fontSize={"5xl"}>ランキング</Text>
+      <SimpleGrid h={"80%"} w={"full"} columns={1} spacing={2} overflow={"auto"}>
         {users.map((user, key) => {
           return (
-            <Flex onClick={() => window.open(`https://localhost:3000/live/3/result/${user}`, '_blank')} cursor={'pointer'} key={key} p={'1.5%'} alignItems={'center'}>
-              <Flex w={'10%'} mr={'2%'} border="solid" borderColor={'teal.400'} rounded={100} justifyContent={'center'}>
-                <Text fontSize={'3xl'}>{key + 1}</Text>
+            <Flex onClick={() => window.open(`http://localhost:3000/live/${router.query.id}/result/${key+1}`, "_self")} cursor={"pointer"} key={key} p={"1.5%"} alignItems={"center"}>
+              <Flex w={"10%"} mr={"2%"} border="solid" borderColor={"teal.400"} rounded={100} justifyContent={"center"}>
+                <Text fontSize={"3xl"}>{key + 1}</Text>
               </Flex>
               <Flex
                 justifyContent={'space-around'}

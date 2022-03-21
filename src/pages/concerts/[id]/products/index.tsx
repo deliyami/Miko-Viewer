@@ -1,29 +1,53 @@
-import { Text, Spinner, useMediaQuery, Flex, Select } from '@chakra-ui/react';
-import BasicLayout from '@src/layout/BasicLayout';
-import axios from 'axios';
-import { useRouter } from 'next/router';
-import { ReactElement, useEffect, useState } from 'react';
-import ProductsList from '../../../../components/product/ProductsList';
+import { Flex, Select, Spinner, Text, useMediaQuery } from "@chakra-ui/react";
+import { getDataFromLaravel } from "@src/helper/getDataFromLaravel";
+import BasicLayout from "@src/layout/BasicLayout";
+import { Pagination } from "@src/types/share/common/common";
+import { Product } from "@src/types/share/Product";
+import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
+import { ReactElement, useEffect, useState } from "react";
+import ProductsList from "../../../../components/product/ProductsList";
 
-const ProductsPage = second => {
+type Data = {
+  data?: Pagination<Product>;
+};
+
+export const getServerSideProps: GetServerSideProps<Data> = async context => {
+  const URL_PRODUCTS = "/products";
+  const concertId = parseInt((context.query.id as string) ?? "1");
+  const result = await getDataFromLaravel<Pagination<Product>>(URL_PRODUCTS, {
+    filter: [["concert_id",concertId]],
+  });
+  return {
+    props: {
+      data: result?.data ?? null,
+    },
+  };
+};
+
+export default function ProductsPage({data}) {
+  console.log(data.length);
   const router = useRouter();
-  // let rId = router.query.id;
-  const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isLargerThan960] = useMediaQuery('(min-width: 960px)');
-  const [selected, setSelected] = useState('新着順');
-
+  const [isLargerThan960] = useMediaQuery("(min-width: 960px)");
+  const [selected, setSelected] = useState("新着順");
+  useEffect(()=>{
+    if(data){
+      setIsLoading(false);
+      console.log(isLoading);
+    }else console.log(isLoading);
+  },[]);
   function onSelectedChanged(event) {
     setSelected(event.target.value);
-    // if (event.target.value == "최신순") {
-    //   sortForLatest();
-    // } else if (event.target.value == "판매순") {
-    //   sortForSold();
-    // } else if (event.target.value == "낮은가격순") {
-    //   sortForLowPrice();
-    // } else if (event.target.value == "높은가격순") {
-    //   sortForHighPrice();
-    // }
+    if (event.target.value == "최신순") {
+      sortForLatest();
+    } else if (event.target.value == "판매순") {
+      sortForSold();
+    } else if (event.target.value == "낮은가격순") {
+      sortForLowPrice();
+    } else if (event.target.value == "높은가격순") {
+      sortForHighPrice();
+    }
   }
 
   function sortForLatest() {
@@ -44,34 +68,14 @@ const ProductsPage = second => {
     });
   }
 
-  useEffect(() => {
-    if (!router.isReady) return;
-    getData();
-  }, [router.isReady]);
-
-  function getData() {
-    axios.get(`http://localhost:8080/api/products?per_page=20&filter=concert_id%3A${router.query.id}}`).then(res => {
-      console.log(res.data);
-      if (res.data.length > 1) {
-        setData(
-          res.data.sort((a, b) => {
-            return a.id - b.id;
-          }),
-        );
-      }
-      setData(res.data.data);
-      setIsLoading(false);
-    });
-  }
-
   return (
     <Flex flexDirection={'column'} alignItems={'center'} h="full" w={'full'} justifyContent={'center'} p={'2%'}>
       {isLoading ? (
         <Flex alignItems={'center'} justifyContent="center">
           <Spinner size={'xl'}></Spinner>
         </Flex>
-      ) : data.length === 0 ? (
-        <Text color={'gray.300'} fontSize={'4xl'} cursor="default">
+      ) : data.data.length === 0 ? (
+        <Text color={"gray.300"} fontSize={"4xl"} cursor="default">
           このコンサートの賞品は用意しておりません。
         </Text>
       ) : (
@@ -92,9 +96,7 @@ const ProductsPage = second => {
       )}
     </Flex>
   );
-};
-
-export default ProductsPage;
+}
 
 ProductsPage.getLayout = function getLayout(page: ReactElement) {
   return <BasicLayout>{page}</BasicLayout>;

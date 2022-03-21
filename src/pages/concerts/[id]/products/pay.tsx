@@ -44,8 +44,8 @@ const pay = () => {
           <Input required w={'20%'} />?<Button onClick={() => window.open('https://www.post.japanpost.jp/zipcode/', '_blank')}>郵便番号検索</Button>
         </Flex>
       </Flex>
-      <Flex py={'2%'} ml={'32%'} w={'50%'} flexDirection={'column'}>
-        <Select pb={'2%'} w={'35%'} required>
+      <Flex py={"2%"} ml={"32%"} w={"50%"} flexDirection={"column"}>
+        <Select pb={"2%"} w={"45%"} required>
           <option>都道府県を選択</option>
           <option value="1">北海道</option>
           <option value="1">青森県</option>
