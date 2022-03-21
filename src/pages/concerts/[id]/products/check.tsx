@@ -1,8 +1,8 @@
-import { Button, Flex } from "@chakra-ui/react";
-import Status from "@src/components/product/Status";
-import BasicLayout from "@src/layout/BasicLayout";
-import { useRouter } from "next/router";
-import { ReactElement } from "react";
+import { Button, Flex } from '@chakra-ui/react';
+import Status from '@src/components/product/Status';
+import BasicLayout from '@src/layout/BasicLayout';
+import { useRouter } from 'next/router';
+import { ReactElement } from 'react';
 
 const check = () => {
   const router = useRouter();
@@ -13,7 +13,7 @@ const check = () => {
         <Button w="23%" fontSize={'2xl'} onClick={() => router.back()}>
           ← 戻る
         </Button>
-        <Button onClick={() => window.open(`/concerts/${router.query.id}/products/paydone`, "_self")} fontSize={"2xl"} w="23%">
+        <Button onClick={() => window.open(`/concerts/${router.query.id}/products/paydone`, '_self')} fontSize={'2xl'} w="23%">
           次へ →
         </Button>
       </Flex>

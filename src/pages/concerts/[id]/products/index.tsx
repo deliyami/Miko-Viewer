@@ -1,22 +1,22 @@
-import { Flex, Select, Spinner, Text, useMediaQuery } from "@chakra-ui/react";
-import { getDataFromLaravel } from "@src/helper/getDataFromLaravel";
-import BasicLayout from "@src/layout/BasicLayout";
-import { Pagination } from "@src/types/share/common/common";
-import { Product } from "@src/types/share/Product";
-import { GetServerSideProps } from "next";
-import { useRouter } from "next/router";
-import { ReactElement, useEffect, useState } from "react";
-import ProductsList from "../../../../components/product/ProductsList";
+import { Flex, Select, Spinner, Text, useMediaQuery } from '@chakra-ui/react';
+import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
+import BasicLayout from '@src/layout/BasicLayout';
+import { Pagination } from '@src/types/share/common/common';
+import { Product } from '@src/types/share/Product';
+import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
+import { ReactElement, useEffect, useState } from 'react';
+import ProductsList from '../../../../components/product/ProductsList';
 
 type Data = {
   data?: Pagination<Product>;
 };
 
 export const getServerSideProps: GetServerSideProps<Data> = async context => {
-  const URL_PRODUCTS = "/products";
-  const concertId = parseInt((context.query.id as string) ?? "1");
+  const URL_PRODUCTS = '/products';
+  const concertId = parseInt((context.query.id as string) ?? '1');
   const result = await getDataFromLaravel<Pagination<Product>>(URL_PRODUCTS, {
-    filter: [["concert_id",concertId]],
+    filter: [['concert_id', concertId]],
   });
   return {
     props: {
@@ -25,27 +25,27 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
   };
 };
 
-export default function ProductsPage({data}) {
+export default function ProductsPage({ data }) {
   console.log(data.length);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [isLargerThan960] = useMediaQuery("(min-width: 960px)");
-  const [selected, setSelected] = useState("新着順");
-  useEffect(()=>{
-    if(data){
+  const [isLargerThan960] = useMediaQuery('(min-width: 960px)');
+  const [selected, setSelected] = useState('新着順');
+  useEffect(() => {
+    if (data) {
       setIsLoading(false);
       console.log(isLoading);
-    }else console.log(isLoading);
-  },[]);
+    } else console.log(isLoading);
+  }, []);
   function onSelectedChanged(event) {
     setSelected(event.target.value);
-    if (event.target.value == "최신순") {
+    if (event.target.value == '최신순') {
       sortForLatest();
-    } else if (event.target.value == "판매순") {
+    } else if (event.target.value == '판매순') {
       sortForSold();
-    } else if (event.target.value == "낮은가격순") {
+    } else if (event.target.value == '낮은가격순') {
       sortForLowPrice();
-    } else if (event.target.value == "높은가격순") {
+    } else if (event.target.value == '높은가격순') {
       sortForHighPrice();
     }
   }
@@ -75,7 +75,7 @@ export default function ProductsPage({data}) {
           <Spinner size={'xl'}></Spinner>
         </Flex>
       ) : data.data.length === 0 ? (
-        <Text color={"gray.300"} fontSize={"4xl"} cursor="default">
+        <Text color={'gray.300'} fontSize={'4xl'} cursor="default">
           このコンサートの賞品は用意しておりません。
         </Text>
       ) : (

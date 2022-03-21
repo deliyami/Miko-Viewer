@@ -1,10 +1,10 @@
-import { Box, Flex, Text, SimpleGrid } from "@chakra-ui/react";
-import { Product } from "@src/types/share/Product";
-import { FC, useState } from "react";
-import Detail from "./Detail";
-import Comment from "./Comment";
-import QnA from "./QnA";
-import Delivery from "./Delivery";
+import { Box, Flex, Text, SimpleGrid } from '@chakra-ui/react';
+import { Product } from '@src/types/share/Product';
+import { FC, useState } from 'react';
+import Detail from './Detail';
+import Comment from './Comment';
+import QnA from './QnA';
+import Delivery from './Delivery';
 
 const Details: FC<{ item: Product[] }> = ({ item }) => {
   const [ch, setCh] = useState(1);

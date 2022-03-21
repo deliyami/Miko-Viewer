@@ -1,9 +1,9 @@
-import { Box, Flex, SimpleGrid, Text, useMediaQuery } from "@chakra-ui/react";
-import { Pagination } from "@src/types/share/common/common";
-import { Product } from "@src/types/share/Product";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { FC } from "react";
+import { Box, Flex, SimpleGrid, Text, useMediaQuery } from '@chakra-ui/react';
+import { Pagination } from '@src/types/share/common/common';
+import { Product } from '@src/types/share/Product';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { FC } from 'react';
 
 const ProductsList: FC<{ data: Pagination<Product> }> = ({ data }) => {
   const router = useRouter();

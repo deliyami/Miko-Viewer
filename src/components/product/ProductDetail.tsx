@@ -1,8 +1,8 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import Cart from "./Cart";
-import OptionSelect from "./OptionSelect";
+import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import Cart from './Cart';
+import OptionSelect from './OptionSelect';
 
 const ProductDetail = ({ item }) => {
   console.log(item);
@@ -15,20 +15,20 @@ const ProductDetail = ({ item }) => {
   // const [child, setChild] = useState(0);
 
   return (
-    <Flex justifyContent={"center"}>
+    <Flex justifyContent={'center'}>
       <Flex>
         <Box w={500} h={500}>
           <Image boxSize={'full'} src={item.image}></Image>
         </Box>
       </Flex>
-      <Flex mt={"2.5%"} ml={"2%"} flexDirection={"column"} mr={"8%"} alignItems={"end"}>
-        <Flex flexDirection={"column"} alignItems="end">
+      <Flex mt={'2.5%'} ml={'2%'} flexDirection={'column'} mr={'8%'} alignItems={'end'}>
+        <Flex flexDirection={'column'} alignItems="end">
           <Text fontSize={30}>{item.name}</Text>
           <Text fontWeight="bold" fontSize={35}>
             ¥{item.price}
           </Text>
         </Flex>
-        <Flex mt={"3%"} w={"100%"} h={"50%"} justifyContent={"center"}>
+        <Flex mt={'3%'} w={'100%'} h={'50%'} justifyContent={'center'}>
           <OptionSelect
             color={color}
             size={size}
@@ -41,7 +41,7 @@ const ProductDetail = ({ item }) => {
           ></OptionSelect>
         </Flex>
       </Flex>
-      <Flex alignItems={"end"}>
+      <Flex alignItems={'end'}>
         <Cart item={item} count={count} color={color} size={size} cartCount={cartCount}></Cart>
       </Flex>
     </Flex>

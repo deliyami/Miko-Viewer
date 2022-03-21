@@ -19,23 +19,23 @@ const OptionSelect = ({ color, size, count, setCartCount, cartCount, setColor, s
   }
 
   return (
-    <Flex w="100%" flexDirection={"column"}>
-      <Flex w={"80%"} mt="5%" alignSelf="end" mb={"19%"}>
-      <PopOver setCartCount={setCartCount} cartCount={cartCount} count={count} size={size} color={color}></PopOver>
+    <Flex w="100%" flexDirection={'column'}>
+      <Flex w={'80%'} mt="5%" alignSelf="end" mb={'19%'}>
+        <PopOver setCartCount={setCartCount} cartCount={cartCount} count={count} size={size} color={color}></PopOver>
       </Flex>
-      <Select mb={"4%"} placeholder="数量" value={count} onChange={onCountChange}>
+      <Select mb={'4%'} placeholder="数量" value={count} onChange={onCountChange}>
         {countArr.map((count, key) => {
           return <option key={key}>{count}</option>;
         })}
       </Select>
       {/* {count !== 0 ? null : <Text align={"right"} color={"red"}>数量を選択してください。</Text>} */}
-      <Select mb={"4%"} placeholder="カラー" value={color} onChange={onColorChange}>
+      <Select mb={'4%'} placeholder="カラー" value={color} onChange={onColorChange}>
         {colorArr.map((color, key) => {
           return <option key={key}>{color}</option>;
         })}
       </Select>
       {/* {color !== "" ? null : <Text align={"right"} color={"red"}>カラーを選択してください。</Text>} */}
-      <Select mb={"4%"} placeholder="サイズ" value={size} onChange={onSizeChange}>
+      <Select mb={'4%'} placeholder="サイズ" value={size} onChange={onSizeChange}>
         {sizeArr.map((size, key) => {
           return <option key={key}>{size}</option>;
         })}

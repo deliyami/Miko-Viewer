@@ -1,7 +1,7 @@
-import { ArrowForwardIcon, PlusSquareIcon } from "@chakra-ui/icons";
-import { Button, ButtonGroup, Flex, IconButton, Popover, PopoverBody, PopoverContent, PopoverFooter, PopoverTrigger } from "@chakra-ui/react";
-import router from "next/router";
-import { useState } from "react";
+import { ArrowForwardIcon, PlusSquareIcon } from '@chakra-ui/icons';
+import { Button, ButtonGroup, Flex, IconButton, Popover, PopoverBody, PopoverContent, PopoverFooter, PopoverTrigger } from '@chakra-ui/react';
+import router from 'next/router';
+import { useState } from 'react';
 
 const PopOver = ({ count, color, size, cartCount, setCartCount }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,22 +27,22 @@ const PopOver = ({ count, color, size, cartCount, setCartCount }) => {
     }
   }
   return (
-    <Flex w={"100%"} justifyContent={"space-between"}>
+    <Flex w={'100%'} justifyContent={'space-between'}>
       <Flex>
         <Popover isOpen={cartIsOpen} onClose={cartClose} returnFocusOnClose={false} placement="bottom" closeOnBlur={false}>
           <PopoverTrigger>
             <ButtonGroup
-              _hover={{ shadow: "xl" }}
-              float={"right"}
+              _hover={{ shadow: 'xl' }}
+              float={'right'}
               onClick={() => {
                 cartOpen();
                 close();
               }}
               isAttached
-              variant={"outline"}
+              variant={'outline'}
             >
-              <Button bg={"gray.100"}>カートに入れる</Button>
-              <IconButton bg={"gray.100"} aria-label="Cart" icon={<PlusSquareIcon></PlusSquareIcon>}></IconButton>
+              <Button bg={'gray.100'}>カートに入れる</Button>
+              <IconButton bg={'gray.100'} aria-label="Cart" icon={<PlusSquareIcon></PlusSquareIcon>}></IconButton>
             </ButtonGroup>
           </PopoverTrigger>
           <PopoverContent>
@@ -70,16 +70,16 @@ const PopOver = ({ count, color, size, cartCount, setCartCount }) => {
         <Popover isOpen={isOpen} onClose={close} returnFocusOnClose={false} placement="bottom" closeOnBlur={false}>
           <PopoverTrigger>
             <ButtonGroup
-              _hover={{ shadow: "xl" }}
+              _hover={{ shadow: 'xl' }}
               onClick={() => {
                 open();
                 cartClose();
               }}
               isAttached
-              variant={"outline"}
+              variant={'outline'}
             >
-              <Button bg={"gray.100"}>注文する</Button>
-              <IconButton bg={"gray.100"} aria-label="Buy" icon={<ArrowForwardIcon></ArrowForwardIcon>}></IconButton>
+              <Button bg={'gray.100'}>注文する</Button>
+              <IconButton bg={'gray.100'} aria-label="Buy" icon={<ArrowForwardIcon></ArrowForwardIcon>}></IconButton>
             </ButtonGroup>
           </PopoverTrigger>
           <PopoverContent>
