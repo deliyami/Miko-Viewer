@@ -4,7 +4,7 @@ import { toastLog } from '@src/helper/toastLog';
 import { updateUserScore } from '@src/helper/updateUserScore';
 import useMyPeer from '@src/hooks/useMyPeer';
 import useSocket from '@src/hooks/useSocket';
-import { enterConcertState, enterRoomIdAsyncState } from '@src/state/recoil/concertState';
+import { curUserTicketState, enterRoomIdAsyncState } from '@src/state/recoil/concertState';
 import { messagesState, myStreamState, PeerDataInterface, peerDataListState } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
@@ -20,7 +20,10 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices) as typeof navigator.mediaDevices.getUserMedia;
 
 const WithSocketEventLayout: FC = ({ children }) => {
-  const concertId = useRecoilValue(enterConcertState)?.id;
+  // const concertId = useRecoilValue(enterConcertState)?.id;
+  const userTicket = useRecoilValue(curUserTicketState);
+  const { concertId, ticketId, id: userTicketId } = userTicket;
+
   const roomId = useRecoilValue(enterRoomIdAsyncState);
   console.log('roomId', roomId);
   const socket = useSocket();
@@ -105,7 +108,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
       return;
     }
 
-    socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, user.data, concertId);
+    socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
 
     myPeer.on('connection', dataConnection => {
       addDataConnectionToPeersDataList(dataConnection);
