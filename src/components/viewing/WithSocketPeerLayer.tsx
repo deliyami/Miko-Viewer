@@ -28,10 +28,10 @@ const WithSocketEventLayout: FC = ({ children }) => {
 
   const roomId = useRecoilValue(enterRoomIdAsyncState);
   console.log('roomId', roomId);
-  const socket = useSocket();
   const user = useUser();
   const myPeer = useMyPeer();
   const myPeerUniqueID = user.data.uuid;
+  const socket = useSocket(myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
 
   const streamOptions: MediaStreamConstraints = { audio: true, video: true };
 
@@ -111,7 +111,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
       return;
     }
 
-    socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
+    // socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
 
     myPeer.on('connection', dataConnection => {
       addDataConnectionToPeersDataList(dataConnection);
@@ -288,7 +288,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
         handleLeavePage();
       }
       window.removeEventListener('beforeunload', windowBeforeUnloadEvent);
-      router.beforePopState = () => true;
+      // router.beforePopState = () => true;
     };
   }, [user.data]);
 

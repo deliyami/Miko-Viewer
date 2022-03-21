@@ -4,8 +4,8 @@ import ChatBox from '@src/components/viewing/chat/ChatBox';
 import { useEffect, useState } from 'react';
 import { TempRoomAvatarView } from './avatar/RoomAvatarView';
 import ChatMessageInput from './chat/ChatMessageInput';
-import ViewingDrawer from './menu/ViewingDrawer';
 import ViewingSideMenuBar from './menu/ViewingSideMenuBar';
+import RankingView from './rightContainer/ranking/rankingView';
 import ViewingWindowEventLayout from './ViewingWindowEventLayout';
 import { WithIntervalTaskLayer } from './WithIntervalTaskLayer';
 import WithSocketEventLayout from './WithSocketPeerLayer';
@@ -13,6 +13,7 @@ import WithSocketEventLayout from './WithSocketPeerLayer';
 const ViewingCSRPage = () => {
   const { IVSPlayer } = window;
   const [scriptLoaded, setScriptLoaded] = useState(!!IVSPlayer);
+
   useEffect(() => {
     let intervalId = null;
     if (!scriptLoaded) {
@@ -35,20 +36,20 @@ const ViewingCSRPage = () => {
       <WithSocketEventLayout>
         <WithIntervalTaskLayer>
           <HStack width="100vw" minH="100vh" backgroundColor="#181818">
-            <ViewingSideMenuBar />
             <VStack width="full">
               {IVSPlayer ? <VideoPlayer /> : 'loading'}
+              {/* <HStack backgroundColor="blue.200" width="80vw" height="20vh"> */}
+              {/* <RoomAvatarView /> */}
+              {/* </HStack> */}
               <TempRoomAvatarView />
+              <ChatMessageInput />
             </VStack>
-            <ChatBox />
+            <VStack width="25vw">
+              <RankingView />
+              <ChatBox />
+            </VStack>
+            <ViewingSideMenuBar />
           </HStack>
-          {/* <HStack backgroundColor="blue.200" width="80vw" height="20vh"> */}
-          {/* <RoomAvatarView /> */}
-          {/* </HStack> */}
-          <ChatMessageInput />
-          <>
-            <ViewingDrawer />
-          </>
         </WithIntervalTaskLayer>
       </WithSocketEventLayout>
     </ViewingWindowEventLayout>
