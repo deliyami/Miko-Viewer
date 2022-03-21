@@ -1,112 +1,117 @@
-import { keyframes } from "@emotion/react";
-import styled from "@emotion/styled";
-import { ClassAttributes, HTMLAttributes } from "react";
+import { keyframes } from '@emotion/react';
+import styled from '@emotion/styled';
+import { ClassAttributes, HTMLAttributes } from 'react';
+
+// color
+const BODY_COLOR = '#47c8c0';
+const BALLON_OUTER = '#55557b';
+const BALLON_INNER = '#e1e1e1';
 
 // type
 
 // type args = { [key in string]: string };
-type props = {
+type Props = {
   [key in string]: string;
 } & ClassAttributes<HTMLDivElement> &
   HTMLAttributes<HTMLDivElement>;
 
 // test
-export const Div = styled.div({}, (props: props) => {
+export const Div = styled.div({}, (props: Props) => {
   const { push } = props;
   return { backgroundColor: push };
 });
 export const SecDiv = styled.div(props => {
-  return { backgroundColor: "#dddddd" };
+  return { backgroundColor: '#dddddd' };
 });
 
 // keyframes
 const fadeIn = keyframes({
-  "0%": { transform: "translateY(3%)", opacity: 0 },
+  '0%': { transform: 'translateY(3%)', opacity: 0 },
 
-  "100%": { transform: "translateY(0%)", opacity: 1 },
+  '100%': { transform: 'translateY(0%)', opacity: 1 },
 });
 
 const fadeOut = keyframes({
-  "0%": { transform: "translateY(0%)", opacity: 1 },
+  '0%': { transform: 'translateY(0%)', opacity: 1 },
 
-  "100%": { transform: "translateY(-3%)", opacity: 0 },
+  '100%': { transform: 'translateY(-3%)', opacity: 0 },
 });
 
 const hideObject = keyframes({
-  "0%": { opacity: 1 },
-  "100%": { opacity: 0 },
+  '0%': { opacity: 1 },
+  '100%': { opacity: 0 },
 });
+
+const makeCircleKeyframes = (calcX: number, calcY: number) => {
+  return keyframes({
+    '0%': {
+      opacity: 0,
+      transform: 'translateY(0%)',
+    },
+    '100%': {
+      opacity: 1,
+      transform: `translateY(${calcY}%) translateX(${calcX}%)`,
+    },
+  });
+};
 
 // animation tag
 export const FadeInBox = styled.div({
-  position: "absolute",
-  overflow: "hidden",
+  position: 'absolute',
+  overflow: 'hidden',
   zIndex: 1,
   animationName: fadeIn,
-  animationDuration: "1s",
+  animationDuration: '1s',
   // animation:keyframes({'0%':{transform:'3%'}}) // ?????????????? 이게 되네?
 });
 
 export const FadeOutBox = styled.div({
-  WebkitTouchCallout: "none",
-  WebkitUserSelect: "none",
-  msTouchSelect: "none",
-  msTouchAction: "none",
-  MozUserSelect: "none",
-  userSelect: "none",
-  select: "none",
-  width: "900px",
-  height: "400px",
+  WebkitTouchCallout: 'none',
+  WebkitUserSelect: 'none',
+  msTouchSelect: 'none',
+  msTouchAction: 'none',
+  MozUserSelect: 'none',
+  userSelect: 'none',
+  select: 'none',
+  width: '900px',
+  height: '400px',
   animationName: fadeOut,
-  animationDuration: "1s",
-  animationDelay: "10000ms",
-  animationFillMode: "forwards",
+  animationDuration: '1s',
+  animationDelay: '10000ms',
+  animationFillMode: 'forwards',
 });
 
 const textCss = {
-  position: "absolute",
-  left: "50%",
-  width: "625px",
-  transform: "translate(-50%, -50%)",
-  textAlign: "center",
+  position: 'absolute',
+  left: '50%',
+  width: '625px',
+  transform: 'translate(-50%, -50%)',
+  textAlign: 'center',
 };
 
 export const Header = styled.span(() => {
-  const style = { fontSize: "24px", top: "20%" };
+  const style = { fontSize: '24px', top: '20%' };
   Object.assign(style, textCss);
   return style;
 });
 
 export const Content = styled.span(() => {
-  const style = { top: "37%", height: "100px" };
+  const style = { top: '37%', height: '100px' };
   Object.assign(style, textCss);
   return style;
 });
 
 export const HideCircle = styled.g({
   animationName: hideObject,
-  animationDuration: "1s",
-  animationDelay: "1500ms",
-  animationFillMode: "forwards",
+  animationDuration: '1s',
+  animationDelay: '1500ms',
+  animationFillMode: 'forwards',
 });
 
-const front = 14;
+// const front = 14;
 const frontMiddle = 8;
-const back = 18;
+// const back = 18;
 const backMiddle = 9;
-
-const makeCircleKeyframes = (calcX: number, calcY: number) => {
-  return keyframes({
-    "0%": {
-      opacity: 0,
-      transform: "translateY(0%)",
-    },
-    "100%": {
-      opacity: 1,
-      transform: `translateY(${calcY}%) translateX(${calcX}%)`,
-    },
-  });
-};
 
 // export const BackCircle = styled.circle((props: props) => {
 //   const { i, cx, cy, r, fill } = props;
@@ -152,10 +157,10 @@ const makeCircleKeyframes = (calcX: number, calcY: number) => {
 //   };
 // });
 
-export const Circle = styled.circle((props: props) => {
+export const Circle = styled.circle(props => {
   const { d, i, cx, cy, r, fill } = props;
   const index = Number.parseInt(i);
-  const direction = d === "front";
+  const direction = d === 'front';
   const find = index < (direction ? frontMiddle : backMiddle);
   const calcY = -(Math.random() * (direction ? 60 : 50) + (direction ? 15 : 20));
   const calcX = (Math.random() * (find ? 6 : 3) * index + index) * (find ? -1 : 1);
@@ -166,8 +171,8 @@ export const Circle = styled.circle((props: props) => {
     opacity: 0,
     animationName: randomShotBack,
     animationDelay: `${Math.random() * 500}ms`,
-    animationDuration: "1s",
-    animationFillMode: "forwards",
+    animationDuration: '1s',
+    animationFillMode: 'forwards',
     cx,
     cy,
     r,
@@ -175,6 +180,17 @@ export const Circle = styled.circle((props: props) => {
   };
 });
 
+export const AvatarBody = styled.g({
+  fill: BODY_COLOR,
+});
+
+export const Inner = styled.path({
+  fill: BALLON_INNER,
+});
+
+export const Outer = styled.path({
+  fill: BALLON_OUTER,
+});
 // color tag
 
 // <Box className={donate.donateFadeIn} style={{ cursor: "default" }}>

@@ -200,7 +200,13 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
           pointRef.current.pop();
         }
         */
-
+        /*
+        if (results.poseLandmarks[12].y > results.poseLandmarks[14].y && results.poseLandmarks[11].y > results.poseLandmarks[13].y && pointRef.current.length === 0) {
+          pointRef.current.push(0);
+        } else if (results.poseLandmarks[16].y > results.poseLandmarks[12].y && results.poseLandmarks[15].y > results.poseLandmarks[11].y && pointRef.current.length !== 0) {
+          pointRef.current.pop();
+        }
+       */
         if (peers) sendToAllPeers(peers, { type: 'motion', data });
 
         // kalido에서 나온 값을 기반으로... vector의 계산이 있음, (0,-1,0)에서 rotation각도 구하고 BABYLON.Vector3(x,y,z)방향으로 나온 각도만큼 굴려보기
@@ -216,17 +222,6 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
     [peers, user.data],
   );
 
-  useEffect(() => {
-    if (mediaStream) {
-      const videoCurr = webcamRef.current;
-      if (!videoCurr) return;
-      const video = videoCurr! as HTMLVideoElement;
-      if (!video.srcObject) {
-        video.srcObject = mediaStream;
-        setupMediapipe();
-      }
-    }
-  }, [mediaStream]);
   function setupMediapipe() {
     const pose = new Pose({
       locateFile: file => {
@@ -263,6 +258,17 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
       camera.current = null;
     };
   }
+  useEffect(() => {
+    if (mediaStream) {
+      const videoCurr = webcamRef.current;
+      if (!videoCurr) return;
+      const video = videoCurr! as HTMLVideoElement;
+      if (!video.srcObject) {
+        video.srcObject = mediaStream;
+        setupMediapipe();
+      }
+    }
+  }, [mediaStream]);
   useEffect(() => {
     console.log('onResults tnwjdehla');
     poseRef.current.onResults(onResults);

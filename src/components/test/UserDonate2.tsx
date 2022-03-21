@@ -1,9 +1,9 @@
-import { Button, theme } from "@chakra-ui/react";
-import { css } from "@emotion/react";
-import useColorStore from "@src/hooks/useColorStore";
-import { FC, useRef, useState } from "react";
-import donate from "./donate.module.sass";
-import { Circle, Content, Div, FadeInBox, FadeOutBox, Header, HideCircle, SecDiv } from "./styledTag";
+import { Button } from '@chakra-ui/react';
+import { css } from '@emotion/react';
+import useColorStore from '@src/hooks/useColorStore';
+import { FC, useRef, useState } from 'react';
+import donate from './donate.module.sass';
+import { Circle, Content, Div, FadeInBox, FadeOutBox, Header, HideCircle, SecDiv } from './styledTag';
 
 type props = {
   nickname: string;
@@ -16,38 +16,31 @@ type props = {
 //   background-color: #e229e3;
 // `;
 const Css = css({
-  backgroundColor: "#1e33e4",
+  backgroundColor: '#1e33e4',
 });
 
 const UserDonate2: FC<props> = props => {
   const { nickname, coin, content } = props;
-  const [colorName, setColorName] = useState<"yellow" | "red">("yellow");
+  const [colorName, setColorName] = useState<'yellow' | 'red'>('yellow');
   const svgRef = useRef<SVGGElement>(null);
   const defaultColor = useColorStore(colorName);
-  const colorArray: ("surface" | "background" | "primary" | "weekPrimary" | "red" | "yellow" | "weekGray" | "textHigh" | "textMedium" | "textDisabled")[] = [
-    "surface",
-    "primary",
-    "red",
-    "yellow",
-  ];
-  console.log(theme);
   // console.log(useColorStore(colorArray[Math.floor(Math.random() * colorArray.length)]));
   return (
     <>
       <div className={donate.home}>아무것도 안적으면 아무것도 안보이지</div>
       <div id={donate.testdiv}>아무것도 안적으면 아무것도 안보이지</div>
       <div style={{ backgroundColor: defaultColor }}>아무것도 안적으면 아무것도 안보이지</div>
-      <Div {...{ push: "#654321" }}>아무것도 안적으면 아무것도 안보이지</Div>
-      <SecDiv {...{ test: "test" }}>아무것도 안적으면 아무것도 안보이지</SecDiv>
+      <Div {...{ push: '#654321' }}>아무것도 안적으면 아무것도 안보이지</Div>
+      <SecDiv {...{ test: 'test' }}>아무것도 안적으면 아무것도 안보이지</SecDiv>
       <Button
         onClick={e => {
           e.preventDefault();
-          setColorName("red");
+          setColorName('red');
         }}
       >
         change button 1회용
       </Button>
-      <FadeInBox style={{ cursor: "default" }}>
+      <FadeInBox style={{ cursor: 'default' }}>
         <FadeOutBox>
           <Header>
             <span className={donate.empfont}>{nickname} </span>
@@ -60,24 +53,24 @@ const UserDonate2: FC<props> = props => {
           <svg width="900" height="400" viewBox="0 0 900 400" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="donate">
               <HideCircle>
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "18", cx: "615", cy: "335", r: "5" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "17", cx: "596", cy: "315", r: "2.5" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "16", cx: "569", cy: "326", r: "5" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "15", cx: "555", cy: "310", r: "7.5" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "14", cx: "520", cy: "331", r: "7.5" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "13", cx: "515", cy: "315", r: "3.75" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "12", cx: "508", cy: "340", r: "5" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "11", cx: "499", cy: "301", r: "6.25" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "10", cx: "488", cy: "322", r: "5" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "9", cx: "465", cy: "334", r: "2.5" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "1", cx: "439", cy: "330", r: "5" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "2", cx: "423", cy: "322", r: "2.5" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "3", cx: "413", cy: "329", r: "6.25" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "4", cx: "390", cy: "318", r: "5" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "5", cx: "375", cy: "303", r: "5" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "6", cx: "366", cy: "326", r: "7.5" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "7", cx: "337", cy: "312", r: "7.5" }} />
-                <Circle {...{ d: "back", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "8", cx: "292", cy: "316", r: "3.75" }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '18', cx: '615', cy: '335', r: '5' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '17', cx: '596', cy: '315', r: '2.5' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '16', cx: '569', cy: '326', r: '5' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '15', cx: '555', cy: '310', r: '7.5' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '14', cx: '520', cy: '331', r: '7.5' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '13', cx: '515', cy: '315', r: '3.75' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '12', cx: '508', cy: '340', r: '5' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '11', cx: '499', cy: '301', r: '6.25' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '10', cx: '488', cy: '322', r: '5' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '9', cx: '465', cy: '334', r: '2.5' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '1', cx: '439', cy: '330', r: '5' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '2', cx: '423', cy: '322', r: '2.5' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '3', cx: '413', cy: '329', r: '6.25' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '4', cx: '390', cy: '318', r: '5' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '5', cx: '375', cy: '303', r: '5' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '6', cx: '366', cy: '326', r: '7.5' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '7', cx: '337', cy: '312', r: '7.5' }} />
+                <Circle {...{ d: 'back', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '8', cx: '292', cy: '316', r: '3.75' }} />
               </HideCircle>
               <g id="donate_2">
                 <g id="avatar">
@@ -839,20 +832,20 @@ const UserDonate2: FC<props> = props => {
                 </g>
               </g>
               <HideCircle>
-                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "14", cx: "580", cy: "358", r: "5" }} />
-                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "13", cx: "555", cy: "346", r: "5" }} />
-                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "12", cx: "533", cy: "356", r: "7.5" }} />
-                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "11", cx: "516", cy: "373", r: "5" }} />
-                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "10", cx: "495", cy: "348", r: "2.5" }} />
-                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "9", cx: "486", cy: "364", r: "6.25" }} />
-                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "8", cx: "466", cy: "358", r: "5" }} />
-                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "1", cx: "429", cy: "371", r: "5" }} />
-                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "2", cx: "418", cy: "358", r: "5" }} />
-                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "3", cx: "398", cy: "377", r: "7.5" }} />
-                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "4", cx: "389", cy: "348", r: "5" }} />
-                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "5", cx: "367", cy: "368", r: "10" }} />
-                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "7", cx: "323", cy: "350", r: "7.5" }} />
-                <Circle {...{ d: "front", fill: "#" + Math.floor(Math.random() * 16777215).toString(16), i: "6", cx: "352", cy: "341", r: "2.5" }} />
+                <Circle {...{ d: 'front', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '14', cx: '580', cy: '358', r: '5' }} />
+                <Circle {...{ d: 'front', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '13', cx: '555', cy: '346', r: '5' }} />
+                <Circle {...{ d: 'front', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '12', cx: '533', cy: '356', r: '7.5' }} />
+                <Circle {...{ d: 'front', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '11', cx: '516', cy: '373', r: '5' }} />
+                <Circle {...{ d: 'front', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '10', cx: '495', cy: '348', r: '2.5' }} />
+                <Circle {...{ d: 'front', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '9', cx: '486', cy: '364', r: '6.25' }} />
+                <Circle {...{ d: 'front', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '8', cx: '466', cy: '358', r: '5' }} />
+                <Circle {...{ d: 'front', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '1', cx: '429', cy: '371', r: '5' }} />
+                <Circle {...{ d: 'front', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '2', cx: '418', cy: '358', r: '5' }} />
+                <Circle {...{ d: 'front', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '3', cx: '398', cy: '377', r: '7.5' }} />
+                <Circle {...{ d: 'front', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '4', cx: '389', cy: '348', r: '5' }} />
+                <Circle {...{ d: 'front', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '5', cx: '367', cy: '368', r: '10' }} />
+                <Circle {...{ d: 'front', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '7', cx: '323', cy: '350', r: '7.5' }} />
+                <Circle {...{ d: 'front', fill: '#' + Math.floor(Math.random() * 16777215).toString(16), i: '6', cx: '352', cy: '341', r: '2.5' }} />
               </HideCircle>
             </g>
           </svg>
