@@ -5,7 +5,7 @@ import { myStreamState } from '@src/state/recoil/viewingState';
 import { forwardRef, useImperativeHandle } from 'react';
 import { useRecoilValue } from 'recoil';
 
-const MyCamera = forwardRef(({ children }, ref) => {
+const MyCamera = forwardRef((_, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const myStream = useRecoilValue(myStreamState);
 
@@ -34,5 +34,7 @@ const MyCamera = forwardRef(({ children }, ref) => {
     </Modal>
   );
 });
+
+MyCamera.displayName = 'MyCamera';
 
 export default MyCamera;

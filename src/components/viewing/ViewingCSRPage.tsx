@@ -12,7 +12,7 @@ import { WithIntervalTaskLayer } from './WithIntervalTaskLayer';
 
 const ViewingCSRPage = () => {
   const { IVSPlayer } = window;
-  const [scriptLoaded, setScriptLoaded] = useState(IVSPlayer ? true : false);
+  const [scriptLoaded, setScriptLoaded] = useState(!!IVSPlayer);
   useEffect(() => {
     let intervalId = null;
     if (!scriptLoaded) {
@@ -28,7 +28,7 @@ const ViewingCSRPage = () => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [scriptLoaded]);
+  }, [scriptLoaded, IVSPlayer]);
 
   return (
     <ViewingWindowEventLayout>

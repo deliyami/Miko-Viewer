@@ -8,10 +8,6 @@ const ChatBox = () => {
   const messages = useRecoilValue(messagesState);
   const messagesEndRef = useRef(null);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({
       behavior: 'smooth',
@@ -19,7 +15,11 @@ const ChatBox = () => {
       inline: 'start',
     });
   };
-  console.log('message', messages);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   return (
     <VStack backgroundColor="#202020" border="2px" borderColor="#262626" width="20vw" textColor="white">
       <Text>채팅</Text>

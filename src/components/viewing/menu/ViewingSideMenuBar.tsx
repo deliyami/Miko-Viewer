@@ -22,7 +22,7 @@ const IconBox: FC<{ text: string; icon: IconType }> = ({ children, text, icon })
       {icon({ size: '100%', style: { padding: '0.5rem' } })}
       <Text>{text} </Text>
 
-      {Children.map(children, (child, index) =>
+      {Children.map(children, (child, _) =>
         cloneElement(
           child as ReactElement,
           // @ts-ignore

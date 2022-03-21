@@ -1,9 +1,8 @@
 import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Input, useDisclosure } from '@chakra-ui/react';
 import React, { forwardRef, useImperativeHandle } from 'react';
 
-const ViewingDrawer = forwardRef(({ children }, ref) => {
+const ViewingDrawer = forwardRef((_, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const btnRef = React.useRef();
 
   useImperativeHandle(ref, () => ({
     open: () => {
@@ -32,5 +31,7 @@ const ViewingDrawer = forwardRef(({ children }, ref) => {
     </Drawer>
   );
 });
+
+ViewingDrawer.displayName = 'ViewingDrawer';
 
 export default ViewingDrawer;

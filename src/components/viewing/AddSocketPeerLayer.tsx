@@ -14,9 +14,6 @@ import { DataConnection } from 'peerjs';
 import { FC, useCallback, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-const motionStore = {
-  peerId: { data: 'data' },
-}; // 60times
 // NOTE video를 true로 할경우 여러 브라우저에서 카메로 리소스 접근할때 보안상의 이유로 에러가 나올 확률이 높음
 // getUserMedia의 callback이 실행되지 않아서 먼저 들어온 사람의 영상이 안 보일 수 있음.
 // Bind 해주지 않으면 this 에러남.
@@ -31,10 +28,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
   const myPeer = useMyPeer();
   const myPeerUniqueID = user.data.uuid;
 
-  // const [streamOptions, _] = useState<MediaStreamConstraints>({
-  //   audio: true,
-  //   video: true,
-  // });
   const streamOptions: MediaStreamConstraints = { audio: true, video: true };
 
   const setPeerDataList = useSetRecoilState(peerDataListState);
@@ -44,9 +37,9 @@ const WithSocketEventLayout: FC = ({ children }) => {
   const addDataConnectionToPeersDataList = useCallback(
     (dataConnection: DataConnection) => {
       setPeerDataList(
-        produce(peers => {
-          const idx = peers.findIndex(peer => peer.id === dataConnection.peer);
-          if (idx >= 0) peers[idx].dataConnection = dataConnection;
+        produce(draft => {
+          const idx = draft.findIndex(peer => peer.id === dataConnection.peer);
+          if (idx >= 0) draft[idx].dataConnection = dataConnection;
         }),
       );
     },
@@ -56,9 +49,9 @@ const WithSocketEventLayout: FC = ({ children }) => {
   const addMediaStreamToPeersDataList = useCallback(
     (mediaStream: MediaStream, id) => {
       setPeerDataList(
-        produce(peers => {
-          const idx = peers.findIndex(peer => peer.id === id);
-          if (idx >= 0) peers[idx].mediaStream = mediaStream;
+        produce(draft => {
+          const idx = draft.findIndex(peer => peer.id === id);
+          if (idx >= 0) draft[idx].mediaStream = mediaStream;
         }),
       );
     },
@@ -68,10 +61,10 @@ const WithSocketEventLayout: FC = ({ children }) => {
   const removePeerById = useCallback(
     id => {
       setPeerDataList(
-        produce(peers => {
-          const idx = peers.findIndex(peer => peer.id === id);
+        produce(draft => {
+          const idx = draft.findIndex(peer => peer.id === id);
           if (idx !== 1) {
-            peers.splice(idx, 1);
+            draft.splice(idx, 1);
           }
         }),
       );
@@ -79,34 +72,35 @@ const WithSocketEventLayout: FC = ({ children }) => {
     [setPeerDataList],
   );
 
-  const addEventToDataConnection = (dataConnection: DataConnection) => {
-    const id = dataConnection.peer;
-    dataConnection.on('data', (event: DataConnectionEvent) => {
-      console.log('data from peer', id);
-      switch (event.type) {
-        case 'chat':
-          showChatToRoom(id, event.data.text, 5);
-          break;
-        case 'motion':
-          setMotionToAvatar(id, event.data);
-          break;
-        case 'scoreUpdate':
-          updateUserScore(id, event.data);
-          break;
-        default:
-          break;
-      }
-    });
-    // Firefox와 호환 안됨.
-    dataConnection.on('close', () => {
-      removePeerById(id);
-    });
-    dataConnection.on('error', () => {
-      removePeerById(id);
-    });
-  };
-
   useEffect(() => {
+    const addEventToDataConnection = (dataConnection: DataConnection) => {
+      const id = dataConnection.peer;
+      dataConnection.on('data', (event: DataConnectionEvent) => {
+        console.log('data from peer', id);
+        switch (event.type) {
+          case 'chat':
+            showChatToRoom(id, event.data.text, 5);
+            break;
+          case 'motion':
+            setMotionToAvatar(id, event.data);
+            break;
+          case 'scoreUpdate':
+            updateUserScore(id, event.data);
+            break;
+          default:
+            break;
+        }
+      });
+
+      // Firefox와 호환 안됨.
+      dataConnection.on('close', () => {
+        removePeerById(id);
+      });
+      dataConnection.on('error', () => {
+        removePeerById(id);
+      });
+    };
+
     if (!socket || !user.data) {
       return;
     }
@@ -260,22 +254,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
       setPeerDataList([]);
       setMessages([]);
     };
-  }, [
-    user.data,
-    socket,
-    addDataConnectionToPeersDataList,
-    addEventToDataConnection,
-    addMediaStreamToPeersDataList,
-    concertId,
-    myPeer,
-    myPeerUniqueID,
-    removePeerById,
-    roomId,
-    setMessages,
-    setMyStream,
-    setPeerDataList,
-    streamOptions,
-  ]);
+  }, [user.data, socket]);
 
   return <> {children}</>;
 };

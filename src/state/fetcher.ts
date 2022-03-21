@@ -59,7 +59,7 @@ const fetcher = (url: string) =>
     .catch(err => {
       // throw new Error("An error occurred while fetching the data.");
       console.log('error in fetcher', err);
-      return undefined;
+      return null;
     });
 
 const fetcherForInfinite = (url: string) =>
