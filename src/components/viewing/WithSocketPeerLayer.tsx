@@ -10,9 +10,10 @@ import { useUser } from '@src/state/swr/useUser';
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import { DataConnectionEvent } from '@src/types/DataConnectionEventType';
 import produce from 'immer';
+import { useRouter } from 'next/router';
 import { DataConnection } from 'peerjs';
 import { FC, useCallback, useEffect } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 // NOTE video를 true로 할경우 여러 브라우저에서 카메로 리소스 접근할때 보안상의 이유로 에러가 나올 확률이 높음
 // getUserMedia의 callback이 실행되지 않아서 먼저 들어온 사람의 영상이 안 보일 수 있음.
@@ -21,6 +22,7 @@ const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDev
 
 const WithSocketEventLayout: FC = ({ children }) => {
   // const concertId = useRecoilValue(enterConcertState)?.id;
+  const router = useRouter();
   const userTicket = useRecoilValue(curUserTicketState);
   const { concertId, ticketId, id: userTicketId } = userTicket;
 
@@ -34,7 +36,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
   const streamOptions: MediaStreamConstraints = { audio: true, video: true };
 
   const setPeerDataList = useSetRecoilState(peerDataListState);
-  const setMyStream = useSetRecoilState(myStreamState);
+  const [myStream, setMyStream] = useRecoilState(myStreamState);
   const setMessages = useSetRecoilState(messagesState);
 
   const addDataConnectionToPeersDataList = useCallback(
@@ -105,6 +107,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
     };
 
     if (!socket || !user.data) {
+      console.log('socket 없음');
       return;
     }
 
@@ -224,40 +227,70 @@ const WithSocketEventLayout: FC = ({ children }) => {
     socket.on('be-fail-enter-room', failEnterRoom);
     socket.on('be-user-left', userLeft);
 
-    const windowBeforeUnloadEvent = (e: BeforeUnloadEvent) => {
-      // NOTE confirm alert propmpt는 모던브라우저 (파폭 제외) onbeforeonload 동안에는 작동 안함
-      let isFired = false;
-      return function () {
-        e.preventDefault();
-        if (!isFired) {
-          isFired = true;
-          const exit = globalThis.confirm('Are you sure you want to leave?');
-          if (exit) {
-            socket.emit('fe-user-left');
-            myPeer.destroy();
-            window.close();
-          }
-        }
-      };
-    };
-    window.addEventListener('beforeunload', windowBeforeUnloadEvent);
-    window.addEventListener('unload', windowBeforeUnloadEvent);
-
-    return () => {
-      socket.off('be-new-user-come', newUserCome);
-      socket.off('be-broadcast-peer-id', getPeerIdFromBroadcast);
-      socket.off('be-broadcast-new-message', broadcastNewMessage);
-      socket.off('be-broadcast-new-message', userLeft);
+    // 정리 코드
+    const handleLeavePage = () => {
+      // socket.off('be-new-user-come', newUserCome);
+      // socket.off('be-broadcast-peer-id', getPeerIdFromBroadcast);
+      // socket.off('be-broadcast-new-message', broadcastNewMessage);
+      // socket.off('be-broadcast-new-message', userLeft);
       socket.emit('fe-user-left');
-      window.removeEventListener('beforeunload', windowBeforeUnloadEvent);
-      window.removeEventListener('unload', windowBeforeUnloadEvent);
-      myPeer.destroy();
       socket.disconnect();
+      window.socket = undefined;
+
+      myPeer.destroy();
+      //  NOTE  useSocket 코드상, disconnect 하는 것만으로는 안됨.
+      myStream?.getTracks().forEach(stream => {
+        stream.stop();
+        myStream.removeTrack(stream);
+      });
       setMyStream(undefined);
       setPeerDataList([]);
       setMessages([]);
     };
-  }, [user.data, socket]);
+
+    const windowBeforeUnloadEvent = (e: BeforeUnloadEvent) => {
+      // NOTE confirm alert propmpt는 모던브라우저 (파폭 제외) onbeforeonload 동안에는 작동 안함
+      e.preventDefault();
+      e.returnValue = '';
+      console.log('windowBeforeUnloadEvent 작동');
+
+      let isFired = false;
+      let exit = null;
+      if (!isFired) {
+        isFired = true;
+        exit = globalThis.confirm('beforeUnload  방을 나가시겠습니까?');
+        if (exit) {
+          handleLeavePage();
+          window.close();
+        }
+      }
+    };
+    window.addEventListener('beforeunload', windowBeforeUnloadEvent, { capture: true });
+
+    //  beforePopState => useEffect return
+    // router.beforePopState(state => {
+    //   const { as, options, url } = state;
+    //   console.log('beforePopState');
+    //   console.log('state', state);
+    //   console.log(router);
+    //   const exit = globalThis.confirm('beforePopState 방을 나가시겠습니까 ?');
+    //   if (exit) {
+    //     window.location.href = '/';
+    //     return true;
+    //   }
+    //   window.location.href = router.asPath;
+    //   return false;
+    // });
+
+    return () => {
+      console.log('useEffect 작동함');
+      if (user.data) {
+        handleLeavePage();
+      }
+      window.removeEventListener('beforeunload', windowBeforeUnloadEvent);
+      router.beforePopState = () => true;
+    };
+  }, [user.data]);
 
   return <> {children}</>;
 };

@@ -1,7 +1,7 @@
 import { UserTicket } from '@src/types/share/UserTicket';
 import axios from 'axios';
 import { atom, selector } from 'recoil';
-import { toastLog } from './../../helper/toastLog';
+import { toastLog } from '../../helper/toastLog';
 
 const enterRoomIdState = atom<string>({
   key: 'enterRoomId',
@@ -27,9 +27,8 @@ const enterRoomIdAsyncState = selector({
 
     if (data) {
       return data;
-    } else {
-      toastLog('error', 'get random roomId fail', 'fail');
     }
+    toastLog('error', 'get random roomId fail', 'fail');
   },
 });
 

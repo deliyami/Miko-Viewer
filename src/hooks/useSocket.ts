@@ -1,5 +1,5 @@
 import { SOCKET_URL } from '@src/const';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import io, { Socket } from 'socket.io-client';
 
 const useSocket = () => {
@@ -26,9 +26,6 @@ const useSocket = () => {
   );
 
   window.socket = socket.current;
-  useEffect(() => {
-    return () => {};
-  }, []);
 
   return socket.current;
 };
