@@ -2,13 +2,13 @@ import { HStack, VStack } from '@chakra-ui/react';
 import VideoPlayer from '@src/components/ivs-player/VideoPlayer';
 import ChatBox from '@src/components/viewing/chat/ChatBox';
 import { useEffect, useState } from 'react';
-import WithSocketEventLayout from './AddSocketPeerLayer';
 import { TempRoomAvatarView } from './avatar/RoomAvatarView';
 import ChatMessageInput from './chat/ChatMessageInput';
 import ViewingDrawer from './menu/ViewingDrawer';
 import ViewingSideMenuBar from './menu/ViewingSideMenuBar';
 import ViewingWindowEventLayout from './ViewingWindowEventLayout';
 import { WithIntervalTaskLayer } from './WithIntervalTaskLayer';
+import WithSocketEventLayout from './WithSocketPeerLayer';
 
 const ViewingCSRPage = () => {
   const { IVSPlayer } = window;
