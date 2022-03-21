@@ -110,7 +110,7 @@ const TempRoomAvatarView = () => {
           <Text as="span" fontSize="2xl">
             {scores?.[data.uuid] ?? 0}
           </Text>
-          <Text fontSize="6xl" id={data.id + 'chat'}></Text>
+          <Text fontSize="6xl" width="auto" id={data.uuid + 'chat'}></Text>
         </Center>
       </Box>
 
