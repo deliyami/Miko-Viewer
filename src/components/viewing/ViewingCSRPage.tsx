@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { TempRoomAvatarView } from './avatar/RoomAvatarView';
 import ChatMessageInput from './chat/ChatMessageInput';
 import ViewingSideMenuBar from './menu/ViewingSideMenuBar';
+import { AudioAnalyze } from './rightContainer/audioAnalyze/AudioAnalyze';
 import RankingView from './rightContainer/ranking/rankingView';
 import ViewingWindowEventLayout from './ViewingWindowEventLayout';
 import { WithIntervalTaskLayer } from './WithIntervalTaskLayer';
@@ -47,6 +48,7 @@ const ViewingCSRPage = () => {
             <VStack width="25vw">
               <RankingView />
               <ChatBox />
+              <AudioAnalyze />
             </VStack>
             <ViewingSideMenuBar />
           </HStack>

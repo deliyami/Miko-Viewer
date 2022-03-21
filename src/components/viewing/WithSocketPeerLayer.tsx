@@ -21,7 +21,6 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices) as typeof navigator.mediaDevices.getUserMedia;
 
 const WithSocketEventLayout: FC = ({ children }) => {
-  // const concertId = useRecoilValue(enterConcertState)?.id;
   const router = useRouter();
   const userTicket = useRecoilValue(curUserTicketState);
   const { concertId, ticketId, id: userTicketId } = userTicket;
@@ -31,7 +30,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
   const user = useUser();
   const myPeer = useMyPeer();
   const myPeerUniqueID = user.data.uuid;
-  const socket = useSocket(myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
+  // const socket = useSocket(myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
+  const socket = useSocket();
 
   const streamOptions: MediaStreamConstraints = { audio: true, video: true };
 
@@ -111,7 +111,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
       return;
     }
 
-    // socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
+    socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
 
     myPeer.on('connection', dataConnection => {
       addDataConnectionToPeersDataList(dataConnection);
@@ -229,10 +229,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
 
     // 정리 코드
     const handleLeavePage = () => {
-      // socket.off('be-new-user-come', newUserCome);
-      // socket.off('be-broadcast-peer-id', getPeerIdFromBroadcast);
-      // socket.off('be-broadcast-new-message', broadcastNewMessage);
-      // socket.off('be-broadcast-new-message', userLeft);
       socket.emit('fe-user-left');
       socket.disconnect();
       window.socket = undefined;
@@ -285,9 +281,14 @@ const WithSocketEventLayout: FC = ({ children }) => {
     return () => {
       console.log('useEffect 작동함');
       if (user.data) {
+        socket.off('be-new-user-come', newUserCome);
+        socket.off('be-broadcast-peer-id', getPeerIdFromBroadcast);
+        socket.off('be-broadcast-new-message', broadcastNewMessage);
+        socket.off('be-broadcast-new-message', userLeft);
         handleLeavePage();
       }
-      window.removeEventListener('beforeunload', windowBeforeUnloadEvent);
+      // NOTE 옵션까지 안 맞춰주면 삭제 안됨??
+      window.removeEventListener('beforeunload', windowBeforeUnloadEvent, { capture: true });
       // router.beforePopState = () => true;
     };
   }, [user.data]);
