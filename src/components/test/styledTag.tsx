@@ -4,8 +4,6 @@ import { ClassAttributes, FC, HTMLAttributes } from 'react';
 
 // color
 // const BODY_COLOR = useColorStore('donateCharBody');
-const BALLON_OUTER = '#55557b';
-const BALLON_INNER = '#e1e1e1';
 
 // type
 
@@ -15,13 +13,24 @@ type Props = {
 } & ClassAttributes<HTMLDivElement> &
   HTMLAttributes<HTMLDivElement>;
 
+// <ClassNames>
+//       {({ css, cx }) => (
+//         <div
+//           className={cx(
+//             'some-class',
+//             css`
+//               color: yellow;
+//             `,
+//           )}
+//         >
+//           신난다 너무 신나!
+//         </div>
+//       )}
+//     </ClassNames>
 // test
 export const Div = styled.div({}, (props: any) => {
   const { push } = props;
   return { backgroundColor: push };
-});
-export const SecDiv = styled.div(props => {
-  return { backgroundColor: '#dddddd' };
 });
 
 // keyframes
@@ -158,8 +167,8 @@ const backMiddle = 9;
 // });
 
 export const Circle = styled.circle((props: Props) => {
-  const { d, i, cx, cy, r, fill } = props;
-  const index = Number.parseInt(i);
+  const { d, i } = props;
+  const index: number = parseFloat(i);
   const direction = d === 'front';
   const find = index < (direction ? frontMiddle : backMiddle);
   const calcY = -(Math.random() * (direction ? 60 : 50) + (direction ? 15 : 20));
@@ -170,15 +179,34 @@ export const Circle = styled.circle((props: Props) => {
   return {
     opacity: 0,
     animationName: randomShotBack,
-    animationDelay: `${Math.random() * 500}ms`,
+    // animationDelay: `${Math.random() * 500}ms`,
     animationDuration: '1s',
     animationFillMode: 'forwards',
-    cx,
-    cy,
-    r,
-    fill,
   };
 });
+
+// export const Circle = styled.circle((props: Props) => {
+//   const { d, i, cx, cy, r, fill } = props;
+//   const index: number = parseFloat(i);
+//   const direction = d === 'front';
+//   const find = index < (direction ? frontMiddle : backMiddle);
+//   const calcY = -(Math.random() * (direction ? 60 : 50) + (direction ? 15 : 20));
+//   const calcX = (Math.random() * (find ? 6 : 3) * index + index) * (find ? -1 : 1);
+//   // translateX((random($i*3)+$i)*1%)
+//   // translateY(-((random(50)+20)*1%))
+//   const randomShotBack = makeCircleKeyframes(calcX, calcY);
+//   return {
+//     opacity: 0,
+//     animationName: randomShotBack,
+//     animationDelay: `${Math.random() * 500}ms`,
+//     animationDuration: '1s',
+//     animationFillMode: 'forwards',
+//     cx,
+//     cy,
+//     r,
+//     fill,
+//   };
+// });
 
 export const AvatarBody: FC<Props> = styled.g((props: Props) => {
   const { avatarColor } = props;

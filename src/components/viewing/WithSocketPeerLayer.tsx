@@ -5,6 +5,7 @@ import { updateUserScore } from '@src/helper/updateUserScore';
 import useMyPeer from '@src/hooks/useMyPeer';
 import useSocket from '@src/hooks/useSocket';
 import { curUserTicketState, enterRoomIdAsyncState } from '@src/state/recoil/concertState';
+import { latestScoreState } from '@src/state/recoil/scoreState';
 import { messagesState, myStreamState, PeerDataInterface, peerDataListState } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
@@ -21,23 +22,24 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices) as typeof navigator.mediaDevices.getUserMedia;
 
 const WithSocketEventLayout: FC = ({ children }) => {
-  // const concertId = useRecoilValue(enterConcertState)?.id;
   const router = useRouter();
   const userTicket = useRecoilValue(curUserTicketState);
   const { concertId, ticketId, id: userTicketId } = userTicket;
 
   const roomId = useRecoilValue(enterRoomIdAsyncState);
   console.log('roomId', roomId);
-  const socket = useSocket();
   const user = useUser();
   const myPeer = useMyPeer();
   const myPeerUniqueID = user.data.uuid;
+  // const socket = useSocket(myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
+  const socket = useSocket();
 
   const streamOptions: MediaStreamConstraints = { audio: true, video: true };
 
   const setPeerDataList = useSetRecoilState(peerDataListState);
   const [myStream, setMyStream] = useRecoilState(myStreamState);
   const setMessages = useSetRecoilState(messagesState);
+  const setLatestScoreState = useSetRecoilState(latestScoreState);
 
   const addDataConnectionToPeersDataList = useCallback(
     (dataConnection: DataConnection) => {
@@ -78,6 +80,13 @@ const WithSocketEventLayout: FC = ({ children }) => {
   );
 
   useEffect(() => {
+    socket.on('connect', () => {
+      // NOTE 서버 재실행시에 다시 소켓 데이터를 전송
+      if (socket.connected) {
+        socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
+      }
+    });
+
     const addEventToDataConnection = (dataConnection: DataConnection) => {
       const id = dataConnection.peer;
       dataConnection.on('data', (event: DataConnectionEvent) => {
@@ -217,6 +226,16 @@ const WithSocketEventLayout: FC = ({ children }) => {
       removePeerById(peerId);
     };
 
+    const getMyScore = score => {
+      setLatestScoreState(
+        produce(draft => {
+          // 나의 Score State를 업데이트
+          console.log('나의 Score state 업데이트', draft, score);
+          draft[user.data.uuid] = score;
+        }),
+      );
+    };
+
     myPeer.on('open', id => {
       // NOTE  peer.conncet 는  peer open 상태가 아니면 undefined 리턴
       console.log('emit new user come');
@@ -226,13 +245,10 @@ const WithSocketEventLayout: FC = ({ children }) => {
     socket.on('be-broadcast-new-message', broadcastNewMessage);
     socket.on('be-fail-enter-room', failEnterRoom);
     socket.on('be-user-left', userLeft);
+    socket.on('be-send-user-score', getMyScore);
 
     // 정리 코드
     const handleLeavePage = () => {
-      // socket.off('be-new-user-come', newUserCome);
-      // socket.off('be-broadcast-peer-id', getPeerIdFromBroadcast);
-      // socket.off('be-broadcast-new-message', broadcastNewMessage);
-      // socket.off('be-broadcast-new-message', userLeft);
       socket.emit('fe-user-left');
       socket.disconnect();
       window.socket = undefined;
@@ -285,10 +301,16 @@ const WithSocketEventLayout: FC = ({ children }) => {
     return () => {
       console.log('useEffect 작동함');
       if (user.data) {
+        socket.off('be-new-user-come', newUserCome);
+        socket.off('be-broadcast-peer-id', getPeerIdFromBroadcast);
+        socket.off('be-broadcast-new-message', broadcastNewMessage);
+        socket.off('be-user-left', userLeft);
+        socket.off('be-send-user-score', getMyScore);
         handleLeavePage();
       }
-      window.removeEventListener('beforeunload', windowBeforeUnloadEvent);
-      router.beforePopState = () => true;
+      // NOTE 옵션까지 안 맞춰주면 삭제 안됨??
+      window.removeEventListener('beforeunload', windowBeforeUnloadEvent, { capture: true });
+      // router.beforePopState = () => true;
     };
   }, [user.data]);
 

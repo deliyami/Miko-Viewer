@@ -10,7 +10,7 @@ const pay = () => {
   const [radio, setRadio] = useState('0');
   const router = useRouter();
   return (
-    <Flex flexDirection={'column'} w={'50%'} h="100vh" p={'2%'} ml={'25%'}>
+    <Flex flexDirection={'column'} w={'50%'} h="100%" p={'2%'} ml={'25%'}>
       <Status status={2}></Status>
       <Text fontWeight={'bold'} fontSize="3xl" alignSelf={'center'} mb="7%">
         お客様情報の入力
@@ -26,7 +26,7 @@ const pay = () => {
       </Flex>
       <CommonDivider></CommonDivider>
       <Flex justifyContent={'space-between'} alignItems={'center'}>
-        <Text w={'16%'}>
+        <Text w={'22%'}>
           お名前(ふりがな)<span style={{ color: 'red', fontSize: '1px', marginLeft: '10%' }}>必要</span>
         </Text>
         <Flex w={'70%'} justifyContent={'space-around'}>
@@ -45,7 +45,7 @@ const pay = () => {
         </Flex>
       </Flex>
       <Flex py={'2%'} ml={'32%'} w={'50%'} flexDirection={'column'}>
-        <Select pb={'2%'} w={'35%'} required>
+        <Select pb={'2%'} w={'45%'} required>
           <option>都道府県を選択</option>
           <option value="1">北海道</option>
           <option value="1">青森県</option>
@@ -114,7 +114,7 @@ const pay = () => {
 
       <CommonDivider></CommonDivider>
       <Flex justifyContent={'space-between'} alignItems={'center'}>
-        <Text w={'16%'}>
+        <Text w={'24%'}>
           メールアドレス<span style={{ color: 'red', fontSize: '1px', marginLeft: '10%' }}>必要</span>
         </Text>
         <Flex w={'50%'} mr={'18%'} flexDirection={'column'} justifyContent={'space-around'}>
@@ -124,7 +124,7 @@ const pay = () => {
       </Flex>
       <CommonDivider></CommonDivider>
       <Flex justifyContent={'space-between'} alignItems={'center'}>
-        <Text w={'16%'}>
+        <Text w={'22%'}>
           メルマガ配信<span style={{ color: 'red', fontSize: '1px', marginLeft: '10%' }}>必要</span>
         </Text>
         <RadioGroup w={'68%'} onChange={setRadio} value={radio}>

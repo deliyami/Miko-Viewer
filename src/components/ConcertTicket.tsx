@@ -1,55 +1,97 @@
-import { Box, Heading, HStack, Image } from '@chakra-ui/react';
-import Link from 'next/link';
+import { Box, HStack, Image, Table, TableCaption, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { S3_URL } from '@src/const';
+import { UserTicket } from '@src/types/share/UserTicket';
+import Dayjs from 'dayjs';
+import { FC } from 'react';
 
-const concert = [
-  {
-    id: 1,
-    name: '東京ヤクルトスワローズ公式マスコットつばみ',
-    url: 'https://obs.line-scdn.net/0haRQfol8DPn1sHyoT35pBKjxCOAoVMSRsCGciGhkZaR0VfXguAy4kTh5IMEQVLXopVHh5GUoYZU9EKHksVXx4Gk0WZU5BJyt7VH53GAweN0hFe315Uw/f640x640',
-  },
-  {
-    id: 2,
-    name: 'fripSide',
-    url: 'https://obs.line-scdn.net/0hBj2461zQHUUPTQranmZiEl8QGzJ2YwdUazUGJy1OQXQnL14TNi4BI31OSnElKFkVMnhXIX5EQSEnf1oUNilVKilFRnQidQhDOixaIW9MFHcnL1gUYQ/f640x640',
-  },
-];
+const TicketDetail: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
+  console.log(userTicket);
+  const date = Dayjs(userTicket.ticket.concertStartDate, 'YYYY-MM-DD HH:mm:ss');
+  const week = ['日', '月', '火', '水', '木', '金', '土']; // 요일
+  const StartDay = date.format('YYYY/MM/DD'); // 2022/03/24
+  const StartTime = date.format('HH:mm'); // 17:30
+  const day = week[date.get('d')]; // 金 (요일)
 
-const TicketDetail = ({ name }) => {
   return (
-    <Box flex="1 1 auto" padding="10px 30px 10px">
-      <Heading fontWeight="600" size="lg" my="20px">
-        {name}
-      </Heading>
-      <dl>
-        <dt>販売期間</dt>
-        <dd>2022/01/24(月) 10:00 - 02/06(日) 23:59</dd>
-        <dt>アーカイブ視聴期間</dt>
-        <dd>2022/02/13(日) 23:59 まで</dd>
-      </dl>
-      <div>※チケット代(3,500円)に別途システム利用料(220円)が必要となります。</div>
-    </Box>
+    <>
+      <Table variant="simple">
+        <TableCaption>Imperial to metric conversion factors</TableCaption>
+        <Thead>
+          <Tr>
+            <Th>예매일</Th>
+            <Th>예약번호</Th>
+            <Th>Title</Th>
+            <Th>시작시간</Th>
+            <Th>상영시간</Th>
+            <Th>현재상태</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          <Tr>
+            <Td>????/??/??</Td>
+            <Td isNumeric>{userTicket.id}</Td>
+            <Td>{userTicket.concert.title}</Td>
+            <Td>
+              {StartDay}({day}) {StartTime}
+            </Td>
+            <Td>{userTicket.ticket.runningTime}分</Td>
+            <Td>예매완료</Td>
+          </Tr>
+        </Tbody>
+      </Table>
+    </>
   );
 };
 
-const ConcertTicket = params => {
+const HistoryDetail: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
+  console.log(userTicket);
+  const date = Dayjs(userTicket.ticket.archiveEndTime, 'YYYY-MM-DD HH:mm:ss'); // 다시보기기간.
+  const week = ['日', '月', '火', '水', '木', '金', '土']; // 요일
+  const ArchiveDay = date.format('YYYY/MM/DD'); // 2022/03/24
+  const ArchiveTime = date.format('HH:mm'); // 17:30
+  const day = week[date.get('d')]; // 金 (요일)
+
+  return (
+    <>
+      <Table variant="simple">
+        <TableCaption>Imperial to metric conversion factors</TableCaption>
+        <Thead>
+          <Tr>
+            <Th>예매일</Th>
+            <Th>예약번호</Th>
+            <Th>Title</Th>
+            <Th>다시보기</Th>
+            <Th>상영시간</Th>
+            <Th>현재상태</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          <Tr>
+            <Td>????/??/??</Td>
+            <Td isNumeric>{userTicket.id}</Td>
+            <Td>{userTicket.concert.title}</Td>
+            <Td>
+              {ArchiveDay}({day}) {ArchiveTime} まで
+            </Td>
+            <Td>{userTicket.ticket.runningTime}分</Td>
+            <Td>시청 완료</Td>
+          </Tr>
+        </Tbody>
+      </Table>
+    </>
+  );
+};
+
+const ConcertTicket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
+  // console.log(userTicket);
   return (
     <Box>
-      {concert.map(({ id, name, url }) => (
-        <HStack as="li" width="full" border="1px solid #efefef" borderRadius="10px" mb="30px">
-          <Box textAlign="center" pl="50px">
-            <Link href={`http://localhost:3000/my/lists/ticket/${id}`}>
-              <a>
-                <Image src={url} width="200px" />
-              </a>
-            </Link>
-          </Box>
-          <Link href={`http://localhost:3000/my/lists/ticket/${id}`}>
-            <a>
-              <TicketDetail key={name} name={name} />
-            </a>
-          </Link>
-        </HStack>
-      ))}
+      <HStack as="li" width="full" border="1px solid #efefef" borderRadius="10px" mb="30px">
+        <Box textAlign="center" pl="50px">
+          <Image src={S3_URL + userTicket.concert.coverImage} width="200px" />
+        </Box>
+        {userTicket.isUsed === 0 ? <TicketDetail userTicket={userTicket} /> : <HistoryDetail userTicket={userTicket} />}
+      </HStack>
     </Box>
   );
 };

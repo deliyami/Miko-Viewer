@@ -1,4 +1,4 @@
-import { Box, Button, HStack, Text } from '@chakra-ui/react';
+import { Box, HStack, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { enterConcertState } from '@src/state/recoil/concertState';
 import { msgMetaDataState, quizMetaDataState, quizResultMetaDataState } from '@src/state/recoil/timeMetaDataState';
@@ -6,10 +6,13 @@ import { AllMetaData } from '@src/types/share/TimeMetadataFormat';
 import * as ivs from 'amazon-ivs-player';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import { BiVolumeFull, BiVolumeMute } from 'react-icons/bi';
+import { IoPause, IoPlay } from 'react-icons/io5';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import QuizResultView from './QuizResultView';
 import QuizView from './QuizView';
 import VideoQualitySelect from './VideoQualitySelect';
+
 const streamUrl = 'https://de853ef2a345.us-east-1.playback.live-video.net/api/video/v1/us-east-1.121323684128.channel.Cj5ynk97sEJv.m3u8';
 
 const jwt =
@@ -110,7 +113,7 @@ const VideoPlayer = props => {
 
       console.log(player.current.getPosition().toFixed(2));
     };
-    //@ts-ignore
+    // @ts-ignore
     player.current = IVSPlayer.create(); // web 버전이어서 wasm 넣어줄 필요는 없음.
     player.current.attachHTMLVideoElement(videoEl.current);
 
@@ -215,9 +218,13 @@ const VideoPlayer = props => {
         >
           <Text color="white">{enterConcertData?.playbackUrl}</Text>
 
-          <HStack id="control-bottom" position="absolute" width="full" bottom="0" p="2rem">
-            <Button onClick={toggleMute}>{muted ? '소리켜기' : '뮤트하기'}</Button>
-            <Button onClick={pause}>{isPlaying ? '정지' : '재생'}</Button>
+          <HStack aria-label="video-controller" id="control-bottom" position="absolute" width="full" bottom="0" p="2rem" color="white">
+            <Box fontSize="4xl" cursor="pointer" onClick={toggleMute}>
+              {muted ? <BiVolumeMute /> : <BiVolumeFull />}
+            </Box>
+            <Box fontSize="4xl" cursor="pointer" onClick={pause}>
+              {isPlaying ? <IoPlay /> : <IoPause />}
+            </Box>
             <Box flexGrow="1"></Box>
             <VideoQualitySelect player={player} selectableQuality={selectableQuality}></VideoQualitySelect>
           </HStack>

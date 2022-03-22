@@ -1,10 +1,11 @@
 import { Box, Flex, SimpleGrid, Text, useMediaQuery } from '@chakra-ui/react';
-import Link from 'next/link';
+import { Pagination } from '@src/types/share/common/common';
 import { Product } from '@src/types/share/Product';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
 
-const ProductsList: FC<{ data: Product[] }> = ({ data }) => {
+const ProductsList: FC<{ data: Pagination<Product> }> = ({ data }) => {
   const router = useRouter();
   console.log('product list');
   console.log(data);
@@ -12,7 +13,7 @@ const ProductsList: FC<{ data: Product[] }> = ({ data }) => {
   return (
     // data[0].id
     <SimpleGrid columns={isLargerThan960 ? 4 : 2} spacing={70}>
-      {data.map((item, id) => (
+      {data.data.map((item, id) => (
         <Link key={id} href={`/concerts/${router.query.id}/products/${item.id}`}>
           <a>
             <Flex justifyItems={'center'}>

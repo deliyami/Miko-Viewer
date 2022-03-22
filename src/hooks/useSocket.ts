@@ -11,14 +11,15 @@ const useSocket = () => {
         transports: ['websocket', 'polling'],
       })
         .on('connect', () => {
-          console.log('connect 👌 ', socket.current.connected);
+          console.log('socket connect 👌 ', window.socket.connected);
+          // window.socket.emit('fe-new-user-request-join', peerId, roomId, userData, concertId, ticketId, userTicketId);
         })
         .on('connect_error', err => {
-          console.error(err);
+          console.error('socket_connect_error', err);
           setTimeout(() => socket.current.connect(), 1000);
         })
         .on('error', err => {
-          console.error(err);
+          console.error('socket error', err);
         })
         .on('disconnect', reason => {
           console.error('socket disconnect', reason);

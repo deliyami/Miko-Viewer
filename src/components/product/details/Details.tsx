@@ -1,4 +1,4 @@
-import { Box, Flex, Text, SimpleGrid } from '@chakra-ui/react/node_modules/@chakra-ui/layout';
+import { Box, Flex, Text, SimpleGrid } from '@chakra-ui/react';
 import { Product } from '@src/types/share/Product';
 import { FC, useState } from 'react';
 import Detail from './Detail';

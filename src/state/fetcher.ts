@@ -1,4 +1,5 @@
 import { createStandaloneToast } from '@chakra-ui/react';
+import { NEST_URL } from '@src/const';
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
 const config: AxiosRequestConfig<any> = {
@@ -72,4 +73,14 @@ const fetcherForInfinite = (url: string) =>
       throw new Error('An error occurred while fetching the data.');
     });
 
-export { fetcher, axiosI };
+const nodeFetcher = (url: string) =>
+  axiosI
+    .get(url, { baseURL: NEST_URL })
+    .then(res => {
+      return res.data;
+    })
+    .catch(err => {
+      throw new Error('An error occurred while fetching the data.');
+    });
+
+export { fetcher, axiosI, nodeFetcher };

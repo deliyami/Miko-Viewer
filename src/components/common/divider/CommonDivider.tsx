@@ -1,8 +1,8 @@
-import { Flex, Divider } from '@chakra-ui/react/node_modules/@chakra-ui/layout';
+import { Flex, Divider } from '@chakra-ui/react';
 
 const CommonDivider = () => {
   return (
-    <Flex alignItems={'center'} h="4%">
+    <Flex alignItems={'center'} h="50px">
       <Divider variant={'dashed'} />
     </Flex>
   );

@@ -11,7 +11,7 @@ const ViewingDrawer = forwardRef((_, ref) => {
   }));
 
   return (
-    <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+    <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton />

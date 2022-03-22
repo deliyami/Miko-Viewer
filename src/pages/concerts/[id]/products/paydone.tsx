@@ -11,6 +11,8 @@ const paydone = () => {
   );
 };
 
+export default paydone;
+
 paydone.getLayout = function getLayout(page: ReactElement) {
   return <BasicLayout>{page}</BasicLayout>;
 };
