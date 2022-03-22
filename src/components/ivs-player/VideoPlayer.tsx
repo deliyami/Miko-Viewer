@@ -1,11 +1,11 @@
 import { Box, HStack, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import { enterConcertState } from '@src/state/recoil/concertState';
+import { enterTicketDataState } from '@src/state/recoil/concertState';
 import { msgMetaDataState, quizMetaDataState, quizResultMetaDataState } from '@src/state/recoil/timeMetaDataState';
 import { AllMetaData } from '@src/types/share/TimeMetadataFormat';
 import * as ivs from 'amazon-ivs-player';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { BiVolumeFull, BiVolumeMute } from 'react-icons/bi';
 import { IoPause, IoPlay } from 'react-icons/io5';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -35,11 +35,11 @@ const Video = styled.video`
 `;
 
 //  TODO  브라우저에 따라서 window에 IVSPlayer 없음
-const VideoPlayer = props => {
+const VideoPlayer: FC = () => {
   const { IVSPlayer } = window;
-  const enterConcertData = useRecoilValue(enterConcertState);
+  const enterTicketData = useRecoilValue(enterTicketDataState);
   const router = useRouter();
-  if (!enterConcertData) router.push('/');
+  if (!enterTicketData) router.push('/');
 
   const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -121,7 +121,8 @@ const VideoPlayer = props => {
     player.current.setVolume(1);
     player.current.setLiveLowLatencyEnabled(true);
 
-    player.current.load(enterConcertData?.playbackUrl + '?token=' + jwt);
+    // @ts-ignore
+    player.current.load(enterTicketData.playbackUrl + '?token=' + jwt);
     player.current.play();
 
     player.current.addEventListener(READY, onStateChange);
@@ -130,7 +131,7 @@ const VideoPlayer = props => {
     player.current.addEventListener(ERROR, onError);
     player.current.addEventListener(IVSPlayer.PlayerEventType.TEXT_METADATA_CUE, onTimeMetaData);
 
-    const intercvalId = setInterval(() => {
+    const intervalId = setInterval(() => {
       player.current.setLiveLowLatencyEnabled(true);
       // player.current.setAutoMaxBitrate(true);
       // player.current.setAutoMaxQuality(true);
@@ -161,9 +162,9 @@ const VideoPlayer = props => {
       player.current.removeEventListener(ERROR, onError);
       player.current.removeEventListener(IVSPlayer.PlayerEventType.TEXT_METADATA_CUE, onTimeMetaData);
       player.current.delete();
-      clearInterval(intercvalId);
+      clearInterval(intervalId);
     };
-  }, [enterConcertData]);
+  }, [enterTicketData]);
 
   const pause = () => {
     const isPaused = player.current.isPaused();
@@ -216,7 +217,7 @@ const VideoPlayer = props => {
             visibility: 'visible',
           }}
         >
-          <Text color="white">{enterConcertData?.playbackUrl}</Text>
+          <Text color="white">{enterTicketData.playbackUrl}</Text>
 
           <HStack aria-label="video-controller" id="control-bottom" position="absolute" width="full" bottom="0" p="2rem" color="white">
             <Box fontSize="4xl" cursor="pointer" onClick={toggleMute}>

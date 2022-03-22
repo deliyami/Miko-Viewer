@@ -7,10 +7,7 @@ export interface Concert extends CommonProps {
   title: string;
   artist: string;
   detail: string;
-  channelArn: string;
-  playbackUrl: string;
-  streamKeyArn: string;
-  streamKeyValue: string;
+
   content: string;
   isPublic: boolean;
   allConcertStartDate: string;

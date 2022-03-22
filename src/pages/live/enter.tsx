@@ -47,7 +47,7 @@ const PrivateRoomIdInput = () => {
 const RoomSelect = () => {
   const [radioValue, setRadioValue] = useState('public');
   const setEnterRoomId = useSetRecoilState(enterRoomIdState);
-  const isPublicRoom = useMemo(() => (radioValue === 'public' ? true : false), [radioValue]);
+  const isPublicRoom = useMemo(() => radioValue === 'public', [radioValue]);
 
   const radioChangeHandler = (value: string) => {
     if (value === 'public') {
