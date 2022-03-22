@@ -11,6 +11,7 @@ import { FC, ReactElement } from 'react';
 import { useSetRecoilState } from 'recoil';
 
 const Ticket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
+  // console.log(userTicket);
   const router = useRouter();
   const setCurUseTicket = useSetRecoilState(curUserTicketState);
   const useTicketHandler = () => {
@@ -18,31 +19,34 @@ const Ticket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
     router.push('/live/enter');
   };
 
-  return <Box onClick={useTicketHandler}>{userTicket.id}</Box>;
+  return (
+    <>
+      <Box onClick={useTicketHandler}>
+        <ConcertTicket userTicket={userTicket} />
+      </Box>
+    </>
+  );
 };
 
-const UserTicketList: FC<{ userTickets: UserTicket[] }> = ({ userTickets }) => {
+const UserTicketList: FC<{ userTickets: UserTicket[]; cate: number }> = ({ userTickets, cate }) => {
+  // console.log(userTickets[0].isUsed == cate);
+  console.log();
   return (
-    <Box>
-      {userTickets.map(userTicket => (
-        <Ticket key={userTicket.id} userTicket={userTicket} />
-      ))}
-    </Box>
+    <>
+      <Box>{userTickets.map(userTicket => userTicket.isUsed === cate && <Ticket key={userTicket.id} userTicket={userTicket} />)}</Box>
+    </>
   );
 };
 
 const MyListPage = second => {
-  const router = useRouter();
+  // const router = useRouter();
   const { data: userData } = useUser();
 
-  const { menu } = router.query as { menu: string };
-
+  // const { menu } = router.query as { menu: string };
   const { data } = useUserTickets({
     with: ['ticket', 'concert'],
     filter: [['user_id', userData.id]],
   });
-
-  console.log('ticket', data);
 
   return (
     <Box>
@@ -53,10 +57,10 @@ const MyListPage = second => {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <UserTicketList userTickets={data.data} />
+            <UserTicketList userTickets={data.data} cate={0} />
           </TabPanel>
           <TabPanel>
-            <ConcertTicket />
+            <UserTicketList userTickets={data.data} cate={1} />
           </TabPanel>
         </TabPanels>
       </Tabs>

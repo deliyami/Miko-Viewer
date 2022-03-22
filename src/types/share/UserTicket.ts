@@ -1,5 +1,6 @@
 import { Concert } from './Concert';
 import { Ticket } from './Ticket';
+
 export interface UserTicket {
   id: number;
   createdAt: string;
