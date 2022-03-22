@@ -1,8 +1,7 @@
-import { Button } from '@chakra-ui/react';
+import { setModel } from '@src/components/viewing/avatar/GlobalModel';
 import * as BABYLON from 'babylonjs';
 import 'babylonjs-loaders';
 import { FC, useEffect, useRef } from 'react';
-import { setModel } from './GlobalModel';
 
 export const AvatarModel: FC<{
   width: number;
@@ -51,9 +50,9 @@ export const AvatarModel: FC<{
                 animations[j].stop();
               }
               setModel(peerId, {
-                borns: borns,
-                originalBorns: originalBorns,
-                scene: scene,
+                borns,
+                originalBorns,
+                scene,
               });
               scene.render();
             },
@@ -90,15 +89,5 @@ export const AvatarModel: FC<{
     }
     return () => {};
   }, [reactCanvas]);
-  console.log('modeling?');
-  return (
-    <>
-      <canvas ref={reactCanvas} {...rest}></canvas>
-      <Button
-        onClick={e => {
-          console.log('yaho');
-        }}
-      ></Button>
-    </>
-  );
+  return <canvas ref={reactCanvas} {...rest}></canvas>;
 };

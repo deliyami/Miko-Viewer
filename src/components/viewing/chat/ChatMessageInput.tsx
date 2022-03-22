@@ -1,4 +1,4 @@
-import { Box, Button, Center, FormControl, Input, ScaleFade } from '@chakra-ui/react';
+import { Box, Button, Center, Input, ScaleFade } from '@chakra-ui/react';
 import sendToAllPeers from '@src/helper/sendToAllPeers';
 import showChatToRoom from '@src/helper/showChatToRoom';
 import useSocket from '@src/hooks/useSocket';
@@ -68,10 +68,10 @@ const ChatMessageInput = () => {
   return (
     <Box bottom="2" position="fixed" zIndex={100}>
       <ScaleFade in={isShow}>
-        <Center bgColor="white" p="2">
+        <Center bgColor="white" p="2" backgroundColor="#000000AA" border="2px" borderRadius="xl" gap="10px" px="4" py="4">
           <Button
             colorScheme="facebook"
-            width="12"
+            width="20"
             onClick={() =>
               setChatMode(prev => {
                 if (prev === 'private') return 'public';
@@ -81,25 +81,26 @@ const ChatMessageInput = () => {
           >
             {chatModeCompute() === 'public' ? '全体へ' : 'ルームへ'}
           </Button>
-          <FormControl>
-            <Input
-              id="chat-input"
-              zIndex={10}
-              ref={inputRef}
-              width="50vw"
-              autoFocus
-              type="text"
-              name="message"
-              value={newMessage}
-              onChange={e => setNewMessage(e.target.value)}
-              placeholder="Message"
-              onKeyUp={onKeyDownHandler}
-            />
-            <SuperChatOption amount={amount} setAmount={setAmount} itemId={itemId} setItemId={setItemId} />
-            <Button type="submit" onClick={onSubmitHandler} colorScheme={amount === 0 ? 'cyan' : 'messenger'}>
-              送る
-            </Button>
-          </FormControl>
+          {/* <FormControl> */}
+          <Input
+            id="chat-input"
+            zIndex={10}
+            ref={inputRef}
+            width="50vw"
+            autoFocus
+            type="text"
+            name="message"
+            color="white"
+            value={newMessage}
+            onChange={e => setNewMessage(e.target.value)}
+            placeholder="Message"
+            onKeyUp={onKeyDownHandler}
+          />
+          <SuperChatOption amount={amount} setAmount={setAmount} itemId={itemId} setItemId={setItemId} />
+          <Button type="submit" onClick={onSubmitHandler} colorScheme={amount === 0 ? 'cyan' : 'messenger'}>
+            送る
+          </Button>
+          {/* </FormControl> */}
         </Center>
       </ScaleFade>
     </Box>

@@ -13,7 +13,7 @@ const LogoutBtn = () => {
       router.push('/');
       setTimeout(() => {
         mutate(null, { revalidate: false });
-      }, 100);
+      }, 1000);
     }
   };
 

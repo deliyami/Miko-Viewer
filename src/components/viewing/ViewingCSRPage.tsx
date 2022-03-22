@@ -6,7 +6,7 @@ import { TempRoomAvatarView } from './avatar/RoomAvatarView';
 import ChatMessageInput from './chat/ChatMessageInput';
 import ViewingSideMenuBar from './menu/ViewingSideMenuBar';
 import { AudioAnalyze } from './rightContainer/audioAnalyze/AudioAnalyze';
-import RankingView from './rightContainer/ranking/rankingView';
+import RankingView from './rightContainer/ranking/RankingView';
 import ViewingWindowEventLayout from './ViewingWindowEventLayout';
 import { WithIntervalTaskLayer } from './WithIntervalTaskLayer';
 import WithSocketEventLayout from './WithSocketPeerLayer';

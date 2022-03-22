@@ -1,12 +1,13 @@
 import { Box, Button, Center, HStack, Tag, Text } from '@chakra-ui/react';
+import { AvatarModel } from '@src/components/viewing/avatar/AvatarModel';
+import ModelMotion from '@src/components/viewing/avatar/ModelMotion';
+import TempModelMotion from '@src/components/viewing/avatar/TempModelMotion';
 import { latestScoreState } from '@src/state/recoil/scoreState';
 import { myStreamState, PeerDataInterface, peerDataListState } from '@src/state/recoil/viewingState';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
 import { useUser } from '@src/state/swr/useUser';
 import { createRef, FC, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { AvatarModel } from './AvatarModel';
-import ModelMotion from './ModelMotion';
 
 const RoomAvatarView = () => {
   const peerDataList = useRecoilValue(peerDataListState);
@@ -81,6 +82,24 @@ const MyUserBox: FC = () => {
 
 export default RoomAvatarView;
 
+const TempMyUserBox: FC = () => {
+  const {
+    data: { uuid, email },
+  } = useUser();
+  const [myStream, setMyStream] = useRecoilState(myStreamState);
+  console.log('myStream', myStream);
+
+  return (
+    <Center width="300px" height="300px" bgColor="blackAlpha.500" id={uuid + 'box'} position="relative">
+      <Text> {email} </Text>
+      <AvatarModel width={300} height={300} path={'http://localhost:3000/resources/babylonjs/models/proseka/proseka.glb'} peerId={'kirari'} antialias></AvatarModel>
+      {myStream ? <TempModelMotion mediaStream={myStream}></TempModelMotion> : <></>}
+      <Text fontSize="6xl" id={uuid + 'chat'}></Text>
+      <Text fontSize="6xl" id={uuid + 'motion'}></Text>
+    </Center>
+  );
+};
+
 const TempAddScoreLogic = () => {
   useEffect(() => {
     const setIntervalId = setInterval(() => {
@@ -103,20 +122,16 @@ const TempRoomAvatarView = () => {
     <Center gap="5">
       <Box position="relative" width={200} height={200} bg="red" backgroundImage="url('/image/temp/avatar.png')" backgroundRepeat="no-repeat" backgroundSize="cover">
         <Text>나</Text>
-        <Center width="full" position="absolute" bottom="0.5" h="2rem" color="white">
-          <Text as="span" fontSize="1xl">
-            내 Score
-          </Text>
-          <Text as="span" fontSize="2xl">
-            {scores?.[data.uuid] ?? 0}
-          </Text>
-          <Text fontSize="6xl" width="auto" id={data.uuid + 'chat'}></Text>
-        </Center>
+        <Box width="full" position="absolute" top="0" h="2rem" color="white">
+          <Text fontSize="1xl">내 Score</Text>
+          <Text fontSize="2xl">{scores?.[data.uuid] ?? 0}</Text>
+          <Text fontSize="3xl" width="30vw" id={data.uuid + 'chat'}></Text>
+        </Box>
       </Box>
+      <TempMyUserBox></TempMyUserBox>
 
       {peers.map((peer, idx) => {
         const score = scores?.[peer.id] ?? 0;
-        console.log('peer other in avatar', peer);
         return (
           <Box
             position="relative"

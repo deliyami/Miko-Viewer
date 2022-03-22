@@ -3,6 +3,7 @@ export const dummyMotion = true;
 
 // Const
 export const LOGIN_COOKIE = 'isLogin';
+export const LARAVEL_SESSION = 'laravel_session';
 export const USER_TICKET_COOKIE = 'userTicket';
 export const categoryArray = ['콘서트', '음악'];
 export const S3_URL = 'https://miko-image.s3.ap-northeast-2.amazonaws.com/';

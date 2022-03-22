@@ -1,18 +1,15 @@
+import { USER_TICKET_COOKIE } from '@src/const';
+import { checkLogin } from '@src/helper/api/checkLogin';
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
-import { USER_TICKET_COOKIE } from './../../../const';
 
 const allowedParams = ['roomId'];
 
-const LARAVEL_SESSION = 'laravel_session';
-
 export async function middleware(req: NextRequest, ev: NextFetchEvent) {
   // Check Login Cookie
-  const isLogin = req.cookies[LARAVEL_SESSION];
   const userTicketId = req.cookies[USER_TICKET_COOKIE];
 
-  if (!isLogin) {
-    return NextResponse.redirect('/login');
-  }
+  const [isNotLogin, redirect] = checkLogin(req);
+  if (isNotLogin) return redirect;
 
   if (!userTicketId) {
     return NextResponse.redirect('/');
