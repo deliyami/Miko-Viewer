@@ -16,10 +16,6 @@ const nextConfig = {
     reactMode: 'concurrent',
     reactRoot: true,
   },
-  images: {
-    domains: ["localhost:3000"],
-    formats: ["image/webp"],
-  },
 };
 
 const withPWA = require('next-pwa');

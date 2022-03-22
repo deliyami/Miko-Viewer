@@ -47,17 +47,8 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   //  NOTE getLayout을 recoilRoot보다 밖에 두면 Layout이 동일하지 않는 이상 초기화됨.
   return (
     <ChakraProvider resetCSS theme={theme}>
-<<<<<<< HEAD
-      <Suspense fallback={<Box>로딩</Box>}>
-        <RecoilRoot>
-          <Component {...pageProps} />
-        </RecoilRoot>
-      </Suspense>
-    </ChakraProvider>,
-=======
       <RecoilRoot>{getLayout(<Component {...pageProps} />)}</RecoilRoot>
     </ChakraProvider>
->>>>>>> main
   );
 }
 
