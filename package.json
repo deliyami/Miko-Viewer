@@ -1,5 +1,6 @@
 {
   "private": true,
+  "name": "Miko-Viewer",
   "scripts": {
     "dev": "next",
     "build": "next build",
