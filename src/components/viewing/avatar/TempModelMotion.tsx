@@ -3,18 +3,16 @@ import * as cam from '@mediapipe/camera_utils';
 import '@mediapipe/control_utils';
 import '@mediapipe/drawing_utils';
 import { Pose, Results } from '@mediapipe/pose';
-import { model } from '@src/components/viewing/avatar/GlobalModel';
-import { motion } from '@src/components/viewing/avatar/GlobalMotion';
-import sendToAllPeers from '@src/helper/sendToAllPeers';
 import { peerDataListState } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
-import { ChatMotionInterface } from '@src/types/ChatMotionType';
 import { FaceDirection } from '@src/types/FaceDirectionType';
 import { Model } from '@src/types/ModelType';
 import * as BABYLON from 'babylonjs';
 import * as Kalidokit from 'kalidokit';
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import { model } from './GlobalModel';
+import { motion } from './GlobalMotion';
 
 const bornReset = (borns: BABYLON.TransformNode[], originalBorns: BABYLON.Quaternion[]) => {
   for (let i = 0; i < borns.length; i++) {
@@ -93,7 +91,7 @@ const setBorn = (model: { [peerId: string]: Model }, peerId: string, poseRig: Ka
   userBorns.scene.render();
 };
 
-const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
+const TempModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   const webcamRef = useRef<HTMLVideoElement | null>(null);
   const camera = useRef<cam.Camera | null>(null);
   const [peers, setPeers] = useRecoilState(peerDataListState);
@@ -116,8 +114,6 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
         results.poseWorldLandmarks &&
         results.segmentationMask
       ) {
-        // 0번 사용자 results를 window에 저장
-
         const poseRig = Kalidokit.Pose.solve(results.poseWorldLandmarks, results.poseLandmarks, {
           runtime: 'mediapipe',
           video: webcamRef?.current,
@@ -129,14 +125,6 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
           right: results.poseLandmarks[8].x,
         };
         setBorn(model, myPeerId, poseRig, faceRig);
-        const data: ChatMotionInterface = {
-          sender: user.data.name,
-          motion: { pose: poseRig, face: faceRig },
-        };
-        if (peers) sendToAllPeers(peers, { type: 'motion', data });
-
-        // kalido에서 나온 값을 기반으로... vector의 계산이 있음, (0,-1,0)에서 rotation각도 구하고 BABYLON.Vector3(x,y,z)방향으로 나온 각도만큼 굴려보기
-        // 손에서 어깨 방향으로 역으로 계산, 팔꿈치>손 각도 계산>굴리기, (0,-1,0)에서 팔꿈치 각도 계산, 아니면 어깨 위치 계산해서 모두다 어깨 위치 값만큼 뺀 뒤에 계산...
         const anotherPeerId = motion.sender;
         for (const peerId in model) {
           if (peerId === anotherPeerId && peerId !== 'kirari') {
@@ -215,4 +203,4 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   );
 };
 
-export default ModelMotion;
+export default TempModelMotion;
