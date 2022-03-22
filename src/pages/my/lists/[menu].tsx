@@ -1,6 +1,6 @@
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import ConcertTicket from '@src/components/ConcertTicket';
-import BasicLayout from '@src/layout/BasicLayout';
+import MyLayout from '@src/layout/MyLayout';
 import { curUserTicketState } from '@src/state/recoil/concertState';
 import { useUser } from '@src/state/swr/useUser';
 import { useUserTickets } from '@src/state/swr/useUserTicket';
@@ -65,7 +65,7 @@ const MyListPage = second => {
 };
 
 MyListPage.getLayout = function getLayout(page: ReactElement) {
-  return <BasicLayout>{page}</BasicLayout>;
+  return <MyLayout>{page}</MyLayout>;
 };
 
 // export default MyListPage;
