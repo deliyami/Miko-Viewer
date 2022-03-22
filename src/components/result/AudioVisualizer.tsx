@@ -7,10 +7,8 @@ const AudioVisualizer = ({ audioData }) => {
   const [canvasTag, setCanvasTag] = useState([]);
   const [ctx, setCtx] = useState();
 
-  console.log("audioData = " + audioData);
   useEffect(() => {
     const canvas = canvasRef.current;
-    console.log("audioData2 = " + audioData);
     // canvas.width = window.innerWidth*0.1;
     // canvas.height = window.innerHeight*0.5;
     canvas.width = 200;
@@ -24,7 +22,6 @@ const AudioVisualizer = ({ audioData }) => {
    
     function volumeDraw(level){
         const value = String(level).slice(0,1);
-        console.log("value"+parseInt(value));
         let x = 0;
         let h = 15;
         let y = 100;
@@ -35,10 +32,7 @@ const AudioVisualizer = ({ audioData }) => {
             context.fillRect(x, y, 7, h);
         }
     }
-
-    console.log(canvas);
     setCtx(contextRef.current);
-    console.log(contextRef.current);
     setCanvasTag(canvas);
   }, [audioData]);
 
@@ -53,7 +47,6 @@ const AudioVisualizer = ({ audioData }) => {
   //     }
   //   }
 
-  console.log('tag = ' + canvasTag);
   return (
     <Box border={'solid'}>
       <Text>{audioData}</Text>

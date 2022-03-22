@@ -2,7 +2,7 @@ import { Box } from '@chakra-ui/react';
 import AudioAnalyser from '@src/components/result/AudioAnalyser';
 import { useEffect, useState } from 'react';
 
-const audio = ({ audio }) => {
+const audio = () => {
   const [audioValue, setAudioValue] = useState({});
   //   useEffect(() => {
   //     setAudioData(Math.floor(Math.random() * 100));
@@ -16,14 +16,15 @@ const audio = ({ audio }) => {
   //     console.log(dataArray);
   //     console.log('uE');
   //   }, []);
-useEffect(()=>{
-  getMicrophone();
-},[])
+  useEffect(() => {
+    getMicrophone();
+  }, []);
   async function getMicrophone() {
     const audio = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: false,
     });
+    // console.log(audioValue);
     setAudioValue(audio);
   }
 

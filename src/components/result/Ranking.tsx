@@ -1,9 +1,9 @@
 import { Flex, SimpleGrid, Text } from '@chakra-ui/react';
+import { NEST_URL } from '@src/const';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 const Ranking = ({ users }) => {
-  // function diffUserResult(userId) {}
   const [rank, setRank] = useState([]);
   const router = useRouter();
   useEffect(() => {
@@ -11,10 +11,9 @@ const Ranking = ({ users }) => {
     getRank();
   }, [router.isReady]);
 
-  function diffUserResult(userId) {}
 
   function getRank() {
-    axios.get(`http://localhost:3001/api/${router.query.id}/getRank`).then(res => {
+    axios.get(`${NEST_URL}/${router.query.id}/getRank`).then(res => {
       console.log(res.data);
       setRank(res.data);
       console.log('겟 랭크!!!', res.data);
