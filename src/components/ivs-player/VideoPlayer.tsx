@@ -1,5 +1,6 @@
 import { Box, HStack, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import { toastLog } from '@src/helper/toastLog';
 import { enterTicketDataState } from '@src/state/recoil/concertState';
 import { msgMetaDataState, quizMetaDataState, quizResultMetaDataState } from '@src/state/recoil/timeMetaDataState';
 import { AllMetaData } from '@src/types/share/TimeMetadataFormat';
@@ -13,13 +14,12 @@ import QuizResultView from './QuizResultView';
 import QuizView from './QuizView';
 import VideoQualitySelect from './VideoQualitySelect';
 
-const streamUrl = 'https://de853ef2a345.us-east-1.playback.live-video.net/api/video/v1/us-east-1.121323684128.channel.Cj5ynk97sEJv.m3u8';
+// const streamUrl = 'https://de853ef2a345.us-east-1.playback.live-video.net/api/video/v1/us-east-1.121323684128.channel.Cj5ynk97sEJv.m3u8';
 
 const jwt =
   'eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9.eyJhd3M6Y2hhbm5lbC1hcm4iOiJhcm46YXdzOml2czp1cy1lYXN0LTE6MTIxMzIzNjg0MTI4OmNoYW5uZWwvQ2o1eW5rOTdzRUp2IiwiYXdzOmFjY2Vzcy1jb250cm9sLWFsbG93LW9yaWdpbiI6IioiLCJleHAiOjE2NDY4MDg2MjQsImlhdCI6MTY0NDM4OTg2OX0.fmdaERbkxkNAThbJtFNv-JScxNl0dy1TSsS7gYWZmOWokUS-teTlZrMKwRvfaIXrUPRpBH7KQoI0n6wOOuOqwODM24mOpgv7OrUb6GBfTllKFes0XZ3sMCpey6bnkzya';
 
 // NOTE aws cli 실행할때 region 설정 주의
-// aws ivs put-metadata --channel-arn arn:aws:ivs:us-east-1:121323684128:channel/Cj5ynk97sEJv --metadata '{"question": "What does IVS stand for?", "correctIndex": 0, "answers": ["interactive video service", "interesting video service", "ingenious video service"]}'
 declare global {
   interface Window {
     IVSPlayer: typeof ivs;
@@ -37,27 +37,23 @@ const Video = styled.video`
 //  TODO  브라우저에 따라서 window에 IVSPlayer 없음
 const VideoPlayer: FC = () => {
   const { IVSPlayer } = window;
-  const enterTicketData = useRecoilValue(enterTicketDataState);
   const router = useRouter();
-  if (!enterTicketData) router.push('/');
 
-  const [loading, setLoading] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(true);
   const [selectableQuality, setSelectableQuality] = useState<ivs.Quality[]>([]);
-  // const [isMiniPlayer, setIsMiniPlayer] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [muted, setMuted] = useState(false);
-
-  // const [playerPosition, setPlayerPosition] = useState({});
-  // const [playerSize, setPlayerSize] = useState({});
-
-  const setQuizMetaDataState = useSetRecoilState(quizMetaDataState);
-  const setQuizResultMetaDataState = useSetRecoilState(quizResultMetaDataState);
-  const setMsgMetaDataState = useSetRecoilState(msgMetaDataState);
 
   const player = useRef<ivs.MediaPlayer>(null);
   const playerBaseEl = useRef(null);
   const videoEl = useRef(null);
-  // const visibleRef = useRef(null);
+
+  const enterTicketData = useRecoilValue(enterTicketDataState);
+  if (!enterTicketData) router.push('/');
+
+  const setQuizResultMetaDataState = useSetRecoilState(quizResultMetaDataState);
+  const setQuizMetaDataState = useSetRecoilState(quizMetaDataState);
+  const setMsgMetaDataState = useSetRecoilState(msgMetaDataState);
 
   // 브라우저 설정으로 인해서 소리와 함께 자동재생이 허용되지 않았을 경우 state 변경
   useEffect(() => {
@@ -65,10 +61,9 @@ const VideoPlayer: FC = () => {
     setMuted(player.current.isMuted());
   }, [loading]);
 
-  if (IVSPlayer?.isPlayerSupported) {
-    console.log('yes');
-  } else {
-    console.log('no');
+  if (!IVSPlayer.isPlayerSupported) {
+    toastLog('info', 'IVS Player Not Supported');
+    router.push('/');
   }
 
   useEffect(() => {

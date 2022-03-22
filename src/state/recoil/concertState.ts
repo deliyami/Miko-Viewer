@@ -1,16 +1,20 @@
+import { NEST_URL } from '@src/const';
 import { UserTicket } from '@src/types/share/UserTicket';
 import axios from 'axios';
 import { atom, selector } from 'recoil';
 import { toastLog } from '../../helper/toastLog';
+import { localStorageEffect } from './effects/localStorageEffect ';
 
 const enterRoomIdState = atom<string>({
   key: 'enterRoomId',
   default: undefined,
+  effects: [localStorageEffect('enterRoomId')],
 });
 
 const curUserTicketState = atom<UserTicket>({
   key: 'curUserTicket',
   default: undefined,
+  effects: [localStorageEffect('curUserTicket')],
 });
 
 const enterTicketDataState = selector({
@@ -30,9 +34,8 @@ const enterRoomIdAsyncState = selector({
     // public room일 경우 서버에서 받아와서 접속
     axios.defaults.withCredentials = true;
     const { data: myRoomId } = await axios.post<string>(
-      'http://localhost:3001/api/room/enter-random',
+      `${NEST_URL}/room/enter-random`,
       {
-        // concertId: get(enterConcertState),
         ticketId: get(enterTicketDataState).id,
       },
       {

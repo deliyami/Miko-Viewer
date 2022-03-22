@@ -20,24 +20,22 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 // getUserMedia의 callback이 실행되지 않아서 먼저 들어온 사람의 영상이 안 보일 수 있음.
 // Bind 해주지 않으면 this 에러남.
 const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices) as typeof navigator.mediaDevices.getUserMedia;
+const streamOptions: MediaStreamConstraints = { audio: true, video: true };
 
 const WithSocketEventLayout: FC = ({ children }) => {
+  const socket = useSocket();
+  const myPeer = useMyPeer();
   const router = useRouter();
+
+  const user = useUser();
+  const myPeerUniqueID = user.data.uuid;
+
+  const roomId = useRecoilValue(enterRoomIdAsyncState);
+  const [myStream, setMyStream] = useRecoilState(myStreamState);
   const userTicket = useRecoilValue(curUserTicketState);
   const { concertId, ticketId, id: userTicketId } = userTicket;
 
-  const roomId = useRecoilValue(enterRoomIdAsyncState);
-  console.log('roomId', roomId);
-  const user = useUser();
-  const myPeer = useMyPeer();
-  const myPeerUniqueID = user.data.uuid;
-  // const socket = useSocket(myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
-  const socket = useSocket();
-
-  const streamOptions: MediaStreamConstraints = { audio: true, video: true };
-
   const setPeerDataList = useSetRecoilState(peerDataListState);
-  const [myStream, setMyStream] = useRecoilState(myStreamState);
   const setMessages = useSetRecoilState(messagesState);
   const setLatestScoreState = useSetRecoilState(latestScoreState);
 
