@@ -1,9 +1,9 @@
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
-import { ClassAttributes, HTMLAttributes } from 'react';
+import { ClassAttributes, FC, HTMLAttributes } from 'react';
 
 // color
-const BODY_COLOR = '#47c8c0';
+// const BODY_COLOR = useColorStore('donateCharBody');
 const BALLON_OUTER = '#55557b';
 const BALLON_INNER = '#e1e1e1';
 
@@ -11,12 +11,12 @@ const BALLON_INNER = '#e1e1e1';
 
 // type args = { [key in string]: string };
 type Props = {
-  [key in string]: string;
+  [key in string]: string | any; // children 유효하도록 바꿔야 함
 } & ClassAttributes<HTMLDivElement> &
   HTMLAttributes<HTMLDivElement>;
 
 // test
-export const Div = styled.div({}, (props: Props) => {
+export const Div = styled.div({}, (props: any) => {
   const { push } = props;
   return { backgroundColor: push };
 });
@@ -157,7 +157,7 @@ const backMiddle = 9;
 //   };
 // });
 
-export const Circle = styled.circle(props => {
+export const Circle = styled.circle((props: Props) => {
   const { d, i, cx, cy, r, fill } = props;
   const index = Number.parseInt(i);
   const direction = d === 'front';
@@ -180,16 +180,32 @@ export const Circle = styled.circle(props => {
   };
 });
 
-export const AvatarBody = styled.g({
-  fill: BODY_COLOR,
+export const AvatarBody: FC<Props> = styled.g((props: Props) => {
+  const { avatarColor } = props;
+  return {
+    fill: avatarColor,
+  };
 });
 
-export const Inner = styled.path({
-  fill: BALLON_INNER,
+export const BallonDot = styled.g((props: Props) => {
+  const { color } = props;
+  return {
+    fill: color,
+  };
 });
 
-export const Outer = styled.path({
-  fill: BALLON_OUTER,
+export const Inner = styled.path((props: Props) => {
+  const { color } = props;
+  return {
+    fill: color,
+  };
+});
+
+export const Outer = styled.path((props: Props) => {
+  const { color } = props;
+  return {
+    fill: color,
+  };
 });
 // color tag
 

@@ -1,0 +1,233 @@
+$surface: #ffffff
+$background: #f7fafc
+$primary: #39c7bb
+$weekPrimary: #39c7bb33
+$red: #b00020
+$yellow: #fff323
+$weekGray: #2d3748
+$textHigh: #000000
+$textMedium: #000000dd
+$textDisabled: #00000055
+$mikuColor: #47c8c0
+$bandColor: #FF629D
+$innerBorder: #e1e1e1
+$outerBorder: #55557b
+$kirariColor: #F49859
+$blind: #FEEACB
+
+@use 'sass:list'
+@use 'sass:math'
+
+$colorList: $surface, $background, $primary, $weekPrimary, $red, $yellow, $weekGray, $mikuColor, $bandColor, $innerBorder, $outerBorder, $kirariColor, $blind
+
+  
+// font
+@font-face 
+  font-family: negichan
+  src: url(http://localhost:3000/resources/font/negichan.ttf)
+  font-style: normal
+  font-weight: normal
+  unicode-range: U+0-10FFFF
+
+@font-face 
+  font-family: kiloji
+  src: url(http://localhost:3000/resources/font/kiloji.ttf)
+  font-style: normal
+  font-weight: normal
+  unicode-range: U+0-10FFFF
+
+
+
+//test
+.home 
+  background-color: yellowgreen
+#dot
+  background-color: aqua
+#testdiv
+  background-color: blueviolet
+
+
+// color
+
+#avatarBody 
+  --body-color: #47c8c0
+  fill: var(--body-color)
+
+#ballon 
+  --inner-color: #e1e1e1
+  --outer-color: #55557b
+
+  #dot 
+    fill: var(--inner-color)
+  
+  #inner 
+    fill: var(--inner-color)
+    // fill: #e1e1e1;
+  
+  #outer 
+    fill: var(--outer-color)
+
+.textDrag
+  -webkit-touch-callout: none  
+  -webkit-user-select: none
+  -ms-touch-select: none
+  -ms-user-select: none
+  -moz-user-select: none
+  user-select: none
+
+.header, .content
+  position: absolute
+  left: 50%
+  width: 625px
+  transform: translate(-50%, -50%)
+  text-align: center
+
+.header
+  font-size: 24px
+  top:20%
+    
+.empfont
+  font-family: kiloji
+
+.content
+  top:37.5%
+  height: 100px
+
+// animation
+// 위로 이동
+// .donateRoot {
+//   .all {
+//     transition: all 1s ease;
+//     fill: brown;
+//     transform: translateY(3%);
+//     opacity: 100;
+//   }
+// }
+// .donateRoot :hover {
+//   // animation: wheel 1s ease-in infinite;
+//   // transform-origin: center; // 회전 센터 정하기
+//   // transform-box: fill-box; //회전 센터의 보정?
+//   .all {
+//     transition: all 1s ease;
+//     fill: brown;
+//     transform: translateY(-3%);
+//     opacity: 0;
+//   }
+//   // .all {
+//   // }
+//   // transform: translateY(-100%);
+//   // cursor: pointer;
+// }
+// 위로 이동2
+.donateFadeIn 
+  // top: 400px
+  position: absolute
+  // rigth: 100px
+  overflow: hidden
+  // display: table
+  // animation: fadeIn 1s;
+  animation-name: fadeIn
+  animation-duration: 1s
+
+.donateFadeOut 
+  // display: table
+  width: 900px
+  // height: 325px
+  animation-name: fadeOut
+  animation-duration: 1s
+  animation-delay: 7500ms
+  animation-fill-mode: forwards
+
+
+//circle animation
+.hideCircle
+  // fill:#47c8c0 
+  animation-name: hide
+  animation-duration:1s
+  animation-delay:1500ms
+  animation-fill-mode: forwards
+
+$front: 14
+$front-middle: 8
+$back: 18
+$back-middle: 9
+
+@mixin front-x() 
+  @for $i from 1 through $front
+    @keyframes randomShotFront#{$i}
+      0%
+        opacity:0
+        transform: translateY(0%)
+      100%
+        opacity:1
+        @if $i<$front-middle
+          transform: translateY(-((random(60)+15)*1%)) translateX(-((random($i*6)+$i)*1%))
+        @else
+          transform: translateY(-((random(60)+15)*1%)) translateX(((random($i*3)+$i)*1%))
+    #front#{$i} 
+      // fill: #55557b
+      opacity:0
+      animation-name: randomShotFront#{$i}
+      animation-delay: calc(random(500))+ms
+      animation-duration: 1s
+      animation-fill-mode: forwards
+  
+@mixin back-x() 
+  @for $i from 1 through $back
+    @keyframes randomShotBack#{$i}
+      0%
+        opacity:0
+        transform: translateY(0%)
+      100%
+        opacity:1
+        @if $i<$back-middle
+          transform: translateY(-((random(50)+20)*1%)) translateX(-((random($i*6)+$i)*1%))
+        @else
+          transform: translateY(-((random(50)+20)*1%)) translateX(((random($i*3)+$i)*1%))
+    #back#{$i}
+      // fill: #55557b
+      opacity:0
+      animation-name: randomShotBack#{$i}
+      animation-delay: calc(random(500))+ms
+      animation-duration: 1s
+      animation-fill-mode: forwards
+
+@include front-x()
+@include back-x()
+
+
+
+//animation function
+
+// @keyframes wheel 
+//   from 
+//     transform: rotateZ(360deg)
+  
+//   to 
+//     transform: rotateZ(0deg)
+
+@keyframes fadeIn 
+  0% 
+    transform: translateY(3%)
+    opacity: 0
+  
+  100% 
+    transform: translateY(0%)
+    opacity: 100
+  
+@keyframes fadeOut 
+  0% 
+    transform: translateY(0%)
+    opacity: 100
+  100%
+    transform: translateY(-3%)
+    opacity: 0
+  
+@keyframes hide
+  0%
+    opacity:1
+  100%
+    opacity:0
+
+
+

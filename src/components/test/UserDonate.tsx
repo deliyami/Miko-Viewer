@@ -1,7 +1,7 @@
-import { Box, Button } from "@chakra-ui/react";
-import useColorStore from "@src/hooks/useColorStore";
-import { FC, useRef, useState } from "react";
-import donate from "./donate.module.sass";
+import { Box, Button } from '@chakra-ui/react';
+import useColorStore from '@src/hooks/useColorStore';
+import { FC, useRef, useState } from 'react';
+import donate from './donate.sass';
 
 type props = {
   nickname: string;
@@ -11,14 +11,14 @@ type props = {
 
 const UserDonate: FC<props> = props => {
   const { nickname, coin, content } = props;
-  const [colorName, setColorName] = useState<"yellow" | "red">("yellow");
+  const [colorName, setColorName] = useState<'yellow' | 'red'>('yellow');
   const svgRef = useRef<SVGGElement>(null);
   const defaultColor = useColorStore(colorName);
-  const colorArray: ("surface" | "background" | "primary" | "weekPrimary" | "red" | "yellow" | "weekGray" | "textHigh" | "textMedium" | "textDisabled")[] = [
-    "surface",
-    "primary",
-    "red",
-    "yellow",
+  const colorArray: ('surface' | 'background' | 'primary' | 'weekPrimary' | 'red' | 'yellow' | 'weekGray' | 'textHigh' | 'textMedium' | 'textDisabled')[] = [
+    'surface',
+    'primary',
+    'red',
+    'yellow',
   ];
   console.log(useColorStore(colorArray[Math.floor(Math.random() * colorArray.length)]));
   return (
@@ -29,12 +29,12 @@ const UserDonate: FC<props> = props => {
       <Button
         onClick={e => {
           e.preventDefault();
-          setColorName("red");
+          setColorName('red');
         }}
       >
         change button 1회용
       </Button>
-      <Box className={donate.donateFadeIn} style={{ cursor: "default" }}>
+      <Box className={donate.donateFadeIn} style={{ cursor: 'default' }}>
         <Box className={donate.donateFadeOut}>
           <div className={donate.textDrag}>
             <span className={donate.header}>
