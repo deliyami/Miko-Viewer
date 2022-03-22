@@ -1,5 +1,6 @@
 import { Box, Button, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, VStack } from '@chakra-ui/react';
 import { donateState } from '@src/state/recoil/donateState';
+import { useUser } from '@src/state/swr/useUser';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { useSetRecoilState } from 'recoil';
 
@@ -9,6 +10,9 @@ const DonateModal = forwardRef((_, ref) => {
   const nicknameInputRef = useRef(null);
   const coinInputRef = useRef(null);
   const contentInputRef = useRef(null);
+  const {
+    data: { name },
+  } = useUser();
 
   useImperativeHandle(ref, () => ({
     open: () => {
@@ -19,7 +23,7 @@ const DonateModal = forwardRef((_, ref) => {
   const onSubmitHandler = e => {
     e.preventDefault();
     console.log('donation go!');
-    setDonate({ nickname: nicknameInputRef.current.value, coin: coinInputRef.current.value, content: contentInputRef.current.value, start: 1 });
+    setDonate({ nickname: name, coin: coinInputRef.current.value, content: contentInputRef.current.value, start: 1 });
     onClose();
   };
 
@@ -33,8 +37,8 @@ const DonateModal = forwardRef((_, ref) => {
           <Box>
             <form onSubmit={onSubmitHandler}>
               <VStack>
-                <FormLabel>nickname</FormLabel>
-                <Input ref={nicknameInputRef} type="text"></Input>
+                {/* <FormLabel>nickname</FormLabel>
+                <Input ref={nicknameInputRef} type="text"></Input> */}
                 <FormLabel>zeni</FormLabel>
                 <Input ref={coinInputRef} type="number"></Input>
                 <FormLabel>content</FormLabel>
