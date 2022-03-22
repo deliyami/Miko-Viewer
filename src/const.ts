@@ -15,5 +15,7 @@ export const LARAVEL_URL = process.env[ENV_PREFIX + 'LARAVEL_URL'] ?? 'http://lo
 export const NEST_URL = process.env[ENV_PREFIX + 'NEST_URL'] ?? 'http://localhost:3001/api';
 export const SOCKET_URL = process.env[ENV_PREFIX + 'SOCKET_SERVER'] ?? 'http://localhost:3002';
 
+export const PUBLIC_RESOURCES_URL = process.env[ENV_PREFIX + 'PUBLIC_RESOURCES_URL'] ?? 'http://localhost:3000';
+
 // URL
 export const URL_USER_TICKET = '/user_tickets';
