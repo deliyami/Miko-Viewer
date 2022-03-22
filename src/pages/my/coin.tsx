@@ -35,7 +35,7 @@ const CoinHistory: FC<{ data: Coin }> = ({ data }) => {
       <Flex>
         <Box p="2">
           <HStack>
-            {data.type == 0 ? (
+            {data.type === 0 ? (
               <Circle size="50px" bg="teal" color="white">
                 <Text>충전</Text>
               </Circle>
@@ -55,7 +55,7 @@ const CoinHistory: FC<{ data: Coin }> = ({ data }) => {
           <HStack>
             <Text>
               {' '}
-              {data.type == 0 ? '+' : '-'} {data.variation}C
+              {data.type === 0 ? '+' : '-'} {data.variation}C
             </Text>
           </HStack>
         </Box>

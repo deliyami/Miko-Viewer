@@ -48,6 +48,7 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
   const search = context.query.search as string;
 
   const result = await getDataFromLaravel<Pagination<Concert>>(URL_CONCERTS, {
+    sort: ['-id'],
     filter: categoryId ? [['category_id', categoryId]] : null,
     page: parseInt(page),
     per_page: 6,

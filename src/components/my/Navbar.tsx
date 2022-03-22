@@ -49,7 +49,7 @@ const NavBar = () => {
     { name: '나의 정보', url: '/my' },
     { name: '나의 정보 수정', url: '/my/edit' },
     { name: '코인 내역', url: '/my/coin' },
-    { name: '티켓 내역', url: '/my/lists/1' },
+    { name: '티켓 내역', url: '/my/lists/ticket' },
   ];
 
   return (

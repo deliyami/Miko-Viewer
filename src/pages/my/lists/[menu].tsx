@@ -4,13 +4,12 @@ import MyLayout from '@src/layout/MyLayout';
 import { curUserTicketState } from '@src/state/recoil/concertState';
 import { useUser } from '@src/state/swr/useUser';
 import { useUserTickets } from '@src/state/swr/useUserTicket';
-import { Ticket } from '@src/types/share/Ticket';
 import { UserTicket } from '@src/types/share/UserTicket';
 import { useRouter } from 'next/router';
 import { FC, ReactElement } from 'react';
 import { useSetRecoilState } from 'recoil';
 
-const Ticket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
+const OneTicket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   // console.log(userTicket);
   const router = useRouter();
   const setCurUseTicket = useSetRecoilState(curUserTicketState);
@@ -33,12 +32,12 @@ const UserTicketList: FC<{ userTickets: UserTicket[]; cate: number }> = ({ userT
   console.log();
   return (
     <>
-      <Box>{userTickets.map(userTicket => userTicket.isUsed === cate && <Ticket key={userTicket.id} userTicket={userTicket} />)}</Box>
+      <Box>{userTickets.map(userTicket => userTicket.isUsed === cate && <OneTicket key={userTicket.id} userTicket={userTicket} />)}</Box>
     </>
   );
 };
 
-const MyListPage = second => {
+const MyListPage = () => {
   // const router = useRouter();
   const { data: userData } = useUser();
 
