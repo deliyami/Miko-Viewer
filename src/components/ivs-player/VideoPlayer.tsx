@@ -1,6 +1,7 @@
 import { Box, HStack, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { toastLog } from '@src/helper/toastLog';
+import useIvsPlayer from '@src/hooks/useIvsPlayer';
 import { enterTicketDataState } from '@src/state/recoil/concertState';
 import { msgMetaDataState, quizMetaDataState, quizResultMetaDataState } from '@src/state/recoil/timeMetaDataState';
 import { AllMetaData } from '@src/types/share/TimeMetadataFormat';
@@ -36,7 +37,7 @@ const Video = styled.video`
 
 //  TODO  브라우저에 따라서 window에 IVSPlayer 없음
 const VideoPlayer: FC = () => {
-  const { IVSPlayer } = window;
+  const IVSPlayer = useIvsPlayer();
   const router = useRouter();
 
   const [selectableQuality, setSelectableQuality] = useState<ivs.Quality[]>([]);
