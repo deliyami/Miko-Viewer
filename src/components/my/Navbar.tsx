@@ -21,7 +21,7 @@ const UserData = () => {
     <Box>
       {data ? (
         <>
-          <HStack px="20px" spacing={15}>
+          <HStack px="20px" spacing={4}>
             <Image
               borderRadius="100%"
               boxSize="60px"
@@ -44,7 +44,7 @@ const UserData = () => {
   );
 };
 
-const NavBar = params => {
+const NavBar = () => {
   const linkList = [
     { name: '나의 정보', url: '/my' },
     { name: '나의 정보 수정', url: '/my/edit' },
@@ -53,8 +53,8 @@ const NavBar = params => {
   ];
 
   return (
-    <Box position="sticky" shadow="md">
-      <VStack as="ul" width="full" alignItems="center" py="20px" spacing={20}>
+    <Box position="sticky">
+      <VStack as="ul" width="full" alignItems="center" py="20px" spacing={16}>
         <Suspense fallback={<Text> 로딩 </Text>}>
           <UserData />
         </Suspense>

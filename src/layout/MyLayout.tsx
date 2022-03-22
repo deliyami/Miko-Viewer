@@ -12,7 +12,9 @@ const Layout = ({ children }) => {
         <GridItem colSpan={1} shadow="0px -2px 1px gray">
           <NavBar />
         </GridItem>
-        <GridItem colSpan={4}>{children}</GridItem>
+        <GridItem colSpan={4} m={4}>
+          {children}
+        </GridItem>
       </Grid>
       <Footer />
     </Box>

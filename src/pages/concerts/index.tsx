@@ -1,4 +1,5 @@
-import { Button, Flex, Heading, HStack, Input, VStack } from '@chakra-ui/react';
+import { SearchIcon } from '@chakra-ui/icons';
+import { Box, Flex, Heading, HStack, IconButton, Input, Spacer, VStack } from '@chakra-ui/react';
 import PaginationBtn from '@src/components/common/button/PaginationBtn';
 import Category from '@src/components/concert/Category';
 import ConcertList from '@src/components/home/ConcertList';
@@ -24,7 +25,7 @@ const SearchBox = () => {
   };
   const onClickSearch = () => {
     setSearchQuery('');
-    router.push(`/concerts?category_id=${router.query.category_id}&search=${searchQuery}`);
+    router.push(`/concerts?search=${searchQuery}`);
   };
 
   const enterKey: KeyboardEventHandler<HTMLInputElement> = e => {
@@ -34,27 +35,24 @@ const SearchBox = () => {
   };
   return (
     <HStack>
-      <Input width="auto" placeholder="Basic usage" name="sWord" value={searchQuery} required onChange={onChangeSearch} onKeyUp={enterKey} />
-      <Button id="btn" name="btn" type="submit" onClick={onClickSearch}>
-        Search
-      </Button>
+      <Input w="400px" variant="flushed" value={searchQuery} required onChange={onChangeSearch} onKeyUp={enterKey} />
+      <IconButton aria-label="Search database" icon={<SearchIcon />} type="submit" onClick={onClickSearch} />
     </HStack>
   );
 };
 
 export const getServerSideProps: GetServerSideProps<Data> = async context => {
   const URL_CONCERTS = '/concerts';
-  let categoryId = parseInt((context.query.category_id as string) ?? '1');
+  const categoryId = parseInt(context.query.category_id as string);
   const page = context.query.page as string;
   const search = context.query.search as string;
 
   const result = await getDataFromLaravel<Pagination<Concert>>(URL_CONCERTS, {
-    filter: [['category_id', categoryId]],
+    filter: categoryId ? [['category_id', categoryId]] : null,
     page: parseInt(page),
-    per_page: 3,
+    per_page: 6,
     search,
   });
-
   return {
     props: {
       data: result?.data ?? null,
@@ -65,22 +63,29 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
 
 export default function ConcertPage({ data, categoryId }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
-    <Flex pt={50} width="full" justifyContent="center">
-      <VStack>
-        <Heading fontWeight="700" size="2xl" my="20px">
-          Concert List
-        </Heading>
-        <SearchBox />
-        <Category />
-        {data ? (
-          <>
-            <ConcertList data={data.data} />
-            <PaginationBtn data={data.meta} url={`/concerts?category_id=${categoryId}`} />
-          </>
-        ) : (
-          'no data'
-        )}
-      </VStack>
+    <Flex width="full" justifyContent="center">
+      <Box w="1000px">
+        <HStack>
+          <Heading fontWeight="700" size="2xl" my="20px">
+            Concert List
+          </Heading>
+          <Spacer />
+          <SearchBox />
+        </HStack>
+        <VStack mt={4} spacing={16}>
+          <Category />
+          {data ? (
+            <>
+              <VStack spacing={10}>
+                <ConcertList data={data.data} />
+                <PaginationBtn data={data.meta} url={`/concerts?category_id=${categoryId}`} />
+              </VStack>
+            </>
+          ) : (
+            'no data'
+          )}
+        </VStack>
+      </Box>
     </Flex>
   );
 }

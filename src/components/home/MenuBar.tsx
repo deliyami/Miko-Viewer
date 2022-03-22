@@ -32,7 +32,7 @@ const UserData = () => {
               alt="Dan Abramov"
             />
             <Box>
-              <Text fontSize="20px" fontWeight="bold">
+              <Text fontSize="20px" fontWeight="bold" px={1}>
                 {data.name}
               </Text>
               <Box>
@@ -48,7 +48,7 @@ const UserData = () => {
   );
 };
 
-const MenuBar = params => {
+const MenuBar = () => {
   // const devList = [{name: '챗팅', url: '/live/viewing' }];
 
   const linkList = [
@@ -60,15 +60,15 @@ const MenuBar = params => {
   ];
 
   return (
-    <Box position="sticky" top="0" backgroundColor="white" boxShadow="rgb(240 240 240) 0px -1px 0px inset" as="header">
-      <HStack as="ul" width="full" alignItems="center" padding="20px">
+    <Box zIndex={100} position="sticky" top="0" backgroundColor="white" boxShadow="rgb(240 240 240) 0px -1px 0px inset" as="header">
+      <HStack as="ul" width="full" alignItems="center" padding="10px">
         <Link href="/">
           <a>
             <Image src={'https://static.line-scdn.net/line_live/17d6ec1a9df/img/viewing/logo_viewing_pc_0923.png'} width="250px" objectFit="contain" />
           </a>
         </Link>
         <Spacer />
-        <HStack spacing={20}>
+        <HStack spacing={8}>
           {linkList.map(({ name, url }) => (
             <MenuLink key={name} name={name} url={url} />
           ))}
