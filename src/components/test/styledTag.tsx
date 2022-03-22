@@ -2,9 +2,6 @@ import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 import { ClassAttributes, FC, HTMLAttributes } from 'react';
 
-// color
-// const BODY_COLOR = useColorStore('donateCharBody');
-
 // type
 
 // type args = { [key in string]: string };
@@ -13,21 +10,6 @@ type Props = {
 } & ClassAttributes<HTMLDivElement> &
   HTMLAttributes<HTMLDivElement>;
 
-// <ClassNames>
-//       {({ css, cx }) => (
-//         <div
-//           className={cx(
-//             'some-class',
-//             css`
-//               color: yellow;
-//             `,
-//           )}
-//         >
-//           신난다 너무 신나!
-//         </div>
-//       )}
-//     </ClassNames>
-// test
 export const Div = styled.div({}, (props: any) => {
   const { push } = props;
   return { backgroundColor: push };
@@ -66,28 +48,29 @@ const makeCircleKeyframes = (calcX: number, calcY: number) => {
 
 // animation tag
 export const FadeInBox = styled.div({
-  position: 'absolute',
   overflow: 'hidden',
-  zIndex: 1,
   animationName: fadeIn,
   animationDuration: '1s',
   // animation:keyframes({'0%':{transform:'3%'}}) // ?????????????? 이게 되네?
 });
 
-export const FadeOutBox = styled.div({
-  WebkitTouchCallout: 'none',
-  WebkitUserSelect: 'none',
-  msTouchSelect: 'none',
-  msTouchAction: 'none',
-  MozUserSelect: 'none',
-  userSelect: 'none',
-  select: 'none',
-  width: '900px',
-  height: '400px',
-  animationName: fadeOut,
-  animationDuration: '1s',
-  animationDelay: '10000ms',
-  animationFillMode: 'forwards',
+export const FadeOutBox = styled.div((props: Props) => {
+  const { delay } = props;
+  return {
+    WebkitTouchCallout: 'none',
+    WebkitUserSelect: 'none',
+    msTouchSelect: 'none',
+    msTouchAction: 'none',
+    MozUserSelect: 'none',
+    userSelect: 'none',
+    select: 'none',
+    width: '900px',
+    height: '400px',
+    animationName: fadeOut,
+    animationDuration: '1s',
+    animationDelay: `${delay}ms`,
+    animationFillMode: 'forwards',
+  };
 });
 
 const textCss = {
@@ -167,7 +150,7 @@ const backMiddle = 9;
 // });
 
 export const Circle = styled.circle((props: Props) => {
-  const { d, i } = props;
+  const { d, i, cx, cy, r, fill } = props;
   const index: number = parseFloat(i);
   const direction = d === 'front';
   const find = index < (direction ? frontMiddle : backMiddle);
@@ -179,39 +162,33 @@ export const Circle = styled.circle((props: Props) => {
   return {
     opacity: 0,
     animationName: randomShotBack,
-    // animationDelay: `${Math.random() * 500}ms`,
+    animationDelay: `${Math.random() * 500}ms`,
     animationDuration: '1s',
     animationFillMode: 'forwards',
+    cx,
+    cy,
+    r,
+    fill: '#' + Math.floor(Math.random() * 16777215).toString(16),
   };
 });
 
-// export const Circle = styled.circle((props: Props) => {
-//   const { d, i, cx, cy, r, fill } = props;
-//   const index: number = parseFloat(i);
-//   const direction = d === 'front';
-//   const find = index < (direction ? frontMiddle : backMiddle);
-//   const calcY = -(Math.random() * (direction ? 60 : 50) + (direction ? 15 : 20));
-//   const calcX = (Math.random() * (find ? 6 : 3) * index + index) * (find ? -1 : 1);
-//   // translateX((random($i*3)+$i)*1%)
-//   // translateY(-((random(50)+20)*1%))
-//   const randomShotBack = makeCircleKeyframes(calcX, calcY);
-//   return {
-//     opacity: 0,
-//     animationName: randomShotBack,
-//     animationDelay: `${Math.random() * 500}ms`,
-//     animationDuration: '1s',
-//     animationFillMode: 'forwards',
-//     cx,
-//     cy,
-//     r,
-//     fill,
-//   };
-// });
+// style tag
 
 export const AvatarBody: FC<Props> = styled.g((props: Props) => {
   const { avatarColor } = props;
   return {
     fill: avatarColor,
+  };
+});
+
+export const Size = styled.div((props: Props) => {
+  const { donateScale, top, left } = props;
+  return {
+    position: 'absolute',
+    top: `${top}%`,
+    left: `${left}%`,
+    zIndex: 1,
+    transform: `scale(${donateScale}%)`,
   };
 });
 
@@ -235,6 +212,5 @@ export const Outer = styled.path((props: Props) => {
     fill: color,
   };
 });
-// color tag
 
 // <Box className={donate.donateFadeIn} style={{ cursor: "default" }}>

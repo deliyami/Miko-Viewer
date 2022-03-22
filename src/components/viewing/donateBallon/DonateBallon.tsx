@@ -12,7 +12,7 @@ type Props = {
   top: string | number;
   left: string | number;
 };
-const UserDonate: FC<Props> = props => {
+const DonateBallon: FC<Props> = props => {
   const { nickname, coin, content, donateScale, delay, top, left } = props;
   const colorPick = {
     donateCharBody: useColorStore('donateCharBody'),
@@ -838,4 +838,4 @@ const UserDonate: FC<Props> = props => {
   );
 };
 
-export default UserDonate;
+export default DonateBallon;
