@@ -2,7 +2,7 @@ import { Box, Button, Center, HStack, Tag, Text } from '@chakra-ui/react';
 import { AvatarModel } from '@src/components/viewing/avatar/AvatarModel';
 import ModelMotion from '@src/components/viewing/avatar/ModelMotion';
 import TempModelMotion from '@src/components/viewing/avatar/TempModelMotion';
-import { PUBLIC_RESOURCES_URL } from '@src/const';
+import { NEXT_URL } from '@src/const';
 import { latestScoreState } from '@src/state/recoil/scoreState';
 import { myStreamState, PeerDataInterface, peerDataListState } from '@src/state/recoil/viewingState';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
@@ -46,7 +46,7 @@ const UserBox: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
   return (
     <Center width="300px" height="300px" bgColor="blackAlpha.500" id={id + 'box'} position="relative">
       <Text> {data.email} </Text>
-      <AvatarModel width={300} height={300} path={`${PUBLIC_RESOURCES_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={peer.id} antialias></AvatarModel>
+      <AvatarModel width={300} height={300} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={peer.id} antialias></AvatarModel>
       <Text fontSize="6xl" id={id + 'chat'}></Text>
       <Text fontSize="6xl" id={id + 'motion'}></Text>
       <Button onClick={handleMute}>
@@ -73,7 +73,7 @@ const MyUserBox: FC = () => {
   return (
     <Center width="300px" height="300px" bgColor="blackAlpha.500" id={uuid + 'box'} position="relative">
       <Text> {email} </Text>
-      <AvatarModel width={300} height={300} path={`${PUBLIC_RESOURCES_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={'kirari'} antialias></AvatarModel>
+      <AvatarModel width={300} height={300} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={'kirari'} antialias></AvatarModel>
       {myStream ? <ModelMotion mediaStream={myStream}></ModelMotion> : <></>}
       <Text fontSize="6xl" id={uuid + 'chat'}></Text>
       <Text fontSize="6xl" id={uuid + 'motion'}></Text>
@@ -93,7 +93,7 @@ const TempMyUserBox: FC = () => {
   return (
     <Center width="300px" height="300px" bgColor="blackAlpha.500" id={uuid + 'box'} position="relative">
       <Text> {email} </Text>
-      <AvatarModel width={300} height={300} path={`${PUBLIC_RESOURCES_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={'kirari'} antialias></AvatarModel>
+      <AvatarModel width={300} height={300} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={'kirari'} antialias></AvatarModel>
       {myStream ? <TempModelMotion mediaStream={myStream}></TempModelMotion> : <></>}
       <Text fontSize="6xl" id={uuid + 'chat'}></Text>
       <Text fontSize="6xl" id={uuid + 'motion'}></Text>
