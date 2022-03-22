@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil';
 
 export const AudioAnalyze = () => {
   const myStream = useRecoilValue(myStreamState);
-
+  
   const handleAddScore = () => {
     // 이렇게 점수 추가해주면 나머지는 알아서 처리됨.
     addedScoreForSeconds.addScore(0);
