@@ -10,4 +10,9 @@ export interface Ticket {
   concertStartDate: string;
   concertEndDate: string;
   archiveEndTime: string;
+  channelArn: string;
+  playbackUrl: string;
+  streamKeyArn: string;
+  streamKeyValue: string;
+  ingestEndpoint: string;
 }
