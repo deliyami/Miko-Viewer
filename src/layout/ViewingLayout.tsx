@@ -1,11 +1,12 @@
 import { Center, Text } from '@chakra-ui/react';
+import ErrorBoundary from '@src/components/common/ErrorBoundary';
 import { withSuspense } from './withSuspenseHOC';
 
 const Layout = ({ children }) => {
   return (
-    <>
+    <ErrorBoundary>
       <main>{children}</main>
-    </>
+    </ErrorBoundary>
   );
 };
 

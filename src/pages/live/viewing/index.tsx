@@ -1,8 +1,10 @@
 import { Center, Text } from '@chakra-ui/react';
 import { Container } from '@src/components/Container';
+import { toastLog } from '@src/helper/toastLog';
 import ViewingLayout from '@src/layout/ViewingLayout';
 import { curUserTicketState } from '@src/state/recoil/concertState';
 import dynamic from 'next/dynamic';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { ReactElement } from 'react';
@@ -35,7 +37,17 @@ const ViewingPage = () => {
 
   return (
     <Container height="auto" width="full">
-      <Script src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js" strategy="beforeInteractive" />
+      <Head>
+        <title>Miko Viewing Pate</title>
+        {/* <script src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js" async></script> */}
+      </Head>
+      <Script
+        src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js"
+        strategy="afterInteractive" // NOTE 왜 before하면 새로고침시 에러?
+        onError={e => {
+          toastLog('error', 'failed to load ivs script');
+        }}
+      />
       <DynamicViewingPage />
     </Container>
   );
