@@ -42,6 +42,12 @@ export const WithIntervalTaskLayer: FC = ({ children }) => {
       // console.log('roomMemberScores', roomMemberScores);
       setLatestScoreState(
         produce(draft => {
+          // for (const [userId, score] of Object.entries(roomMemberScores)) {
+          //   const newScore = score;
+          //   draft[userId] = newScore;
+          //   delete roomMemberScores[userId];
+          // }
+
           for (const key in roomMemberScores) {
             const newScore = roomMemberScores[key];
             draft[key] = newScore;

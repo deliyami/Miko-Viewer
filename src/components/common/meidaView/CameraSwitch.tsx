@@ -1,8 +1,9 @@
 import { Box, Select } from '@chakra-ui/react';
 import { toastLog } from '@src/helper/toastLog';
-import { myStreamState } from '@src/state/recoil/viewingState';
-import { ChangeEventHandler, useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { myStreamState, peerDataListState } from '@src/state/recoil/viewingState';
+import produce from 'immer';
+import { ChangeEventHandler, FC, useEffect, useState } from 'react';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 // NOTE Navigator.getUserMedia() deprecated
 const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices) as typeof navigator.mediaDevices.getUserMedia;
@@ -12,15 +13,18 @@ async function getConnectedDevices(type: MediaDeviceKind) {
   return devices.filter(device => device.kind === type);
 }
 
-const CameraSwitch = params => {
+const CameraSwitch: FC = () => {
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>([]);
   const [audios, setCAudios] = useState<MediaDeviceInfo[]>([]);
+  const [curCameraId, setCurCameraId] = useState<string>();
+  const [curAudioId, setCurAudioId] = useState<string>();
+
   const [myStream, setMyStream] = useRecoilState(myStreamState);
+  const setPeerDataList = useSetRecoilState(peerDataListState);
+
   console.log(myStream.getAudioTracks());
   console.log(myStream.getVideoTracks()[0].label);
   console.log(myStream.getTracks());
-  const [curCameraId, setCurCameraId] = useState<string>();
-  const [curAudioId, setCurAudioId] = useState<string>();
 
   useEffect(() => {
     const deviceChangeHandler = async () => {
@@ -30,19 +34,33 @@ const CameraSwitch = params => {
       setCAudios(initAudios);
     };
 
-    deviceChangeHandler();
-    navigator.mediaDevices.addEventListener('devicechange', deviceChangeHandler);
+    deviceChangeHandler(); // 초기 set 실행
+    navigator.mediaDevices.addEventListener('devicechange', deviceChangeHandler); // 이후 기기 변경시에 실행
 
     return () => {
       navigator.mediaDevices.removeEventListener('devicechange', deviceChangeHandler);
     };
   }, []);
 
+  const updateStreamToPeerData = (stream: MediaStream) => {
+    setPeerDataList(
+      produce(draft => {
+        draft.forEach(peerData => {
+          console.log('peerData', peerData.mediaConnection.peerConnection.getSenders());
+          peerData.mediaConnection.peerConnection.getSenders()[0].replaceTrack(stream.getVideoTracks()[0]);
+          // peerData.mediaConnection.peerConnection.getSenders()[1].replaceTrack(stream.getAudioTracks()[0]);
+          console.log('updateStreamToPeerData', peerData.mediaConnection.peerConnection.getSenders(), stream.getVideoTracks(), stream.getAudioTracks());
+        });
+      }),
+    );
+  };
+
   const handelCameraChange: ChangeEventHandler<HTMLSelectElement> = e => {
     const deviceId = e.target.value;
     getUserMedia({ video: { deviceId }, audio: curAudioId ? { deviceId: curAudioId } : true })
       .then(stream => {
         setMyStream(stream);
+        updateStreamToPeerData(stream);
         setCurCameraId(deviceId);
       })
       .catch(err => {
@@ -55,6 +73,7 @@ const CameraSwitch = params => {
     getUserMedia({ audio: { deviceId }, video: curCameraId ? { deviceId: curCameraId } : true })
       .then(stream => {
         setMyStream(stream);
+        updateStreamToPeerData(stream);
         setCurAudioId(deviceId);
       })
       .catch(err => {
@@ -67,12 +86,17 @@ const CameraSwitch = params => {
       <label htmlFor="cameraSelect">카메라 선택</label>
       <Select id="cameraSelect" aria-label="카메라 선택" placeholder="Select option" onChange={handelCameraChange}>
         {cameras.map(camera => (
-          <option value={camera.deviceId}>{camera.label}</option>
+          <option key={camera.deviceId} value={camera.deviceId}>
+            {camera.label}
+          </option>
         ))}
       </Select>
+      <label htmlFor="audioSelect">오디오 선택 선택</label>
       <Select id="audioSelect" aria-label="오디오 선택" placeholder="Select option" onChange={handelAudioChange}>
         {audios.map(audio => (
-          <option value={audio.deviceId}>{audio.label}</option>
+          <option key={audio.deviceId} value={audio.deviceId}>
+            {audio.label}
+          </option>
         ))}
       </Select>
     </Box>
