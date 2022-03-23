@@ -101,6 +101,46 @@ const TempMyUserBox: FC = () => {
   );
 };
 
+const TempUserBox: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
+  const { id, data, dataConnection, mediaStream } = peer;
+
+  const audioRef = createRef<HTMLAudioElement>();
+
+  const [muted, setMuted] = useState(false);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio && mediaStream) {
+      mediaStream.getAudioTracks()[0].enabled = true;
+      audio.srcObject = mediaStream;
+    }
+    return () => {};
+  }, [mediaStream]);
+
+  const handleMute = () => {
+    setMuted(prev => !prev);
+  };
+
+  return (
+    <Center width="300px" height="300px" bgColor="blackAlpha.500" id={id + 'box'} position="relative">
+      <Text> {data.email} </Text>
+      <AvatarModel width={300} height={300} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={peer.id} antialias></AvatarModel>
+      <Text fontSize="6xl" id={id + 'chat'}></Text>
+      <Text fontSize="6xl" id={id + 'motion'}></Text>
+      <Button onClick={handleMute}>
+        {muted ? '뮤트됨' : '재생중'}
+        <audio autoPlay muted={muted} ref={audioRef}>
+          audio
+        </audio>
+      </Button>
+      <HStack position="absolute" right="1" bottom="1">
+        {dataConnection && <Tag> Data 👌</Tag>}
+        {mediaStream && <Tag> media 👌</Tag>}
+      </HStack>
+    </Center>
+  );
+};
+
 const TempAddScoreLogic = () => {
   useEffect(() => {
     const setIntervalId = setInterval(() => {
@@ -145,6 +185,7 @@ const TempRoomAvatarView = () => {
             backgroundSize="cover"
           >
             <Text>아바타</Text>
+            <TempUserBox peer={peer}></TempUserBox>
             <Center width="full" position="absolute" bottom="0.5" h="2rem" color="white">
               <Text as="span" fontSize="1xl">
                 Score{' '}
