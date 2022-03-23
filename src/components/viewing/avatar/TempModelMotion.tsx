@@ -77,8 +77,6 @@ const bornTurn = (transBorn: BABYLON.TransformNode[], bornNum: number, kalidoRig
 
 const faceTurn = (transBorn: BABYLON.TransformNode[], faceFront: number, faceLeft: number, faceRight: number) => {
   const avg = (faceLeft + faceRight) / 2;
-
-  // console.log(Math.atan2(avg, faceFront)-(Math.PI/4)-0.02)
   transBorn[7].rotate(new BABYLON.Vector3(0, 1, 0), -(Math.atan2(avg, faceFront) - Math.PI / 4) * 10, 2);
 };
 
@@ -94,6 +92,7 @@ const setBorn = (model: { [peerId: string]: Model }, peerId: string, poseRig: Ka
 
 const TempModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   const webcamRef = useRef<HTMLVideoElement | null>(null);
+  const countRef = useRef<number>(0);
   const camera = useRef<cam.Camera | null>(null);
   const [peers, setPeers] = useRecoilState(peerDataListState);
   const [peerChange, setPeerChange] = useState(false);
@@ -128,6 +127,15 @@ const TempModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
         };
         // AVATAR 적절하게 render 호출하는 메소드
         setBorn(model, myPeerId, poseRig, faceRig);
+        countRef.current += 1;
+        if (peers && countRef.current % 5 === 0) {
+          countRef.current = 0;
+          // const data: ChatMotionInterface = {
+          //   sender: user.data.name,
+          //   motion: { pose: poseRig, face: faceRig },
+          // };
+          // sendToAllPeers(peers, { type: 'motion', data });
+        }
         const anotherPeerId = motion.sender;
         for (const peerId in model) {
           if (peerId === anotherPeerId && peerId !== 'kirari') {
@@ -187,7 +195,6 @@ const TempModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   }, [mediaStream]);
 
   useEffect(() => {
-    console.log('change onResults');
     poseRef.current.onResults(onResults);
   }, [peerChange, onResults]);
 
