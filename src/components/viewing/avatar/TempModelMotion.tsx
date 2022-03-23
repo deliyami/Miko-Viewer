@@ -3,10 +3,8 @@ import * as cam from '@mediapipe/camera_utils';
 import '@mediapipe/control_utils';
 import '@mediapipe/drawing_utils';
 import { Pose, Results } from '@mediapipe/pose';
-import sendToAllPeers from '@src/helper/sendToAllPeers';
 import { peerDataListState } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
-import { ChatMotionInterface } from '@src/types/ChatMotionType';
 import { FaceDirection } from '@src/types/FaceDirectionType';
 import { Model } from '@src/types/ModelType';
 import * as BABYLON from 'babylonjs';
@@ -131,12 +129,12 @@ const TempModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
         setBorn(model, myPeerId, poseRig, faceRig);
         countRef.current += 1;
         if (peers && countRef.current % 5 === 0) {
-          const data: ChatMotionInterface = {
-            sender: user.data.name,
-            motion: { pose: poseRig, face: faceRig },
-          };
           countRef.current = 0;
-          sendToAllPeers(peers, { type: 'motion', data });
+          // const data: ChatMotionInterface = {
+          //   sender: user.data.name,
+          //   motion: { pose: poseRig, face: faceRig },
+          // };
+          // sendToAllPeers(peers, { type: 'motion', data });
         }
         const anotherPeerId = motion.sender;
         for (const peerId in model) {
