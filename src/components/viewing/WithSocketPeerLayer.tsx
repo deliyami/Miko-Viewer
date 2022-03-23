@@ -80,7 +80,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
       setPeerDataList(
         produce(draft => {
           const idx = draft.findIndex(peer => peer.id === id);
-          if (idx !== 1) {
+          if (idx !== -1) {
             draft.splice(idx, 1);
           }
         }),
@@ -107,7 +107,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
     const addEventToDataConnection = (dataConnection: DataConnection) => {
       const id = dataConnection.peer;
       dataConnection.on('data', (event: DataConnectionEvent) => {
-        console.log('data from peer', id);
+        console.log('data from peer', id, event.type);
         switch (event.type) {
           case 'chat':
             showChatToRoom(id, event.data.text, 5);
