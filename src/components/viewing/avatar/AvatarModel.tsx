@@ -10,7 +10,7 @@ export const AvatarModel: FC<{
   peerId?: string | undefined;
   antialias?: boolean | undefined;
 }> = ({ ...props }) => {
-  const { width, height, path, peerId, antialias, ...rest } = props;
+  const { width, height, path, peerId, ...rest } = props;
   const reactCanvas = useRef(null);
   useEffect(() => {
     if (reactCanvas.current) {
@@ -39,6 +39,7 @@ export const AvatarModel: FC<{
               if (peerId) {
                 console.log('나는야 신나고 즐겁지');
               }
+
               args[4][27].rotate(new BABYLON.Vector3(0, 1, 0), Math.PI, 2);
               const borns = args[4];
               const originalBorns = [];
@@ -66,12 +67,8 @@ export const AvatarModel: FC<{
         scene.getEngine().setSize(width, height);
         onSceneReady(scene);
       } else {
-        scene.onReadyObservable.addOnce(scene => onSceneReady(scene));
+        scene.onReadyObservable.addOnce(newScene => onSceneReady(newScene));
       }
-
-      const resize = () => {
-        scene.getEngine().resize();
-      };
 
       if (engine) {
         engine.runRenderLoop(() => {
