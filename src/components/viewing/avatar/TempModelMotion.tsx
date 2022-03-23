@@ -130,11 +130,11 @@ const TempModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
         countRef.current += 1;
         if (peers && countRef.current % 5 === 0) {
           countRef.current = 0;
-          // const data: ChatMotionInterface = {
-          //   sender: user.data.name,
-          //   motion: { pose: poseRig, face: faceRig },
-          // };
-          // sendToAllPeers(peers, { type: 'motion', data });
+          const data: ChatMotionInterface = {
+            sender: user.data.name,
+            motion: { pose: poseRig, face: faceRig },
+          };
+          sendToAllPeers(peers, { type: 'motion', data });
         }
         const anotherPeerId = motion.sender;
         for (const peerId in model) {
