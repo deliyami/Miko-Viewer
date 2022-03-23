@@ -17,8 +17,8 @@ import { WithIntervalTaskLayer } from './WithIntervalTaskLayer';
 import WithSocketEventLayout from './WithSocketPeerLayer';
 
 const ViewingCSRPage = () => {
-  const donate = useRecoilValue(donateState);
   const IVSPlayer = useIvsPlayer();
+  const donate = useRecoilValue(donateState);
   const [scriptLoaded, setScriptLoaded] = useState(!!IVSPlayer);
   const [donateBallon, setDonateBallon] = useState([]);
 

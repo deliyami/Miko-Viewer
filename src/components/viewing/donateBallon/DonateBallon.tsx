@@ -1,6 +1,6 @@
 import { AvatarBody, BallonDot, Circle, Content, FadeInBox, FadeOutBox, Header, HideCircle, Inner, Outer, Size } from '@src/components/viewing/donateBallon/StyledTag';
 import useColorStore from '@src/hooks/useColorStore';
-import donate from '@src/style/donate.module.sass';
+import donate from '@src/style/donate.module.css';
 import { FC } from 'react';
 
 type Props = {
