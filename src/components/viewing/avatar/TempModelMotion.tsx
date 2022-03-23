@@ -130,7 +130,7 @@ const TempModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
         // AVATAR 적절하게 render 호출하는 메소드
         setBorn(model, myPeerId, poseRig, faceRig);
         countRef.current += 1;
-        if (peers && countRef.current % 10 === 0) {
+        if (peers && countRef.current % 5 === 0) {
           const data: ChatMotionInterface = {
             sender: user.data.name,
             motion: { pose: poseRig, face: faceRig },
