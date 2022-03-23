@@ -68,7 +68,6 @@ const MyUserBox: FC = () => {
     data: { uuid, email },
   } = useUser();
   const [myStream, setMyStream] = useRecoilState(myStreamState);
-  console.log('myStream', myStream);
 
   return (
     <Center width="300px" height="300px" bgColor="blackAlpha.500" id={uuid + 'box'} position="relative">
@@ -88,7 +87,6 @@ const TempMyUserBox: FC = () => {
     data: { uuid, email },
   } = useUser();
   const [myStream, setMyStream] = useRecoilState(myStreamState);
-  console.log('myStream', myStream);
 
   return (
     <Center width="300px" height="300px" bgColor="blackAlpha.500" id={uuid + 'box'} position="relative">
