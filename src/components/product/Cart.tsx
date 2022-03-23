@@ -1,4 +1,4 @@
-import { Button, Image, Text, Flex } from '@chakra-ui/react';
+import { Button, Flex, Image, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -28,7 +28,6 @@ const Cart = ({ cartCount, count, size, color, item }) => {
         )}
         <Button
           aria-label="cart"
-          icon={<Image src="/cart.svg" alt="next" />}
           mb={5}
           w={92.5}
           h={92.5}
@@ -38,7 +37,7 @@ const Cart = ({ cartCount, count, size, color, item }) => {
           colorScheme={'blue'}
           bg={'white'}
         >
-          <Image src="/cart.svg"></Image>
+          <Image src="/image/productPage/cart.svg"></Image>
         </Button>
       </Flex>
     </Link>
