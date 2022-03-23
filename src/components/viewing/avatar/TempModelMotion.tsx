@@ -3,8 +3,10 @@ import * as cam from '@mediapipe/camera_utils';
 import '@mediapipe/control_utils';
 import '@mediapipe/drawing_utils';
 import { Pose, Results } from '@mediapipe/pose';
+import sendToAllPeers from '@src/helper/sendToAllPeers';
 import { peerDataListState } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
+import { ChatMotionInterface } from '@src/types/ChatMotionType';
 import { FaceDirection } from '@src/types/FaceDirectionType';
 import { Model } from '@src/types/ModelType';
 import * as BABYLON from 'babylonjs';
@@ -128,6 +130,14 @@ const TempModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
         };
         // AVATAR 적절하게 render 호출하는 메소드
         setBorn(model, myPeerId, poseRig, faceRig);
+        const data: ChatMotionInterface = {
+          sender: user.data.name,
+          motion: { pose: poseRig, face: faceRig },
+        };
+        if (peers) {
+          console.log('this is modelmotion', peers);
+          sendToAllPeers(peers, { type: 'motion', data });
+        }
         const anotherPeerId = motion.sender;
         for (const peerId in model) {
           if (peerId === anotherPeerId && peerId !== 'kirari') {

@@ -135,11 +135,15 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
           sender: user.data.name,
           motion: { pose: poseRig, face: faceRig },
         };
-        if (peers) sendToAllPeers(peers, { type: 'motion', data });
+        if (peers) {
+          console.log('this is modelmotion', peers);
+          sendToAllPeers(peers, { type: 'motion', data });
+        }
 
         // kalido에서 나온 값을 기반으로... vector의 계산이 있음, (0,-1,0)에서 rotation각도 구하고 BABYLON.Vector3(x,y,z)방향으로 나온 각도만큼 굴려보기
         // 손에서 어깨 방향으로 역으로 계산, 팔꿈치>손 각도 계산>굴리기, (0,-1,0)에서 팔꿈치 각도 계산, 아니면 어깨 위치 계산해서 모두다 어깨 위치 값만큼 뺀 뒤에 계산...
         const anotherPeerId = motion.sender;
+        console.log('this is modelmotion sender', motion.sender);
         for (const peerId in model) {
           if (peerId === anotherPeerId && peerId !== 'kirari') {
             setBorn(model, peerId, motion.motion.pose, motion.motion.face);
