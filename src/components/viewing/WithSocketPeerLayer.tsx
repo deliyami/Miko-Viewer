@@ -12,7 +12,7 @@ import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import { DataConnectionEvent } from '@src/types/DataConnectionEventType';
 import produce from 'immer';
 import { useRouter } from 'next/router';
-import { DataConnection } from 'peerjs';
+import { DataConnection, MediaConnection } from 'peerjs';
 import { FC, useCallback, useEffect } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
@@ -20,26 +20,24 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 // getUserMedia의 callback이 실행되지 않아서 먼저 들어온 사람의 영상이 안 보일 수 있음.
 // Bind 해주지 않으면 this 에러남.
 const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices) as typeof navigator.mediaDevices.getUserMedia;
+const streamOptions: MediaStreamConstraints = { audio: false, video: true };
 
 const WithSocketEventLayout: FC = ({ children }) => {
+  const socket = useSocket();
+  const myPeer = useMyPeer();
   const router = useRouter();
+
+  const user = useUser();
+  const myPeerUniqueID = user.data.uuid;
+
+  const [myStream, setMyStream] = useRecoilState(myStreamState);
+  const roomId = useRecoilValue(enterRoomIdAsyncState);
   const userTicket = useRecoilValue(curUserTicketState);
   const { concertId, ticketId, id: userTicketId } = userTicket;
 
-  const roomId = useRecoilValue(enterRoomIdAsyncState);
-  console.log('roomId', roomId);
-  const user = useUser();
-  const myPeer = useMyPeer();
-  const myPeerUniqueID = user.data.uuid;
-  // const socket = useSocket(myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
-  const socket = useSocket();
-
-  const streamOptions: MediaStreamConstraints = { audio: true, video: true };
-
-  const setPeerDataList = useSetRecoilState(peerDataListState);
-  const [myStream, setMyStream] = useRecoilState(myStreamState);
-  const setMessages = useSetRecoilState(messagesState);
   const setLatestScoreState = useSetRecoilState(latestScoreState);
+  const setPeerDataList = useSetRecoilState(peerDataListState);
+  const setMessages = useSetRecoilState(messagesState);
 
   const addDataConnectionToPeersDataList = useCallback(
     (dataConnection: DataConnection) => {
@@ -65,6 +63,18 @@ const WithSocketEventLayout: FC = ({ children }) => {
     [setPeerDataList],
   );
 
+  const addMediaConnectionToPeersDataList = useCallback(
+    (mediaConnection: MediaConnection, id) => {
+      setPeerDataList(
+        produce(draft => {
+          const idx = draft.findIndex(peer => peer.id === id);
+          if (idx >= 0) draft[idx].mediaConnection = mediaConnection;
+        }),
+      );
+    },
+    [setPeerDataList],
+  );
+
   const removePeerById = useCallback(
     id => {
       setPeerDataList(
@@ -80,12 +90,19 @@ const WithSocketEventLayout: FC = ({ children }) => {
   );
 
   useEffect(() => {
+    if (!socket || !user.data) {
+      console.log('socket || user 없음', socket, user.data);
+      return;
+    }
+
     socket.on('connect', () => {
       // NOTE 서버 재실행시에 다시 소켓 데이터를 전송
       if (socket.connected) {
         socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
       }
     });
+
+    socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
 
     const addEventToDataConnection = (dataConnection: DataConnection) => {
       const id = dataConnection.peer;
@@ -105,7 +122,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
             break;
         }
       });
-
       // Firefox와 호환 안됨.
       dataConnection.on('close', () => {
         removePeerById(id);
@@ -114,13 +130,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
         removePeerById(id);
       });
     };
-
-    if (!socket || !user.data) {
-      console.log('socket 없음');
-      return;
-    }
-
-    socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
 
     myPeer.on('connection', dataConnection => {
       addDataConnectionToPeersDataList(dataConnection);
@@ -162,10 +171,12 @@ const WithSocketEventLayout: FC = ({ children }) => {
           setMyStream(stream);
           if (otherPeerId !== myPeerUniqueID) {
             socket.emit('fe-answer-send-peer-id', otherSocketId);
-            const call = myPeer.call(otherPeerId, stream);
-            call.on('stream', remoteStream => {
-              addMediaStreamToPeersDataList(remoteStream, call.peer);
+            const mediaConnection = myPeer.call(otherPeerId, stream);
+            addMediaConnectionToPeersDataList(mediaConnection, mediaConnection.peer);
+            mediaConnection.on('stream', remoteStream => {
+              addMediaStreamToPeersDataList(remoteStream, mediaConnection.peer);
             });
+            // call.peerConnection.getSenders()[0].replaceTrack(newTrack) // 0 -auido // 1 video
           }
         })
         .catch(_ => {
@@ -174,9 +185,12 @@ const WithSocketEventLayout: FC = ({ children }) => {
 
       myPeer.on('call', mediaConnection => {
         getUserMedia({ video: true, audio: true })
-          .then(myStream => {
-            setMyStream(myStream);
-            mediaConnection.answer(myStream);
+          .then(stream => {
+            console.log('New MyStream', stream);
+            console.log('Before MyStream', myStream);
+            setMyStream(stream);
+            addMediaConnectionToPeersDataList(mediaConnection, mediaConnection.peer);
+            mediaConnection.answer(stream);
             mediaConnection.on('stream', otherStream => {
               addMediaStreamToPeersDataList(otherStream, mediaConnection.peer);
             });
@@ -283,21 +297,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
     };
     window.addEventListener('beforeunload', windowBeforeUnloadEvent, { capture: true });
 
-    //  beforePopState => useEffect return
-    // router.beforePopState(state => {
-    //   const { as, options, url } = state;
-    //   console.log('beforePopState');
-    //   console.log('state', state);
-    //   console.log(router);
-    //   const exit = globalThis.confirm('beforePopState 방을 나가시겠습니까 ?');
-    //   if (exit) {
-    //     window.location.href = '/';
-    //     return true;
-    //   }
-    //   window.location.href = router.asPath;
-    //   return false;
-    // });
-
     return () => {
       console.log('useEffect 작동함');
       if (user.data) {
@@ -310,7 +309,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
       }
       // NOTE 옵션까지 안 맞춰주면 삭제 안됨??
       window.removeEventListener('beforeunload', windowBeforeUnloadEvent, { capture: true });
-      // router.beforePopState = () => true;
     };
   }, [user.data]);
 
@@ -318,5 +316,3 @@ const WithSocketEventLayout: FC = ({ children }) => {
 };
 
 export default WithSocketEventLayout;
-
-// export { myPeerUniqueID };

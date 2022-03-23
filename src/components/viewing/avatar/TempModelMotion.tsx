@@ -84,6 +84,7 @@ const faceTurn = (transBorn: BABYLON.TransformNode[], faceFront: number, faceLef
 
 const setBorn = (model: { [peerId: string]: Model }, peerId: string, poseRig: Kalidokit.TPose, faceRig: FaceDirection<'left' | 'center' | 'right', number>) => {
   const userBorns = model[peerId];
+  // AVATAR 적절하게 가공하는 곳
   bornReset(userBorns.borns, userBorns.originalBorns);
   bornTurn(userBorns.borns, 15, poseRig, 0);
   bornTurn(userBorns.borns, 11, poseRig, 1);
@@ -101,6 +102,7 @@ const TempModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   const user = useUser();
   const myPeerId = 'kirari';
 
+  // AVATAR mediapipe 데이터가 적절하게 나오는 곳
   const onResults = useCallback(
     (results: Results) => {
       if (
@@ -124,6 +126,7 @@ const TempModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
           left: results.poseLandmarks[7].x,
           right: results.poseLandmarks[8].x,
         };
+        // AVATAR 적절하게 render 호출하는 메소드
         setBorn(model, myPeerId, poseRig, faceRig);
         const anotherPeerId = motion.sender;
         for (const peerId in model) {

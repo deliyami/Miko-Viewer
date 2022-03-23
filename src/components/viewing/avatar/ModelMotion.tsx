@@ -1,3 +1,4 @@
+import { Button } from '@chakra-ui/react';
 import '@mediapipe/camera_utils';
 import * as cam from '@mediapipe/camera_utils';
 import '@mediapipe/control_utils';
@@ -84,8 +85,8 @@ const faceTurn = (transBorn: BABYLON.TransformNode[], faceFront: number, faceLef
   transBorn[7].rotate(new BABYLON.Vector3(0, 1, 0), -(Math.atan2(avg, faceFront) - Math.PI / 4) * 10, 2);
 };
 
-const setBorn = (model: { [peerId: string]: Model }, peerId: string, poseRig: Kalidokit.TPose, faceRig: FaceDirection<'left' | 'center' | 'right', number>) => {
-  const userBorns = model[peerId];
+const setBorn = (functionModel: { [peerId: string]: Model }, peerId: string, poseRig: Kalidokit.TPose, faceRig: FaceDirection<'left' | 'center' | 'right', number>) => {
+  const userBorns = functionModel[peerId];
   bornReset(userBorns.borns, userBorns.originalBorns);
   bornTurn(userBorns.borns, 15, poseRig, 0);
   bornTurn(userBorns.borns, 11, poseRig, 1);
@@ -99,6 +100,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   const [peers, setPeers] = useRecoilState(peerDataListState);
   const [peerChange, setPeerChange] = useState(false);
   const poseRef = useRef<Pose>(null);
+  const pointRef = useRef<number[]>([]);
 
   const user = useUser();
   const myPeerId = 'kirari';
@@ -165,7 +167,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
       minDetectionConfidence: 0.5,
       minTrackingConfidence: 0.5,
     });
-    pose.onResults(onResults);
+    // pose.onResults(onResults);
     if (webcamRef.current && webcamRef.current) {
       camera.current = new cam.Camera(webcamRef?.current, {
         onFrame: async () => {
@@ -211,6 +213,19 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
           height: 240,
         }}
       ></video>
+      <Button
+        style={{ height: '500px' }}
+        onClick={e => {
+          console.log(peers);
+        }}
+      >
+        <span>
+          dfsdfsdf sdfsdfsd fsdfdsf sdfsd fsdfsd fsdf dsfsdf sdfsd <br />
+          fsdfsd fsdf sdf dfsdfsdf sdfsdfsd fsdfdsf sdfsd fsdfsd fsdf dsfsdf sdfsd fsdfsd fsdf sdf dfsdfsdf sdfsdfsd fsdfdsf sdfsd fsdfsd fsdf dsfsdf sdfsd fsdfsd fsdf sdf dfsdfsdf
+          sdfsdfsd fsdfdsf sdfsd fsdfsd fsdf dsfsdf sdfsd fsdfsd fsdf sdf dfsdfsdf sdfsdfsd fsdfdsf sdfsd fsdfsd fsdf dsfsdf sdfsd fsdfsd fsdf sdf dfsdfsdf sdfsdfsd fsdfdsf sdfsd
+          fsdfsd fsdf dsfsdf sdfsd fsdfsd fsdf sdf dfsdfsdf sdfsdfsd fsdfdsf sdfsd fsdfsd fsdf dsfsdf sdfsd fsdfsd fsdf sdf
+        </span>
+      </Button>
     </>
   );
 };

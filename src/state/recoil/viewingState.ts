@@ -1,6 +1,6 @@
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import { User } from '@src/types/share/User';
-import { DataConnection } from 'peerjs';
+import { DataConnection, MediaConnection } from 'peerjs';
 import { atom } from 'recoil';
 
 const peersArrayState = atom<string[]>({
@@ -37,6 +37,7 @@ const isShowChatInputState = atom<boolean>({
 export type PeerDataInterface = {
   id: string;
   dataConnection?: DataConnection;
+  mediaConnection?: MediaConnection;
   mediaStream?: MediaStream;
   data?: Pick<User, 'id' | 'avatar' | 'email' | 'name'>;
 };

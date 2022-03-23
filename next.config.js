@@ -16,6 +16,7 @@ const nextConfig = {
     reactMode: 'concurrent',
     reactRoot: true,
   },
+  swcMinify: true,
 };
 
 const withPWA = require('next-pwa');
