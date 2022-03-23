@@ -80,7 +80,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
       setPeerDataList(
         produce(draft => {
           const idx = draft.findIndex(peer => peer.id === id);
-          if (idx !== 1) {
+          if (idx !== -1) {
             draft.splice(idx, 1);
           }
         }),
