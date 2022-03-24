@@ -1,7 +1,6 @@
 import { Box, Button, Center, HStack, Tag, Text } from '@chakra-ui/react';
 import { AvatarModel } from '@src/components/viewing/avatar/AvatarModel';
 import ModelMotion from '@src/components/viewing/avatar/ModelMotion';
-import TempModelMotion from '@src/components/viewing/avatar/TempModelMotion';
 import { NEXT_URL } from '@src/const';
 import { latestScoreState } from '@src/state/recoil/scoreState';
 import { myStreamState, PeerDataInterface, peerDataListState } from '@src/state/recoil/viewingState';
@@ -86,13 +85,10 @@ const TempMyUserBox: FC = () => {
   const {
     data: { uuid, email },
   } = useUser();
-  const [myStream, setMyStream] = useRecoilState(myStreamState);
 
   return (
     <Center width="300px" height="300px" bgColor="blackAlpha.500" id={uuid + 'box'} position="relative">
       <Text> {email} </Text>
-      <AvatarModel width={300} height={300} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={'kirari'} antialias></AvatarModel>
-      {myStream ? <TempModelMotion mediaStream={myStream}></TempModelMotion> : <></>}
       <Text fontSize="6xl" id={uuid + 'chat'}></Text>
       <Text fontSize="6xl" id={uuid + 'motion'}></Text>
     </Center>
@@ -122,7 +118,6 @@ const TempUserBox: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
   return (
     <Center width="300px" height="300px" bgColor="blackAlpha.500" id={id + 'box'} position="relative">
       <Text> {data.email} </Text>
-      <AvatarModel width={300} height={300} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={peer.id} antialias></AvatarModel>
       <Text fontSize="6xl" id={id + 'chat'}></Text>
       <Text fontSize="6xl" id={id + 'motion'}></Text>
       <Button onClick={handleMute}>
