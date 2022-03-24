@@ -19,14 +19,14 @@ export const AvatarModel: FC<{
           const camera = new BABYLON.ArcRotateCamera('camera', Math.PI / 2, Math.PI / 2.5, 10, new BABYLON.Vector3(0, 0, 0), scene);
 
           camera.setTarget(new BABYLON.Vector3(0, 2.5, 0));
-          camera.setPosition(new BABYLON.Vector3(0, 2.5, 5));
+          camera.setPosition(new BABYLON.Vector3(0, 1.8, 4.7));
 
           // camera.attachControl(true);
 
           const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, -1), scene);
 
           // Default intensity is 1. Let's dim the light a small amount
-          light.intensity = 0.7;
+          light.intensity = 1.2;
 
           BABYLON.MeshBuilder.CreateGround('ground', { width: 30, height: 6 }, scene);
           BABYLON.SceneLoader.ImportMesh(

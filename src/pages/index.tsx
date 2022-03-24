@@ -6,6 +6,7 @@ import BasicLayout from '@src/layout/BasicLayout';
 import { Pagination } from '@src/types/share/common/common';
 import { Concert } from '@src/types/share/Concert';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
+import Head from 'next/head';
 import Link from 'next/link';
 import { ReactElement } from 'react';
 
@@ -39,6 +40,10 @@ export default function HomePage({ data }: InferGetStaticPropsType<typeof getSta
       <Heading size="xl" fontSize="50px" my={5}>
         RECOMMEND
       </Heading>
+      <Head>
+        <title key="title">Miko - Homepage</title>
+        <meta property="og:title" content="Miko" key="og:title" />
+      </Head>
       <Carousel data={data} />
       <Flex pt={50} width="full" justifyContent="center">
         <VStack align="start">
