@@ -26,5 +26,5 @@
     "titleBar.inactiveForeground": "#15202b99"
   },
   "peacock.color": "#61dafb",
-  "cSpell.words": ["babylonjs", "kalidokit", "mediapipe", "Miko", "peerjs", "wasmworker"]
+  "cSpell.words": ["babylonjs", "kalidokit", "mediapipe", "Miko", "openrelay", "openrelayproject", "peerjs", "wasmworker"]
 }
