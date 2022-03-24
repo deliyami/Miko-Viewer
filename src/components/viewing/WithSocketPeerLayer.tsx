@@ -42,18 +42,9 @@ const WithSocketEventLayout: FC = ({ children }) => {
     setMessages([]);
   };
 
-  useBeforeunload(e => {
+  useBeforeunload(() => {
     console.log('windowBeforeUnloadEvent in WithSocketPeerLayer');
-    let isFired = false;
-    let exit = null;
-    if (!isFired) {
-      isFired = true;
-      exit = globalThis.confirm('beforeUnload  방을 나가시겠습니까?');
-      if (exit) {
-        handleLeavePage();
-        window.close();
-      }
-    }
+    handleLeavePage();
   });
 
   const addDataConnectionToPeersDataList = useCallback(

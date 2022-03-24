@@ -62,11 +62,9 @@ const ViewingPrepareCSRPage = () => {
     window.myPeer = undefined;
   };
 
-  useBeforeunload(e => {
-    const exit = globalThis.confirm('beforeUnload  방을 나가시겠습니까?');
-    if (exit) {
-      handleCleanUp();
-    }
+  useBeforeunload(() => {
+    handleCleanUp();
+    console.log('windowBeforeUnloadEvent in Prepare');
   });
   useEffect(() => {
     return () => {
