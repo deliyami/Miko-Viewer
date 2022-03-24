@@ -6,6 +6,7 @@ import { FC } from 'react';
 
 const AllItem: FC<{ allItem: Pagination<Product> }> = ({ allItem }) => {
   const router = useRouter();
+  console.log(allItem.data);
   return (
     <Flex flexDir={'column'} w={'82%'}>
       <Text fontSize={'3xl'} fontWeight={'bold'}>
@@ -14,7 +15,7 @@ const AllItem: FC<{ allItem: Pagination<Product> }> = ({ allItem }) => {
       <Flex>
         <SimpleGrid spacing={20} p={'2%'} columns={5}>
           {allItem.data.map((item, key) => {
-            if (key > 5) {
+            if (key<5) {
               return (
                 <Flex
                   onClick={() => window.open(`/concerts/${router.query.id}/products/${item.id}`, '_self')}

@@ -41,11 +41,8 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
   };
 };
 
-export default function ProductPage({ data, item }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  // console.log(allItem);
+export default function ProductPage({ data, item, concertId }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
-  console.log(item);
-  console.log(router.query.product_id);
   return (
     <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
       <Box mb={'3%'} w="full">
