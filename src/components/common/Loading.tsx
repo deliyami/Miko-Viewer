@@ -7,8 +7,8 @@ const Loading: FC = ({ children }) => {
       <VStack>
         <Spinner boxSize="300px" color="red.500" mb={20} />
         <Text fontSize="6xl">Loading...</Text>
+        {children}
       </VStack>
-      {children}
     </Center>
   );
 };

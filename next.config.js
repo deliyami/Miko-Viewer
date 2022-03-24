@@ -15,6 +15,7 @@ const nextConfig = {
   experimental: {
     reactMode: 'concurrent',
     reactRoot: true,
+    nextScriptWorkers: true,
   },
   swcMinify: true,
 };

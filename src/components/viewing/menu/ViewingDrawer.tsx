@@ -1,8 +1,11 @@
-import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Input, useDisclosure } from '@chakra-ui/react';
+import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Heading, Input, useDisclosure } from '@chakra-ui/react';
+import { enterRoomIdAsyncState } from '@src/state/recoil/concertState';
 import React, { forwardRef, useImperativeHandle } from 'react';
+import { useRecoilValue } from 'recoil';
 
-const ViewingDrawer = forwardRef((_, ref) => {
+const ViewingSettingDrawer = forwardRef((_, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const enterRoomId = useRecoilValue(enterRoomIdAsyncState);
 
   useImperativeHandle(ref, () => ({
     open: () => {
@@ -19,6 +22,7 @@ const ViewingDrawer = forwardRef((_, ref) => {
 
         <DrawerBody>
           <Input placeholder="Type here..." />
+          <Heading size="md">Room Id :{enterRoomId} </Heading>
         </DrawerBody>
 
         <DrawerFooter>
@@ -32,6 +36,6 @@ const ViewingDrawer = forwardRef((_, ref) => {
   );
 });
 
-ViewingDrawer.displayName = 'ViewingDrawer';
+ViewingSettingDrawer.displayName = 'ViewingDrawer';
 
-export default ViewingDrawer;
+export default ViewingSettingDrawer;

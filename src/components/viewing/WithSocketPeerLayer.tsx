@@ -2,6 +2,7 @@ import setMotionToAvatar from '@src/helper/setMotionToAvatar';
 import showChatToRoom from '@src/helper/showChatToRoom';
 import { toastLog } from '@src/helper/toastLog';
 import { updateUserScore } from '@src/helper/updateUserScore';
+import useBeforeunload from '@src/hooks/useBeforeunload';
 import useMyPeer from '@src/hooks/useMyPeer';
 import useSocket from '@src/hooks/useSocket';
 import { curUserTicketState, enterRoomIdAsyncState } from '@src/state/recoil/concertState';
@@ -14,13 +15,7 @@ import produce from 'immer';
 import { useRouter } from 'next/router';
 import { DataConnection, MediaConnection } from 'peerjs';
 import { FC, useCallback, useEffect } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-
-// NOTE video를 true로 할경우 여러 브라우저에서 카메로 리소스 접근할때 보안상의 이유로 에러가 나올 확률이 높음
-// getUserMedia의 callback이 실행되지 않아서 먼저 들어온 사람의 영상이 안 보일 수 있음.
-// Bind 해주지 않으면 this 에러남.
-const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices) as typeof navigator.mediaDevices.getUserMedia;
-const streamOptions: MediaStreamConstraints = { audio: false, video: true };
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 const WithSocketEventLayout: FC = ({ children }) => {
   const socket = useSocket();
@@ -28,9 +23,11 @@ const WithSocketEventLayout: FC = ({ children }) => {
   const router = useRouter();
 
   const user = useUser();
-  const myPeerUniqueID = user.data.uuid;
+  const myPeerUniqueID = user.data?.uuid;
 
-  const [myStream, setMyStream] = useRecoilState(myStreamState);
+  // NOTE getUserMedia를 할때마다 새로운 객체가 나와서, getUserMedia를 한번만 실행하도록 개선
+  // 또한 미묘한 시간 오차로 인한 오류가 있었음
+  const myStream = useRecoilValue(myStreamState);
   const roomId = useRecoilValue(enterRoomIdAsyncState);
   const userTicket = useRecoilValue(curUserTicketState);
   const { concertId, ticketId, id: userTicketId } = userTicket;
@@ -38,6 +35,26 @@ const WithSocketEventLayout: FC = ({ children }) => {
   const setLatestScoreState = useSetRecoilState(latestScoreState);
   const setPeerDataList = useSetRecoilState(peerDataListState);
   const setMessages = useSetRecoilState(messagesState);
+
+  // 정리 코드
+  const handleLeavePage = () => {
+    setPeerDataList([]);
+    setMessages([]);
+  };
+
+  useBeforeunload(e => {
+    console.log('windowBeforeUnloadEvent in WithSocketPeerLayer');
+    let isFired = false;
+    let exit = null;
+    if (!isFired) {
+      isFired = true;
+      exit = globalThis.confirm('beforeUnload  방을 나가시겠습니까?');
+      if (exit) {
+        handleLeavePage();
+        window.close();
+      }
+    }
+  });
 
   const addDataConnectionToPeersDataList = useCallback(
     (dataConnection: DataConnection) => {
@@ -90,19 +107,19 @@ const WithSocketEventLayout: FC = ({ children }) => {
   );
 
   useEffect(() => {
-    if (!socket || !user.data) {
-      console.log('socket || user 없음', socket, user.data);
+    if (!socket || !user.data || !myPeer) {
+      toastLog('error', 'socket, user.data, myPeer 중 하나가 없습니다');
+      console.log('socket || user 없음', socket, myPeer, user.data);
       return;
     }
 
+    socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
     socket.on('connect', () => {
-      // NOTE 서버 재실행시에 다시 소켓 데이터를 전송
+      // NOTE 서버 재실행시에 다시 소켓 데이터를 전송, 처음 랜더링 될떄에는 이미 connect 이벤트 이후여서 동작하지 않음.
       if (socket.connected) {
         socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
       }
     });
-
-    socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
 
     const addEventToDataConnection = (dataConnection: DataConnection) => {
       const id = dataConnection.peer;
@@ -136,25 +153,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
       addEventToDataConnection(dataConnection);
     });
 
-    myPeer.on('disconnected', () => {
-      myPeer.reconnect();
-      toastLog('error', 'myPeer disconnected', 'peer가 시그널링 서버와 끊겼습니다.');
-    });
-
-    myPeer.on('error', _ => {
-      toastLog('error', 'myPeer error', '심각한 에러발생 로그창 확인.');
-    });
-
-    // navigator.mediaDevices.
-    getUserMedia(streamOptions)
-      .then(stream => {
-        setMyStream(stream);
-      })
-      .catch(err => {
-        toastLog('error', 'get stream fail', '', err);
-        console.error(err);
-      });
-
     const newUserCome = (otherPeerId: string, roomID: string, otherUserData: PeerDataInterface['data'], otherSocketId) => {
       console.log('newUserCome', otherPeerId, otherUserData.email);
 
@@ -166,38 +164,21 @@ const WithSocketEventLayout: FC = ({ children }) => {
         }),
       );
 
-      getUserMedia(streamOptions)
-        .then(stream => {
-          setMyStream(stream);
-          if (otherPeerId !== myPeerUniqueID) {
-            socket.emit('fe-answer-send-peer-id', otherSocketId);
-            const mediaConnection = myPeer.call(otherPeerId, stream);
-            addMediaConnectionToPeersDataList(mediaConnection, mediaConnection.peer);
-            mediaConnection.on('stream', remoteStream => {
-              addMediaStreamToPeersDataList(remoteStream, mediaConnection.peer);
-            });
-            // call.peerConnection.getSenders()[0].replaceTrack(newTrack) // 0 -auido // 1 video
-          }
-        })
-        .catch(_ => {
-          toastLog('error', 'Failed to get local stream', '미디어에 대한 접근 권한을 얻지 못 했습니다.');
+      if (otherPeerId !== myPeerUniqueID) {
+        socket.emit('fe-answer-send-peer-id', otherSocketId);
+        const mediaConnection = myPeer.call(otherPeerId, myStream);
+        addMediaConnectionToPeersDataList(mediaConnection, mediaConnection.peer);
+        mediaConnection.on('stream', remoteStream => {
+          addMediaStreamToPeersDataList(remoteStream, mediaConnection.peer);
         });
+      }
 
       myPeer.on('call', mediaConnection => {
-        getUserMedia({ video: true, audio: true })
-          .then(stream => {
-            console.log('New MyStream', stream);
-            console.log('Before MyStream', myStream);
-            setMyStream(stream);
-            addMediaConnectionToPeersDataList(mediaConnection, mediaConnection.peer);
-            mediaConnection.answer(stream);
-            mediaConnection.on('stream', otherStream => {
-              addMediaStreamToPeersDataList(otherStream, mediaConnection.peer);
-            });
-          })
-          .catch(err => {
-            console.error('Failed to get stream', err);
-          });
+        addMediaConnectionToPeersDataList(mediaConnection, mediaConnection.peer);
+        mediaConnection.answer(myStream);
+        mediaConnection.on('stream', otherStream => {
+          addMediaStreamToPeersDataList(otherStream, mediaConnection.peer);
+        });
       });
 
       const dataConnection = myPeer.connect(otherPeerId);
@@ -250,52 +231,12 @@ const WithSocketEventLayout: FC = ({ children }) => {
       );
     };
 
-    myPeer.on('open', id => {
-      // NOTE  peer.conncet 는  peer open 상태가 아니면 undefined 리턴
-      console.log('emit new user come');
-      socket.on('be-new-user-come', newUserCome);
-    });
+    socket.on('be-new-user-come', newUserCome);
     socket.on('be-broadcast-peer-id', getPeerIdFromBroadcast);
     socket.on('be-broadcast-new-message', broadcastNewMessage);
     socket.on('be-fail-enter-room', failEnterRoom);
     socket.on('be-user-left', userLeft);
     socket.on('be-send-user-score', getMyScore);
-
-    // 정리 코드
-    const handleLeavePage = () => {
-      socket.emit('fe-user-left');
-      socket.disconnect();
-      window.socket = undefined;
-
-      myPeer.destroy();
-      //  NOTE  useSocket 코드상, disconnect 하는 것만으로는 안됨.
-      myStream?.getTracks().forEach(stream => {
-        stream.stop();
-        myStream.removeTrack(stream);
-      });
-      setMyStream(undefined);
-      setPeerDataList([]);
-      setMessages([]);
-    };
-
-    const windowBeforeUnloadEvent = (e: BeforeUnloadEvent) => {
-      // NOTE confirm alert propmpt는 모던브라우저 (파폭 제외) onbeforeonload 동안에는 작동 안함
-      e.preventDefault();
-      e.returnValue = '';
-      console.log('windowBeforeUnloadEvent 작동');
-
-      let isFired = false;
-      let exit = null;
-      if (!isFired) {
-        isFired = true;
-        exit = globalThis.confirm('beforeUnload  방을 나가시겠습니까?');
-        if (exit) {
-          handleLeavePage();
-          window.close();
-        }
-      }
-    };
-    window.addEventListener('beforeunload', windowBeforeUnloadEvent, { capture: true });
 
     return () => {
       console.log('useEffect 작동함');
@@ -307,10 +248,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
         socket.off('be-send-user-score', getMyScore);
         handleLeavePage();
       }
-      // NOTE 옵션까지 안 맞춰주면 삭제 안됨??
-      window.removeEventListener('beforeunload', windowBeforeUnloadEvent, { capture: true });
     };
-  }, [user.data]);
+  }, [user.data, socket, myPeer]);
 
   return <> {children}</>;
 };
