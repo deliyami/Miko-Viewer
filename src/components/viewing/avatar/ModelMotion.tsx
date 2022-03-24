@@ -80,12 +80,11 @@ const bornTurn = (transBorn: BABYLON.TransformNode[], bornNum: number, kalidoRig
 const faceTurn = (transBorn: BABYLON.TransformNode[], faceFront: number, faceLeft: number, faceRight: number) => {
   const avg = (faceLeft + faceRight) / 2;
 
-  // console.log(Math.atan2(avg, faceFront)-(Math.PI/4)-0.02)
   transBorn[7].rotate(new BABYLON.Vector3(0, 1, 0), -(Math.atan2(avg, faceFront) - Math.PI / 4) * 10, 2);
 };
 
-const setBorn = (model: { [peerId: string]: Model }, peerId: string, poseRig: Kalidokit.TPose, faceRig: FaceDirection<'left' | 'center' | 'right', number>) => {
-  const userBorns = model[peerId];
+const setBorn = (functionModel: { [peerId: string]: Model }, peerId: string, poseRig: Kalidokit.TPose, faceRig: FaceDirection<'left' | 'center' | 'right', number>) => {
+  const userBorns = functionModel[peerId];
   bornReset(userBorns.borns, userBorns.originalBorns);
   bornTurn(userBorns.borns, 15, poseRig, 0);
   bornTurn(userBorns.borns, 11, poseRig, 1);
@@ -99,6 +98,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   const [peers, setPeers] = useRecoilState(peerDataListState);
   const [peerChange, setPeerChange] = useState(false);
   const poseRef = useRef<Pose>(null);
+  const pointRef = useRef<number[]>([]);
 
   const user = useUser();
   const myPeerId = 'kirari';
@@ -133,7 +133,9 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
           sender: user.data.name,
           motion: { pose: poseRig, face: faceRig },
         };
-        if (peers) sendToAllPeers(peers, { type: 'motion', data });
+        if (peers) {
+          sendToAllPeers(peers, { type: 'motion', data });
+        }
 
         // kalido에서 나온 값을 기반으로... vector의 계산이 있음, (0,-1,0)에서 rotation각도 구하고 BABYLON.Vector3(x,y,z)방향으로 나온 각도만큼 굴려보기
         // 손에서 어깨 방향으로 역으로 계산, 팔꿈치>손 각도 계산>굴리기, (0,-1,0)에서 팔꿈치 각도 계산, 아니면 어깨 위치 계산해서 모두다 어깨 위치 값만큼 뺀 뒤에 계산...
@@ -165,7 +167,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
       minDetectionConfidence: 0.5,
       minTrackingConfidence: 0.5,
     });
-    pose.onResults(onResults);
+    // pose.onResults(onResults);
     if (webcamRef.current && webcamRef.current) {
       camera.current = new cam.Camera(webcamRef?.current, {
         onFrame: async () => {
@@ -196,7 +198,6 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   }, [mediaStream]);
 
   useEffect(() => {
-    console.log('change onResults');
     poseRef.current.onResults(onResults);
   }, [peerChange, onResults]);
 

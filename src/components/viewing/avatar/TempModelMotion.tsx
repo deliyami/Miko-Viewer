@@ -3,8 +3,10 @@ import * as cam from '@mediapipe/camera_utils';
 import '@mediapipe/control_utils';
 import '@mediapipe/drawing_utils';
 import { Pose, Results } from '@mediapipe/pose';
+import sendToAllPeers from '@src/helper/sendToAllPeers';
 import { peerDataListState } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
+import { ChatMotionInterface } from '@src/types/ChatMotionType';
 import { FaceDirection } from '@src/types/FaceDirectionType';
 import { Model } from '@src/types/ModelType';
 import * as BABYLON from 'babylonjs';
@@ -77,13 +79,12 @@ const bornTurn = (transBorn: BABYLON.TransformNode[], bornNum: number, kalidoRig
 
 const faceTurn = (transBorn: BABYLON.TransformNode[], faceFront: number, faceLeft: number, faceRight: number) => {
   const avg = (faceLeft + faceRight) / 2;
-
-  // console.log(Math.atan2(avg, faceFront)-(Math.PI/4)-0.02)
   transBorn[7].rotate(new BABYLON.Vector3(0, 1, 0), -(Math.atan2(avg, faceFront) - Math.PI / 4) * 10, 2);
 };
 
 const setBorn = (model: { [peerId: string]: Model }, peerId: string, poseRig: Kalidokit.TPose, faceRig: FaceDirection<'left' | 'center' | 'right', number>) => {
   const userBorns = model[peerId];
+  // AVATAR 적절하게 가공하는 곳
   bornReset(userBorns.borns, userBorns.originalBorns);
   bornTurn(userBorns.borns, 15, poseRig, 0);
   bornTurn(userBorns.borns, 11, poseRig, 1);
@@ -93,6 +94,7 @@ const setBorn = (model: { [peerId: string]: Model }, peerId: string, poseRig: Ka
 
 const TempModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   const webcamRef = useRef<HTMLVideoElement | null>(null);
+  const countRef = useRef<number>(0);
   const camera = useRef<cam.Camera | null>(null);
   const [peers, setPeers] = useRecoilState(peerDataListState);
   const [peerChange, setPeerChange] = useState(false);
@@ -101,6 +103,7 @@ const TempModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   const user = useUser();
   const myPeerId = 'kirari';
 
+  // AVATAR mediapipe 데이터가 적절하게 나오는 곳
   const onResults = useCallback(
     (results: Results) => {
       if (
@@ -124,7 +127,17 @@ const TempModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
           left: results.poseLandmarks[7].x,
           right: results.poseLandmarks[8].x,
         };
+        // AVATAR 적절하게 render 호출하는 메소드
         setBorn(model, myPeerId, poseRig, faceRig);
+        countRef.current += 1;
+        if (peers && countRef.current % 5 === 0) {
+          countRef.current = 0;
+          const data: ChatMotionInterface = {
+            sender: user.data.name,
+            motion: { pose: poseRig, face: faceRig },
+          };
+          sendToAllPeers(peers, { type: 'motion', data });
+        }
         const anotherPeerId = motion.sender;
         for (const peerId in model) {
           if (peerId === anotherPeerId && peerId !== 'kirari') {
@@ -184,7 +197,6 @@ const TempModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   }, [mediaStream]);
 
   useEffect(() => {
-    console.log('change onResults');
     poseRef.current.onResults(onResults);
   }, [peerChange, onResults]);
 
