@@ -1,4 +1,5 @@
 import { Box, Center, Spinner, Text, VStack } from '@chakra-ui/react';
+import LottieVideoPlay from '@src/components/lottie/lottieVideoPlay';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -99,6 +100,7 @@ const Loading = () => {
           reload
         </Box>
       </VStack>
+      <LottieVideoPlay />
     </Center>
   );
 };

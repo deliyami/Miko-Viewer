@@ -1,14 +1,15 @@
-import { Text, VStack } from '@chakra-ui/react';
+import { Box, BoxProps, Text, VStack } from '@chakra-ui/react';
 import { toastLog } from '@src/helper/toastLog';
 import useBeforeunload from '@src/hooks/useBeforeunload';
 import useMyPeer from '@src/hooks/useMyPeer';
 import useSocket from '@src/hooks/useSocket';
 import { isReadyIvsState, myStreamState } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
+import { AnimatePresence, motion } from 'framer-motion';
 import Script from 'next/script';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import Loading from '../common/Loading';
+import LottieVideoPlay from '../lottie/lottieVideoPlay';
 import ViewingCSRPage from './ViewingCSRPage';
 
 // NOTE video를 true로 할경우 여러 브라우저에서 카메로 리소스 접근할때 보안상의 이유로 에러가 나올 확률이 높음
@@ -16,6 +17,8 @@ import ViewingCSRPage from './ViewingCSRPage';
 // Bind 해주지 않으면 this 에러남.
 const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices) as typeof navigator.mediaDevices.getUserMedia;
 const streamOptions: MediaStreamConstraints = { audio: true, video: true };
+
+const MotionBox = motion<Omit<BoxProps, 'transition'>>(Box);
 
 // Prepare 단계를 둠으로써 State 상태 관리
 const ViewingPrepareCSRPage = () => {
@@ -129,31 +132,51 @@ const ViewingPrepareCSRPage = () => {
     };
   }, [myPeer]);
 
-  if (isAllReady) return <ViewingCSRPage />;
-
-  // console.log('Ready 상태', isReadyStream, isReadyPeer, isReadySocket);
   return (
-    <Loading>
-      <VStack>
-        <Text> カメラ - {isReadyStream ? '✅' : '❌'} </Text>
-        <Text> P2P - {isReadyPeer ? '✅' : '❌'} </Text>
-        <Text> Socket - {isReadySocket ? '✅' : '❌'} </Text>
-        <Text> Script - {isReadyIvs ? '✅' : '❌'} </Text>
-        {peerError && <Text>{peerError}</Text>}
-      </VStack>
-      <Script
-        src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js"
-        // @ts-ignore
-        strategy="afterInteractive" // NOTE 왜 before하면 새로고침시 에러?, onLoad도 작동 안함?
-        onLoad={e => {
-          console.log('ivs script load', e);
-          setIsReadyIvs(true);
-        }}
-        onError={e => {
-          toastLog('error', 'failed to load ivs script', '', e);
-        }}
-      />
-    </Loading>
+    <AnimatePresence>
+      {!isAllReady && (
+        <MotionBox
+          key="video-prepare"
+          // initial={{ x: 0, opacity: 0 }}
+          animate={{ x: 0, opacity: 1, backgroundColor: '#000000FF' }}
+          exit={{ x: 0, opacity: 0, backgroundColor: '#00000000' }}
+          transition={{ duration: 2 }}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          w="full"
+          h="full"
+          minH="100vh"
+        >
+          <VStack>
+            <MotionBox whileTap={{ scale: 1.2 }}>
+              <LottieVideoPlay />
+            </MotionBox>
+            <Text fontSize="6xl">Loading...</Text>
+            <VStack>
+              <Text> カメラ - {isReadyStream ? '✅' : '❌'} </Text>
+              <Text> P2P - {isReadyPeer ? '✅' : '❌'} </Text>
+              <Text> Socket - {isReadySocket ? '✅' : '❌'} </Text>
+              <Text> Script - {isReadyIvs ? '✅' : '❌'} </Text>
+              {peerError && <Text>{peerError}</Text>}
+            </VStack>
+            <Script
+              src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js"
+              // @ts-ignore
+              strategy="afterInteractive" // NOTE 왜 before하면 새로고침시 에러?, onLoad도 작동 안함?
+              onLoad={e => {
+                console.log('ivs script load', e);
+                setIsReadyIvs(true);
+              }}
+              onError={e => {
+                toastLog('error', 'failed to load ivs script', '', e);
+              }}
+            />
+          </VStack>
+        </MotionBox>
+      )}
+      {isAllReady && <ViewingCSRPage />}
+    </AnimatePresence>
   );
 };
 
