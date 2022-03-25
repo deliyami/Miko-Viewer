@@ -3,25 +3,26 @@ import * as cam from '@mediapipe/camera_utils';
 import '@mediapipe/control_utils';
 import '@mediapipe/drawing_utils';
 import { Pose, Results } from '@mediapipe/pose';
-import { model } from '@src/components/viewing/avatar/GlobalModel';
-import { motion } from '@src/components/viewing/avatar/GlobalMotion';
-import sendToAllPeers from '@src/helper/sendToAllPeers';
 import { setBorn } from '@src/helper/setBornAvatar';
+import { model } from '@src/state/recoil/modelState';
+import { lastestMotionState } from '@src/state/recoil/motionState';
 import { peerDataListState } from '@src/state/recoil/viewingState';
+import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { useUser } from '@src/state/swr/useUser';
-import { ChatMotionInterface } from '@src/types/ChatMotionType';
 import * as Kalidokit from 'kalidokit';
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 // motion module...? function module? 어찌되었던 and motion algorithm
 const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ mediaStream, myPeerId }) => {
   const webcamRef = useRef<HTMLVideoElement | null>(null);
-  const countRef = useRef<number>(0);
   const camera = useRef<cam.Camera | null>(null);
   const [peers, setPeers] = useRecoilState(peerDataListState);
+  const motionState = useRecoilValue(lastestMotionState);
+  const modelState = useRecoilValue(model);
   const [peerChange, setPeerChange] = useState(false);
   const poseRef = useRef<Pose>(null);
   const pointRef = useRef<number[]>([]);
+  sendMotionForFrames.setPeerId(myPeerId);
 
   const user = useUser();
 
@@ -30,11 +31,11 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
     (results: Results) => {
       if (
         /* eslint-disable */
-        model &&
-        model[myPeerId] &&
-        model[myPeerId].borns &&
-        model[myPeerId].originalBorns &&
-        model[myPeerId].scene &&
+        modelState &&
+        modelState[myPeerId] &&
+        modelState[myPeerId].borns &&
+        modelState[myPeerId].originalBorns &&
+        modelState[myPeerId].scene &&
         results &&
         results.poseLandmarks &&
         results.poseWorldLandmarks &&
@@ -51,17 +52,11 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
           right: results.poseLandmarks[8].x,
         };
         // AVATAR 적절하게 render 호출하는 메소드
-        setBorn(model, myPeerId, poseRig, faceRig);
-        countRef.current += 1;
-        if (peers && countRef.current % 5 === 0 && sendToAllPeers) {
-          countRef.current = 0;
-          const data: ChatMotionInterface = {
-            sender: user.data.name,
-            motion: { pose: poseRig, face: faceRig },
-          };
-          sendToAllPeers(peers, { type: 'motion', data });
+        setBorn(modelState, myPeerId, poseRig, faceRig);
+        if (peers && sendMotionForFrames) {
+          const myMotion = { pose: poseRig, face: faceRig };
+          sendMotionForFrames.setMotionStatus(myMotion);
         }
-        const anotherPeerId = motion.sender;
 
         // const T4 = 0.4;
         // const T5 = 0.5;
@@ -120,6 +115,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
         //   pointRef.current.pop();
         // }
 
+        // onResults에 나온 정점의 주요부분의 y값만 가지고 점수 낼까 생각중
         if (results.poseLandmarks[12].y > results.poseLandmarks[14].y && results.poseLandmarks[11].y > results.poseLandmarks[13].y && pointRef.current.length === 0) {
           console.log('pushing');
           pointRef.current.push(0);
@@ -129,13 +125,13 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
         }
 
         for (const peerId in model) {
-          if (peerId === anotherPeerId && peerId !== myPeerId) {
-            setBorn(model, peerId, motion.motion.pose, motion.motion.face);
+          if (motionState[peerId] && peerId !== myPeerId) {
+            setBorn(modelState, peerId, motionState[peerId].pose, motionState[peerId].face);
           }
         }
       }
     },
-    [peers, user.data],
+    [modelState, peers, user.data],
   );
   function setupMediapipe() {
     const pose = new Pose({

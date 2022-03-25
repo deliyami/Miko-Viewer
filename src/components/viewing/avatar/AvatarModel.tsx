@@ -1,7 +1,9 @@
-import { setModel } from '@src/components/viewing/avatar/GlobalModel';
+import { model } from '@src/state/recoil/modelState';
 import * as BABYLON from 'babylonjs';
 import 'babylonjs-loaders';
+import produce from 'immer';
 import { FC, useEffect, useRef } from 'react';
+import { useSetRecoilState } from 'recoil';
 
 export const AvatarModel: FC<{
   width: number;
@@ -12,6 +14,7 @@ export const AvatarModel: FC<{
 }> = ({ ...props }) => {
   const { width, height, path, peerId, ...rest } = props;
   const reactCanvas = useRef(null);
+  const setModel = useSetRecoilState(model);
   useEffect(() => {
     if (reactCanvas.current) {
       const onSceneReady = (scene: BABYLON.Scene) => {
@@ -42,7 +45,7 @@ export const AvatarModel: FC<{
 
               args[4][27].rotate(new BABYLON.Vector3(0, 1, 0), Math.PI, 2);
               const borns = args[4];
-              const originalBorns = [];
+              const originalBorns: BABYLON.Quaternion[] = [];
               for (let j = 0; j < args[4].length; j++) {
                 originalBorns[j] = args[4][j].rotationQuaternion?.clone();
               }
@@ -50,11 +53,15 @@ export const AvatarModel: FC<{
               for (let j = 0; j < animations.length; j++) {
                 animations[j].stop();
               }
-              setModel(peerId, {
-                borns,
-                originalBorns,
-                scene,
-              });
+              setModel(
+                produce(draft => {
+                  draft[peerId] = {
+                    borns,
+                    originalBorns,
+                    scene,
+                  };
+                }),
+              );
               scene.render();
             },
           );
