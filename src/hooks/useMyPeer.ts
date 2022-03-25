@@ -14,7 +14,7 @@ const useMyPeer = () => {
         // host: '0.peerjs.com', // default 0.peerjs.com
         host: 'localhost', // default 0.peerjs.com
         // port: 443, // default 443
-        port: 9001, // default 443
+        port: 9000, // default 443
         // path: '/', // default '/'
         path: '/myapp', // default '/'
         config: {

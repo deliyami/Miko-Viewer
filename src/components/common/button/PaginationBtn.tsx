@@ -35,15 +35,15 @@ const PaginationBtn: FC<Props> = ({ data: { current_page, last_page }, url }) =>
   return (
     <Center minWidth="container.md">
       <HStack>
-        {curPage != startPage && <PageBtn text="<" onClick={onBeforePageHandler} />}
+        {curPage !== startPage && <PageBtn text="<" onClick={onBeforePageHandler} />}
         {new Array(Math.max(curPage - startPage, 0)).fill(0).map((_, idx) => (
-          <PageBtn text={startPage + idx} onClick={() => onPageChangeHandler(startPage + idx)} />
+          <PageBtn key={idx} text={startPage + idx} onClick={() => onPageChangeHandler(startPage + idx)} />
         ))}
         <PageBtn text={curPage} color="green.400" />
         {new Array(Math.max(lastPage - curPage, 0)).fill(0).map((_, idx) => {
-          return <PageBtn text={curPage + idx + 1} onClick={() => onPageChangeHandler(curPage + idx + 1)} />;
+          return <PageBtn key={idx} text={curPage + idx + 1} onClick={() => onPageChangeHandler(curPage + idx + 1)} />;
         })}
-        {curPage != lastPage && <PageBtn text=">" onClick={onNextPageHandler} />}
+        {curPage !== lastPage && <PageBtn text=">" onClick={onNextPageHandler} />}
       </HStack>
     </Center>
   );
