@@ -13,6 +13,7 @@ import ViewingSideMenuBar from './menu/ViewingSideMenuBar';
 import { AudioAnalyze } from './rightContainer/audioAnalyze/AudioAnalyze';
 import RankingView from './rightContainer/ranking/RankingView';
 import ViewingWindowEventLayout from './ViewingWindowEventLayout';
+import { WithIntervalMotionLayer } from './WithIntervalMotionLayer';
 import { WithIntervalTaskLayer } from './WithIntervalTaskLayer';
 import WithSocketEventLayout from './WithSocketPeerLayer';
 
@@ -51,32 +52,34 @@ const ViewingCSRPage = () => {
   return (
     <ViewingWindowEventLayout>
       <WithSocketEventLayout>
-        <WithIntervalTaskLayer>
-          {donateBallon.map((_, i) => (
-            <DonateBallon key={i} nickname={donate.nickname} coin={donate.coin} content={donate.content} donateScale={75} delay={5000} top={10} left={10} />
-          ))}
-          <HStack width="100vw" minH="100vh" backgroundColor="#181818">
-            <VStack width="full">
-              {IVSPlayer ? (
-                <VideoPlayer />
-              ) : (
-                <Center>
-                  <Text fontSize="7xl" color="whatsapp.100">
-                    Loading Player
-                  </Text>
-                </Center>
-              )}
-              <RoomAvatarView />
-              <ChatMessageInput />
-            </VStack>
-            <VStack width="25vw">
-              <RankingView />
-              <ChatBox />
-              <AudioAnalyze />
-            </VStack>
-            <ViewingSideMenuBar />
-          </HStack>
-        </WithIntervalTaskLayer>
+        <WithIntervalMotionLayer>
+          <WithIntervalTaskLayer>
+            {donateBallon.map((_, i) => (
+              <DonateBallon key={i} nickname={donate.nickname} coin={donate.coin} content={donate.content} donateScale={75} delay={5000} top={10} left={10} />
+            ))}
+            <HStack width="100vw" minH="100vh" backgroundColor="#181818">
+              <VStack width="full">
+                {IVSPlayer ? (
+                  <VideoPlayer />
+                ) : (
+                  <Center>
+                    <Text fontSize="7xl" color="whatsapp.100">
+                      Loading Player
+                    </Text>
+                  </Center>
+                )}
+                <RoomAvatarView />
+                <ChatMessageInput />
+              </VStack>
+              <VStack width="25vw">
+                <RankingView />
+                <ChatBox />
+                <AudioAnalyze />
+              </VStack>
+              <ViewingSideMenuBar />
+            </HStack>
+          </WithIntervalTaskLayer>
+        </WithIntervalMotionLayer>
       </WithSocketEventLayout>
     </ViewingWindowEventLayout>
   );

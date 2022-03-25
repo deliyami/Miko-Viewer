@@ -1,8 +1,9 @@
-import { setMotion } from '@src/components/viewing/avatar/GlobalMotion';
+import { roomMemberMotions } from '@src/state/shareObject/shareMotionObject';
 import { ChatMotionInterface } from '@src/types/ChatMotionType';
 
 const setMotionToAvatar = (id: string, motionData: ChatMotionInterface) => {
-  setMotion(id, motionData.motion.pose, motionData.motion.face);
+  roomMemberMotions[id] = motionData.motion;
+  // setMotion(id, motionData.motion.pose, motionData.motion.face);
 };
 
 export default setMotionToAvatar;
