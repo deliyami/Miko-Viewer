@@ -1,5 +1,6 @@
-import { Center, Text } from '@chakra-ui/react';
 import ErrorBoundary from '@src/components/common/ErrorBoundary';
+import Loading from '@src/components/common/Loading';
+import { FC } from 'react';
 import { withSuspense } from './withSuspenseHOC';
 
 const Layout = ({ children }) => {
@@ -10,12 +11,8 @@ const Layout = ({ children }) => {
   );
 };
 
-const Loading = () => {
-  return (
-    <Center>
-      <Text fontSize="6xl">Loading...</Text>
-    </Center>
-  );
+const CustomLoading: FC = () => {
+  return <Loading></Loading>;
 };
 
-export default withSuspense(Layout, Loading);
+export default withSuspense(Layout, CustomLoading);

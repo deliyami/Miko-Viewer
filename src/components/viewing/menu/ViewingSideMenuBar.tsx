@@ -8,7 +8,7 @@ import { IoSettingsOutline } from 'react-icons/io5';
 import { IconType } from 'react-icons/lib';
 import MyCamera from './MyCamera';
 import SideShop from './sideshop/SideShop';
-import ViewingDrawer from './ViewingDrawer';
+import ViewingSettingDrawer from './ViewingDrawer';
 
 const IconBox: FC<{ text: string; icon: IconType }> = ({ children, text, icon }) => {
   const imperativeRef = useRef(null);
@@ -44,7 +44,7 @@ const ViewingSideMenuBar: FC = () => {
         <MyCamera />
       </IconBox>
       <IconBox icon={IoSettingsOutline} text="設定">
-        <ViewingDrawer />
+        <ViewingSettingDrawer />
       </IconBox>
       <IconBox icon={FiShoppingBag} text="グッズ">
         <SideShop />
