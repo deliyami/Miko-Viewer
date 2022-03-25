@@ -56,7 +56,6 @@ const UserBox: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
       {isOnModel && (
         <>
           <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={MY_AVATAR_ID} antialias></AvatarModel>
-          {mediaStream && <ModelMotion mediaStream={mediaStream}></ModelMotion>}
         </>
       )}
       <Box width="full" position="absolute" top="0" h="2rem" color="white">
@@ -98,8 +97,8 @@ const MyUserBox: FC = () => {
     >
       {isOnModel && (
         <Box overflow="hidden" position="relative">
-          <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={'kirari'} antialias></AvatarModel>
-          {myStream && <ModelMotion mediaStream={myStream}></ModelMotion>}
+          <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={uuid} antialias></AvatarModel>
+          {myStream && <ModelMotion myPeerId={uuid} mediaStream={myStream}></ModelMotion>}
         </Box>
       )}
       <Box width="full" position="absolute" top="0" h="2rem" color="white">
