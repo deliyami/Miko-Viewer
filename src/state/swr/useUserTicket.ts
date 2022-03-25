@@ -1,7 +1,7 @@
 import { CommonDataResponse, CommonFSW, Pagination } from '@src/types/share/common/common';
 import useSWR from 'swr';
+import { UserTicket } from '../../types/share/UserTicket';
 import { fetcher } from '../fetcher';
-import { UserTicket } from './../../types/share/UserTicket';
 import { createFSWQueryString } from './createQueryStringKey';
 import laggy from './middleware/laggy';
 

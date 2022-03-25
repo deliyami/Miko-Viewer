@@ -8,11 +8,11 @@ const Layout = ({ children }) => {
   return (
     <Flex h="110vh" flexDirection="column">
       <MenuBar />
-      <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(5, 1fr)" gap={4}>
+      <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(5, 1fr)">
         <GridItem colSpan={1} shadow="0px -2px 1px gray">
           <NavBar />
         </GridItem>
-        <GridItem colSpan={4} m={4} pb={20}>
+        <GridItem colSpan={4} pb={20}>
           {children}
         </GridItem>
       </Grid>

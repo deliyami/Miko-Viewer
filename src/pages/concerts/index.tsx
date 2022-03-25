@@ -1,5 +1,5 @@
 import { SearchIcon } from '@chakra-ui/icons';
-import { Box, Flex, Heading, HStack, IconButton, Input, Spacer, VStack } from '@chakra-ui/react';
+import { Box, Center, Flex, Heading, HStack, IconButton, Input, Spacer, Text, VStack } from '@chakra-ui/react';
 import PaginationBtn from '@src/components/common/button/PaginationBtn';
 import Category from '@src/components/concert/Category';
 import ConcertList from '@src/components/home/ConcertList';
@@ -54,6 +54,7 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
     per_page: 6,
     search,
   });
+
   return {
     props: {
       data: result?.data ?? null,
@@ -63,6 +64,20 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
 };
 
 export default function ConcertPage({ data, categoryId }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const router = useRouter();
+  const handleDenyAccess = () => {
+    setTimeout(() => {
+      router.push('/');
+    }, 1000);
+  };
+  if (!data) handleDenyAccess();
+  if (!data)
+    return (
+      <Center height="auto" width="full">
+        <Text fontSize="7xl">비정상 접근</Text>
+      </Center>
+    );
+
   return (
     <Flex width="full" justifyContent="center">
       <Box w="1000px">

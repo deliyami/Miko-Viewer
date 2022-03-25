@@ -7,7 +7,7 @@ import LogoutBtn from '../common/button/LogoutBtn';
 
 const MenuLink: FC<{ name: string; url: string }> = ({ name, url }) => {
   return (
-    <Box as="li" listStyleType="none" fontSize="23px" fontWeight="bold" px="20px">
+    <Box as="li" listStyleType="none" fontSize="22px" fontWeight="bold" px="20px">
       <Link href={url}>
         <a>{name}</a>
       </Link>
@@ -32,7 +32,7 @@ const UserData = () => {
               alt="Dan Abramov"
             />
             <Box>
-              <Text fontSize="20px" fontWeight="bold" px={1}>
+              <Text fontSize="19px" fontWeight="bold" px={1}>
                 {data.name}
               </Text>
               <Box>
