@@ -195,7 +195,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
       <video
         ref={webcamRef}
         style={{
-          visibility: 'hidden',
+          display: 'hidden',
           position: 'absolute',
           width: 320,
           height: 240,

@@ -7,6 +7,7 @@ const LottieVideoPlay: FC = () => {
     animationData: videoPlayJson,
     loop: true,
     autoplay: true,
+    className: 'LottieVideoPlay',
   };
 
   const { View } = useLottie(options);
