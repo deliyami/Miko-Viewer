@@ -19,6 +19,7 @@ const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDev
 const streamOptions: MediaStreamConstraints = { audio: true, video: true };
 
 const MotionBox = motion<Omit<BoxProps, 'transition'>>(Box);
+const MotionViewingCSRPage = motion(ViewingCSRPage);
 
 // Prepare 단계를 둠으로써 State 상태 관리
 const ViewingPrepareCSRPage = () => {
@@ -134,9 +135,11 @@ const ViewingPrepareCSRPage = () => {
 
   return (
     <AnimatePresence>
-      {!isAllReady && (
+      {isAllReady ? (
+        <MotionViewingCSRPage key="video-viewing" />
+      ) : (
         <MotionBox
-          key="video-prepare"
+          key="video-viewing"
           // initial={{ x: 0, opacity: 0 }}
           animate={{ x: 0, opacity: 1, backgroundColor: '#000000FF' }}
           exit={{ x: 0, opacity: 0, backgroundColor: '#00000000' }}
@@ -175,7 +178,6 @@ const ViewingPrepareCSRPage = () => {
           </VStack>
         </MotionBox>
       )}
-      {isAllReady && <ViewingCSRPage />}
     </AnimatePresence>
   );
 };

@@ -97,10 +97,10 @@ const MyUserBox: FC = () => {
       backgroundSize="cover"
     >
       {isOnModel && (
-        <>
+        <Box overflow="hidden" position="relative">
           <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={'kirari'} antialias></AvatarModel>
           {myStream && <ModelMotion mediaStream={myStream}></ModelMotion>}
-        </>
+        </Box>
       )}
       <Box width="full" position="absolute" top="0" h="2rem" color="white">
         <Text fontSize="1xl">スコア</Text>
