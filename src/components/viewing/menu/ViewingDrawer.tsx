@@ -1,8 +1,28 @@
-import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Input, useDisclosure } from '@chakra-ui/react';
+import {
+  Button,
+  Divider,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  FormControl,
+  FormLabel,
+  Heading,
+  Switch,
+  useDisclosure,
+} from '@chakra-ui/react';
+import { enterRoomIdAsyncState } from '@src/state/recoil/concertState';
+import { isOnModelState } from '@src/state/recoil/viewingState';
 import React, { forwardRef, useImperativeHandle } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
-const ViewingDrawer = forwardRef((_, ref) => {
+const ViewingSettingDrawer = forwardRef((_, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const enterRoomId = useRecoilValue(enterRoomIdAsyncState);
+  const [isOnModel, setIsOnModel] = useRecoilState(isOnModelState);
 
   useImperativeHandle(ref, () => ({
     open: () => {
@@ -15,10 +35,16 @@ const ViewingDrawer = forwardRef((_, ref) => {
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>Create your account</DrawerHeader>
-
+        <DrawerHeader>設定</DrawerHeader>
         <DrawerBody>
-          <Input placeholder="Type here..." />
+          <Heading size="sm">Room Id :{enterRoomId} </Heading>
+          <Divider my="6" />
+          <FormControl display="flex" alignItems="center">
+            <FormLabel htmlFor="is-on-model" mb="0">
+              Show Avatar
+            </FormLabel>
+            <Switch id="is-on-model" onChange={() => setIsOnModel(prev => !prev)} />
+          </FormControl>
         </DrawerBody>
 
         <DrawerFooter>
@@ -32,6 +58,6 @@ const ViewingDrawer = forwardRef((_, ref) => {
   );
 });
 
-ViewingDrawer.displayName = 'ViewingDrawer';
+ViewingSettingDrawer.displayName = 'ViewingDrawer';
 
-export default ViewingDrawer;
+export default ViewingSettingDrawer;

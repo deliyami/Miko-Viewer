@@ -7,7 +7,7 @@ import { donateState } from '@src/state/recoil/donateState';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import ivsPlayer from '../ivs-player';
-import { TempRoomAvatarView } from './avatar/RoomAvatarView';
+import RoomAvatarView from './avatar/RoomAvatarView';
 import ChatMessageInput from './chat/ChatMessageInput';
 import ViewingSideMenuBar from './menu/ViewingSideMenuBar';
 import { AudioAnalyze } from './rightContainer/audioAnalyze/AudioAnalyze';
@@ -66,10 +66,7 @@ const ViewingCSRPage = () => {
                   </Text>
                 </Center>
               )}
-              {/* <HStack backgroundColor="blue.200" width="80vw" height="20vh"> */}
-              {/* <RoomAvatarView /> */}
-              {/* </HStack> */}
-              <TempRoomAvatarView />
+              <RoomAvatarView />
               <ChatMessageInput />
             </VStack>
             <VStack width="25vw">

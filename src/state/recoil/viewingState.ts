@@ -3,34 +3,34 @@ import { User } from '@src/types/share/User';
 import { DataConnection, MediaConnection } from 'peerjs';
 import { atom } from 'recoil';
 
-const peersArrayState = atom<string[]>({
+export const peersArrayState = atom<string[]>({
   key: 'peersArray',
   default: [],
 });
 
-const myStreamState = atom<MediaStream>({
+export const myStreamState = atom<MediaStream>({
   key: 'myStream',
   default: undefined,
 });
 
-const newMessageState = atom<string>({
+export const newMessageState = atom<string>({
   key: 'newMessage',
   default: '',
 });
 
-const messagesState = atom<ChatMessageInterface[]>({
+export const messagesState = atom<ChatMessageInterface[]>({
   key: 'messages',
   default: [],
 });
 
 type ChatMode = 'public' | 'private';
 
-const chatModeState = atom<ChatMode>({
+export const chatModeState = atom<ChatMode>({
   key: 'chatMode',
   default: 'public',
 });
 
-const isShowChatInputState = atom<boolean>({
+export const isShowChatInputState = atom<boolean>({
   key: 'isShowChatInput',
   default: true,
 });
@@ -42,9 +42,17 @@ export type PeerDataInterface = {
   data?: Pick<User, 'id' | 'avatar' | 'email' | 'name'>;
 };
 
-const peerDataListState = atom<PeerDataInterface[]>({
+export const peerDataListState = atom<PeerDataInterface[]>({
   key: 'peerDataList',
   default: [],
 });
 
-export { peersArrayState, myStreamState, newMessageState, messagesState, chatModeState, peerDataListState, isShowChatInputState };
+export const isReadyIvsState = atom({
+  key: 'ivsScriptLoadedState',
+  default: false,
+});
+
+export const isOnModelState = atom({
+  key: 'isOnModelState',
+  default: true,
+});

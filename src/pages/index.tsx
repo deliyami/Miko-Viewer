@@ -1,11 +1,11 @@
-import { Box, Button, Center, Flex, Heading, VStack } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, VStack } from '@chakra-ui/react';
 import ConcertList from '@src/components/home/ConcertList';
-import ImageSlider from '@src/components/home/ImageSlider';
 import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
 import BasicLayout from '@src/layout/BasicLayout';
 import { Pagination } from '@src/types/share/common/common';
 import { Concert } from '@src/types/share/Concert';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
+import Head from 'next/head';
 import Link from 'next/link';
 import { ReactElement } from 'react';
 
@@ -36,27 +36,30 @@ export const getStaticProps: GetStaticProps<{
 export default function HomePage({ data }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
-      <ImageSlider data={data} />
-      <Flex width="full" justifyContent="center">
-        <Box w="1000px">
-          <VStack align="start" mt={20}>
-            {tabs.map((tab, idx) => (
-              <Box key={idx}>
-                <Heading size="xl" fontSize="50px" my={8}>
-                  {tab.name}
-                </Heading>
-                <ConcertList data={data} />
-                <Center mt={3}>
-                  <Link href={`/concerts`}>
-                    <a>
-                      <Button mt={5}>더보기</Button>
-                    </a>
-                  </Link>
-                </Center>
-              </Box>
-            ))}
-          </VStack>
-        </Box>
+      <Heading size="xl" fontSize="50px" my={5}>
+        RECOMMEND
+      </Heading>
+      <Head>
+        <title key="title">Miko - Homepage</title>
+        <meta property="og:title" content="Miko" key="og:title" />
+      </Head>
+      <Carousel data={data} />
+      <Flex pt={50} width="full" justifyContent="center">
+        <VStack align="start">
+          {tabs.map((tab, idx) => (
+            <Box mb={9} key={idx}>
+              <Heading size="xl" fontSize="50px" my={5}>
+                {tab.name}
+              </Heading>
+              <ConcertList data={data} />
+              <Link href={`/concerts`}>
+                <a>
+                  <Button mt={5}>더보기</Button>
+                </a>
+              </Link>
+            </Box>
+          ))}
+        </VStack>
       </Flex>
     </>
   );
