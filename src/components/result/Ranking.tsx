@@ -1,5 +1,5 @@
 import { Flex, SimpleGrid, Text } from '@chakra-ui/react';
-import { NEST_URL } from '@src/const';
+import { NEST_URL, NEXT_URL } from '@src/const';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -27,7 +27,7 @@ const Ranking = ({ users }) => {
         {users.map((user, key) => {
           return (
             <Flex
-              onClick={() => window.open(`http://localhost:3000/live/${router.query.id}/result/${key + 1}`, '_self')}
+              onClick={() => window.open(`${NEXT_URL}/live/${router.query.id}/result/${key + 1}`, '_self')}
               cursor={'pointer'}
               key={key}
               p={'1.5%'}
