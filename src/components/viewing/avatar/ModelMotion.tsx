@@ -14,7 +14,7 @@ import * as Kalidokit from 'kalidokit';
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 // motion module...? function module? 어찌되었던 and motion algorithm
-const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
+const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ mediaStream, myPeerId }) => {
   const webcamRef = useRef<HTMLVideoElement | null>(null);
   const countRef = useRef<number>(0);
   const camera = useRef<cam.Camera | null>(null);
@@ -24,17 +24,17 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   const pointRef = useRef<number[]>([]);
 
   const user = useUser();
-  const myPeerId = 'kirari';
 
   // AVATAR mediapipe 데이터가 적절하게 나오는 곳
   const onResults = useCallback(
     (results: Results) => {
       if (
+        /* eslint-disable */
         model &&
-        model.kirari &&
-        model.kirari.borns &&
-        model.kirari.originalBorns &&
-        model.kirari.scene &&
+        model[myPeerId] &&
+        model[myPeerId].borns &&
+        model[myPeerId].originalBorns &&
+        model[myPeerId].scene &&
         results &&
         results.poseLandmarks &&
         results.poseWorldLandmarks &&
@@ -129,7 +129,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
         }
 
         for (const peerId in model) {
-          if (peerId === anotherPeerId && peerId !== 'kirari') {
+          if (peerId === anotherPeerId && peerId !== myPeerId) {
             setBorn(model, peerId, motion.motion.pose, motion.motion.face);
           }
         }
@@ -140,6 +140,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
   function setupMediapipe() {
     const pose = new Pose({
       locateFile: file => {
+        // CDN
         return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
       },
     });

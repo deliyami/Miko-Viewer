@@ -1,9 +1,10 @@
+import { MY_AVATAR_ID } from '@src/const';
 import { ChatMotionInterface } from '@src/types/ChatMotionType';
 import { FaceDirection } from '@src/types/FaceDirectionType';
 import * as Kalidokit from 'kalidokit';
 
 const motion: ChatMotionInterface = {
-  sender: 'kirari',
+  sender: MY_AVATAR_ID,
   motion: {
     pose: undefined,
     face: { left: 0, center: 0, right: 0 },

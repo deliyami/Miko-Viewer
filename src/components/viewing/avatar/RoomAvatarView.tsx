@@ -1,7 +1,7 @@
 import { Box, Button, Center, Tag, Text } from '@chakra-ui/react';
 import { AvatarModel } from '@src/components/viewing/avatar/AvatarModel';
 import ModelMotion from '@src/components/viewing/avatar/ModelMotion';
-import { NEXT_URL } from '@src/const';
+import { MY_AVATAR_ID, NEXT_URL } from '@src/const';
 import { latestScoreState } from '@src/state/recoil/scoreState';
 import { isOnModelState, myStreamState, PeerDataInterface, peerDataListState } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
@@ -55,7 +55,7 @@ const UserBox: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
     >
       {isOnModel && (
         <>
-          <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={'kirari'} antialias></AvatarModel>
+          <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={MY_AVATAR_ID} antialias></AvatarModel>
           {mediaStream && <ModelMotion mediaStream={mediaStream}></ModelMotion>}
         </>
       )}

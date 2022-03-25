@@ -1,10 +1,11 @@
+import { MY_AVATAR_ID } from '@src/const';
 import { ChatMotionInterface } from '@src/types/ChatMotionType';
 import { atom } from 'recoil';
 
 // const modelState = atom<{ [peerId: string]: Model }>({
 //   key: "model",
 //   default: {
-//     kirari: {
+//     chulsu: {
 //       borns: undefined,
 //       originalBorns: undefined,
 //       scene: undefined,
@@ -16,7 +17,7 @@ import { atom } from 'recoil';
 const motionState = atom<ChatMotionInterface>({
   key: 'motion',
   default: {
-    sender: 'kirari',
+    sender: MY_AVATAR_ID,
     motion: {
       pose: undefined,
       face: { left: 0, center: 0, right: 0 },
