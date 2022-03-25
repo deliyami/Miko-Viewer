@@ -1,5 +1,6 @@
 import {
   Button,
+  Divider,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -10,7 +11,6 @@ import {
   FormControl,
   FormLabel,
   Heading,
-  Input,
   Switch,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -35,12 +35,10 @@ const ViewingSettingDrawer = forwardRef((_, ref) => {
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>Create your account</DrawerHeader>
-
+        <DrawerHeader>設定</DrawerHeader>
         <DrawerBody>
-          <Input placeholder="Type here..." />
-          <Heading size="md">Room Id :{enterRoomId} </Heading>
-
+          <Heading size="sm">Room Id :{enterRoomId} </Heading>
+          <Divider my="6" />
           <FormControl display="flex" alignItems="center">
             <FormLabel htmlFor="is-on-model" mb="0">
               Show Avatar

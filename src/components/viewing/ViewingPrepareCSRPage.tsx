@@ -26,8 +26,8 @@ const ViewingPrepareCSRPage = () => {
   const [isReadyStream, setIsReadyStream] = useState(false);
   const [isReadyPeer, setIsReadyPeer] = useState(false);
   const [peerError, setPeerError] = useState(undefined);
-
   const [isReadyIvs, setIsReadyIvs] = useRecoilState(isReadyIvsState);
+  // const [isAllReady, setIsAllReady] = useState(isReadyPeer && isReadySocket && isReadyStream && isReadyIvs);
 
   const isAllReady = isReadyPeer && isReadySocket && isReadyStream && isReadyIvs;
 
