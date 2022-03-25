@@ -1,6 +1,5 @@
 import { Box, VStack } from '@chakra-ui/react';
 import AudioAnalyser from '@src/components/result/AudioAnalyser';
-import AudioVisualizer from '@src/components/result/AudioVisualizer';
 import { myStreamState } from '@src/state/recoil/viewingState';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
 import { useRecoilValue } from 'recoil';

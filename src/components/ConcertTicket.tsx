@@ -83,7 +83,7 @@ const HistoryDetail: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
 };
 
 const ConcertTicket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
-  // console.log(userTicket);
+  console.log(userTicket.concert);
   return (
     <Box>
       <HStack as="li" width="full" border="1px solid #efefef" borderRadius="10px" mb="30px">

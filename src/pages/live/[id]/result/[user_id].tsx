@@ -3,15 +3,15 @@ import Charts from '@src/components/result/Charts';
 import Ranking from '@src/components/result/Ranking';
 import SNSModal from '@src/components/result/SNSModal';
 import BasicLayout from '@src/layout/BasicLayout';
-import axios from 'axios';
 import { useRouter } from 'next/router';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect } from 'react';
 
 const result = () => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const router = useRouter();
   const users = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
-  const [rank, setRank] = useState([]);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     const script = document.createElement('script');
     script.src = '//developers.kakao.com/sdk/js/kakao.min.js';
@@ -23,7 +23,7 @@ const result = () => {
       document.body.removeChild(script);
     };
   }, [router.isReady]);
- 
+
   // })
 
   //   function ranking(){

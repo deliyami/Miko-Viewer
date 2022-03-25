@@ -64,10 +64,8 @@ const AudioAnalyser = () => {
   //     setInterval(volumeCallback,2000);
   //   }
   // })
-  useEffect(() => {
-    audioAnalyse();
-  }, []);
   async function audioAnalyse() {
+    // eslint-disable-next-line func-names
     await navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
       const audioContext = new AudioContext();
       // if(test==true){
@@ -84,16 +82,20 @@ const AudioAnalyser = () => {
       function volumeCallback() {
         analyser.getByteTimeDomainData(dataArray);
         let volumeSum = 0;
+        // eslint-disable-next-line no-restricted-syntax
         for (const volume of dataArray) volumeSum += volume;
         // console.log(volumeSum);
         // console.log(Math.round(parseInt(String(volumeSum).slice(2, 5))/10));
-        const volume = parseInt(String(volumeSum).slice(2, 4)) - 30;
-        setAudioData(Math.round(parseInt(String(volumeSum).slice(2, 5))/10));
+        // const volume = parseInt(String(volumeSum).slice(2, 4), 10) - 30;
+        setAudioData(Math.round(parseInt(String(volumeSum).slice(2, 5), 10) / 10));
       }
       setInterval(volumeCallback, 1000);
     });
     // }
   }
+  useEffect(() => {
+    audioAnalyse();
+  }, []);
   // console.log("렌더링");
   return (
     <Box>

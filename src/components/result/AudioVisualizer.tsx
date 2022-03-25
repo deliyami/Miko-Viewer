@@ -1,12 +1,9 @@
-import { Box, Text } from '@chakra-ui/react';
-import audio from '@src/pages/live/[id]/result/audio';
-import { useEffect, useRef, useState } from 'react';
+import { Box } from '@chakra-ui/react';
+import { useEffect, useRef } from 'react';
 
 const AudioVisualizer = ({ audioData }) => {
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
-  const [canvasTag, setCanvasTag] = useState([]);
-  const [ctx, setCtx] = useState();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -18,42 +15,24 @@ const AudioVisualizer = ({ audioData }) => {
 
     const context = canvas.getContext('2d');
     contextRef.current = context;
-    context.fillStyle = "green";
+    context.fillStyle = 'green';
 
-    volumeDraw(audioData);
-    //audioData를 0에서 100까지의 범위로 제한하기
-    
- 
-    function volumeDraw(level){
-        // const value = String(level).slice(0,2);
-
-        console.log(Math.floor(parseInt(level)/10+1));
-        let x = 0;
-        let h = 15;
-        let y = 100;
-        for(let i=3; i<Math.floor(parseInt(level)/10+1); i++){
-            // console.log(Math.floor(parseInt(value)/10));
-            x += 15;
-            h = h+5;
-            y = y-5;
-            context.fillRect(x, y, 10, h);
-        }
+    function volumeDraw(level) {
+      console.log(Math.floor(parseInt(level, 10) / 10 + 1));
+      let x = 0;
+      let h = 15;
+      let y = 100;
+      // eslint-disable-next-line no-plusplus
+      for (let i = 3; i < Math.floor(parseInt(level, 10) / 10 + 1); i++) {
+        // console.log(Math.floor(parseInt(value)/10));
+        x += 15;
+        h += 5;
+        y -= 5;
+        context.fillRect(x, y, 10, h);
+      }
     }
-    setCtx(contextRef.current);
-    setCanvasTag(canvas);
+    volumeDraw(audioData);
   }, [audioData]);
-
-  // function draw() {
-  //     var canvas = document.getElementById('canvas');
-  //     if (ctx) {
-  //     //   var ctx = canvas.getContext('2d');
-
-  //       ctx.fillRect(25, 25, 100, 100);
-  //       ctx.clearRect(45, 45, 60, 60);
-  //       ctx.strokeRect(50, 50, 50, 50);
-  //     }
-  //   }
-
 
   return (
     <Box border={'solid'}>

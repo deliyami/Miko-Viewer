@@ -1,4 +1,5 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import { S3_URL } from '@src/const';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Cart from './Cart';
@@ -18,7 +19,7 @@ const ProductDetail = ({ item }) => {
     <Flex justifyContent={'center'}>
       <Flex>
         <Box w={500} h={500}>
-          <Image boxSize={'full'} src={item.image}></Image>
+          <Image boxSize={'full'} src={`${S3_URL}products/${item.image}`}></Image>
         </Box>
       </Flex>
       <Flex mt={'2.5%'} ml={'2%'} flexDirection={'column'} mr={'8%'} alignItems={'end'}>
