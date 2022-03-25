@@ -1,6 +1,5 @@
 import { Box, Button, Center, Flex, Heading, VStack } from '@chakra-ui/react';
 import ConcertList from '@src/components/home/ConcertList';
-import ImageSlider from '@src/components/home/ImageSlider';
 import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
 import BasicLayout from '@src/layout/BasicLayout';
 import { Pagination } from '@src/types/share/common/common';
@@ -37,7 +36,6 @@ export const getStaticProps: GetStaticProps<{
 export default function HomePage({ data }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
-      <ImageSlider data={data} />
       <Head>
         <title key="title">Miko - Homepage</title>
         <meta property="og:title" content="Miko" key="og:title" />
