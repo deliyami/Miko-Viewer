@@ -1,28 +1,26 @@
-import { Box, Heading, Image, SimpleGrid, Text, VStack } from '@chakra-ui/react';
+import { Box, Heading, Image, SimpleGrid, Spinner, Text, VStack } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
 import { Concert } from '@src/types/share/Concert';
 import Link from 'next/link';
-import { FC } from 'react';
+import { FC, Suspense } from 'react';
 
 const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
   // console.log(concert);
   return (
     <Box className="movie">
-      <Link href="">
-        <VStack>
-          <Link href={`/concerts/${concert.id}`}>
-            <a>
-              <Image boxSize="300px" src={S3_URL + concert.coverImage} />
-              <VStack pt={3}>
-                <Heading size="sm" fontSize="23px">
-                  {concert.title}
-                </Heading>
-                <Text textStyle="body">{concert.artist}</Text>
-              </VStack>
-            </a>
-          </Link>
-        </VStack>
-      </Link>
+      <VStack>
+        <Link href={`/concerts/${concert.id}`}>
+          <a>
+            <Image boxSize="300px" src={S3_URL + concert.coverImage} />
+            <VStack pt={3}>
+              <Heading size="sm" fontSize="23px">
+                {concert.title}
+              </Heading>
+              <Text textStyle="body">{concert.artist}</Text>
+            </VStack>
+          </a>
+        </Link>
+      </VStack>
 
       <style>
         {`
@@ -56,12 +54,13 @@ const ConcertList: FC<{ data: Concert[] }> = ({ data }) => {
   return (
     <div>
       <SimpleGrid columns={[2, null, 3]} spacing={10} width="full">
-        {concerts.length > 0 &&
-          concerts?.map((concert, index) => (
+        <Suspense fallback={<Spinner thickness="3px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />}>
+          {concerts?.map((concert, index) => (
             <Box key={index}>
               <ConcertCard concert={concert} />
             </Box>
           ))}
+        </Suspense>
       </SimpleGrid>
     </div>
   );

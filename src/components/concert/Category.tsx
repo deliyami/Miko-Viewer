@@ -20,7 +20,7 @@ const Category = () => {
   return (
     <Box>
       {cateName.map(({ name, id }) => (
-        <Button onClick={() => setCategory(id)} m="10px" colorScheme="blue">
+        <Button key={id} onClick={() => setCategory(id)} m="10px" colorScheme="blue">
           {name}
         </Button>
       ))}

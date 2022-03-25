@@ -17,7 +17,11 @@ const LogoutBtn = () => {
     }
   };
 
-  return <Button onClick={logoutHandler}>Logout</Button>;
+  return (
+    <Button size="sm" variant="outline" colorScheme="teal" onClick={logoutHandler}>
+      Logout
+    </Button>
+  );
 };
 
 export default LogoutBtn;

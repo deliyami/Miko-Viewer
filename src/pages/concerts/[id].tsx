@@ -1,216 +1,169 @@
-import { Box, Button, Collapse, Heading, HStack, Text, VStack } from '@chakra-ui/react';
-import Footer from '@src/components/home/Footer';
-import MenuBar from '@src/components/home/MenuBar';
+import { Box, Button, Center, Collapse, Flex, Grid, GridItem, Heading, HStack, Image, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue } from '@chakra-ui/react';
+import TicketBox from '@src/components/concert/TicketBox';
 import { S3_URL } from '@src/const';
+import convertDate from '@src/helper/convertDate';
+import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
+import BasicLayout from '@src/layout/BasicLayout';
+import { Pagination } from '@src/types/share/common/common';
 import { Concert } from '@src/types/share/Concert';
 import { Ticket } from '@src/types/share/Ticket';
-import axios from 'axios';
-import React, { FC } from 'react';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { useRouter } from 'next/router';
+import React, { FC, ReactElement, useState } from 'react';
 
-const TicketDate: FC<{ ticket: Ticket }> = ({ ticket }) => {
-  const concert_start_date = ticket.concertStartDate.split('T');
-  const date = concert_start_date[0].split('-');
-  const time = concert_start_date[1].split(':', 2);
-  // console.log(time);
-  // @ts-ignore
-  const d = new Date(concert_start_date);
-  const week = ['日', '月', '火', '水', '木', '金', '土'];
-  const day = week[d.getDay()];
-
-  return (
-    <Box textAlign="center" pl="50px">
-      <Text textStyle="h6">{date[0]}</Text>
-      <Text textStyle="h4">
-        {date[1]}/{date[2]}
-      </Text>
-      <Text textStyle="h6">({day})</Text>
-      <Text textStyle="sub">
-        {time[0]}:{time[1]}
-      </Text>
-    </Box>
-  );
+type Data = {
+  concert?: Pagination<Concert>;
+  tickets?: Pagination<Ticket>;
 };
 
-const TicketDetail: FC<{ ticket: Ticket }> = ({ ticket }) => {
-  // console.log(ticket);
-  const week = ['日', '月', '火', '水', '木', '金', '土'];
-
-  const start_date = ticket.concertStartDate.split('.', 1);
-  const sdate = start_date[0].split('T')[0].split('-');
-  const stime = start_date[0].split('T')[1].split(':', 2);
-  // @ts-ignore
-  const sd = new Date(start_date);
-  const sday = week[sd.getDay()];
-
-  const end_date = ticket.concertEndDate.split('.', 1);
-  const etime = end_date[0].split('T')[1].split(':', 2);
-
-  const archive_end = ticket.archiveEndTime.split('.', 1);
-  const adate = archive_end[0].split('T')[0].split('-');
-  // @ts-ignore
-  const atime = archive_end[0].split('T')[1].split(':', 2);
-  // @ts-ignore
-  const ad = new Date(start_date);
-  const aday = week[ad.getDay()];
-
-  const today = new Date();
-  const sale_start_date = new Date(ticket.saleStartDate);
-  const sale_end_date = new Date(ticket.saleEndDate);
-
-  return (
-    <Box flex="1 1 auto" padding="20px 60px 20px">
-      {new Date(ticket.saleStartDate) < today ? (
-        <>
-          {sale_start_date < today && today < sale_end_date ? (
-            <div>
-              <Box as="span" backgroundColor="#638dff" borderRadius="2px" fontSize="10px" fontWeight="bold" color="white">
-                販売中
-              </Box>
-            </div>
-          ) : (
-            <div>
-              <Box as="span" borderRadius="2px" fontSize="10px" fontWeight="bold">
-                販売終了
-              </Box>
-            </div>
-          )}
-          <div>
-            <a href="https://viewing.live.line.me/channels/6104428/upcoming/18486965">配信チケット</a>
-          </div>
-          <dl>
-            <dt>販売期間</dt>
-            <dd>
-              {sdate[0]}/{sdate[1]}/{sdate[2]}({sday}) {stime[0]}:{stime[1]} - {etime[0]}:{etime[1]}
-            </dd>
-            <dt>アーカイブ視聴期間</dt>
-            <dd>
-              {adate[0]}/{adate[1]}/{adate[2]}({aday}) {atime[0]}:{atime[1]} まで
-            </dd>
-          </dl>
-          <div>※チケット代(3,500円)に別途システム利用料(220円)が必要となります。</div>
-        </>
-      ) : (
-        <div>
-          <Text m={12}>まだチケット購入期間ではありません。</Text>
-        </div>
-      )}
-    </Box>
-  );
-};
-
-const TicketPrice = ({ ticket }) => {
-  console.log(ticket);
+const TicketList: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
+  // console.log('Ticket List', tickets[1]);
+  const router = useRouter();
+  const saleId = parseInt(router.query.sale as string);
   const today = new Date();
 
   return (
     <>
-      {new Date(ticket.sale_start_date) < today ? (
-        <Box display="flex" alignItems="center" pr="40px">
-          <div>¥{ticket.price}</div>
-          <button>購入</button>
+      {!tickets[0] && (
+        <Center>
+          <Text>티켓없음.</Text>
+        </Center>
+      )}
+      {tickets?.map(ticket => (
+        <Box key={ticket.id}>
+          {saleId === 1
+            ? new Date(ticket.concertEndDate) < today && (
+                <Box _hover={{ bg: '#FFF5F5' }}>
+                  <TicketBox data={ticket} />
+                </Box>
+              )
+            : new Date(ticket.concertEndDate) > today && (
+                <Box _hover={{ bg: '#EBF8FF' }}>
+                  <TicketBox data={ticket} />
+                </Box>
+              )}
         </Box>
-      ) : (
-        <div></div>
-      )}
+      ))}
     </>
   );
 };
 
-const TicketBox = ({ ticket }) => {
-  // console.log(ticket);
-  const today = new Date();
-
-  return (
-    <>
-      <HStack as="li" width="full" border="1px solid #efefef" borderRadius="10px">
-        <TicketDate ticket={ticket} />
-        <TicketDetail ticket={ticket} />
-        <TicketPrice ticket={ticket} />
-      </HStack>
-    </>
-  );
-};
-
-const LiveInformation = ({ data }) => {
-  const concert = data.data as Concert;
+const LiveInformation: FC<{ data: Concert }> = ({ data: concert }) => {
+  // console.log(concert.detail.length);
   const [show, setShow] = React.useState(false);
   const handleToggle = () => setShow(!show);
 
-  // console.log(concert);
-  const week = ['日', '月', '火', '水', '木', '金', '土'];
-  const start_date = concert.allConcertStartDate.split('T');
-  const date = start_date[0].split('T')[0].split('-');
-  // @ts-ignore
-  const d = new Date(start_date);
-  const day = week[d.getDay()];
+  const startDate = convertDate(concert.allConcertStartDate, 'YMDHM');
+  const endDate = convertDate(concert.allConcertEndDate, 'YMDHM');
 
   return (
     <Box>
-      <Heading fontWeight="800" my="10px">
-        {concert.title}
-      </Heading>
-      <HStack justifyContent="center">
-        <Box w="400px" mb="20px">
-          <img src={S3_URL + concert.coverImage} srcSet={S3_URL + concert.coverImage} alt="ディズニー・オン・クラシック ～まほうの夜の音楽会 2021" />
+      <Flex>
+        <Image borderRadius="2%" width="350px" src={S3_URL + concert.coverImage} fallbackSrc="" alt="Concert Image" />
+        <Box alignItems="top" pl={12} flex="1">
+          <HStack mb={5} spacing={3}>
+            <Heading fontWeight="700">{concert.title}</Heading>
+            <Text pt={3}>{concert.artist}</Text>
+          </HStack>
+          <Grid h="200px" templateRows="repeat(2, 1fr)" templateColumns="repeat(5, 1fr)" gap={4}>
+            <GridItem rowSpan={2} colSpan={1}>
+              <Text fontWeight="500">公演期間</Text>
+              <Text fontWeight="500">公演内容</Text>
+            </GridItem>
+            <GridItem rowSpan={2} colSpan={4}>
+              <Text fontWeight="440">
+                {startDate} ~ {endDate}
+              </Text>
+              <div>
+                <Collapse startingHeight={20} in={show}>
+                  <Text fontWeight="440">{concert.content}</Text>
+                </Collapse>
+                {concert.content.length > 50 && (
+                  <Button size="sm" onClick={handleToggle} mt={2} fontSize="16px" borderRadius="2px">
+                    詳細情報を{show ? '閉じる' : '見る'}
+                  </Button>
+                )}
+              </div>
+            </GridItem>
+          </Grid>
         </Box>
-        <Box w="800px" mr="20px">
-          <div>
-            <div>{concert.artist}</div>
-            <div>
-              {date[0]}/{date[1]}/{date[2]} ({day})
-            </div>
-            <div>공연시간 150분</div>
-            <div>
-              <Collapse startingHeight={20} in={show}>
-                {concert.detail}
-              </Collapse>
-              <Button size="sm" onClick={handleToggle} mt="1rem">
-                Show {show ? 'Less' : 'More'}
-              </Button>
-            </div>
-          </div>
-        </Box>
-      </HStack>
+      </Flex>
     </Box>
   );
 };
 
-const LiveDetailPage = ({ concert, tickets }) => {
-  // console.log(tickets);
+export const getServerSideProps: GetServerSideProps<Data> = async context => {
+  const concertId = context.query.id as string;
+  const CONCERT_URL_CONCERTS = `/concerts/${concertId}`;
+  const TICKET_URL_CONCERTS = `/tickets`;
 
-  const ticket_data = tickets.data;
+  const concertData = await getDataFromLaravel<Pagination<Concert>>(CONCERT_URL_CONCERTS);
+  const ticketsData = await getDataFromLaravel<Pagination<Ticket>>(TICKET_URL_CONCERTS, {
+    filter: [['concert_id', concertId]],
+  });
+
+  return {
+    props: {
+      concert: concertData?.data ?? null,
+      tickets: ticketsData?.data ?? null,
+    },
+  };
+};
+
+export default function LiveDetailPage({ concert, tickets }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const router = useRouter();
+  const concertId = router.query.id as string;
+  const saleId = parseInt(router.query.sale as string);
+
+  const handleDenyAccess = () => {
+    setTimeout(() => {
+      router.push('/concerts');
+    }, 1000);
+  };
+
+  if (!concert) handleDenyAccess();
+  if (!concert)
+    return (
+      <Center height="auto" width="full">
+        <Text fontSize="7xl">비정상 접근</Text>
+      </Center>
+    );
+
+  const onClickSale = clickId => {
+    router.push(`/concerts/${concertId}?sale=${clickId}`);
+  };
+  const colors = useColorModeValue(['blue', 'red'], []);
+  const [tabIndex, setTabIndex] = useState(saleId);
+  const colorScheme = colors[tabIndex];
+  // console.log(bg);
 
   return (
-    <Box>
-      <MenuBar></MenuBar>
-      {/* <HStack justifyContent="space-between" py="40px" px="20px">
-      </HStack> */}
-      <Box py="50px" px="40px" width="1250px">
-        <LiveInformation data={concert} />
-        <VStack width="full" alignItems="flex-start">
-          <Text as="h2" textStyle="h3" mt="50px" mb="10px">
-            チケット一覧
-          </Text>
-          {ticket_data.length > 0 &&
-            ticket_data?.map(ticket => (
-              <>
-                <div key={ticket.id}>
-                  <TicketBox ticket={ticket} />
-                </div>
-              </>
-            ))}
-        </VStack>
+    <Flex justifyContent="center">
+      <Box w="1000px">
+        <LiveInformation data={concert.data} />
+        <Tabs my={7} defaultIndex={saleId || 0} onChange={index => setTabIndex(index)} colorScheme={colorScheme}>
+          <TabList>
+            <Tab color="gray" onClick={() => onClickSale(0)}>
+              販売中
+            </Tab>
+            <Tab color="gray" onClick={() => onClickSale(1)}>
+              販売終了
+            </Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <TicketList data={tickets.data} />
+            </TabPanel>
+            <TabPanel>
+              <TicketList data={tickets.data} />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </Box>
-      <Footer></Footer>
-    </Box>
+    </Flex>
   );
-};
+}
 
-LiveDetailPage.getInitialProps = async context => {
-  const { id } = context.query;
-  const { data: concert } = await axios.get(`http://localhost:8080/api/concerts/${id}`);
-  const { data: tickets } = await axios.get(`http://localhost:8080/api/tickets?filter=concert_id%3A${id}`);
-  return { concert, tickets };
+LiveDetailPage.getLayout = function getLayout(page: ReactElement) {
+  return <BasicLayout>{page}</BasicLayout>;
 };
-
-export default LiveDetailPage;
