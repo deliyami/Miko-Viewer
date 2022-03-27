@@ -13,9 +13,9 @@ import { atom } from 'recoil';
 //   //   default: undefined,
 // });
 
-const lastestMotionState = atom<{ [peerId: string]: MotionInterface }>({
+const latestMotionState = atom<{ [peerId: string]: MotionInterface }>({
   key: 'motion',
   default: {},
 });
 
-export { lastestMotionState };
+export { latestMotionState };

@@ -5,7 +5,7 @@ import '@mediapipe/drawing_utils';
 import { Pose, Results } from '@mediapipe/pose';
 import { setBorn } from '@src/helper/setBornAvatar';
 import { model } from '@src/state/recoil/modelState';
-import { lastestMotionState } from '@src/state/recoil/motionState';
+import { latestMotionState } from '@src/state/recoil/motionState';
 import { peerDataListState } from '@src/state/recoil/viewingState';
 import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { useUser } from '@src/state/swr/useUser';
@@ -17,7 +17,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
   const webcamRef = useRef<HTMLVideoElement | null>(null);
   const camera = useRef<cam.Camera | null>(null);
   const [peers, setPeers] = useRecoilState(peerDataListState);
-  const motionState = useRecoilValue(lastestMotionState);
+  const motionState = useRecoilValue(latestMotionState);
   const modelState = useRecoilValue(model);
   const [peerChange, setPeerChange] = useState(false);
   const poseRef = useRef<Pose>(null);
@@ -52,7 +52,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
           right: results.poseLandmarks[8].x,
         };
         // AVATAR 적절하게 render 호출하는 메소드
-        setBorn(modelState, myPeerId, poseRig, faceRig);
+        setBorn(modelState[myPeerId], myPeerId, poseRig, faceRig);
         if (peers && sendMotionForFrames) {
           const myMotion = { pose: poseRig, face: faceRig };
           sendMotionForFrames.setMotionStatus(myMotion);
@@ -124,14 +124,15 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
           pointRef.current.pop();
         }
 
-        for (const peerId in model) {
-          if (motionState[peerId] && peerId !== myPeerId) {
-            setBorn(modelState, peerId, motionState[peerId].pose, motionState[peerId].face);
-          }
-        }
+        // for (const peerId in modelState) {
+        //   console.log('thisismodelmotion', peerId, peerId !== myPeerId, motionState[peerId]);
+        //   if (motionState[peerId] && peerId !== myPeerId) {
+        //     setBorn(modelState, peerId, motionState[peerId].pose, motionState[peerId].face);
+        //   }
+        // }
       }
     },
-    [modelState, peers, user.data],
+    [motionState, modelState, peers, user.data],
   );
   function setupMediapipe() {
     const pose = new Pose({
