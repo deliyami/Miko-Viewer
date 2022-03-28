@@ -29,7 +29,6 @@ const OneTicket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
 
 const UserTicketList: FC<{ userTickets: UserTicket[]; cate: number }> = ({ userTickets, cate }) => {
   // console.log(userTickets[0].isUsed == cate);
-  console.log();
   return (
     <>
       <Box>{userTickets.map(userTicket => userTicket.isUsed === cate && <OneTicket key={userTicket.id} userTicket={userTicket} />)}</Box>

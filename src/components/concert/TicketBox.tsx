@@ -2,6 +2,7 @@ import { Box, Button, Center, Divider, Flex, Grid, GridItem, HStack, Text } from
 import convertDate from '@src/helper/convertDate';
 import { Ticket } from '@src/types/share/Ticket';
 import React, { FC } from 'react';
+import TicketModal from './TicketModal';
 
 const TicketDate: FC<{ data: Ticket }> = ({ data: ticket }) => {
   const startDate = convertDate(ticket.concertStartDate, 'YMDHM');
@@ -84,9 +85,7 @@ const TicketPrice: FC<{ data: Ticket }> = ({ data: ticket }) => {
             <Text fontWeight="600" fontSize="xl">
               ¥{ticket.price}
             </Text>
-            <Button color="white" bg="#4299E1" width="65px" variant="solid" borderRadius={15} _hover={{ bg: '#2B6CB0' }}>
-              購入
-            </Button>
+            <TicketModal data={ticket} />
           </HStack>
         </Box>
       )}
