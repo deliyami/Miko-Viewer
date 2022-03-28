@@ -8,10 +8,12 @@ import { model } from '@src/state/recoil/modelState';
 import { latestMotionState } from '@src/state/recoil/motionState';
 import { peerDataListState } from '@src/state/recoil/viewingState';
 import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
+import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
 import { useUser } from '@src/state/swr/useUser';
 import * as Kalidokit from 'kalidokit';
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+
 // motion module...? function module? 어찌되었던 and motion algorithm
 const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ mediaStream, myPeerId }) => {
   const webcamRef = useRef<HTMLVideoElement | null>(null);
@@ -22,7 +24,6 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
   const [peerChange, setPeerChange] = useState(false);
   const poseRef = useRef<Pose>(null);
   const pointRef = useRef<number[]>([]);
-  sendMotionForFrames.setPeerId(myPeerId);
 
   const user = useUser();
 
@@ -58,6 +59,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
           sendMotionForFrames.setMotionStatus(myMotion);
         }
 
+        // 이것도 팔 올렸다 내렸다가 되는데 팔 각도를 계산하기 어렵고 예외인 부분까지 팔을 꺾어봐야 해서... 불완전함
         // const T4 = 0.4;
         // const T5 = 0.5;
         // const T6 = 0.6;
@@ -122,6 +124,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
         } else if (results.poseLandmarks[16].y > results.poseLandmarks[12].y && results.poseLandmarks[15].y > results.poseLandmarks[11].y && pointRef.current.length !== 0) {
           console.log('popping');
           pointRef.current.pop();
+          addedScoreForSeconds.addScore(Math.floor(Math.random() * 101) + 100);
         }
 
         // for (const peerId in modelState) {

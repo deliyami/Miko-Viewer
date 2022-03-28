@@ -15,6 +15,7 @@ export const WithIntervalMotionLayer: FC = ({ children }) => {
   const socket = useSocket();
   const peers = useRecoilValue(peerDataListState);
   const modelState = useRecoilValue(model);
+  sendMotionForFrames.setPeerId(user.uuid);
 
   const setLatestMotionState = useSetRecoilState(latestMotionState);
 
