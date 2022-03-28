@@ -15,6 +15,8 @@ const bornReset = (borns: BABYLON.TransformNode[], originalBorns: BABYLON.Quater
 
 /**
  *
+ * 회전하는데 있어서, '구면좌표계'검색해서 회전하는 방식?을 염두해야함
+ *
  * @param transBorn 모델링
  * @param bornNum 모델링의 처음 시작하는 부분
  * @param kalidoRig 관절 회전 값의 오브젝트, xyz키를 가진 배열...?
