@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, VStack } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, Heading, VStack } from '@chakra-ui/react';
 import ConcertList from '@src/components/home/ConcertList';
 import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
 import BasicLayout from '@src/layout/BasicLayout';
@@ -36,14 +36,32 @@ export const getStaticProps: GetStaticProps<{
 export default function HomePage({ data }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
-      <Heading size="xl" fontSize="50px" my={5}>
-        RECOMMEND
-      </Heading>
       <Head>
         <title key="title">Miko - Homepage</title>
         <meta property="og:title" content="Miko" key="og:title" />
       </Head>
-      <Carousel data={data} />
+<<<<<<< Updated upstream
+      <Flex width="full" justifyContent="center">
+        <Box w="1000px">
+          <VStack align="start" mt={20}>
+            {tabs.map((tab, idx) => (
+              <Box key={idx}>
+                <Heading size="xl" fontSize="50px" my={8}>
+                  {tab.name}
+                </Heading>
+                <ConcertList data={data} />
+                <Center mt={3}>
+                  <Link href={`/concerts`}>
+                    <a>
+                      <Button mt={5}>더보기</Button>
+                    </a>
+                  </Link>
+                </Center>
+              </Box>
+            ))}
+          </VStack>
+        </Box>
+=======
       <Flex pt={50} width="full" justifyContent="center">
         <VStack align="start">
           {tabs.map((tab, idx) => (
@@ -60,6 +78,7 @@ export default function HomePage({ data }: InferGetStaticPropsType<typeof getSta
             </Box>
           ))}
         </VStack>
+>>>>>>> Stashed changes
       </Flex>
     </>
   );

@@ -3,12 +3,18 @@ import { FaceDirection } from './FaceDirectionType';
 
 interface ChatMotionInterface {
   sender: string;
-  motion: {
-    pose: Kalidokit.TPose;
-    face: FaceDirection<'left' | 'center' | 'right', number>;
-    // face: { [key in "left" | "center" | "right"]: number };
-  };
+  motion: MotionInterface;
+  // motion: {
+  //   pose: Kalidokit.TPose;
+  //   face: FaceDirection<'left' | 'center' | 'right', number>;
+  //   // face: { [key in "left" | "center" | "right"]: number };
+  // };
   amount?: number;
+}
+interface MotionInterface {
+  pose: Kalidokit.TPose;
+  face: FaceDirection<'left' | 'center' | 'right', number>;
+  // face: { [key in "left" | "center" | "right"]: number };
 }
 
 // type FaceDirection<K extends keyof any, T> = {
@@ -16,3 +22,4 @@ interface ChatMotionInterface {
 // };
 
 export type { ChatMotionInterface };
+export type { MotionInterface };

@@ -9,6 +9,8 @@ export const categoryArray = ['J-POP', 'K-POP', '애니메이션', '재즈/소�
 
 export const S3_URL = 'https://miko-image.s3.ap-northeast-2.amazonaws.com/';
 
+export const MY_AVATAR_ID = 'kirari'; // 이거 변경하면 @src/components/viewing/GlobalModel.ts에 default value변경해야함
+
 // Env
 const ENV_PREFIX = 'NEXT_PUBLIC_';
 
