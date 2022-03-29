@@ -46,7 +46,7 @@ const RankingView: FC = () => {
           return (
             <HStack key={index}>
               <Text>
-                {index + 1}位: {element.value === user.uuid && user.name}, {element.score}点
+                {index + 1}位: {element.value}, {element.score}点
               </Text>
             </HStack>
           );
