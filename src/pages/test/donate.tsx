@@ -1,15 +1,14 @@
-import { HStack } from '@chakra-ui/react';
-import DonateBallon from '@src/components/viewing/donateBallon/DonateBallon';
-import { FC } from 'react';
+import { Center } from '@chakra-ui/react';
+import { DonateOption } from '@src/components/viewing/chat/DonateOption';
+import { useState } from 'react';
 
-const Donate: FC = () => {
+const Donate = () => {
+  const [amount, setAmount] = useState<number>(0);
+  const [itemId, setItemId] = useState<number>(-1);
   return (
-    <>
-      <HStack>
-        <DonateBallon path="addland_heatfav_v2"></DonateBallon>
-      </HStack>
-      <div>yaho</div>
-    </>
+    <Center>
+      <DonateOption amount={amount} itemId={itemId} setAmount={setAmount} setItemId={setItemId}></DonateOption>
+    </Center>
   );
 };
 

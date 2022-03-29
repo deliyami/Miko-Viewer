@@ -1,3 +1,10 @@
+interface DonateInterface {
+  sender: string;
+  amount?: number;
+  itemId?: number;
+  timestamp: number;
+}
+
 type DonateIconName =
   | 'GreenHeart'
   | 'AvatarIcon'
@@ -24,4 +31,4 @@ type DonateProps = {
   autoplay?: boolean;
   width?: string;
 };
-export type { DonateIconName, DonateProps };
+export type { DonateInterface, DonateIconName, DonateProps };

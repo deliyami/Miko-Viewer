@@ -12,6 +12,7 @@ import Heart from '@src/components/viewing/chat/icon/json/Heart.json';
 import HelloWorld from '@src/components/viewing/chat/icon/json/HelloWorld.json';
 import Melting from '@src/components/viewing/chat/icon/json/Melting.json';
 import Mental from '@src/components/viewing/chat/icon/json/Mental.json';
+import MoneyRain from '@src/components/viewing/chat/icon/json/MoneyRain.json';
 import Night from '@src/components/viewing/chat/icon/json/Night.json';
 import StarBurst from '@src/components/viewing/chat/icon/json/StarBurst.json';
 import UFO from '@src/components/viewing/chat/icon/json/UFO.json';
@@ -34,4 +35,5 @@ export const JSONExporter = {
   Night,
   Chart,
   StarBurst,
+  MoneyRain,
 };
