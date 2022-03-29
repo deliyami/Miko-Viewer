@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { Flex, Image, Text } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
 
