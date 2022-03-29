@@ -3,6 +3,7 @@ import sendToAllPeers from '@src/helper/sendToAllPeers';
 import showChatToRoom from '@src/helper/showChatToRoom';
 import useSocket from '@src/hooks/useSocket';
 import { chatModeState, isShowChatInputState, peerDataListState } from '@src/state/recoil/viewingState';
+import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
 import { useUser } from '@src/state/swr/useUser';
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import { FormEvent, KeyboardEventHandler, useRef, useState } from 'react';
@@ -28,6 +29,7 @@ const ChatMessageInput = () => {
 
   const sendMessage = () => {
     if (!newMessage) return;
+    addedScoreForSeconds.addScore(1);
 
     const data: ChatMessageInterface = {
       sender: user.data.name,
