@@ -1,5 +1,6 @@
-import { Box, Button, Container, Input, Radio, RadioGroup, Stack, Text } from '@chakra-ui/react';
-import { USER_TICKET_COOKIE } from '@src/const';
+import { Box, Button, Center, Divider, Flex, Grid, GridItem, Heading, HStack, Image, Input, Radio, RadioGroup, Stack } from '@chakra-ui/react';
+import { S3_URL, USER_TICKET_COOKIE } from '@src/const';
+import convertDate from '@src/helper/convertDate';
 import { setCookie } from '@src/helper/setCookie';
 import BasicLayout from '@src/layout/BasicLayout';
 import { curUserTicketState, enterRoomIdState } from '@src/state/recoil/concertState';
@@ -19,7 +20,7 @@ const EnterRoomBtn = () => {
     router.push('/live/viewing', '', { shallow: false });
   };
 
-  return <Button onClick={enterHandler}>입장하기</Button>;
+  return <Button onClick={enterHandler}>入場する</Button>;
 };
 
 const PrivateRoomIdInput = () => {
@@ -37,10 +38,12 @@ const PrivateRoomIdInput = () => {
   };
 
   return (
-    <Box>
+    <HStack my={5}>
       <Input value={roomId} isInvalid={roomId?.length !== 21} contentEditable="false" onChange={e => setRoomId(e.target.value)} />
-      <Button onClick={createRoomIdHandler}>생성</Button>
-    </Box>
+      <Button colorScheme="green" onClick={createRoomIdHandler}>
+        ID 生成
+      </Button>
+    </HStack>
   );
 };
 
@@ -57,7 +60,7 @@ const RoomSelect = () => {
   };
 
   return (
-    <Box>
+    <Box my={5}>
       <RadioGroup value={radioValue} onChange={radioChangeHandler}>
         <Stack spacing={5} direction="row">
           <Radio colorScheme="red" value="public">
@@ -75,13 +78,44 @@ const RoomSelect = () => {
 
 const CurEnterInfo: FC<{ ticket: Ticket; concert: Concert }> = ({ ticket, concert }) => {
   console.log('concert', concert);
+  const startDate = convertDate(ticket.concertStartDate, 'YMDHM'); // 티켓 시작날
+
   return (
-    <Box>
-      <Text>{concert.title}</Text>
-      <Text>{concert.artist}</Text>
-      <Text>{concert.categoryId}</Text>
-      <Text>{ticket.price}</Text>
-    </Box>
+    <Flex justifyContent="center">
+      <Box>
+        <Image w="350px" h="350px" src={S3_URL + concert.coverImage} fallbackSrc="https://via.placeholder.com/300" />
+        <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(6, 1fr)">
+          <GridItem rowSpan={1} colSpan={2}>
+            <Heading as="h5" size="sm" my={2}>
+              Title
+            </Heading>
+            <Heading as="h5" size="sm" my={2}>
+              Artist
+            </Heading>
+            <Heading as="h5" size="sm" my={2}>
+              公演の日付
+            </Heading>
+            <Heading as="h5" size="sm" my={2}>
+              公演時間
+            </Heading>
+          </GridItem>
+          <GridItem rowSpan={1} colSpan={4}>
+            <Heading as="h5" size="sm" my={2}>
+              {concert.title}
+            </Heading>
+            <Heading as="h5" size="sm" my={2}>
+              {concert.artist}
+            </Heading>
+            <Heading as="h5" size="sm" my={2}>
+              {startDate}時
+            </Heading>
+            <Heading as="h5" size="sm" my={2}>
+              {ticket.runningTime}分
+            </Heading>
+          </GridItem>
+        </Grid>
+      </Box>
+    </Flex>
   );
 };
 
@@ -99,11 +133,17 @@ const RoomEnterPage = props => {
   }, [router.isReady]);
 
   return (
-    <Container>
-      {curUserTicket ? <CurEnterInfo ticket={curUserTicket.ticket} concert={curUserTicket.concert} /> : 'no'}
-      <RoomSelect />
-      <EnterRoomBtn />
-    </Container>
+    <Flex width="full" justifyContent="center">
+      <Box width="400px">{curUserTicket ? <CurEnterInfo ticket={curUserTicket.ticket} concert={curUserTicket.concert} /> : 'no'}</Box>
+      <Center height="500px" mx={14}>
+        <Divider orientation="vertical" />
+      </Center>
+      <Box width="400px" mt={20}>
+        <Heading>コンサート入場</Heading>
+        <RoomSelect />
+        <EnterRoomBtn />
+      </Box>
+    </Flex>
   );
 };
 

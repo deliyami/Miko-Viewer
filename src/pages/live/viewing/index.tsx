@@ -36,8 +36,8 @@ const ViewingPage = () => {
   return (
     <Container height="auto" width="full">
       <Head>
-        <title>Miko Viewing Pate</title>
-        {/* <script src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js" async></script> */}
+        <title>Miko Viewing Page</title>
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" />
       </Head>
 
       <DynamicViewingPage />

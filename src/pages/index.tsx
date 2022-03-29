@@ -1,5 +1,4 @@
-import { Box, Button, Flex, Heading, VStack } from '@chakra-ui/react';
-import Carousel from '@src/components/home/Carousel';
+import { Box, Button, Center, Flex, Heading, VStack } from '@chakra-ui/react';
 import ConcertList from '@src/components/home/ConcertList';
 import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
 import BasicLayout from '@src/layout/BasicLayout';
@@ -11,7 +10,6 @@ import Link from 'next/link';
 import { ReactElement } from 'react';
 
 const tabs = [
-  { id: 'recommend', name: 'RECOMMEND' },
   { id: 'ranking', name: 'RANKING' },
   { id: 'new', name: 'NEW' },
 ];
@@ -24,6 +22,7 @@ export const getStaticProps: GetStaticProps<{
   //  getStaticProps에 대해서는 서버 에러일때를 생각하고 에러 핸들링
   const result = await getDataFromLaravel<Pagination<Concert>>('/concerts', {
     per_page: 3,
+    sort: ['-id'],
   });
 
   return {
@@ -37,30 +36,30 @@ export const getStaticProps: GetStaticProps<{
 export default function HomePage({ data }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
-      <Heading size="xl" fontSize="50px" my={5}>
-        RECOMMEND
-      </Heading>
       <Head>
         <title key="title">Miko - Homepage</title>
         <meta property="og:title" content="Miko" key="og:title" />
       </Head>
-      <Carousel data={data} />
-      <Flex pt={50} width="full" justifyContent="center">
-        <VStack align="start">
-          {tabs.map((tab, idx) => (
-            <Box mb={9} key={idx}>
-              <Heading size="xl" fontSize="50px" my={5}>
-                {tab.name}
-              </Heading>
-              <ConcertList data={data} />
-              <Link href={`/concerts`}>
-                <a>
-                  <Button mt={5}>더보기</Button>
-                </a>
-              </Link>
-            </Box>
-          ))}
-        </VStack>
+      <Flex width="full" justifyContent="center">
+        <Box w="1000px">
+          <VStack align="start" mt={20}>
+            {tabs.map((tab, idx) => (
+              <Box key={idx}>
+                <Heading size="xl" fontSize="50px" my={8}>
+                  {tab.name}
+                </Heading>
+                <ConcertList data={data} />
+                <Center mt={3}>
+                  <Link href={`/concerts`}>
+                    <a>
+                      <Button mt={5}>더보기</Button>
+                    </a>
+                  </Link>
+                </Center>
+              </Box>
+            ))}
+          </VStack>
+        </Box>
       </Flex>
     </>
   );

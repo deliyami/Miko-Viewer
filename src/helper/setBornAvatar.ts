@@ -15,6 +15,8 @@ const bornReset = (borns: BABYLON.TransformNode[], originalBorns: BABYLON.Quater
 
 /**
  *
+ * 회전하는데 있어서, '구면좌표계'검색해서 회전하는 방식?을 염두해야함
+ *
  * @param transBorn 모델링
  * @param bornNum 모델링의 처음 시작하는 부분
  * @param kalidoRig 관절 회전 값의 오브젝트, xyz키를 가진 배열...?
@@ -72,8 +74,8 @@ const faceTurn = (transBorn: BABYLON.TransformNode[], faceFront: number, faceLef
   transBorn[7].rotate(new BABYLON.Vector3(0, 1, 0), -(Math.atan2(avg, faceFront) - Math.PI / 4) * 10, 2);
 };
 
-export const setBorn = (model: { [peerId: string]: Model }, peerId: string, poseRig: Kalidokit.TPose, faceRig: FaceDirection<'left' | 'center' | 'right', number>) => {
-  const userBorns = model[peerId];
+export const setBorn = (userBorns: Model, peerId: string, poseRig: Kalidokit.TPose, faceRig: FaceDirection<'left' | 'center' | 'right', number>) => {
+  // const userBorns = model[peerId];
   // AVATAR 적절하게 가공하는 곳
   bornReset(userBorns.borns, userBorns.originalBorns);
   bornTurn(userBorns.borns, 15, poseRig, 0);

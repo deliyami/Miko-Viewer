@@ -3,38 +3,40 @@ import * as cam from '@mediapipe/camera_utils';
 import '@mediapipe/control_utils';
 import '@mediapipe/drawing_utils';
 import { Pose, Results } from '@mediapipe/pose';
-import { model } from '@src/components/viewing/avatar/GlobalModel';
-import { motion } from '@src/components/viewing/avatar/GlobalMotion';
-import sendToAllPeers from '@src/helper/sendToAllPeers';
 import { setBorn } from '@src/helper/setBornAvatar';
+import { model } from '@src/state/recoil/modelState';
+import { latestMotionState } from '@src/state/recoil/motionState';
 import { peerDataListState } from '@src/state/recoil/viewingState';
+import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
+import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
 import { useUser } from '@src/state/swr/useUser';
-import { ChatMotionInterface } from '@src/types/ChatMotionType';
 import * as Kalidokit from 'kalidokit';
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+
 // motion module...? function module? 어찌되었던 and motion algorithm
-const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
+const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ mediaStream, myPeerId }) => {
   const webcamRef = useRef<HTMLVideoElement | null>(null);
-  const countRef = useRef<number>(0);
   const camera = useRef<cam.Camera | null>(null);
   const [peers, setPeers] = useRecoilState(peerDataListState);
+  const motionState = useRecoilValue(latestMotionState);
+  const modelState = useRecoilValue(model);
   const [peerChange, setPeerChange] = useState(false);
   const poseRef = useRef<Pose>(null);
   const pointRef = useRef<number[]>([]);
 
   const user = useUser();
-  const myPeerId = 'kirari';
 
   // AVATAR mediapipe 데이터가 적절하게 나오는 곳
   const onResults = useCallback(
     (results: Results) => {
       if (
-        model &&
-        model.kirari &&
-        model.kirari.borns &&
-        model.kirari.originalBorns &&
-        model.kirari.scene &&
+        /* eslint-disable */
+        modelState &&
+        modelState[myPeerId] &&
+        modelState[myPeerId].borns &&
+        modelState[myPeerId].originalBorns &&
+        modelState[myPeerId].scene &&
         results &&
         results.poseLandmarks &&
         results.poseWorldLandmarks &&
@@ -51,18 +53,13 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
           right: results.poseLandmarks[8].x,
         };
         // AVATAR 적절하게 render 호출하는 메소드
-        setBorn(model, myPeerId, poseRig, faceRig);
-        countRef.current += 1;
-        if (peers && countRef.current % 5 === 0 && sendToAllPeers) {
-          countRef.current = 0;
-          const data: ChatMotionInterface = {
-            sender: user.data.name,
-            motion: { pose: poseRig, face: faceRig },
-          };
-          sendToAllPeers(peers, { type: 'motion', data });
+        setBorn(modelState[myPeerId], myPeerId, poseRig, faceRig);
+        if (peers && sendMotionForFrames) {
+          const myMotion = { pose: poseRig, face: faceRig };
+          sendMotionForFrames.setMotionStatus(myMotion);
         }
-        const anotherPeerId = motion.sender;
 
+        // 이것도 팔 올렸다 내렸다가 되는데 팔 각도를 계산하기 어렵고 예외인 부분까지 팔을 꺾어봐야 해서... 불완전함
         // const T4 = 0.4;
         // const T5 = 0.5;
         // const T6 = 0.6;
@@ -120,26 +117,30 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
         //   pointRef.current.pop();
         // }
 
+        // onResults에 나온 정점의 주요부분의 y값만 가지고 점수 낼까 생각중
         if (results.poseLandmarks[12].y > results.poseLandmarks[14].y && results.poseLandmarks[11].y > results.poseLandmarks[13].y && pointRef.current.length === 0) {
           console.log('pushing');
           pointRef.current.push(0);
         } else if (results.poseLandmarks[16].y > results.poseLandmarks[12].y && results.poseLandmarks[15].y > results.poseLandmarks[11].y && pointRef.current.length !== 0) {
           console.log('popping');
           pointRef.current.pop();
+          addedScoreForSeconds.addScore(Math.floor(Math.random() * 101) + 100);
         }
 
-        for (const peerId in model) {
-          if (peerId === anotherPeerId && peerId !== 'kirari') {
-            setBorn(model, peerId, motion.motion.pose, motion.motion.face);
-          }
-        }
+        // for (const peerId in modelState) {
+        //   console.log('thisismodelmotion', peerId, peerId !== myPeerId, motionState[peerId]);
+        //   if (motionState[peerId] && peerId !== myPeerId) {
+        //     setBorn(modelState, peerId, motionState[peerId].pose, motionState[peerId].face);
+        //   }
+        // }
       }
     },
-    [peers, user.data],
+    [motionState, modelState, peers, user.data],
   );
   function setupMediapipe() {
     const pose = new Pose({
       locateFile: file => {
+        // CDN
         return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
       },
     });
@@ -194,7 +195,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream }> = ({ mediaStream }) => {
       <video
         ref={webcamRef}
         style={{
-          visibility: 'hidden',
+          display: 'hidden',
           position: 'absolute',
           width: 320,
           height: 240,

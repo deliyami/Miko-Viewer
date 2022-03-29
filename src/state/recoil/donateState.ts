@@ -1,3 +1,4 @@
+import { MY_AVATAR_ID } from '@src/const';
 import { atom } from 'recoil';
 
 type Donate = {
@@ -10,9 +11,9 @@ type Donate = {
 const donateState = atom<Donate>({
   key: 'donate',
   default: {
-    nickname: 'kirari',
+    nickname: MY_AVATAR_ID,
     coin: 0,
-    content: '얄루얄루얄얄루 얄라셩얄라',
+    content: 'test입니다 저는',
     start: 0,
   },
 });

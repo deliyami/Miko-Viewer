@@ -21,19 +21,21 @@ export const WithIntervalTaskLayer: FC = ({ children }) => {
       // n 초간 추가된 점수를 더한 최신 총점수를 모든 룸 Peer에게 보냅니다.
       // redis 상의 자신의 랭킹 점수를 업데이트 합니다
       const addedScore = addedScoreForSeconds.getAndReset();
-      setLatestScoreState(
-        produce(draft => {
-          const updatedScore = (draft?.[user.uuid] ?? 0) + addedScore;
-          // DataConnection을 통해 전달 후 shareObject의 roomMemberScores를 업데이트
-          sendToAllPeers(peers, { type: 'scoreUpdate', data: updatedScore });
+      // NOTE 점수가 올랐을때만 보냄.
+      if (addedScore)
+        setLatestScoreState(
+          produce(draft => {
+            const updatedScore = (draft?.[user.uuid] ?? 0) + addedScore;
+            // DataConnection을 통해 전달 후 shareObject의 roomMemberScores를 업데이트
+            sendToAllPeers(peers, { type: 'scoreUpdate', data: updatedScore });
 
-          // redis에 자신의 점수를 업데이트
-          socket.emit('fe-update-score', addedScore, updatedScore);
+            // redis에 자신의 점수를 업데이트
+            socket.emit('fe-update-score', addedScore, updatedScore);
 
-          // 나의 Score State를 업데이트
-          draft[user.uuid] = updatedScore;
-        }),
-      );
+            // 나의 Score State를 업데이트
+            draft[user.uuid] = updatedScore;
+          }),
+        );
     }, 1000);
 
     const updateRoomMemberScoreInterval = setInterval(() => {

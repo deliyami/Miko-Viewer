@@ -1,14 +1,15 @@
-import { Text, VStack } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, BoxProps, Heading, HStack, Tag, VStack } from '@chakra-ui/react';
 import { toastLog } from '@src/helper/toastLog';
 import useBeforeunload from '@src/hooks/useBeforeunload';
 import useMyPeer from '@src/hooks/useMyPeer';
 import useSocket from '@src/hooks/useSocket';
 import { isReadyIvsState, myStreamState } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
+import { AnimatePresence, motion } from 'framer-motion';
 import Script from 'next/script';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import Loading from '../common/Loading';
+import LottieVideoPlay from '../lottie/lottieVideoPlay';
 import ViewingCSRPage from './ViewingCSRPage';
 
 // NOTE video를 true로 할경우 여러 브라우저에서 카메로 리소스 접근할때 보안상의 이유로 에러가 나올 확률이 높음
@@ -17,22 +18,33 @@ import ViewingCSRPage from './ViewingCSRPage';
 const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices) as typeof navigator.mediaDevices.getUserMedia;
 const streamOptions: MediaStreamConstraints = { audio: true, video: true };
 
+const MotionBox = motion<Omit<BoxProps, 'transition'>>(Box);
+const MotionViewingCSRPage = motion(ViewingCSRPage);
+
 // Prepare 단계를 둠으로써 State 상태 관리
 const ViewingPrepareCSRPage = () => {
   const [isReadySocket, setIsReadySocket] = useState(false);
   const [isReadyStream, setIsReadyStream] = useState(false);
   const [isReadyPeer, setIsReadyPeer] = useState(false);
   const [peerError, setPeerError] = useState(undefined);
-
   const [isReadyIvs, setIsReadyIvs] = useRecoilState(isReadyIvsState);
+  const [asyncIsAllReady, setAsyncIsAllReady] = useState(isReadyPeer && isReadySocket && isReadyStream && isReadyIvs);
 
   const isAllReady = isReadyPeer && isReadySocket && isReadyStream && isReadyIvs;
+
+  useEffect(() => {
+    //  isAllReady의 상태가 방영된 상태로 Framer Motion이 exit 애니메이션을 실행하게 함.
+    if (isReadyPeer && isReadySocket && isReadyStream && isReadyIvs) {
+      setTimeout(() => {
+        setAsyncIsAllReady(true);
+      }, 0);
+    }
+  }, [isReadyPeer, isReadySocket, isReadyStream, isReadyIvs]);
 
   const socket = useSocket();
   const myPeer = useMyPeer();
 
   const user = useUser();
-  const myPeerUniqueID = user.data?.uuid;
 
   const [myStream, setMyStream] = useRecoilState(myStreamState);
   // const roomId = useRecoilValue(enterRoomIdAsyncState);
@@ -72,7 +84,7 @@ const ViewingPrepareCSRPage = () => {
     };
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     getUserMedia(streamOptions)
       .then(stream => {
         setMyStream(stream);
@@ -84,12 +96,7 @@ const ViewingPrepareCSRPage = () => {
       });
   }, []);
 
-  useEffect(() => {
-    if (!socket || !user.data || myPeer) {
-    }
-  }, [socket, myPeer, user.data]);
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!socket) return;
 
     if (socket.connected) {
@@ -97,13 +104,13 @@ const ViewingPrepareCSRPage = () => {
     }
   }, [socket.connected, socket]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     //  on("open")에서 하면 useEffect에서 등록하기 전에 이미 open 되어버림.
     if (myPeer.open) {
       setIsReadyPeer(true);
     }
   }, [myPeer.open]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!myPeer) return;
 
     const handlePeerDisconnected = () => {
@@ -122,38 +129,67 @@ const ViewingPrepareCSRPage = () => {
     myPeer.on('error', handlePeerError);
 
     // NOTE  peer.connect 는  peer open 상태가 아니면 undefined 리턴
-
     return () => {
       myPeer.off('disconnected', handlePeerDisconnected);
       myPeer.off('error', handlePeerError);
     };
   }, [myPeer]);
 
-  if (isAllReady) return <ViewingCSRPage />;
-
-  // console.log('Ready 상태', isReadyStream, isReadyPeer, isReadySocket);
   return (
-    <Loading>
-      <VStack>
-        <Text> カメラ - {isReadyStream ? '✅' : '❌'} </Text>
-        <Text> P2P - {isReadyPeer ? '✅' : '❌'} </Text>
-        <Text> Socket - {isReadySocket ? '✅' : '❌'} </Text>
-        <Text> Script - {isReadyIvs ? '✅' : '❌'} </Text>
-        {peerError && <Text>{peerError}</Text>}
-      </VStack>
-      <Script
-        src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js"
-        // @ts-ignore
-        strategy="afterInteractive" // NOTE 왜 before하면 새로고침시 에러?, onLoad도 작동 안함?
-        onLoad={e => {
-          console.log('ivs script load', e);
-          setIsReadyIvs(true);
-        }}
-        onError={e => {
-          toastLog('error', 'failed to load ivs script', '', e);
-        }}
-      />
-    </Loading>
+    <AnimatePresence>
+      {asyncIsAllReady ? (
+        <MotionViewingCSRPage key="live-ing" />
+      ) : (
+        <MotionBox
+          key="live-prepare"
+          exit={{ x: 0, opacity: [1, 1, 1, 0], color: ['#000000', '#FFFFFFFF', '#FFFFFF00', '#FFFFFF00'], backgroundColor: ['#FFFFFF', '#282828FF', '#282828FF', '#28282800'] }}
+          transition={{ duration: 2, times: [0, 0.6, 0.85, 1], type: 'keyframes' }}
+          display="flex"
+          position="fixed"
+          zIndex="10000"
+          justifyContent="center"
+          alignItems="center"
+          w="full"
+          minH="100vh"
+          sx={{ '.LottieVideoPlay  path': { stroke: '#39c5bb' } }}
+        >
+          <VStack>
+            <MotionBox whileTap={{ scale: 1.2 }} position="relative">
+              <LottieVideoPlay />
+            </MotionBox>
+            <Heading fontSize="6xl">Loading...</Heading>
+            <Box opacity={isAllReady ? 0 : 1.0} transition={'opacity 1s'}>
+              <HStack py="5">
+                <Tag colorScheme={isReadyStream ? 'green' : 'red'}>カメラ</Tag>
+                <Tag colorScheme={isReadyPeer ? 'green' : 'red'}>P2P</Tag>
+                <Tag colorScheme={isReadySocket ? 'green' : 'red'}>Socket</Tag>
+                <Tag colorScheme={isReadyIvs ? 'green' : 'red'}>Script</Tag>
+              </HStack>
+              <HStack>
+                {peerError && (
+                  <Alert status="error">
+                    <AlertIcon />
+                    {peerError}
+                  </Alert>
+                )}
+              </HStack>
+            </Box>
+            <Script
+              src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js"
+              // @ts-ignore
+              strategy="afterInteractive" // NOTE 왜 before하면 새로고침시 에러?, onLoad도 작동 안함?
+              onLoad={e => {
+                console.log('ivs script load', e);
+                setIsReadyIvs(true);
+              }}
+              onError={e => {
+                toastLog('error', 'failed to load ivs script', '', e);
+              }}
+            />
+          </VStack>
+        </MotionBox>
+      )}
+    </AnimatePresence>
   );
 };
 
