@@ -10,7 +10,7 @@ const CartItem = ({ query, selectedCount, setSelectedCount }) => {
     item = JSON.parse(query.item);
   }
   return (
-    <Flex w={800} border="solid" mt={'3%'} overflow={'auto'} h={600} flexDirection={'column'}>
+    <Flex w={800} mt={'3%'} overflow={'auto'} h={600} flexDirection={'column'}>
       <Flex h={'25%'} m={'5%'} justifyContent={'space-evenly'} w={'100%'}>
         <Image w="15%" h="100%" src={`${S3_URL}products/${item.image}`} rounded={'30%'} alt="productImage"></Image>
         <Flex m={'2%'} flexDirection={'column'}>
