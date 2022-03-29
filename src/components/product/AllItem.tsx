@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import { Box, Button, Flex, Image, SimpleGrid, Text } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
 import { Pagination } from '@src/types/share/common/common';

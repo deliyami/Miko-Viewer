@@ -1,18 +1,16 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
-import Cart from './Cart';
+import CartButton from './cart/CartButton';
 import OptionSelect from './OptionSelect';
 
 const ProductDetail = ({ item }) => {
   console.log(item);
-  const router = useRouter();
   const [cartCount, setCartCount] = useState(0);
   const [count, setCount] = useState(0);
   const [color, setColor] = useState('');
   const [size, setSize] = useState('');
-  // const [options, setOptions] = useState({""});
+  // const [options, setOptions] = useState({""});.ㅋ
   // const [child, setChild] = useState(0);
 
   return (
@@ -43,7 +41,7 @@ const ProductDetail = ({ item }) => {
         </Flex>
       </Flex>
       <Flex alignItems={'end'}>
-        <Cart item={item} count={count} color={color} size={size} cartCount={cartCount}></Cart>
+        <CartButton item={item} count={count} color={color} size={size} cartCount={cartCount}></CartButton>
       </Flex>
     </Flex>
   );
