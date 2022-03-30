@@ -1,73 +1,94 @@
-import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { Box, Center, Tab, Table, TabList, TabPanel, TabPanels, Tabs, Tbody, Text, Th, Thead, Tr, useColorModeValue } from '@chakra-ui/react';
+import PaginationBtn from '@src/components/common/button/PaginationBtn';
 import ConcertTicket from '@src/components/ConcertTicket';
-import MyLayout from '@src/layout/MyLayout';
-import { curUserTicketState } from '@src/state/recoil/concertState';
+import BasicLayout from '@src/layout/BasicLayout';
 import { useUser } from '@src/state/swr/useUser';
 import { useUserTickets } from '@src/state/swr/useUserTicket';
 import { UserTicket } from '@src/types/share/UserTicket';
 import { useRouter } from 'next/router';
-import { FC, ReactElement } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { FC, ReactElement, useState } from 'react';
 
-const OneTicket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
-  // console.log(userTicket);
+const UserTicketList: FC<{ userTickets: UserTicket[] }> = ({ userTickets }) => {
   const router = useRouter();
-  const setCurUseTicket = useSetRecoilState(curUserTicketState);
-  const useTicketHandler = () => {
-    setCurUseTicket(userTicket);
-    router.push('/live/enter');
-  };
+  const userUsedId = parseInt(router.query.isUsedId as string);
 
+  console.log(userTickets);
   return (
     <>
-      <Box onClick={useTicketHandler}>
-        <ConcertTicket userTicket={userTicket} />
-      </Box>
-    </>
-  );
-};
-
-const UserTicketList: FC<{ userTickets: UserTicket[]; cate: number }> = ({ userTickets, cate }) => {
-  // console.log(userTickets[0].isUsed == cate);
-  return (
-    <>
-      <Box>{userTickets.map(userTicket => userTicket.isUsed === cate && <OneTicket key={userTicket.id} userTicket={userTicket} />)}</Box>
+      <Table variant="simple">
+        <Thead>
+          <Tr>
+            <Th> </Th>
+            <Th>予約日</Th>
+            <Th>予約番号</Th>
+            <Th>Title</Th>
+            <Th>{userUsedId === 1 ? 'アーカイブ視聴期間' : '公演の日付'}</Th>
+            <Th>公演時間</Th>
+            <Th>現状</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {userTickets?.map(userTicket =>
+            userUsedId === 1
+              ? userTicket.isUsed === userUsedId && <ConcertTicket key={userTicket.id} userTicket={userTicket} />
+              : userTicket.isUsed === 0 && <ConcertTicket key={userTicket.id} userTicket={userTicket} />,
+          )}
+        </Tbody>
+      </Table>
+      {userTickets.length === 0 && (
+        <Center m={20}>
+          <Text>티켓없음.</Text>
+        </Center>
+      )}
     </>
   );
 };
 
 const MyListPage = () => {
-  // const router = useRouter();
+  const router = useRouter();
   const { data: userData } = useUser();
+  const isUsedId = parseInt(router.query.isUsedId as string);
 
-  // const { menu } = router.query as { menu: string };
   const { data } = useUserTickets({
     with: ['ticket', 'concert'],
     filter: [['user_id', userData.id]],
   });
+  console.log('userTicket', data);
+
+  const onClickUsed = clickId => {
+    router.push(`/my/lists/ticket/?isUsedId=${clickId}`);
+  };
+  const colors = useColorModeValue(['blue', 'purple'], []);
+  const [tabIndex, setTabIndex] = useState(isUsedId);
+  const colorScheme = colors[tabIndex];
 
   return (
     <Box>
-      <Tabs variant="enclosed" isFitted>
+      <Tabs variant="enclosed" defaultIndex={isUsedId || 0} onChange={index => setTabIndex(index)} colorScheme={colorScheme} isFitted>
         <TabList>
-          <Tab>보기전 티켓</Tab>
-          <Tab>사용한 티켓</Tab>
+          <Tab color="gray" onClick={() => onClickUsed(0)}>
+            見る前のチケット
+          </Tab>
+          <Tab color="gray" onClick={() => onClickUsed(1)}>
+            使用したチケット
+          </Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
-            <UserTicketList userTickets={data.data} cate={0} />
+            <UserTicketList userTickets={data.data} />
           </TabPanel>
           <TabPanel>
-            <UserTicketList userTickets={data.data} cate={1} />
+            <UserTicketList userTickets={data.data} />
           </TabPanel>
         </TabPanels>
       </Tabs>
+      {!(data.data.length === 0) && <PaginationBtn data={data.meta} url={`/my/lists/ticket?`} />}
     </Box>
   );
 };
 
 MyListPage.getLayout = function getLayout(page: ReactElement) {
-  return <MyLayout>{page}</MyLayout>;
+  return <BasicLayout>{page}</BasicLayout>;
 };
 
 // export default MyListPage;

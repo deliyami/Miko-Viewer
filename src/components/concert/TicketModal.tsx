@@ -25,7 +25,7 @@ import {
   Text,
   useDisclosure
 } from '@chakra-ui/react';
-import convertDate from '@src/helper/convertDate';
+import { convertDate } from '@src/helper/convertDate';
 import { useUser } from '@src/state/swr/useUser';
 import { Ticket } from '@src/types/share/Ticket';
 import { useRouter } from 'next/router';

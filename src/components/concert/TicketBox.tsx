@@ -1,5 +1,5 @@
 import { Box, Button, Center, Divider, Flex, Grid, GridItem, HStack, Text } from '@chakra-ui/react';
-import convertDate from '@src/helper/convertDate';
+import { convertDate } from '@src/helper/convertDate';
 import { Ticket } from '@src/types/share/Ticket';
 import React, { FC } from 'react';
 import TicketModal from './TicketModal';
@@ -96,7 +96,7 @@ const TicketPrice: FC<{ data: Ticket }> = ({ data: ticket }) => {
 const TicketBox: FC<{ data: Ticket }> = ({ data: ticket }) => {
   console.log('Ticket Box', ticket);
   return (
-    <Box w="970px" pt={1}>
+    <Box w="970px">
       <Flex>
         <Center w="200px">
           <TicketDate data={ticket} />
@@ -108,7 +108,7 @@ const TicketBox: FC<{ data: Ticket }> = ({ data: ticket }) => {
           <TicketPrice data={ticket} />
         </Center>
       </Flex>
-      <Divider />
+      <Divider borderColor="gray.200" />
     </Box>
   );
 };

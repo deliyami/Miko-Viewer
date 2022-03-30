@@ -1,6 +1,6 @@
 import { Box, Button, Center, Flex, Heading, HStack, Image, Input } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
-import MyLayout from '@src/layout/MyLayout';
+import BasicLayout from '@src/layout/BasicLayout';
 import { useUser } from '@src/state/swr/useUser';
 import { User } from '@src/types/share/User';
 import Link from 'next/link';
@@ -54,5 +54,5 @@ export default function MyPage() {
 }
 
 MyPage.getLayout = function getLayout(page: ReactElement) {
-  return <MyLayout>{page}</MyLayout>;
+  return <BasicLayout>{page}</BasicLayout>;
 };

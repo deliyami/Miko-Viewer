@@ -1,4 +1,4 @@
-import { Box, chakra, Container, Link, Stack, Text, useColorModeValue, VisuallyHidden } from '@chakra-ui/react';
+import { Box, Button, chakra, Container, HStack, Link, Stack, Text, useColorModeValue, VisuallyHidden } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 
@@ -66,15 +66,26 @@ export default function Footer() {
         >
           <Text>© 2020 Chakra Templates. All rights reserved</Text>
           <Stack direction={'row'} spacing={6}>
-            <SocialButton label={'Twitter'} href={'#'}>
-              <FaTwitter />
-            </SocialButton>
-            <SocialButton label={'YouTube'} href={'#'}>
-              <FaYoutube />
-            </SocialButton>
-            <SocialButton label={'Instagram'} href={'#'}>
-              <FaInstagram />
-            </SocialButton>
+            <HStack>
+              <Button colorScheme="facebook" leftIcon={<FaYoutube />} size="xs" borderRadius="20">
+                Youtube
+              </Button>
+              <Button colorScheme="telegram" leftIcon={<FaInstagram />} size="xs" borderRadius="20">
+                Instargram
+              </Button>
+              <Button colorScheme="twitter" leftIcon={<FaTwitter />} size="xs" borderRadius="20">
+                Twitter
+              </Button>
+              <SocialButton label={'Twitter'} href={'#'}>
+                <FaTwitter />
+              </SocialButton>
+              <SocialButton label={'YouTube'} href={'#'}>
+                <FaYoutube />
+              </SocialButton>
+              <SocialButton label={'Instagram'} href={'#'}>
+                <FaInstagram />
+              </SocialButton>
+            </HStack>
           </Stack>
         </Container>
       </Box>

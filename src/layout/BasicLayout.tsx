@@ -1,17 +1,16 @@
-import { Box, Center, Flex, Text } from '@chakra-ui/react';
-import Footer from '@src/components/home/Footer';
+import { Box, Center, Text } from '@chakra-ui/react';
 import MenuBar from '@src/components/home/MenuBar';
 import { withSuspense } from './withSuspenseHOC';
 
 const Layout = ({ children }) => {
   return (
-    <Flex h="110vh" flexDirection="column">
+    <Box minH="100vh">
       <MenuBar />
-      <Box my={30} pb={20} flexGrow="1">
+      <Box ml={60} p="4" my={30} pb={20}>
         {children}
       </Box>
-      <Footer />
-    </Flex>
+      {/* <Footer /> */}
+    </Box>
   );
 };
 

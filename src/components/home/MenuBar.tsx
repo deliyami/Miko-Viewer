@@ -1,84 +1,127 @@
-import { Box, HStack, Image, Spacer, Text } from '@chakra-ui/react';
+import { Avatar, Box, Flex, FlexProps, HStack, Icon, Image, Link, Menu, MenuButton, MenuItem, MenuList, Text, useColorModeValue, VStack } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
 import { useUser } from '@src/state/swr/useUser';
-import Link from 'next/link';
-import { FC, Suspense } from 'react';
-import LogoutBtn from '../common/button/LogoutBtn';
+import React, { ReactText, Suspense } from 'react';
+import { IconType } from 'react-icons';
+import { FiCheck, FiChevronDown, FiHome, FiList, FiStar } from 'react-icons/fi';
+import { LoginBtn, LogoutBtn } from '../common/button/LogoutBtn';
 
-const MenuLink: FC<{ name: string; url: string }> = ({ name, url }) => {
+interface LinkItemProps {
+  name: string;
+  icon: IconType;
+  url: string;
+}
+
+const LinkItems: Array<LinkItemProps> = [
+  { name: 'Home', icon: FiHome, url: '/' },
+  { name: 'List', icon: FiList, url: '/concerts' },
+  { name: 'My History', icon: FiCheck, url: '/my/lists/ticket' },
+  { name: 'My Page', icon: FiStar, url: '/my' },
+];
+
+interface NavItemProps extends FlexProps {
+  icon: IconType;
+  children: ReactText;
+  url: string;
+}
+
+const NavItem = ({ icon, url, children }: NavItemProps) => {
   return (
-    <Box as="li" listStyleType="none" fontSize="22px" fontWeight="bold" px="20px">
-      <Link href={url}>
-        <a>{name}</a>
-      </Link>
+    <Link href={url} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+      <a>
+        <Flex
+          align="center"
+          p="4"
+          mx="4"
+          borderRadius="lg"
+          cursor="pointer"
+          _hover={{
+            bg: 'cyan.400',
+            color: 'white',
+          }}
+        >
+          {icon && (
+            <Icon
+              mr="4"
+              fontSize="16"
+              _groupHover={{
+                color: 'white',
+              }}
+              as={icon}
+            />
+          )}
+          {children}
+        </Flex>
+      </a>
+    </Link>
+  );
+};
+
+const SidebarContent = () => {
+  return (
+    <Box zIndex={100} bg={useColorModeValue('white', 'gray.900')} borderRight="1px" borderRightColor={useColorModeValue('gray.200', 'gray.700')} w="230px" pos="fixed" h="full">
+      <Flex h="20" alignItems="center" mx="12" my="2">
+        <Image boxSize="130px" src={S3_URL + 'logo/color%3Dsimple.svg'} />
+      </Flex>
+      {LinkItems.map(link => (
+        <NavItem key={link.name} icon={link.icon} url={link.url}>
+          {link.name}
+        </NavItem>
+      ))}
     </Box>
   );
 };
 
-const UserData = () => {
+const MobileNav = () => {
   const { data } = useUser();
 
   return (
-    <Box>
+    <Flex alignItems={'center'}>
       {data ? (
-        <>
-          <HStack px="20px">
-            <Image
-              borderRadius="100%"
-              boxSize="60px"
-              // objectFit="none"
-              src={S3_URL + data.avatar}
-              fallbackSrc="https://i.pinimg.com/564x/ba/7d/a2/ba7da2c7fa66b6a81d357df4a4113333.jpg"
-              alt="Dan Abramov"
-            />
-            <Box>
-              <Text fontSize="19px" fontWeight="bold" px={1}>
-                {data.name}
-              </Text>
-              <Box>
-                <LogoutBtn />
+        <Menu>
+          <MenuButton py={2} _focus={{ boxShadow: 'none' }}>
+            <HStack spacing={3}>
+              <Avatar size={'sm'} src={S3_URL + data.avatar} fallbackSrc="https://i.pinimg.com/564x/ba/7d/a2/ba7da2c7fa66b6a81d357df4a4113333.jpg" />
+              <VStack display={{ base: 'none', md: 'flex' }} alignItems="flex-start" spacing="1px" ml="2">
+                <Text fontSize="lg" fontWeight="600">
+                  {data.name}
+                </Text>
+              </VStack>
+              <Box display={{ base: 'none', md: 'flex' }}>
+                <FiChevronDown />
               </Box>
-            </Box>
-          </HStack>
-        </>
+            </HStack>
+          </MenuButton>
+          <MenuList alignItems={'center'}>
+            <MenuItem>
+              <LogoutBtn />
+            </MenuItem>
+          </MenuList>
+        </Menu>
       ) : (
-        <MenuLink name="로그인" url="/login" />
+        <LoginBtn />
       )}
-    </Box>
+    </Flex>
   );
 };
 
-const MenuBar = () => {
-  // const devList = [{name: '챗팅', url: '/live/viewing' }];
-
-  const linkList = [
-    { name: '콘서트 검색', url: '/concerts' },
-    { name: '이용자', url: '/my' },
-    { name: '챗팅', url: '/live/viewing' },
-    // {name: '로그인', url: '/login' },
-    // ...devList,
-  ];
-
+export default function MenuBar() {
   return (
-    <Box zIndex={100} position="sticky" top="0" backgroundColor="white" boxShadow="rgb(240 240 240) 0px -1px 0px inset" as="header">
-      <HStack as="ul" width="full" alignItems="center" padding="10px">
-        <Link href="/">
-          <a>
-            <Image src={'https://static.line-scdn.net/line_live/17d6ec1a9df/img/viewing/logo_viewing_pc_0923.png'} width="250px" objectFit="contain" />
-          </a>
-        </Link>
-        <Spacer />
-        <HStack spacing={8}>
-          {linkList.map(({ name, url }) => (
-            <MenuLink key={name} name={name} url={url} />
-          ))}
-        </HStack>
+    <Box>
+      <SidebarContent />
+      <Flex
+        px={4}
+        height="20"
+        alignItems="center"
+        bg={useColorModeValue('white', 'gray.900')}
+        borderBottomWidth="1px"
+        borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
+        justifyContent="flex-end"
+      >
         <Suspense fallback={<Text> 로딩 </Text>}>
-          <UserData />
+          <MobileNav />
         </Suspense>
-      </HStack>
+      </Flex>
     </Box>
   );
-};
-
-export default MenuBar;
+}

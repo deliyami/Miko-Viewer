@@ -35,7 +35,7 @@ const SearchBox = () => {
   };
   return (
     <HStack>
-      <Input w="400px" variant="flushed" value={searchQuery} required onChange={onChangeSearch} onKeyUp={enterKey} />
+      <Input w="90%" variant="flushed" value={searchQuery} required onChange={onChangeSearch} onKeyUp={enterKey} />
       <IconButton aria-label="Search database" icon={<SearchIcon />} type="submit" onClick={onClickSearch} />
     </HStack>
   );
@@ -79,23 +79,21 @@ export default function ConcertPage({ data, categoryId }: InferGetServerSideProp
     );
 
   return (
-    <Flex width="full" justifyContent="center">
+    <Flex justifyContent="center">
       <Box w="1000px">
-        <HStack>
+        <Flex>
           <Heading fontWeight="700" size="2xl" my="20px">
             Concert List
           </Heading>
           <Spacer />
           <SearchBox />
-        </HStack>
-        <VStack mt={4} spacing={16}>
-          <Category />
+        </Flex>
+        <Category />
+        <VStack mt={14} spacing={16}>
           {data ? (
             <>
-              <VStack spacing={10}>
-                <ConcertList data={data.data} />
-                <PaginationBtn data={data.meta} url={`/concerts?category_id=${categoryId}`} />
-              </VStack>
+              <ConcertList data={data.data} />
+              <PaginationBtn data={data.meta} url={`/concerts?category_id=${categoryId}`} />
             </>
           ) : (
             'no data'
