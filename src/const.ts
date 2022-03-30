@@ -1,3 +1,5 @@
+import { DoneItem } from './types/share/DoneItem';
+
 // Debug Mode
 export const dummyMotion = true;
 
@@ -6,6 +8,18 @@ export const LOGIN_COOKIE = 'isLogin';
 export const LARAVEL_SESSION = 'laravel_session';
 export const USER_TICKET_COOKIE = 'userTicket';
 export const categoryArray = ['J-POP', 'K-POP', '애니메이션', '재즈/소울', '밴드', '발라드'];
+export const doneItem: DoneItem[] = [{ name: 'ハート', price: 5000, id: 0 }];
+
+export const chType = ['チャージ', 'チケット購入', 'SC送り', 'アイテム使用', 'グッズ購入', 'チケット販売', 'グッズ販売', 'SC受け', 'アイテム受け'];
+export const chChargeIdx = 0;
+export const chTicketBuyIdx = 1;
+export const chSuperChatSendIdx = 2;
+export const chDoneItemSendIdx = 3;
+export const chGoodsBuyIdx = 4;
+export const chTicketSoldIdx = 5;
+export const chGoodsSoldIdx = 6;
+export const chSuperChatSendedIdx = 7;
+export const chSuperDoneItemSendedIdx = 8;
 
 export const S3_URL = 'https://miko-image.s3.ap-northeast-2.amazonaws.com/';
 
