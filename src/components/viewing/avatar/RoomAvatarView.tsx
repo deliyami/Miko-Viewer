@@ -4,6 +4,7 @@ import ModelMotion from '@src/components/viewing/avatar/ModelMotion';
 import { NEXT_URL } from '@src/const';
 import { latestScoreState } from '@src/state/recoil/scoreState';
 import { isOnModelState, myStreamState, PeerDataInterface, peerDataListState } from '@src/state/recoil/viewingState';
+import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
 import { useUser } from '@src/state/swr/useUser';
 import { createRef, FC, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -107,6 +108,7 @@ const MyUserBox: FC = () => {
         <Text fontSize="6xl" id={uuid + 'motion'}></Text>
         <Text fontSize="3xl" width="30vw" id={uuid + 'chat'}></Text>
       </Box>
+      <TempAddScoreLogic />
     </Box>
   );
 };

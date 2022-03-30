@@ -1,43 +1,35 @@
-import { Divider, HStack, Text, VStack } from '@chakra-ui/react';
+import { Box, Divider, Heading, VStack } from '@chakra-ui/react';
 import useSocket from '@src/hooks/useSocket';
-import { myRankState } from '@src/state/recoil/myRankState';
 import { latestScoreState } from '@src/state/recoil/scoreState';
+import { myRankState } from '@src/state/recoil/viewing/rankState';
 import { useUser } from '@src/state/swr/useUser';
-import produce from 'immer';
 import { FC, useEffect, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { RiVipCrownLine } from 'react-icons/ri';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 const RankingView: FC = () => {
   const { data: user } = useUser();
   const socket = useSocket();
-  const [rank, setRank] = useState(null);
-  const [myRank, setMyRank] = useState(null);
-  const setMyRankState = useSetRecoilState(myRankState);
-  // const myRank = useRecoilValue(myRankState);
-  const myScore = useRecoilValue(latestScoreState);
 
-  const getMyRank = getMyRankState => {
-    setMyRankState(
-      produce(draft => {
-        // 나의 Score State를 업데이트
-        console.log('myRank 업데이트', draft, getMyRankState);
-        draft[user.uuid] = getMyRankState;
-        setMyRank(getMyRankState);
-      }),
-    );
-  };
+  const [myRank, setMyRank] = useRecoilState(myRankState);
+  const latestScore = useRecoilValue(latestScoreState);
+
+  const [ranks, setRank] = useState([]);
 
   useEffect(() => {
-    socket.on('be-broadcast-rank', getRank => {
-      console.log('show Rank ', getRank);
+    const broadcastRank = getRank => {
       setRank(getRank);
-    });
-    socket.on('be-update-myRank', getMyRank);
-  }, []);
+    };
+    const getMyRank = (newMyRank: number) => {
+      setMyRank(newMyRank);
+    };
 
-  return (
-    <VStack width="full" backgroundColor="#202020" border="2px" borderColor="#262626" textColor="white">
-      <Text fontSize="2xl">Ranking</Text>
+    socket.on('be-broadcast-rank', broadcastRank);
+    socket.on('be-update-myRank', getMyRank);
+
+    const updateMyRankInterval = setInterval(() => {
+      socket.emit('fe-get-myRank');
+    }, 1000);
 
       {rank === null ? (
         <p>nothing</p>
@@ -53,14 +45,22 @@ const RankingView: FC = () => {
         })
       )}
 
+  return (
+    <VStack width="full" position="relative" backgroundColor="#202020" border="2px" borderColor="#262626" textColor="white" h="130px" maxH="130px" overflowY="scroll">
+      <Box color="yellow" fontSize="2xl" pos="absolute" left="2" top="2">
+        <RiVipCrownLine />
+      </Box>
+      {ranks.length
+        ? ranks.map((rank, index) => {
+            return (
+              <Heading size="sm" key={rank.value + index}>
+                {index + 1}位: {rank.value} - {rank.score}点
+              </Heading>
+            );
+          })
+        : 'loading'}
       <Divider />
-      <VStack>
-        <Text>MyRank: {myRank}位</Text>
-        <HStack>
-          <Text> {user.name}</Text>
-          <Text> {myScore[user.uuid]}点</Text>
-        </HStack>
-      </VStack>
+      <Heading size="sm">{myRank ? `MyRank: ${myRank}位 - ${latestScore[user.uuid]}  ` : 'loading'} </Heading>
     </VStack>
   );
 };

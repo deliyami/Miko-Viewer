@@ -126,6 +126,9 @@ const WithSocketEventLayout: FC = ({ children }) => {
           case 'scoreUpdate':
             updateUserScore(id, event.data);
             break;
+          // case 'model':
+          //   updateUserScore(id, event.data);
+          //   break;
           default:
             break;
         }

@@ -1,8 +1,10 @@
 import { Box, Button, Center, Input, ScaleFade } from '@chakra-ui/react';
+import { DonateOption } from '@src/components/viewing/chat/DonateOption';
 import sendToAllPeers from '@src/helper/sendToAllPeers';
 import showChatToRoom from '@src/helper/showChatToRoom';
 import useSocket from '@src/hooks/useSocket';
 import { chatModeState, isShowChatInputState, peerDataListState } from '@src/state/recoil/viewingState';
+import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
 import { useUser } from '@src/state/swr/useUser';
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import { FormEvent, KeyboardEventHandler, useRef, useState } from 'react';
@@ -28,6 +30,7 @@ const ChatMessageInput = () => {
 
   const sendMessage = () => {
     if (!newMessage) return;
+    addedScoreForSeconds.addScore(1);
 
     const data: ChatMessageInterface = {
       sender: user.data.name,
@@ -96,6 +99,7 @@ const ChatMessageInput = () => {
             placeholder="Message"
             onKeyUp={onKeyDownHandler}
           />
+          <DonateOption amount={amount} setAmount={setAmount} itemId={itemId} setItemId={setItemId} />
           <SuperChatOption amount={amount} setAmount={setAmount} itemId={itemId} setItemId={setItemId} />
           <Button type="submit" onClick={onSubmitHandler} colorScheme={amount === 0 ? 'cyan' : 'messenger'}>
             送る
