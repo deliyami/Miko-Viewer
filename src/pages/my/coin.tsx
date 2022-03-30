@@ -1,6 +1,6 @@
 import { Box, Button, Center, Circle, Divider, Flex, Heading, HStack, Spacer, Spinner, Text, VStack } from '@chakra-ui/react';
 import PaginationBtn from '@src/components/common/button/PaginationBtn';
-import MyLayout from '@src/layout/MyLayout';
+import BasicLayout from '@src/layout/BasicLayout';
 import { fetcher } from '@src/state/fetcher';
 import { useUser } from '@src/state/swr/useUser';
 import { Coin } from '@src/types/share/Coin';
@@ -72,10 +72,12 @@ export default function CoinPage() {
   useEffect(() => {
     if (page) {
       setPageIndex(page);
+    } else {
+      setPageIndex(1);
     }
   });
   const { data: coinData } = useSWR(`/coin_histories?per_page=3&filter=user_id:${userData.id}&page=${pageIndex}`, fetcher);
-  // console.log(coinData);
+  console.log(page);
 
   return (
     <>
@@ -113,5 +115,5 @@ export default function CoinPage() {
 }
 
 CoinPage.getLayout = function getLayout(page: ReactElement) {
-  return <MyLayout>{page}</MyLayout>;
+  return <BasicLayout>{page}</BasicLayout>;
 };

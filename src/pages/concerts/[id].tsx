@@ -1,7 +1,7 @@
 import { Box, Button, Center, Collapse, Flex, Grid, GridItem, Heading, HStack, Image, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue } from '@chakra-ui/react';
 import TicketBox from '@src/components/concert/TicketBox';
 import { S3_URL } from '@src/const';
-import convertDate from '@src/helper/convertDate';
+import { convertDate } from '@src/helper/convertDate';
 import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
 import BasicLayout from '@src/layout/BasicLayout';
 import { Pagination } from '@src/types/share/common/common';
@@ -17,14 +17,14 @@ type Data = {
 };
 
 const TicketList: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
-  // console.log('Ticket List', tickets[1]);
+  // console.log('Ticket List', tickets);
   const router = useRouter();
   const saleId = parseInt(router.query.sale as string);
   const today = new Date();
 
   return (
     <>
-      {!tickets[0] && (
+      {tickets.length === 0 && (
         <Center>
           <Text>티켓없음.</Text>
         </Center>
@@ -32,12 +32,12 @@ const TicketList: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
       {tickets?.map(ticket => (
         <Box key={ticket.id}>
           {saleId === 1
-            ? new Date(ticket.concertEndDate) < today && (
+            ? new Date(ticket.saleEndDate) < today && (
                 <Box _hover={{ bg: '#FFF5F5' }}>
                   <TicketBox data={ticket} />
                 </Box>
               )
-            : new Date(ticket.concertEndDate) > today && (
+            : new Date(ticket.saleEndDate) > today && (
                 <Box _hover={{ bg: '#EBF8FF' }}>
                   <TicketBox data={ticket} />
                 </Box>
@@ -59,13 +59,13 @@ const LiveInformation: FC<{ data: Concert }> = ({ data: concert }) => {
   return (
     <Box>
       <Flex>
-        <Image borderRadius="2%" width="350px" src={S3_URL + concert.coverImage} fallbackSrc="" alt="Concert Image" />
+        <Image borderRadius="2%" boxSize="350px" src={S3_URL + concert.coverImage} fallbackSrc="" alt="Concert Image" />
         <Box alignItems="top" pl={12} flex="1">
           <HStack mb={5} spacing={3}>
             <Heading fontWeight="700">{concert.title}</Heading>
             <Text pt={3}>{concert.artist}</Text>
           </HStack>
-          <Grid h="200px" templateRows="repeat(2, 1fr)" templateColumns="repeat(5, 1fr)" gap={4}>
+          <Grid templateRows="repeat(2, 1fr)" templateColumns="repeat(5, 1fr)" gap={4}>
             <GridItem rowSpan={2} colSpan={1}>
               <Text fontWeight="500">公演期間</Text>
               <Text fontWeight="500">公演内容</Text>
@@ -141,7 +141,7 @@ export default function LiveDetailPage({ concert, tickets }: InferGetServerSideP
     <Flex justifyContent="center">
       <Box w="1000px">
         <LiveInformation data={concert.data} />
-        <Tabs my={7} defaultIndex={saleId || 0} onChange={index => setTabIndex(index)} colorScheme={colorScheme}>
+        <Tabs mt={7} defaultIndex={saleId || 0} onChange={index => setTabIndex(index)} colorScheme={colorScheme}>
           <TabList>
             <Tab color="gray" onClick={() => onClickSale(0)}>
               販売中

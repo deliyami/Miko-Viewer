@@ -33,7 +33,7 @@ const PaginationBtn: FC<Props> = ({ data: { current_page, last_page }, url }) =>
   };
 
   return (
-    <Center minWidth="container.md">
+    <Center>
       <HStack>
         {curPage !== startPage && <PageBtn text="<" onClick={onBeforePageHandler} />}
         {new Array(Math.max(curPage - startPage, 0)).fill(0).map((_, idx) => (

@@ -1,99 +1,115 @@
-import { Box, HStack, Image, Table, TableCaption, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { Badge, Box, Button, HStack, Image, Td, Text, Tr } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
+import { convertDate, noFormatDate } from '@src/helper/convertDate';
+import { curUserTicketState } from '@src/state/recoil/concertState';
 import { UserTicket } from '@src/types/share/UserTicket';
-import Dayjs from 'dayjs';
+import { useRouter } from 'next/router';
 import { FC } from 'react';
+import { useSetRecoilState } from 'recoil';
 
 const TicketDetail: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
-  console.log(userTicket);
-  const date = Dayjs(userTicket.ticket.concertStartDate, 'YYYY-MM-DD HH:mm:ss');
-  const week = ['日', '月', '火', '水', '木', '金', '土']; // 요일
-  const StartDay = date.format('YYYY/MM/DD'); // 2022/03/24
-  const StartTime = date.format('HH:mm'); // 17:30
-  const day = week[date.get('d')]; // 金 (요일)
+  const router = useRouter();
 
+  // /live/enter으로 이동
+  const setCurUseTicket = useSetRecoilState(curUserTicketState);
+  const useTicketHandler = () => {
+    setCurUseTicket(userTicket);
+    router.push('/live/enter');
+  };
+
+  // 티켓 정보
+  const startDate = convertDate(userTicket.ticket.concertStartDate, 'YMD');
+
+  // 날짜 비교
+  const compareStartDate = noFormatDate(userTicket.ticket.concertStartDate);
+  const compareEndDate = noFormatDate(userTicket.ticket.concertEndDate);
+  const today = noFormatDate(new Date());
+  const diff = compareStartDate.diff(today, 'm') as number; // 시작일로부터 남은 시간(분)
+  const showBadge = diff <= 120 && diff > 0; // 남은 시간 2시간 전부터 알림
+  const screening = today.isBetween(compareStartDate, compareEndDate, 'minute', '[]');
+
+  // console.log(screening);
   return (
-    <>
-      <Table variant="simple">
-        <TableCaption>Imperial to metric conversion factors</TableCaption>
-        <Thead>
-          <Tr>
-            <Th>예매일</Th>
-            <Th>예약번호</Th>
-            <Th>Title</Th>
-            <Th>시작시간</Th>
-            <Th>상영시간</Th>
-            <Th>현재상태</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          <Tr>
-            <Td>????/??/??</Td>
-            <Td isNumeric>{userTicket.id}</Td>
-            <Td>{userTicket.concert.title}</Td>
-            <Td>
-              {StartDay}({day}) {StartTime}
-            </Td>
-            <Td>{userTicket.ticket.runningTime}分</Td>
-            <Td>예매완료</Td>
-          </Tr>
-        </Tbody>
-      </Table>
-    </>
+    <Tr _hover={{ bg: screening ? '#F0FFF4' : '#EBF8FF' }} cursor={screening && 'pointer'}>
+      <Td>
+        <HStack align="stretch">
+          <Image w="120px" h="120px" src={S3_URL + userTicket.concert.coverImage} />
+          {showBadge && (
+            <Box>
+              <Badge variant="solid" colorScheme="blue" fontSize="13px">
+                間も無く
+              </Badge>
+            </Box>
+          )}
+          {screening && (
+            <Box>
+              <Badge variant="solid" colorScheme="green" fontSize="13px">
+                上映中
+              </Badge>
+            </Box>
+          )}
+        </HStack>
+      </Td>
+      <Td>????/??/??</Td>
+      <Td isNumeric>{userTicket.id}</Td>
+      <Td>{userTicket.concert.title}</Td>
+      <Td>{startDate + 'から'}</Td>
+      <Td>{userTicket.ticket.runningTime}分</Td>
+      <Td>
+        {screening ? (
+          <Button onClick={useTicketHandler} colorScheme="green" size="sm" fontWeight="800" fontSize="14px">
+            コンサート入場
+          </Button>
+        ) : (
+          <Text color="#3182CE" fontWeight="550" fontSize="17px">
+            上映前
+          </Text>
+        )}
+      </Td>
+    </Tr>
   );
 };
 
-const HistoryDetail: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
-  console.log(userTicket);
-  const date = Dayjs(userTicket.ticket.archiveEndTime, 'YYYY-MM-DD HH:mm:ss'); // 다시보기기간.
-  const week = ['日', '月', '火', '水', '木', '金', '土']; // 요일
-  const ArchiveDay = date.format('YYYY/MM/DD'); // 2022/03/24
-  const ArchiveTime = date.format('HH:mm'); // 17:30
-  const day = week[date.get('d')]; // 金 (요일)
+const TicketHistory: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
+  // 티켓 정보
+  const archiveEndTime = convertDate(userTicket.ticket.archiveEndTime, 'YMD');
 
+  // 날짜 비교
+  const compareArchiveEndDate = noFormatDate(userTicket.ticket.archiveEndTime);
+  const today = noFormatDate(new Date());
+  const archiving = today.isSameOrBefore(compareArchiveEndDate);
+
+  console.log(archiving);
   return (
-    <>
-      <Table variant="simple">
-        <TableCaption>Imperial to metric conversion factors</TableCaption>
-        <Thead>
-          <Tr>
-            <Th>예매일</Th>
-            <Th>예약번호</Th>
-            <Th>Title</Th>
-            <Th>다시보기</Th>
-            <Th>상영시간</Th>
-            <Th>현재상태</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          <Tr>
-            <Td>????/??/??</Td>
-            <Td isNumeric>{userTicket.id}</Td>
-            <Td>{userTicket.concert.title}</Td>
-            <Td>
-              {ArchiveDay}({day}) {ArchiveTime} まで
-            </Td>
-            <Td>{userTicket.ticket.runningTime}分</Td>
-            <Td>시청 완료</Td>
-          </Tr>
-        </Tbody>
-      </Table>
-    </>
+    <Tr _hover={{ bg: archiving ? '#FAF5FF' : '#FFF5F7' }} cursor={archiving && 'pointer'}>
+      <Td>
+        <Image w="120px" h="120px" src={S3_URL + userTicket.concert.coverImage} />
+      </Td>
+      <Td>????/??/??</Td>
+      <Td isNumeric>{userTicket.id}</Td>
+      <Td>{userTicket.concert.title}</Td>
+      <Td>{archiveEndTime + 'まで'}</Td>
+      <Td>{userTicket.ticket.runningTime}分</Td>
+      <Td>
+        {archiving ? (
+          <Button colorScheme="purple" size="sm" fontWeight="800" fontSize="14px">
+            アーカイブ視聴
+          </Button>
+        ) : (
+          <Text color="#ED64A6" fontWeight="550" fontSize="17px">
+            アーカイブ期間満了
+          </Text>
+        )}
+      </Td>
+    </Tr>
   );
 };
 
 const ConcertTicket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
-  console.log(userTicket.concert);
-  return (
-    <Box>
-      <HStack as="li" width="full" border="1px solid #efefef" borderRadius="10px" mb="30px">
-        <Box textAlign="center" pl="50px">
-          <Image src={S3_URL + userTicket.concert.coverImage} width="200px" />
-        </Box>
-        {userTicket.isUsed === 0 ? <TicketDetail userTicket={userTicket} /> : <HistoryDetail userTicket={userTicket} />}
-      </HStack>
-    </Box>
-  );
+  const router = useRouter();
+  const isUsedId = parseInt(router.query.isUsedId as string);
+
+  return <>{isUsedId === 1 ? <TicketHistory userTicket={userTicket} /> : <TicketDetail userTicket={userTicket} />}</>;
 };
 
 export default ConcertTicket;

@@ -1,7 +1,8 @@
-import { Button } from '@chakra-ui/react';
+import { Box, Flex, Icon, Link, Text } from '@chakra-ui/react';
 import { axiosI } from '@src/state/fetcher';
 import { useUser } from '@src/state/swr/useUser';
 import { useRouter } from 'next/router';
+import { FiLogIn, FiLogOut } from 'react-icons/fi';
 
 const LogoutBtn = () => {
   const router = useRouter();
@@ -18,10 +19,43 @@ const LogoutBtn = () => {
   };
 
   return (
-    <Button size="sm" variant="outline" colorScheme="teal" onClick={logoutHandler}>
-      Logout
-    </Button>
+    <Flex onClick={logoutHandler} align="center" borderRadius="lg" cursor="pointer">
+      <Icon mr="4" fontSize="20" as={FiLogOut} />
+      <Text>Logout</Text>
+    </Flex>
   );
 };
 
-export default LogoutBtn;
+const LoginBtn = () => {
+  return (
+    <Box listStyleType="none" fontSize="lg" fontWeight="bold">
+      <Link href="/login" style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+        <a>
+          <Flex
+            align="center"
+            p="2"
+            mx="2"
+            borderRadius="lg"
+            cursor="pointer"
+            _hover={{
+              bg: 'cyan.400',
+              color: 'white',
+            }}
+          >
+            <Icon
+              mr="4"
+              fontSize="20"
+              _groupHover={{
+                color: 'white',
+              }}
+              as={FiLogIn}
+            />
+            <Text>Login</Text>
+          </Flex>
+        </a>
+      </Link>
+    </Box>
+  );
+};
+
+export { LogoutBtn, LoginBtn };
