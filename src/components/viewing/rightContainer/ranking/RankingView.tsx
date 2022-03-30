@@ -31,12 +31,19 @@ const RankingView: FC = () => {
       socket.emit('fe-get-myRank');
     }, 1000);
 
-    return () => {
-      socket.off('be-broadcast-rank', broadcastRank);
-      socket.off('be-update-myRank', getMyRank);
-      clearInterval(updateMyRankInterval);
-    };
-  }, [socket]);
+      {rank === null ? (
+        <p>nothing</p>
+      ) : (
+        rank.map((element, index) => {
+          return (
+            <HStack key={index}>
+              <Text>
+                {index + 1}位: {element.value}, {element.score}点
+              </Text>
+            </HStack>
+          );
+        })
+      )}
 
   return (
     <VStack width="full" position="relative" backgroundColor="#202020" border="2px" borderColor="#262626" textColor="white" h="130px" maxH="130px" overflowY="scroll">
