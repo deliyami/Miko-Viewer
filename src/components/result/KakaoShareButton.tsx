@@ -45,7 +45,7 @@ const KakaoShareButton = () => {
   };
   return (
     <Box id="kakao-link-btn" cursor={'pointer'} w={'10%'} h={'50%'}>
-      <Image boxSize={'full'} src="/KakaoTalk_logo.svg"></Image>
+      <Image boxSize={'full'} src="/image/snsLogo/KakaoTalk_logo.svg"></Image>
     </Box>
   );
 };

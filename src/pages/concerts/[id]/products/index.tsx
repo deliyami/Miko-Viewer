@@ -1,4 +1,4 @@
-import { Flex, Select, Spinner, Text, useMediaQuery } from '@chakra-ui/react';
+import { Flex, Select, Spinner, Text } from '@chakra-ui/react';
 import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
 import BasicLayout from '@src/layout/BasicLayout';
 import { Pagination } from '@src/types/share/common/common';
@@ -14,7 +14,7 @@ type Data = {
 
 export const getServerSideProps: GetServerSideProps<Data> = async context => {
   const URL_PRODUCTS = '/products';
-  const concertId = parseInt((context.query.id as string) ?? '1');
+  const concertId = parseInt((context.query.id as string) ?? '1', 10);
   const result = await getDataFromLaravel<Pagination<Product>>(URL_PRODUCTS, {
     filter: [['concert_id', concertId]],
   });
@@ -29,14 +29,14 @@ export default function ProductsPage({ data }) {
   console.log(data.length);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [isLargerThan960] = useMediaQuery('(min-width: 960px)');
+  // const [isLargerThan960] = useMediaQuery('(min-width: 960px)');
   const [selected, setSelected] = useState('新着順');
   useEffect(() => {
     if (data) {
       setIsLoading(false);
       console.log(isLoading);
     } else console.log(isLoading);
-  }, []);
+  }, [data, isLoading]);
   function onSelectedChanged(event) {
     setSelected(event.target.value);
     if (event.target.value == '최신순') {

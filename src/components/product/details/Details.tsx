@@ -11,8 +11,8 @@ const Details: FC<{ item: Product[] }> = ({ item }) => {
   console.log(ch);
   return (
     <Flex flexDirection={'column'} w={'100vw'} overflow="auto" mt={'4%'} h="120vh">
-      <Box alignSelf={'center'} w={'60%'} h={'70'} borderTop="2px" cursor={'pointer'}>
-        <SimpleGrid bg="gray.100" alignItems={'center'} columns={4} h={'full'} fontSize={'xl'} textAlign={'center'}>
+      <Box alignSelf={'center'} w={'60%'} borderTop="2px" cursor={'pointer'}>
+        <SimpleGrid bg="gray.100" alignItems={'center'} columns={4} h={"80px"} fontSize={'xl'} textAlign={'center'}>
           <Box onClick={() => setCh(1)}>
             <Text>アイテム説明</Text>
           </Box>

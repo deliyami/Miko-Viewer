@@ -1,24 +1,23 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
+import { S3_URL } from '@src/const';
 import { useState } from 'react';
-import Cart from './Cart';
+import CartButton from './cart/CartButton';
 import OptionSelect from './OptionSelect';
 
 const ProductDetail = ({ item }) => {
   console.log(item);
-  const router = useRouter();
   const [cartCount, setCartCount] = useState(0);
   const [count, setCount] = useState(0);
   const [color, setColor] = useState('');
   const [size, setSize] = useState('');
-  // const [options, setOptions] = useState({""});
+  // const [options, setOptions] = useState({""});.ㅋ
   // const [child, setChild] = useState(0);
 
   return (
     <Flex justifyContent={'center'}>
       <Flex>
         <Box w={500} h={500}>
-          <Image boxSize={'full'} src={item.image}></Image>
+          <Image boxSize={'full'} src={`${S3_URL}products/${item.image}`}></Image>
         </Box>
       </Flex>
       <Flex mt={'2.5%'} ml={'2%'} flexDirection={'column'} mr={'8%'} alignItems={'end'}>
@@ -42,7 +41,7 @@ const ProductDetail = ({ item }) => {
         </Flex>
       </Flex>
       <Flex alignItems={'end'}>
-        <Cart item={item} count={count} color={color} size={size} cartCount={cartCount}></Cart>
+        <CartButton item={item} count={count} color={color} size={size} cartCount={cartCount}></CartButton>
       </Flex>
     </Flex>
   );

@@ -3,17 +3,15 @@ import Charts from '@src/components/result/Charts';
 import Ranking from '@src/components/result/Ranking';
 import SNSModal from '@src/components/result/SNSModal';
 import BasicLayout from '@src/layout/BasicLayout';
-import axios from 'axios';
 import { useRouter } from 'next/router';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect } from 'react';
 
 const result = () => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const router = useRouter();
   const users = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-  // const users = [{id:1,name:"u1"}, {id:2,name:"u2"}, {id:3,name:"u3"}, {id:4,name:"u4"}, {id:5,name:"u5"}, {id:6,name:"u6"}, {id:7,name:"u7"}, {id:8,name:"u8"}, {id:9,name:"u9"}, {id:10,name:"u10"}];
-  // const u = null;
 
-  const [rank, setRank] = useState([]);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     const script = document.createElement('script');
     script.src = '//developers.kakao.com/sdk/js/kakao.min.js';
@@ -25,9 +23,6 @@ const result = () => {
       document.body.removeChild(script);
     };
   }, [router.isReady]);
-  // axios.get("http://localhost:8080/api/user").then((res)=>{
-  //   console.log(res.data);
-  //   // u = res.data;
 
   // })
 

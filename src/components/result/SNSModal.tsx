@@ -19,16 +19,16 @@ const SNSModal = () => {
             <Flex justifyContent={'space-around'}>
               <KakaoShareButton></KakaoShareButton>
               <Box cursor={'pointer'} w={'10%'} h={'50%'}>
-                <Image boxSize={'full'} src="/icons8-instagram.svg"></Image>
+                <Image boxSize={'full'} src="/image/snsLogo/icons8-instagram.svg"></Image>
               </Box>
               <Box cursor={'pointer'} w={'10%'} h={'50%'}>
-                <Image boxSize={'full'} src="/icons8-twitter.svg"></Image>
+                <Image boxSize={'full'} src="/image/snsLogo/icons8-twitter.svg"></Image>
               </Box>
               <Box cursor={'pointer'} w={'10%'} h={'50%'}>
-                <Image boxSize={'full'} src="/icons8-line.svg"></Image>
+                <Image boxSize={'full'} src="/image/snsLogo/icons8-line.svg"></Image>
               </Box>
               <Box cursor={'pointer'} w={'10%'} h={'50%'}>
-                <Image boxSize={'full'} src="/icons8-facebook.svg"></Image>
+                <Image boxSize={'full'} src="/image/snsLogo/icons8-facebook.svg"></Image>
               </Box>
             </Flex>
           </ModalBody>
