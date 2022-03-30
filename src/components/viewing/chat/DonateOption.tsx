@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Grid,
+  Image,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -18,7 +19,7 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { DonateIcon } from '@src/components/viewing/chat/icon/DonateIcon';
+import { S3_URL } from '@src/const';
 import useSocket from '@src/hooks/useSocket';
 import { PATHNAME } from '@src/state/shareObject/shareDonateObject';
 import { useUser } from '@src/state/swr/useUser';
@@ -84,7 +85,7 @@ export const DonateOption: FC<Prop> = ({ amount, itemId, setAmount, setItemId })
                     donateSendHandler(i);
                   }}
                 >
-                  <DonateIcon path={value}></DonateIcon>
+                  <Image src={`${S3_URL}donateSVG/${value}.svg`} alt="donateSVG"></Image>
                 </Box>
               ))}
             </Grid>
