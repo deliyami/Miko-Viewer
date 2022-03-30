@@ -201,6 +201,9 @@ const WithSocketEventLayout: FC = ({ children }) => {
     const broadcastNewMessage = (data: ChatMessageInterface) => {
       setMessages(
         produce(prevMsgs => {
+          const MAX_MSGS = 30;
+          const len = prevMsgs.length;
+          if (len > MAX_MSGS) prevMsgs.splice(0, len - MAX_MSGS);
           prevMsgs.push(data);
           return prevMsgs;
         }),

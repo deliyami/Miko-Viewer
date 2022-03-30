@@ -3,7 +3,7 @@ import { useUser } from '@src/state/swr/useUser';
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import React, { FC } from 'react';
 
-const Message: FC<{ data: ChatMessageInterface }> = ({ data: { sender, text, amount, itemId } }) => {
+const Message: FC<{ data: ChatMessageInterface }> = ({ data: { sender, text, amount } }) => {
   const {
     data: { name, avatar },
   } = useUser();
@@ -34,8 +34,8 @@ const Message: FC<{ data: ChatMessageInterface }> = ({ data: { sender, text, amo
     );
   };
 
-  if (amount === 0) return <CommonChat />;
-  if (amount !== 0) return <SuperChat />;
+  if (amount) return <SuperChat />;
+  return <CommonChat />;
 };
 
 export default Message;
