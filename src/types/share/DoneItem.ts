@@ -3,3 +3,9 @@ export interface DoneItem {
   name: string;
   id: number;
 }
+
+export interface DoneSendInterface {
+  sender: string;
+  itemId: number;
+  timestamp: number;
+}

@@ -6,6 +6,7 @@ const createFSWQueryString = (query: CommonFSW): string => {
   if (filter) {
     let filterString = '';
     for (const [area, value] of filter) {
+      if (filterString !== '') filterString += ',';
       filterString += area + ':' + value;
     }
     url.set('filter', filterString);
