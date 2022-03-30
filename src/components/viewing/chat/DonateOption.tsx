@@ -19,7 +19,10 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { DonateIcon } from '@src/components/viewing/chat/icon/DonateIcon';
+import useSocket from '@src/hooks/useSocket';
 import { PATHNAME } from '@src/state/shareObject/shareDonateObject';
+import { useUser } from '@src/state/swr/useUser';
+import { DonateInterface } from '@src/types/DonateTypes';
 import { Dispatch, FC, SetStateAction } from 'react';
 import { RiGiftFill } from 'react-icons/ri';
 
@@ -31,12 +34,28 @@ type Prop = {
 };
 
 export const DonateOption: FC<Prop> = ({ amount, itemId, setAmount, setItemId }) => {
+  const user = useUser();
+  const socket = useSocket();
   const { onOpen, onClose, isOpen } = useDisclosure();
-  const donateSendHandler = () => {
+  const donateSendHandler = (index: number) => {
+    const data: DonateInterface = {
+      sender: user.data.name,
+      amount,
+      itemId: index,
+      timestamp: Date.now(),
+    };
+
+    // showChatToRoom(user.data.uuid, newMessage, 5); // 이거보고 만들 것
+    // showDonateToRoom(user.data.uuid, newMessage, 5);
+
+    // socket.emit('fe-send-message', data);
+    console.log(data);
+    // setAmount(0);
+    // setItemId(-1);
     onClose();
   };
   return (
-    <Popover onClose={onClose} onOpen={onOpen} isOpen={isOpen}>
+    <Popover onClose={onClose} onOpen={onOpen} isOpen={isOpen} offset={[0, 30]}>
       <PopoverTrigger>
         <Button>
           <RiGiftFill />
@@ -45,7 +64,7 @@ export const DonateOption: FC<Prop> = ({ amount, itemId, setAmount, setItemId })
       <Portal>
         <PopoverContent>
           <PopoverArrow />
-          <PopoverHeader>Donate</PopoverHeader>
+          <PopoverHeader>Donate!</PopoverHeader>
           <PopoverCloseButton />
           <PopoverBody>
             <Text>{amount}円</Text>
@@ -59,7 +78,12 @@ export const DonateOption: FC<Prop> = ({ amount, itemId, setAmount, setItemId })
           <PopoverFooter>
             <Grid templateColumns="repeat(3, 1fr)">
               {PATHNAME.map((value, i) => (
-                <Box key={i} onClick={donateSendHandler}>
+                <Box
+                  key={i}
+                  onClick={() => {
+                    donateSendHandler(i);
+                  }}
+                >
                   <DonateIcon path={value}></DonateIcon>
                 </Box>
               ))}

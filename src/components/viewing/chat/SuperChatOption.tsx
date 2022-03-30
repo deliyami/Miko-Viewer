@@ -25,7 +25,7 @@ type Prop = {
 
 export const SuperChatOption: FC<Prop> = ({ amount, itemId, setAmount, setItemId }) => {
   return (
-    <Popover placement="top">
+    <Popover placement="top" offset={[0, 30]}>
       <PopoverTrigger>
         <Button>
           <RiMoneyDollarCircleFill />
