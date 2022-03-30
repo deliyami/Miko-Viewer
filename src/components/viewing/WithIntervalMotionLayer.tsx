@@ -1,6 +1,5 @@
 import sendToAllPeers from '@src/helper/sendToAllPeers';
 import { setBorn } from '@src/helper/setBornAvatar';
-import useSocket from '@src/hooks/useSocket';
 import { model } from '@src/state/recoil/modelState';
 import { latestMotionState } from '@src/state/recoil/motionState';
 import { peerDataListState } from '@src/state/recoil/viewingState';
@@ -12,7 +11,6 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 export const WithIntervalMotionLayer: FC = ({ children }) => {
   const { data: user } = useUser();
-  const socket = useSocket();
   const peers = useRecoilValue(peerDataListState);
   const modelState = useRecoilValue(model);
   sendMotionForFrames.setPeerId(user.uuid);
@@ -65,8 +63,7 @@ export const WithIntervalMotionLayer: FC = ({ children }) => {
       clearInterval(updateLatestMyMotionInterval);
       clearInterval(updateRoomMemberMotionInterval);
     };
-    // NOTE 또 이거 까먹어서 고생함.
-  }, [peers, user.uuid, setLatestMotionState]);
+  }, [peers, user.uuid]);
 
   return <>{children}</>;
 };

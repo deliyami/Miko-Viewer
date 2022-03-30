@@ -20,7 +20,6 @@ const ChatMessageInput = () => {
   const inputRef = useRef<HTMLInputElement>();
   const [newMessage, setNewMessage] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
-  const [itemId, setItemId] = useState<number>(-1);
 
   const chatModeCompute = () => {
     if (amount !== 0) return 'public';
@@ -36,7 +35,6 @@ const ChatMessageInput = () => {
       sender: user.data.name,
       text: newMessage,
       amount,
-      itemId,
       timestamp: Date.now(),
     };
 
@@ -49,7 +47,6 @@ const ChatMessageInput = () => {
 
     setNewMessage('');
     setAmount(0);
-    setItemId(-1);
     inputRef.current.focus();
   };
 
@@ -99,8 +96,8 @@ const ChatMessageInput = () => {
             placeholder="Message"
             onKeyUp={onKeyDownHandler}
           />
-          <DonateOption amount={amount} setAmount={setAmount} itemId={itemId} setItemId={setItemId} />
-          <SuperChatOption amount={amount} setAmount={setAmount} itemId={itemId} setItemId={setItemId} />
+          <DonateOption />
+          <SuperChatOption amount={amount} setAmount={setAmount} />
           <Button type="submit" onClick={onSubmitHandler} colorScheme={amount === 0 ? 'cyan' : 'messenger'}>
             送る
           </Button>

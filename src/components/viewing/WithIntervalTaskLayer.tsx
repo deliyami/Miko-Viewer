@@ -11,7 +11,6 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 export const WithIntervalTaskLayer: FC = ({ children }) => {
   const { data: user } = useUser();
   const socket = useSocket();
-  // const userId = "0";
   const peers = useRecoilValue(peerDataListState);
 
   const setLatestScoreState = useSetRecoilState(latestScoreState);
@@ -40,8 +39,6 @@ export const WithIntervalTaskLayer: FC = ({ children }) => {
 
     const updateRoomMemberScoreInterval = setInterval(() => {
       //  shareObject의 roomMemberScores에서 주기적으로 실제 ScoreState로 점수를 반영함.
-      // console.log('peers', peers);
-      // console.log('roomMemberScores', roomMemberScores);
       setLatestScoreState(
         produce(draft => {
           // for (const [userId, score] of Object.entries(roomMemberScores)) {
@@ -60,11 +57,11 @@ export const WithIntervalTaskLayer: FC = ({ children }) => {
     }, 1000);
 
     return () => {
+      console.log('useEffect return - withIntervalTaskLayer');
       clearInterval(updateLatestMyScoreInterval);
       clearInterval(updateRoomMemberScoreInterval);
     };
-    // NOTE 또 이거 까먹어서 고생함.
-  }, [peers, user.uuid, setLatestScoreState]);
+  }, [peers, user.uuid]);
 
   return <>{children}</>;
 };

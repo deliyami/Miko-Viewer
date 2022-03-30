@@ -18,12 +18,10 @@ import { RiMoneyDollarCircleFill } from 'react-icons/ri';
 
 type Prop = {
   amount: number;
-  itemId: number;
   setAmount: Dispatch<SetStateAction<number>>;
-  setItemId: Dispatch<SetStateAction<number>>;
 };
 
-export const SuperChatOption: FC<Prop> = ({ amount, itemId, setAmount, setItemId }) => {
+export const SuperChatOption: FC<Prop> = ({ amount, setAmount }) => {
   return (
     <Popover placement="top">
       <PopoverTrigger>

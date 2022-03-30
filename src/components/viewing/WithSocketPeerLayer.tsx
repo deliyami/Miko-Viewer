@@ -38,6 +38,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
 
   // 정리 코드
   const handleLeavePage = () => {
+    console.log('withSocketPeerLayer - handleLeavePage');
     setPeerDataList([]);
     setMessages([]);
   };
@@ -233,7 +234,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
     socket.on('be-send-user-score', getMyScore);
 
     return () => {
-      console.log('useEffect 작동함');
+      console.log('withSocketPeerLayer - useEffect 작동함');
       if (user.data) {
         socket.off('be-new-user-come', newUserCome);
         socket.off('be-broadcast-peer-id', getPeerIdFromBroadcast);
@@ -243,7 +244,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
         handleLeavePage();
       }
     };
-  }, [user.data, socket, myPeer]);
+    //  무조건 처음 접속 user.data만 사용함. user.data가 변경되는 경우가 있다면 재접속 해야만 하는 경우
+  }, [socket, myPeer]);
 
   return <> {children}</>;
 };

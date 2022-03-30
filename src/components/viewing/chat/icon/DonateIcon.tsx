@@ -13,7 +13,6 @@ export const DonateIcon: FC<DonateProps> = forwardRef(({ path, loop = true, auto
       width,
     },
   };
-  console.log('끼얏호~ donateicon');
   //   useEffect(() => {
   //     const loadData = async () => {
   //       const data = await import(`@src/components/viewing/donateBallon/json/${path}.json`);
@@ -36,7 +35,6 @@ export const DonateLazyIcon: FC<DonateProps> = forwardRef(({ path, loop = true, 
       width,
     },
   };
-  console.log('끼얏호~ donatelazyicon');
   useEffect(() => {
     const loadData = async () => {
       const data = await import(`@src/components/viewing/chat/icon/json/${path}.json`);
