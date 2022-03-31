@@ -1,20 +1,17 @@
-import { Button, Flex, Input, Radio, RadioGroup, Select, Text } from '@chakra-ui/react';
+import { Button, Flex, Input, Select, Text } from '@chakra-ui/react';
 import CommonDivider from '@src/components/common/divider/CommonDivider';
+import Buttons from '@src/components/product/pay/buttons';
+import NoteCheck from '@src/components/product/pay/NoteCheck';
+import Title from '@src/components/product/pay/Title';
 import Status from '@src/components/product/Status';
 import BasicLayout from '@src/layout/BasicLayout';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { ReactElement, useState } from 'react';
+import { ReactElement } from 'react';
 
 const pay = () => {
-  const [radio, setRadio] = useState('0');
-  const router = useRouter();
   return (
     <Flex flexDirection={'column'} w={'50%'} h="100%" p={'2%'} ml={'25%'}>
       <Status status={2}></Status>
-      <Text fontWeight={'bold'} fontSize="3xl" alignSelf={'center'} mb="7%">
-        お客様情報の入力
-      </Text>
+      <Title title={'お客様情報の入力'}></Title>
       <Flex justifyContent={'space-between'} alignItems={'center'}>
         <Text w={'15%'}>
           お名前<span style={{ color: 'red', fontSize: '1px', marginLeft: '10%' }}>必要</span>
@@ -123,30 +120,8 @@ const pay = () => {
         </Flex>
       </Flex>
       <CommonDivider></CommonDivider>
-      <Flex justifyContent={'space-between'} alignItems={'center'}>
-        <Text w={'22%'}>
-          メルマガ配信<span style={{ color: 'red', fontSize: '1px', marginLeft: '10%' }}>必要</span>
-        </Text>
-        <RadioGroup w={'68%'} onChange={setRadio} value={radio}>
-          <Radio required value="1">
-            配信
-          </Radio>
-          <Radio required value="2" ml={'10px'}>
-            解除
-          </Radio>
-        </RadioGroup>
-      </Flex>
-
-      <Flex justifyContent={'space-between'} h="100px" mt={'10%'}>
-        <Button w="23%" fontSize={'2xl'} onClick={() => router.back()}>
-          ← 戻る
-        </Button>
-        <Link href={`/concerts/${router.query.id}/products/check`}>
-          <Button fontSize={'2xl'} w="23%">
-            次へ →
-          </Button>
-        </Link>
-      </Flex>
+      <NoteCheck></NoteCheck>
+      <Buttons page={'check'}></Buttons>
     </Flex>
   );
 };

@@ -1,6 +1,6 @@
 /* eslint-disable array-callback-return */
 import { Box, Button, Flex, Image, SimpleGrid, Text } from '@chakra-ui/react';
-import { S3_URL } from '@src/const';
+import { NEXT_URL, S3_URL } from '@src/const';
 import { Pagination } from '@src/types/share/common/common';
 import { Product } from '@src/types/share/Product';
 import { useRouter } from 'next/router';
@@ -42,7 +42,7 @@ const AllItem: FC<{ allItem: Pagination<Product> }> = ({ allItem }) => {
           })}
         </SimpleGrid>
         <Flex alignItems={'end'} ml={'3%'}>
-          <Button onClick={() => window.open(`/concerts/${router.query.id}/products`, '_self')}>
+          <Button onClick={() => window.open(`${NEXT_URL}//concerts/${router.query.id}/products`, '_self')}>
             <Text fontWeight={'bold'} fontSize={'xl'}>
               全ての商品へ &#10132;
             </Text>

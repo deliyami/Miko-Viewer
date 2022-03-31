@@ -4,30 +4,22 @@ import { useEffect, useRef } from 'react';
 const AudioVisualizer = ({ audioData }) => {
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
-
   useEffect(() => {
     const canvas = canvasRef.current;
-    // console.log(audioData);
-    // canvas.width = window.innerWidth*0.1;
-    // canvas.height = window.innerHeight*0.5;
     canvas.width = 200;
-    canvas.height = 130;
-    canvas.style.background = 'black';
-
+    canvas.height = 20;
+    canvas.style.background = '#222222';
     const context = canvas.getContext('2d');
+
     contextRef.current = context;
     context.fillStyle = 'white';
-    context.globalAlpha = 0.9;
+    // context.globalAlpha = 0.8;
+    // context.strokeStyle = '#003300';
+    context.fillRect(10, 7, 180, 7);
 
     function volumeDraw(level) {
-      // console.log(Math.floor(parseInt(level, 10) / 10));
-      let x = 0;
-      let h = 15;
-      let y = 100;
-
-      // 0~50
-      // 50에서 500사이의 값이온다. 이걸
       console.log(level);
+      // const x = 0;
       let volume = null;
       if (level > 0 && level <= 50) {
         volume = 1;
@@ -47,18 +39,23 @@ const AudioVisualizer = ({ audioData }) => {
         volume = 8;
       } else if (level > 400 && level <= 450) {
         volume = 9;
-      } else if (level > 450 && level <= 500) {
+      } else if (level > 450 && level <= 1000) {
         volume = 10;
       }
-      if (volume <= 10) {
+      console.log(volume);
+      if (volume <= 10 && volume >= 1) {
         // eslint-disable-next-line no-plusplus
-        for (let j = 0; j < volume; j++) {
-          // console.log(Math.floor(parseInt(value)/10));
-          x += 15;
-          h += 5;
-          y -= 5;
-          context.fillRect(x, y, 10, h);
-        }
+        // for (let j = 0; j < volume; j++) {
+        // console.log(Math.floor(parseInt(value)/10));
+        // x += 15;
+        context.beginPath();
+        // 15~185
+        // 3~57
+        context.arc(15 * volume, 10, 8, 0, 2 * Math.PI);
+        context.stroke();
+        context.fillStyle = '#70F1E9';
+        context.fill();
+        // }
       }
       // eslint-disable-next-line no-plusplus
     }
@@ -66,7 +63,7 @@ const AudioVisualizer = ({ audioData }) => {
   }, [audioData]);
 
   return (
-    <Box border={'solid'}>
+    <Box>
       <Text>{audioData}</Text>
       <canvas style={{ border: 'solid' }} ref={canvasRef}></canvas>
     </Box>

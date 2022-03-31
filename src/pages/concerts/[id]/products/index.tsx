@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import { Flex, Select, Spinner, Text } from '@chakra-ui/react';
 import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
 import BasicLayout from '@src/layout/BasicLayout';
