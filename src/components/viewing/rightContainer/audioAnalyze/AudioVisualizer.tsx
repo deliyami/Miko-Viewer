@@ -1,4 +1,5 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
+import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
 import { useEffect, useRef } from 'react';
 
 const AudioVisualizer = ({ audioData }) => {
@@ -39,9 +40,15 @@ const AudioVisualizer = ({ audioData }) => {
         volume = 8;
       } else if (level > 400 && level <= 450) {
         volume = 9;
-      } else if (level > 450 && level <= 1000) {
+      } else if (level > 450 && level <= 2000) {
         volume = 10;
       }
+
+      const handleAddScore = v => {
+        // 이렇게 점수 추가해주면 나머지는 알아서 처리됨.
+        addedScoreForSeconds.addScore(v);
+      };
+      handleAddScore(volume);
       console.log(volume);
       if (volume <= 10 && volume >= 1) {
         // eslint-disable-next-line no-plusplus
@@ -59,12 +66,12 @@ const AudioVisualizer = ({ audioData }) => {
       }
       // eslint-disable-next-line no-plusplus
     }
+    // handleAddScore(volume);
     volumeDraw(audioData);
   }, [audioData]);
 
   return (
     <Box>
-      <Text>{audioData}</Text>
       <canvas style={{ border: 'solid' }} ref={canvasRef}></canvas>
     </Box>
   );
