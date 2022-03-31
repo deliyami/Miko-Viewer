@@ -1,7 +1,7 @@
 import { Box, Button, Center, Collapse, Flex, Grid, GridItem, Heading, HStack, Image, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue } from '@chakra-ui/react';
 import TicketBox from '@src/components/concert/TicketBox';
 import { S3_URL } from '@src/const';
-import { convertDate } from '@src/helper/convertDate';
+import convertDate from '@src/helper/convertDate';
 import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
 import BasicLayout from '@src/layout/BasicLayout';
 import { Pagination } from '@src/types/share/common/common';
