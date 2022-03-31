@@ -1,6 +1,6 @@
 import { Box, Button, Center, Divider, Flex, Grid, GridItem, Heading, HStack, Image, Input, Radio, RadioGroup, Stack } from '@chakra-ui/react';
 import { S3_URL, USER_TICKET_COOKIE } from '@src/const';
-import { convertDate } from '@src/helper/convertDate';
+import convertDate from '@src/helper/convertDate';
 import { setCookie } from '@src/helper/setCookie';
 import BasicLayout from '@src/layout/BasicLayout';
 import { curUserTicketState, enterRoomIdState } from '@src/state/recoil/concertState';
