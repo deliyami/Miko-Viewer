@@ -1,21 +1,14 @@
-import { MY_AVATAR_ID } from '@src/const';
+import { DoneSendInterface } from '@src/types/share/DoneItem';
 import { atom } from 'recoil';
 
-type Donate = {
-  nickname: string;
-  coin: string | number;
-  content: string;
-  start: number;
-};
-
-const donateState = atom<Donate>({
-  key: 'donate',
-  default: {
-    nickname: MY_AVATAR_ID,
-    coin: 0,
-    content: 'test입니다 저는',
-    start: 0,
-  },
+const donateState = atom<DoneSendInterface>({
+  key: 'donateState',
+  default: undefined,
 });
 
-export { donateState };
+const donateAccept = atom<boolean>({
+  key: 'donateAccept',
+  default: false,
+});
+
+export { donateState, donateAccept };
