@@ -77,7 +77,7 @@ export default function CoinPage() {
     }
   });
   const { data: coinData } = useSWR(`/coin_histories?per_page=3&filter=user_id:${userData.id}&page=${pageIndex}`, fetcher);
-  console.log(page);
+  // console.log(page);
 
   return (
     <>

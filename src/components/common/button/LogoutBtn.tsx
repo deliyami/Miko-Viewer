@@ -19,7 +19,7 @@ const LogoutBtn = () => {
   };
 
   return (
-    <Flex onClick={logoutHandler} align="center" borderRadius="lg" cursor="pointer">
+    <Flex px={5} onClick={logoutHandler} align="center" borderRadius="lg" cursor="pointer">
       <Icon mr="4" fontSize="20" as={FiLogOut} />
       <Text>Logout</Text>
     </Flex>
