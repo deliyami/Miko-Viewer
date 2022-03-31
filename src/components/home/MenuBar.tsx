@@ -16,7 +16,7 @@ interface LinkItemProps {
 
 const LinkItems: Array<LinkItemProps> = [
   { name: 'Home', icon: FiHome, url: '/' },
-  { name: 'List', icon: FiList, url: '/concerts' },
+  { name: 'Concert List', icon: FiList, url: '/concerts' },
 ];
 
 const SubLinkItems: Array<LinkItemProps> = [
@@ -70,14 +70,14 @@ const SidebarContent = () => {
   const router = useRouter();
   const nowPath = router.pathname as string;
 
-  console.log(router.pathname);
+  // console.log(router.pathname);
 
   const ShowSubLinks = () => {
     setIsShow(!isShow);
   };
 
   return (
-    <Box zIndex={100} bg={useColorModeValue('white', 'gray.900')} borderRight="1px" borderRightColor={useColorModeValue('gray.200', 'gray.700')} w="230px" pos="fixed" h="full">
+    <Box zIndex={100} bg={useColorModeValue('white', 'gray.900')} borderRight="1px" borderRightColor={useColorModeValue('gray.200', 'gray.700')} w="240px" pos="fixed" h="full">
       <Flex h="20" alignItems="center" mx="12" my="2">
         <Image boxSize="130px" src={S3_URL + 'logo/color%3Dsimple.svg'} />
       </Flex>

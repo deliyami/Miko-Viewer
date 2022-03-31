@@ -76,7 +76,7 @@ export default function CoinPage() {
       setPageIndex(1);
     }
   });
-  const { data: coinData } = useSWR(`/coin_histories?per_page=3&filter=user_id:${userData.id}&page=${pageIndex}`, fetcher);
+  const { data: coinData } = useSWR(`/coin_histories?per_page=10&filter=user_id:${userData.id}&page=${pageIndex}`, fetcher);
   // console.log(page);
 
   return (

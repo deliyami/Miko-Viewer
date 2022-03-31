@@ -29,7 +29,7 @@ const TicketDetail: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   const diff = compareStartDate.diff(today, 'm') as number; // 시작일로부터 남은 시간(분)
   const showBadge = diff <= 120 && diff > 0; // 남은 시간 2시간 전부터 알림
   const screening = today.isBetween(compareStartDate, compareEndDate, 'minute', '[]');
-  const beforeScreening = today.isAfter(compareEndDate, 'day');
+  const beforeScreening = today.isAfter(compareEndDate, 'minute');
 
   // console.log(screening);
   return (
