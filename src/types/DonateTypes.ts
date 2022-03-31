@@ -19,7 +19,7 @@ type DonateIconName =
   | 'MoneyRain';
 
 type DonateProps = {
-  path: DonateIconName;
+  path: number;
   loop?: boolean;
   autoplay?: boolean;
   width?: string;

@@ -1,7 +1,18 @@
-import { Center } from '@chakra-ui/react';
+import { Button, Center } from '@chakra-ui/react';
+import { DONATEITEM } from '@src/state/shareObject/shareDonateObject';
 
-const Donate = () => {
-  return <Center>{/* <Image width={100} src="http://localhost:3000/resources/AvatarIcon.svg" alt="donateSvg"></Image> */}</Center>;
+const Child = () => {
+  return (
+    <Center w="full" h="100vh">
+      <Button
+        onClick={() => {
+          console.log(DONATEITEM);
+        }}
+      >
+        sdfasdf
+      </Button>
+    </Center>
+  );
 };
 
-export default Donate;
+export default Child;
