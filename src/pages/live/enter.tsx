@@ -1,4 +1,4 @@
-import { Box, Button, Center, Divider, Flex, Grid, GridItem, Heading, HStack, Image, Input, Radio, RadioGroup, Stack } from '@chakra-ui/react';
+import { AspectRatio, Box, Button, Center, Divider, Flex, Grid, GridItem, Heading, HStack, Image, Input, Radio, RadioGroup, Stack } from '@chakra-ui/react';
 import { S3_URL, USER_TICKET_COOKIE } from '@src/const';
 import convertDate from '@src/helper/convertDate';
 import { setCookie } from '@src/helper/setCookie';
@@ -83,7 +83,9 @@ const CurEnterInfo: FC<{ ticket: Ticket; concert: Concert }> = ({ ticket, concer
   return (
     <Flex justifyContent="center">
       <Box>
-        <Image w="350px" h="350px" src={S3_URL + concert.coverImage} fallbackSrc="https://via.placeholder.com/300" />
+        <AspectRatio maxW="400px" ratio={1}>
+          <Image src={S3_URL + concert.coverImage} objectFit="over" fallbackSrc="https://via.placeholder.com/300" />
+        </AspectRatio>
         <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(6, 1fr)">
           <GridItem rowSpan={1} colSpan={2}>
             <Heading as="h5" size="sm" my={2}>

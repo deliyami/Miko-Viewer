@@ -21,7 +21,7 @@ export const getStaticProps: GetStaticProps<{
   // NOTE  undefined를 구조부해 할당할려고 해서 에러 났었음.
   //  getStaticProps에 대해서는 서버 에러일때를 생각하고 에러 핸들링
   const result = await getDataFromLaravel<Pagination<Concert>>('/concerts', {
-    per_page: 3,
+    per_page: 6,
     sort: ['-id'],
   });
 
@@ -41,15 +41,15 @@ export default function HomePage({ data }: InferGetStaticPropsType<typeof getSta
         <meta property="og:title" content="Miko" key="og:title" />
       </Head>
       <Flex width="full" justifyContent="center">
-        <Box w="1000px">
-          <VStack align="start" mt={20}>
+        <Box>
+          <VStack align="start">
             {tabs.map((tab, idx) => (
               <Box key={idx}>
                 <Heading size="xl" fontSize="50px" my={8}>
                   {tab.name}
                 </Heading>
                 <ConcertList data={data} />
-                <Center mt={3}>
+                <Center my={3}>
                   <Link href={`/concerts`}>
                     <a>
                       <Button mt={5}>더보기</Button>
