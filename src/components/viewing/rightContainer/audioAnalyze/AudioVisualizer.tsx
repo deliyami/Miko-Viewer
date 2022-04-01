@@ -18,7 +18,7 @@ const AudioVisualizer = ({ audioData }) => {
     context.fillRect(10, 7, 180, 7);
 
     function volumeDraw(level) {
-      console.log(level);
+      // console.log(level);
       // const x = 0;
       let volume = null;
       if (level > 0 && level <= 50) {
@@ -42,7 +42,7 @@ const AudioVisualizer = ({ audioData }) => {
       } else if (level > 450 && level <= 1000) {
         volume = 10;
       }
-      console.log(volume);
+      // console.log(volume);
       if (volume <= 10 && volume >= 1) {
         // eslint-disable-next-line no-plusplus
         // for (let j = 0; j < volume; j++) {

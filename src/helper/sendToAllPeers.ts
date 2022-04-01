@@ -5,7 +5,7 @@ const sendToAllPeers = (peers: PeerDataInterface[], data: DataConnectionEvent) =
   // console.log('sent to all Peer', peers, data);
   peers.forEach(({ dataConnection }) => {
     dataConnection?.send(data);
-    console.log('sendTopper', dataConnection);
+    // console.log('sendToAllPeer', dataConnection);
   });
 };
 

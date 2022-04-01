@@ -1,8 +1,8 @@
 import { Box, Center, Text, VStack } from '@chakra-ui/react';
+import { useABC } from '@src/hooks/test/useABC';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useABC } from './useABC';
 
 const Loading = () => {
   const router = useRouter();

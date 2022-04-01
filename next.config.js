@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const withPlugins = require('next-compose-plugins');
 const withBundleAnalyzer = require('@next/bundle-analyzer');
+const withPWA = require('next-pwa');
 
 /**
  * @type {import('next').NextConfig}
@@ -13,32 +14,32 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   experimental: {
-    reactMode: 'concurrent',
     reactRoot: true,
     nextScriptWorkers: true,
   },
   swcMinify: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
-const withPWA = require('next-pwa');
-
 module.exports = withPlugins([
-  [
-    withBundleAnalyzer,
-    {
-      enabled: process.env.ANALYZE === 'true',
-    },
-  ],
-  [
-    withPWA,
-    {
-      pwa: {
-        dest: 'public',
-        register: true,
-        skipWaiting: true,
-        disable: process.env.NODE_ENV === 'development',
-      },
-    },
-  ],
+  // [
+  //   withBundleAnalyzer,
+  //   {
+  //     enabled: process.env.ANALYZE === 'true',
+  //   },
+  // ],
+  // [
+  //   withPWA,
+  //   {
+  //     pwa: {
+  //       dest: 'public',
+  //       register: true,
+  //       skipWaiting: true,
+  //       disable: process.env.NODE_ENV === 'development',
+  //     },
+  //   },
+  // ],
   nextConfig,
 ]);

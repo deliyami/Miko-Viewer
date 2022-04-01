@@ -31,8 +31,13 @@ const ViewingCSRPage = () => {
       }, 1000);
     }
 
+    // const setI = setInterval(() => {
+    //   console.log('*******************');
+    // }, 100);
+
     return () => {
       clearInterval(intervalId);
+      // clearInterval(setI);
     };
   }, [scriptLoaded, IVSPlayer]);
 

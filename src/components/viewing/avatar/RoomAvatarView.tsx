@@ -26,7 +26,6 @@ const TempAddScoreLogic = () => {
 
 const UserBox: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
   const { id: uuid, data, dataConnection, mediaStream } = peer;
-  console.log('peer', peer);
   const scores = useRecoilValue(latestScoreState);
   const audioRef = createRef<HTMLAudioElement>();
   const score = scores?.[uuid] ?? 0;
