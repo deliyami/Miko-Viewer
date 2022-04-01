@@ -34,12 +34,15 @@ export const isShowChatInputState = atom<boolean>({
   key: 'isShowChatInput',
   default: true,
 });
+
+export type PickUserData = Pick<User, 'id' | 'avatar' | 'email' | 'name'>;
+
 export type PeerDataInterface = {
   id: string;
   dataConnection?: DataConnection;
   mediaConnection?: MediaConnection;
   mediaStream?: MediaStream;
-  data?: Pick<User, 'id' | 'avatar' | 'email' | 'name'>;
+  data?: PickUserData;
 };
 
 export const peerDataListState = atom<PeerDataInterface[]>({

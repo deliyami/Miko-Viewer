@@ -7,7 +7,7 @@ import useMyPeer from '@src/hooks/useMyPeer';
 import useSocket from '@src/hooks/useSocket';
 import { curUserTicketState, enterRoomIdAsyncState } from '@src/state/recoil/concertState';
 import { latestScoreState } from '@src/state/recoil/scoreState';
-import { messagesState, myStreamState, PeerDataInterface, peerDataListState } from '@src/state/recoil/viewingState';
+import { messagesState, myStreamState, PeerDataInterface, peerDataListState, PickUserData } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import { DataConnectionEvent } from '@src/types/DataConnectionEventType';
@@ -48,55 +48,44 @@ const WithSocketEventLayout: FC = ({ children }) => {
     handleLeavePage();
   });
 
-  const addDataConnectionToPeersDataList = useCallback(
-    (dataConnection: DataConnection) => {
-      setPeerDataList(
-        produce(draft => {
-          const idx = draft.findIndex(peer => peer.id === dataConnection.peer);
-          if (idx >= 0) draft[idx].dataConnection = dataConnection;
-        }),
-      );
-    },
-    [setPeerDataList],
-  );
+  const addDataConnectionToPeersDataList = useCallback((dataConnection: DataConnection) => {
+    setPeerDataList(
+      produce(draft => {
+        const idx = draft.findIndex(peer => peer.id === dataConnection.peer);
+        if (idx >= 0) draft[idx].dataConnection = dataConnection;
+      }),
+    );
+  }, []);
 
-  const addMediaStreamToPeersDataList = useCallback(
-    (mediaStream: MediaStream, id) => {
-      setPeerDataList(
-        produce(draft => {
-          const idx = draft.findIndex(peer => peer.id === id);
-          if (idx >= 0) draft[idx].mediaStream = mediaStream;
-        }),
-      );
-    },
-    [setPeerDataList],
-  );
+  const addMediaStreamToPeersDataList = useCallback((mediaStream: MediaStream, id) => {
+    setPeerDataList(
+      produce(draft => {
+        const idx = draft.findIndex(peer => peer.id === id);
+        if (idx >= 0) draft[idx].mediaStream = mediaStream;
+      }),
+    );
+  }, []);
 
-  const addMediaConnectionToPeersDataList = useCallback(
-    (mediaConnection: MediaConnection, id) => {
-      setPeerDataList(
-        produce(draft => {
-          const idx = draft.findIndex(peer => peer.id === id);
-          if (idx >= 0) draft[idx].mediaConnection = mediaConnection;
-        }),
-      );
-    },
-    [setPeerDataList],
-  );
+  const addMediaConnectionToPeersDataList = useCallback((mediaConnection: MediaConnection, id) => {
+    setPeerDataList(
+      produce(draft => {
+        const idx = draft.findIndex(peer => peer.id === id);
+        if (idx >= 0) draft[idx].mediaConnection = mediaConnection;
+      }),
+    );
+  }, []);
 
-  const removePeerById = useCallback(
-    id => {
-      setPeerDataList(
-        produce(draft => {
-          const idx = draft.findIndex(peer => peer.id === id);
-          if (idx !== -1) {
-            draft.splice(idx, 1);
-          }
-        }),
-      );
-    },
-    [setPeerDataList],
-  );
+  const removePeerById = useCallback(id => {
+    setPeerDataList(
+      produce(draft => {
+        const idx = draft.findIndex(peer => peer.id === id);
+        if (idx !== -1) {
+          toastLog('info', `${draft[idx].data.name}がルームを出ました。`);
+          draft.splice(idx, 1);
+        }
+      }),
+    );
+  }, []);
 
   useEffect(() => {
     if (!socket || !user.data || !myPeer) {
@@ -104,7 +93,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
       console.log('socket || user 없음', socket, myPeer, user.data);
       return;
     }
-
+    console.log('WithSocketPeerLayer  UseEffect');
     socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
     socket.on('connect', () => {
       // NOTE 서버 재실행시에 다시 소켓 데이터를 전송, 처음 랜더링 될떄에는 이미 connect 이벤트 이후여서 동작하지 않음.
@@ -116,7 +105,7 @@ const WithSocketEventLayout: FC = ({ children }) => {
     const addEventToDataConnection = (dataConnection: DataConnection) => {
       const id = dataConnection.peer;
       dataConnection.on('data', (event: DataConnectionEvent) => {
-        console.log('data from peer', id, event.type, event.data);
+        // console.log('data from peer', id, event.type, event.data);
         switch (event.type) {
           case 'chat':
             showChatToRoom(id, event.data.text, 5);
@@ -136,10 +125,19 @@ const WithSocketEventLayout: FC = ({ children }) => {
       });
       // Firefox와 호환 안됨.
       dataConnection.on('close', () => {
+        // mediaConnection.close() 상대가 할 경우
+        toastLog('info', `${(dataConnection.metadata as PickUserData).name}とデータコネクションが切断されました。`, 'dataConnection on close');
         removePeerById(id);
       });
-      dataConnection.on('error', () => {
+      dataConnection.on('error', err => {
+        toastLog('error', `${(dataConnection.metadata as PickUserData).name}とデータコネクションが切断されました。`, 'dataConnection on error', err);
         removePeerById(id);
+      });
+    };
+
+    const addEventToMediaConnection = (mediaConnection: MediaConnection) => {
+      mediaConnection.on('stream', remoteStream => {
+        addMediaStreamToPeersDataList(remoteStream, mediaConnection.peer);
       });
     };
 
@@ -148,44 +146,43 @@ const WithSocketEventLayout: FC = ({ children }) => {
       addEventToDataConnection(dataConnection);
     });
 
+    myPeer.on('call', mediaConnection => {
+      addMediaConnectionToPeersDataList(mediaConnection, mediaConnection.peer);
+      addEventToMediaConnection(mediaConnection);
+      mediaConnection.answer(myStream);
+    });
+
     const newUserCome = (otherPeerId: string, roomID: string, otherUserData: PeerDataInterface['data'], otherSocketId) => {
-      console.log('newUserCome', otherPeerId, otherUserData.email);
+      // console.log('newUserCome', otherPeerId, otherUserData.email);
+      toastLog('info', `${otherUserData.name}がルームに入場しました。`);
+      const peerIdDuplicateWithMe = otherPeerId === myPeerUniqueID;
+      if (peerIdDuplicateWithMe) {
+        toastLog('warning', `${otherUserData.name}のPeerId、${otherPeerId}が被りました。`);
+        return;
+      }
 
       setPeerDataList(
         produce(prevPeers => {
           const notFound = !prevPeers.some(peer => peer.id === otherPeerId);
-          if (notFound && otherPeerId !== myPeerUniqueID) prevPeers.push({ id: otherPeerId, data: otherUserData });
+          if (notFound) prevPeers.push({ id: otherPeerId, data: otherUserData });
           return prevPeers;
         }),
       );
 
-      if (otherPeerId !== myPeerUniqueID) {
-        socket.emit('fe-answer-send-peer-id', otherSocketId);
-        const mediaConnection = myPeer.call(otherPeerId, myStream);
-        addMediaConnectionToPeersDataList(mediaConnection, mediaConnection.peer);
-        mediaConnection.on('stream', remoteStream => {
-          addMediaStreamToPeersDataList(remoteStream, mediaConnection.peer);
-        });
-      }
+      socket.emit('fe-answer-send-peer-id', otherSocketId);
+      const mediaConnection = myPeer.call(otherPeerId, myStream);
+      addMediaConnectionToPeersDataList(mediaConnection, mediaConnection.peer);
+      addEventToMediaConnection(mediaConnection);
 
-      myPeer.on('call', mediaConnection => {
-        addMediaConnectionToPeersDataList(mediaConnection, mediaConnection.peer);
-        mediaConnection.answer(myStream);
-        mediaConnection.on('stream', otherStream => {
-          addMediaStreamToPeersDataList(otherStream, mediaConnection.peer);
-        });
-      });
-
-      const dataConnection = myPeer.connect(otherPeerId);
-
+      const dataConnection = myPeer.connect(otherPeerId, { metadata: otherUserData });
       dataConnection.on('open', () => {
         addDataConnectionToPeersDataList(dataConnection);
         addEventToDataConnection(dataConnection);
-        dataConnection.send(`Hello! I am${myPeerUniqueID}`);
       });
     };
-    const getPeerIdFromBroadcast = (peerId: string, otherUserData: PeerDataInterface['data']) => {
-      console.log('getPeerIdFromBroadcast', peerId);
+
+    // TODO 이거 이벤트명, 변수명 수정
+    const getAnswerFromRoomBroadcast = (peerId: string, otherUserData: PeerDataInterface['data']) => {
       setPeerDataList(
         produce(prevPeers => {
           const notFound = !prevPeers.some(peer => peer.id === peerId);
@@ -198,7 +195,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
         }),
       );
     };
-    const broadcastNewMessage = (data: ChatMessageInterface) => {
+
+    const getBroadcastedNewMessage = (data: ChatMessageInterface) => {
       setMessages(
         produce(prevMsgs => {
           const MAX_MSGS = 30;
@@ -211,8 +209,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
     };
 
     const failEnterRoom = () => {
-      console.log('fail enter room');
       // TODO 새로운 방 번호를 얻고 입장.
+      toastLog('info', 'ルームが満員であらたま、他のルームに再接続しています。');
     };
 
     const userLeft = (peerId: string) => {
@@ -222,16 +220,14 @@ const WithSocketEventLayout: FC = ({ children }) => {
     const getMyScore = score => {
       setLatestScoreState(
         produce(draft => {
-          // 나의 Score State를 업데이트
-          console.log('나의 Score state 업데이트', draft, score);
           draft[user.data.uuid] = score;
         }),
       );
     };
 
     socket.on('be-new-user-come', newUserCome);
-    socket.on('be-broadcast-peer-id', getPeerIdFromBroadcast);
-    socket.on('be-broadcast-new-message', broadcastNewMessage);
+    socket.on('be-broadcast-peer-id', getAnswerFromRoomBroadcast);
+    socket.on('be-broadcast-new-message', getBroadcastedNewMessage);
     socket.on('be-fail-enter-room', failEnterRoom);
     socket.on('be-user-left', userLeft);
     socket.on('be-send-user-score', getMyScore);
@@ -240,8 +236,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
       console.log('withSocketPeerLayer - useEffect 작동함');
       if (user.data) {
         socket.off('be-new-user-come', newUserCome);
-        socket.off('be-broadcast-peer-id', getPeerIdFromBroadcast);
-        socket.off('be-broadcast-new-message', broadcastNewMessage);
+        socket.off('be-broadcast-peer-id', getAnswerFromRoomBroadcast);
+        socket.off('be-broadcast-new-message', getBroadcastedNewMessage);
         socket.off('be-user-left', userLeft);
         socket.off('be-send-user-score', getMyScore);
         handleLeavePage();
