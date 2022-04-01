@@ -24,7 +24,6 @@ const VIDEO_WIDTH = 320;
 const VIDEO_HEIGHT = 240;
 
 const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
-  const camera = useRef<cam.Camera>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const myStream = useRecoilValue(myStreamState);
   const peers = useRecoilValue(peerDataListState);
@@ -81,10 +80,11 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
   );
 
   useEffect(() => {
+    let camera;
     const setupMediapipe = () => {
       if (videoRef.current) {
         let isMediaPipeSetup = false;
-        camera.current = new cam.Camera(videoRef?.current, {
+        camera = new cam.Camera(videoRef?.current, {
           onFrame: async () => {
             await aPose.send({ image: videoRef.current });
             if (!isMediaPipeSetup) {
@@ -95,16 +95,16 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
           width: VIDEO_WIDTH,
           height: VIDEO_HEIGHT,
         });
-        camera.current.start().then(() => {
+        camera.start().then(() => {
           console.log('camera start');
         });
         setPeerChange(true);
       }
     };
-
+    console.log('myStream', myPeerId);
     if (myStream) {
+      console.log('aaa');
       const videoElement = videoRef.current;
-      if (!videoElement) return;
       if (videoElement.srcObject) {
         videoElement.srcObject = myStream;
       } else {
@@ -115,26 +115,26 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
     }
 
     return () => {
-      camera.current?.stop();
-      videoRef.current = null;
-      camera.current = null;
+      camera?.stop();
     };
-  }, [myStream]);
+  }, [myStream, videoRef.current]);
 
   useEffect(() => {
     aPose.onResults(onResults);
   }, [peerChange, onResults]);
 
   return (
-    <video
-      ref={videoRef}
-      style={{
-        visibility: 'hidden',
-        position: 'absolute',
-        width: VIDEO_WIDTH,
-        height: VIDEO_HEIGHT,
-      }}
-    ></video>
+    <>
+      <video
+        ref={videoRef}
+        style={{
+          visibility: 'hidden',
+          position: 'absolute',
+          width: VIDEO_WIDTH,
+          height: VIDEO_HEIGHT,
+        }}
+      ></video>
+    </>
   );
 };
 

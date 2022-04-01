@@ -4,14 +4,13 @@ import useBeforeunload from '@src/hooks/useBeforeunload';
 import useMyPeer from '@src/hooks/useMyPeer';
 import useSocket from '@src/hooks/useSocket';
 import { isReadyIvsState, myStreamState } from '@src/state/recoil/viewingState';
-import { aPose } from '@src/state/shareObject/sharePose';
 import { AnimatePresence, motion } from 'framer-motion';
 import Script from 'next/script';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import LottieVideoPlay from '../lottie/lottieVideoPlay';
 import ViewingCSRPage from './ViewingCSRPage';
-import MediaPipeSetup from './viewingPrepare.tsx/mediaPipeSetup';
+import MediaPipeSetup from './viewingPrepare/MediaPipeSetup';
 
 // NOTE video를 true로 할경우 여러 브라우저에서 카메로 리소스 접근할때 보안상의 이유로 에러가 나올 확률이 높음
 // getUserMedia의 callback이 실행되지 않아서 먼저 들어온 사람의 영상이 안 보일 수 있음.
@@ -81,7 +80,7 @@ const ViewingPrepareCSRPage = () => {
   });
 
   useEffect(() => {
-    aPose.initialize();
+    // aPose.initialize();
     return () => {
       handleCleanUp();
     };
@@ -162,9 +161,11 @@ const ViewingPrepareCSRPage = () => {
                 <MotionBox whileTap={{ scale: 1.2 }} position="relative">
                   <LottieVideoPlay />
                 </MotionBox>
-                <Spinner size="xl" position="absolute" />
               </Box>
-              <Heading fontSize="6xl">Loading...</Heading>
+              <Heading fontSize="6xl">
+                L<Spinner size="lg" thickness="7px" />
+                ading...
+              </Heading>
               <Box opacity={isAllReady ? 0 : 1.0} transition={'opacity 1s'}>
                 <HStack py="5">
                   <Tag colorScheme={isReadyStream ? 'green' : 'red'}>カメラ</Tag>
@@ -197,8 +198,8 @@ const ViewingPrepareCSRPage = () => {
             </VStack>
           </MotionBox>
         )}
+        <MediaPipeSetup setIsMediaPipeSetup={setIsMediapipeSetup} />
       </AnimatePresence>
-      <MediaPipeSetup setIsMediaPipeSetup={setIsMediapipeSetup} />
     </>
   );
 };
