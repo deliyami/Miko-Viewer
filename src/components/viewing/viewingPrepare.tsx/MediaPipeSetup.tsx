@@ -6,25 +6,34 @@ import { Results } from '@mediapipe/pose';
 import { setBorn } from '@src/helper/setBornAvatar';
 import { model } from '@src/state/recoil/modelState';
 import { latestMotionState } from '@src/state/recoil/motionState';
-import { peerDataListState } from '@src/state/recoil/viewingState';
+import { myStreamState, peerDataListState } from '@src/state/recoil/viewingState';
 import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
 import { aPose } from '@src/state/shareObject/sharePose';
 import { useUser } from '@src/state/swr/useUser';
 import * as Kalidokit from 'kalidokit';
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import React, { Dispatch, FC, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
-const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ mediaStream, myPeerId }) => {
-  const webcamRef = useRef<HTMLVideoElement | null>(null);
-  const camera = useRef<cam.Camera | null>(null);
-  const [peers, setPeers] = useRecoilState(peerDataListState);
+type Props = {
+  //   isMediaPipeSetup: boolean;
+  setIsMediaPipeSetup: Dispatch<SetStateAction<boolean>>;
+};
+
+const VIDEO_WIDTH = 320;
+const VIDEO_HEIGHT = 240;
+
+const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
+  const camera = useRef<cam.Camera>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const myStream = useRecoilValue(myStreamState);
+  const peers = useRecoilValue(peerDataListState);
   const motionState = useRecoilValue(latestMotionState);
   const modelState = useRecoilValue(model);
-  const [peerChange, setPeerChange] = useState(false);
-  const pointRef = useRef<number[]>([]);
-
   const user = useUser();
+  const pointRef = useRef<number[]>([]);
+  const myPeerId = user.data.uuid;
+  const [peerChange, setPeerChange] = useState(false);
 
   // mediapipe 데이터가 적절하게 나오는 곳
   const onResults = useCallback(
@@ -43,7 +52,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
       ) {
         const poseRig = Kalidokit.Pose.solve(results.poseWorldLandmarks, results.poseLandmarks, {
           runtime: 'mediapipe',
-          video: webcamRef?.current,
+          video: videoRef?.current,
           enableLegs: false,
         });
         const faceRig = {
@@ -59,10 +68,10 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
         }
 
         if (results.poseLandmarks[12].y > results.poseLandmarks[14].y && results.poseLandmarks[11].y > results.poseLandmarks[13].y && pointRef.current.length === 0) {
-          console.log('pushing');
+          //   console.log('pushing');
           pointRef.current.push(0);
         } else if (results.poseLandmarks[16].y > results.poseLandmarks[12].y && results.poseLandmarks[15].y > results.poseLandmarks[11].y && pointRef.current.length !== 0) {
-          console.log('popping');
+          //   console.log('popping');
           pointRef.current.pop();
           addedScoreForSeconds.addScore(Math.floor(Math.random() * 101) + 100);
         }
@@ -71,54 +80,62 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
     [motionState, modelState, peers, user.data],
   );
 
-  function setupMediapipe() {
-    aPose.onResults(onResults);
-    if (webcamRef.current && webcamRef.current) {
-      camera.current = new cam.Camera(webcamRef?.current, {
-        onFrame: async () => {
-          if (webcamRef.current) await aPose.send({ image: webcamRef.current });
-        },
-        width: 320,
-        height: 240,
-      });
-      camera.current.start();
-    }
-    setPeerChange(true);
-    return () => {
-      camera.current?.stop();
-      webcamRef.current = null;
-      camera.current = null;
-    };
-  }
   useEffect(() => {
-    if (mediaStream) {
-      const videoCurr = webcamRef.current;
-      if (!videoCurr) return;
-      const video = videoCurr! as HTMLVideoElement;
-      if (!video.srcObject) {
-        video.srcObject = mediaStream;
+    const setupMediapipe = () => {
+      if (videoRef.current) {
+        let isMediaPipeSetup = false;
+        camera.current = new cam.Camera(videoRef?.current, {
+          onFrame: async () => {
+            await aPose.send({ image: videoRef.current });
+            if (!isMediaPipeSetup) {
+              isMediaPipeSetup = true;
+              setIsMediaPipeSetup(true);
+            }
+          },
+          width: VIDEO_WIDTH,
+          height: VIDEO_HEIGHT,
+        });
+        camera.current.start().then(() => {
+          console.log('camera start');
+        });
+        setPeerChange(true);
+      }
+    };
+
+    if (myStream) {
+      const videoElement = videoRef.current;
+      if (!videoElement) return;
+      if (videoElement.srcObject) {
+        videoElement.srcObject = myStream;
+      } else {
+        videoElement.srcObject = myStream;
         setupMediapipe();
       }
+      videoElement.volume = 0;
     }
-  }, [mediaStream]);
+
+    return () => {
+      camera.current?.stop();
+      videoRef.current = null;
+      camera.current = null;
+    };
+  }, [myStream]);
 
   useEffect(() => {
     aPose.onResults(onResults);
   }, [peerChange, onResults]);
 
   return (
-    <>
-      <video
-        ref={webcamRef}
-        style={{
-          display: 'hidden',
-          position: 'absolute',
-          width: 320,
-          height: 240,
-        }}
-      ></video>
-    </>
+    <video
+      ref={videoRef}
+      style={{
+        visibility: 'hidden',
+        position: 'absolute',
+        width: VIDEO_WIDTH,
+        height: VIDEO_HEIGHT,
+      }}
+    ></video>
   );
 };
 
-export default ModelMotion;
+export default MediaPipeSetup;

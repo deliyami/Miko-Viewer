@@ -1,6 +1,5 @@
 import { Box, Button, Center, Tag, Text } from '@chakra-ui/react';
 import { AvatarModel } from '@src/components/viewing/avatar/AvatarModel';
-import ModelMotion from '@src/components/viewing/avatar/ModelMotion';
 import { NEXT_URL } from '@src/const';
 import { latestScoreState } from '@src/state/recoil/scoreState';
 import { isOnModelState, myStreamState, PeerDataInterface, peerDataListState } from '@src/state/recoil/viewingState';
@@ -99,7 +98,7 @@ const MyUserBox: FC = () => {
       {isOnModel && (
         <Box overflow="hidden" position="relative">
           <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={uuid} antialias></AvatarModel>
-          {myStream && <ModelMotion myPeerId={uuid} mediaStream={myStream}></ModelMotion>}
+          {/* {myStream && <ModelMotion myPeerId={uuid} mediaStream={myStream}></ModelMotion>} */}
         </Box>
       )}
       <Box width="full" position="absolute" top="0" h="2rem" color="white">

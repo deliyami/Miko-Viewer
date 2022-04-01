@@ -26,18 +26,5 @@
     "titleBar.inactiveForeground": "#15202b99"
   },
   "peacock.color": "#61dafb",
-  "cSpell.words": [
-    "babylonjs",
-    "chakra",
-    "kalidokit",
-    "Laravel",
-    "mediapipe",
-    "Miko",
-    "nprogress",
-    "openrelay",
-    "openrelayproject",
-    "peerjs",
-    "wasmworker",
-    "YMDHM"
-  ]
+  "cSpell.words": ["babylonjs", "borns", "chakra", "kalidokit", "Laravel", "mediapipe", "Miko", "nprogress", "openrelay", "openrelayproject", "peerjs", "wasmworker", "YMDHM"]
 }
