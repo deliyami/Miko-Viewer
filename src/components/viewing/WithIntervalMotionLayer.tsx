@@ -27,13 +27,9 @@ export const WithIntervalMotionLayer: FC = ({ children }) => {
           produce(draft => {
             const updatedMotion = setMotion.motion;
             if (updatedMotion) {
-              // 여기서 onResults를 받고 모션 해석하고 shareObjectMotion에 입력 할 수 없기 때문에
               // sendToAllPeers와 recoil state만 업데이트
               sendToAllPeers(peers, { type: 'motion', data: setMotion });
 
-              // redis에 내 모션 데이터를 넣을 필요가 없음
-
-              // 나의 Motion State를 업데이트
               draft[user.uuid] = updatedMotion;
             }
           }),
@@ -46,7 +42,6 @@ export const WithIntervalMotionLayer: FC = ({ children }) => {
         produce(draft => {
           /* eslint-disable */
           for (const key in roomMemberMotions) {
-            // console.log('this is withinterval motion', key, roomMemberMotions[key]);
             const newMotion = roomMemberMotions[key];
             const userModel = modelState[key];
             if (newMotion && userModel && key !== user.uuid) {

@@ -4,13 +4,13 @@ import { DonateProps } from '@src/types/DonateTypes';
 import { LottieOptions, useLottie } from 'lottie-react';
 import { FC, forwardRef } from 'react';
 /* eslint-disable */
-export const DonateIcon: FC<DonateProps> = forwardRef(({ path, loop = true, autoplay = true, width = '100px' }, ref) => {
+export const DonateIcon: FC<DonateProps> = forwardRef(({ path, loop = true, autoplay = true, width = 100 }, ref) => {
   const options: LottieOptions = {
     animationData: JSONExporter[PATHNAME[path]],
     loop,
     autoplay,
     style: {
-      width,
+      width: `${width}px`,
     },
   };
   const { View } = useLottie(options);

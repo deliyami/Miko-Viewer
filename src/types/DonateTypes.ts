@@ -22,6 +22,6 @@ type DonateProps = {
   path: number;
   loop?: boolean;
   autoplay?: boolean;
-  width?: string;
+  width?: number;
 };
 export type { DonateIconName, DonateProps };

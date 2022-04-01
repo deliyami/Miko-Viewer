@@ -32,39 +32,32 @@ export const AvatarModel: FC<{
           light.intensity = 1.2;
 
           BABYLON.MeshBuilder.CreateGround('ground', { width: 30, height: 6 }, scene);
-          BABYLON.SceneLoader.ImportMesh(
-            '',
-            path,
-            // "/test",
-            '',
-            scene,
-            (...args) => {
-              if (peerId) {
-                console.log('나는야 신나고 즐겁지');
-              }
+          BABYLON.SceneLoader.ImportMesh('', path, '', scene, (...args) => {
+            if (peerId) {
+              console.log('나는야 신나고 즐겁지');
+            }
 
-              args[4][27].rotate(new BABYLON.Vector3(0, 1, 0), Math.PI, 2);
-              const borns = args[4];
-              const originalBorns: BABYLON.Quaternion[] = [];
-              for (let j = 0; j < args[4].length; j++) {
-                originalBorns[j] = args[4][j].rotationQuaternion?.clone();
-              }
-              const animations = scene.animationGroups;
-              for (let j = 0; j < animations.length; j++) {
-                animations[j].stop();
-              }
-              setModel(
-                produce(draft => {
-                  draft[peerId] = {
-                    borns,
-                    originalBorns,
-                    scene,
-                  };
-                }),
-              );
-              scene.render();
-            },
-          );
+            args[4][27].rotate(new BABYLON.Vector3(0, 1, 0), Math.PI, 2);
+            const borns = args[4];
+            const originalBorns: BABYLON.Quaternion[] = [];
+            for (let j = 0; j < args[4].length; j++) {
+              originalBorns[j] = args[4][j].rotationQuaternion?.clone();
+            }
+            const animations = scene.animationGroups;
+            for (let j = 0; j < animations.length; j++) {
+              animations[j].stop();
+            }
+            setModel(
+              produce(draft => {
+                draft[peerId] = {
+                  borns,
+                  originalBorns,
+                  scene,
+                };
+              }),
+            );
+            scene.render();
+          });
         }
       };
       const engine = new BABYLON.Engine(reactCanvas.current);
