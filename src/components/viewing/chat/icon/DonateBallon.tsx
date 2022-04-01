@@ -37,7 +37,7 @@ export const DonateBallon: FC<Props> = props => {
     <>
       {isRunning ? (
         <DonateAnimationBox retry={retry} {...props}>
-          <DonateIcon width={width} path={nowDonate}></DonateIcon>
+          <DonateIcon width={props.width} path={nowDonate}></DonateIcon>
         </DonateAnimationBox>
       ) : (
         <></>

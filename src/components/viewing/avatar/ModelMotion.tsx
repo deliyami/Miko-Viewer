@@ -14,7 +14,6 @@ import * as Kalidokit from 'kalidokit';
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-// motion module...? function module? 어찌되었던 and motion algorithm
 const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ mediaStream, myPeerId }) => {
   const webcamRef = useRef<HTMLVideoElement | null>(null);
   const camera = useRef<cam.Camera | null>(null);
@@ -27,7 +26,7 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
 
   const user = useUser();
 
-  // AVATAR mediapipe 데이터가 적절하게 나오는 곳
+  // mediapipe 데이터가 적절하게 나오는 곳
   const onResults = useCallback(
     (results: Results) => {
       if (
@@ -52,72 +51,13 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
           left: results.poseLandmarks[7].x,
           right: results.poseLandmarks[8].x,
         };
-        // AVATAR 적절하게 render 호출하는 메소드
+        // 적절하게 render 호출하는 메소드 setBorn
         setBorn(modelState[myPeerId], myPeerId, poseRig, faceRig);
         if (peers && sendMotionForFrames) {
           const myMotion = { pose: poseRig, face: faceRig };
           sendMotionForFrames.setMotionStatus(myMotion);
         }
 
-        // 이것도 팔 올렸다 내렸다가 되는데 팔 각도를 계산하기 어렵고 예외인 부분까지 팔을 꺾어봐야 해서... 불완전함
-        // const T4 = 0.4;
-        // const T5 = 0.5;
-        // const T6 = 0.6;
-        // const T7 = 0.7;
-        // const T8 = 0.8;
-        // const T9 = 0.9;
-        // const O2 = 1.2;
-        // const findBefore = (ru: any, rl: any, lu: any, ll: any) => {
-        //   return (
-        //     ru.x > 0 &&
-        //     ru.x <= T4 &&
-        //     T7 < ru.y &&
-        //     ru.y < O2 &&
-        //     ru.z > 0 &&
-        //     ru.z <= T4 &&
-        //     rl.y !== 0 &&
-        //     T5 < rl.z &&
-        //     lu.x > 0 &&
-        //     lu.x <= T4 &&
-        //     O2 * -1 < lu.y &&
-        //     lu.y < T7 * -1 &&
-        //     T4 * -1 < lu.z &&
-        //     lu.z <= 0 &&
-        //     ll.y !== 0 &&
-        //     ll.z < T5 * -1
-        //   );
-        // };
-        // const findAfter = (ru: any, rl: any, lu: any, ll: any) => {
-        //   return (
-        //     ru.x !== 0 &&
-        //     T8 < ru.y &&
-        //     ru.y < O2 &&
-        //     T6 * -1 < ru.z &&
-        //     ru.z < 0 &&
-        //     rl.x !== 0 &&
-        //     rl.y !== 0 &&
-        //     rl.z > 0 &&
-        //     rl.z < T9 &&
-        //     lu.x !== 0 &&
-        //     O2 * -1 < lu.y &&
-        //     lu.y < T8 * -1 &&
-        //     lu.z > 0 &&
-        //     lu.z < T6 &&
-        //     ll.x !== 0 &&
-        //     ll.y !== 0 &&
-        //     T9 * -1 < ll.z &&
-        //     ll.z < 0
-        //   );
-        // };
-        // if (findBefore(poseRig.RightUpperArm, poseRig.RightLowerArm, poseRig.LeftUpperArm, poseRig.LeftLowerArm) && pointRef.current.length === 0) {
-        //   console.log('yes');
-        //   pointRef.current.push(0);
-        // } else if (findAfter(poseRig.RightUpperArm, poseRig.RightLowerArm, poseRig.LeftUpperArm, poseRig.LeftLowerArm) && pointRef.current.length !== 0) {
-        //   console.log('no');
-        //   pointRef.current.pop();
-        // }
-
-        // onResults에 나온 정점의 주요부분의 y값만 가지고 점수 낼까 생각중
         if (results.poseLandmarks[12].y > results.poseLandmarks[14].y && results.poseLandmarks[11].y > results.poseLandmarks[13].y && pointRef.current.length === 0) {
           console.log('pushing');
           pointRef.current.push(0);
@@ -126,13 +66,6 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
           pointRef.current.pop();
           addedScoreForSeconds.addScore(Math.floor(Math.random() * 101) + 100);
         }
-
-        // for (const peerId in modelState) {
-        //   console.log('thisismodelmotion', peerId, peerId !== myPeerId, motionState[peerId]);
-        //   if (motionState[peerId] && peerId !== myPeerId) {
-        //     setBorn(modelState, peerId, motionState[peerId].pose, motionState[peerId].face);
-        //   }
-        // }
       }
     },
     [motionState, modelState, peers, user.data],
@@ -145,9 +78,6 @@ const ModelMotion: FC<{ mediaStream: MediaStream; myPeerId: string }> = ({ media
       },
     });
     poseRef.current = pose;
-    //   let pose = new Holistic({locateFile: (file) => {
-    //     return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic@0.4.1633559476/${file}`;
-    // }});
     pose.setOptions({
       modelComplexity: 1,
       smoothLandmarks: true,
