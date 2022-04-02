@@ -43,9 +43,6 @@ const AudioVisualizer = ({ audioData }) => {
       } else if (level > 450 && level <= 2000) {
         volume = 10;
       }
-<<<<<<< HEAD
-      // console.log(volume);
-=======
 
       const handleAddScore = v => {
         // 이렇게 점수 추가해주면 나머지는 알아서 처리됨.
@@ -53,7 +50,6 @@ const AudioVisualizer = ({ audioData }) => {
       };
       handleAddScore(volume);
       console.log(volume);
->>>>>>> min3
       if (volume <= 10 && volume >= 1) {
         // eslint-disable-next-line no-plusplus
         // for (let j = 0; j < volume; j++) {

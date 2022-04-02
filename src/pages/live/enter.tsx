@@ -64,27 +64,34 @@ const RoomSelect = () => {
       <RadioGroup value={radioValue} onChange={radioChangeHandler}>
         <Stack spacing={5} direction="row">
           <Radio colorScheme="red" value="public">
-            Public
+            ランダム
           </Radio>
           <Radio colorScheme="green" value="private">
-            Private
+            プライベート
           </Radio>
         </Stack>
       </RadioGroup>
-      {!isPublicRoom && <PrivateRoomIdInput />}
+      <Flex h="100px" w="full" alignItems="center">
+        {isPublicRoom ? (
+          <Box>
+            <Heading size="md">ランダムのルームに入場します。</Heading>
+          </Box>
+        ) : (
+          <PrivateRoomIdInput />
+        )}
+      </Flex>
     </Box>
   );
 };
 
 const CurEnterInfo: FC<{ ticket: Ticket; concert: Concert }> = ({ ticket, concert }) => {
-  console.log('concert', concert);
   const startDate = convertDate(ticket.concertStartDate, 'YMDHM'); // 티켓 시작날
 
   return (
     <Flex justifyContent="center">
       <Box>
         <AspectRatio maxW="400px" ratio={1}>
-          <Image src={S3_URL + concert.coverImage} objectFit="over" fallbackSrc="https://via.placeholder.com/300" />
+          <Image src={S3_URL + concert.coverImage} objectFit="cover" fallbackSrc="https://via.placeholder.com/300" />
         </AspectRatio>
         <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(6, 1fr)">
           <GridItem rowSpan={1} colSpan={2}>
@@ -121,7 +128,7 @@ const CurEnterInfo: FC<{ ticket: Ticket; concert: Concert }> = ({ ticket, concer
   );
 };
 
-const RoomEnterPage = props => {
+const RoomEnterPage = () => {
   const router = useRouter();
   const curUserTicket = useRecoilValue(curUserTicketState);
 
