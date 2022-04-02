@@ -1,79 +1,49 @@
-import { Box } from '@chakra-ui/react';
-import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
-import { useEffect, useRef } from 'react';
+import { Box, BoxProps, Flex, HStack, Text } from '@chakra-ui/react';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { memo } from 'react';
+import { RiVoiceprintLine } from 'react-icons/ri';
 
-const AudioVisualizer = ({ audioData }) => {
-  const canvasRef = useRef(null);
-  const contextRef = useRef(null);
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    canvas.width = 200;
-    canvas.height = 20;
-    canvas.style.background = '#222222';
-    const context = canvas.getContext('2d');
+type Props = {
+  volume: number;
+};
 
-    contextRef.current = context;
-    context.fillStyle = 'white';
-    // context.globalAlpha = 0.8;
-    // context.strokeStyle = '#003300';
-    context.fillRect(10, 7, 180, 7);
+const MotionBox = motion<Omit<BoxProps, 'transition' | 'style'>>(Box);
 
-    function volumeDraw(level) {
-      // console.log(level);
-      // const x = 0;
-      let volume = null;
-      if (level > 0 && level <= 50) {
-        volume = 1;
-      } else if (level > 50 && level <= 100) {
-        volume = 2;
-      } else if (level > 100 && level <= 150) {
-        volume = 3;
-      } else if (level > 150 && level <= 200) {
-        volume = 4;
-      } else if (level > 200 && level <= 250) {
-        volume = 5;
-      } else if (level > 250 && level <= 300) {
-        volume = 6;
-      } else if (level > 300 && level <= 350) {
-        volume = 7;
-      } else if (level > 350 && level <= 400) {
-        volume = 8;
-      } else if (level > 400 && level <= 450) {
-        volume = 9;
-      } else if (level > 450 && level <= 2000) {
-        volume = 10;
-      }
+const MAX_VOLUME = 300;
+const MIN_VOLUME = 100;
 
-      const handleAddScore = v => {
-        // 이렇게 점수 추가해주면 나머지는 알아서 처리됨.
-        addedScoreForSeconds.addScore(v);
-      };
-      handleAddScore(volume);
-      console.log(volume);
-      if (volume <= 10 && volume >= 1) {
-        // eslint-disable-next-line no-plusplus
-        // for (let j = 0; j < volume; j++) {
-        // console.log(Math.floor(parseInt(value)/10));
-        // x += 15;
-        context.beginPath();
-        // 15~185
-        // 3~57
-        context.arc(15 * volume, 10, 8, 0, 2 * Math.PI);
-        context.stroke();
-        context.fillStyle = '#70F1E9';
-        context.fill();
-        // }
-      }
-      // eslint-disable-next-line no-plusplus
-    }
-    // handleAddScore(volume);
-    volumeDraw(audioData);
-  }, [audioData]);
+const MAX_PROCESS_RESULT = 100;
+
+const COLORS = ['#e3f015', '#39c5bb', '#2132dc', '#f700ff', '#fe0059'];
+
+const processVolume = volume => {
+  const cut = Math.min(MAX_VOLUME, volume);
+  const normalized = ((cut - MIN_VOLUME) / (MAX_VOLUME - MIN_VOLUME)) * 100;
+  const rounded = Math.round(normalized);
+  return Math.max(0, rounded);
+};
+
+const AudioVisualizer = memo<Props>(({ volume }) => {
+  const x = useMotionValue(0);
+  const xRange = [...Array(COLORS.length).keys()];
+  const background = useTransform(x, xRange, COLORS);
+
+  const processedVolume = processVolume(volume);
+  const colorIdx = (processedVolume * (COLORS.length - 1)) / MAX_PROCESS_RESULT;
+
+  x.set(colorIdx);
 
   return (
-    <Box>
-      <canvas style={{ border: 'solid' }} ref={canvasRef}></canvas>
-    </Box>
+    <Flex alignItems="center" w="full" position="relative">
+      <HStack zIndex="1" px="1">
+        <RiVoiceprintLine />
+        <Text pl="1">{processedVolume}</Text>
+      </HStack>
+      <MotionBox position="absolute" display="flex" style={{ background }} alignItems="center" h="20px" animate={{ width: `${processedVolume}%` }}></MotionBox>
+    </Flex>
   );
-};
+});
+
+AudioVisualizer.displayName = 'AudioVisualizer';
+
 export default AudioVisualizer;

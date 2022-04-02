@@ -8,7 +8,7 @@ import ivsPlayer from '../ivs-player';
 import RoomAvatarView from './avatar/RoomAvatarView';
 import ChatMessageInput from './chat/ChatMessageInput';
 import ViewingSideMenuBar from './menu/ViewingSideMenuBar';
-import { AudioAnalyze } from './rightContainer/audioAnalyze/AudioAnalyze';
+import AudioAnalyser from './rightContainer/audioAnalyze/AudioAnalyser';
 import RankingView from './rightContainer/ranking/RankingView';
 import ViewingWindowEventLayout from './ViewingWindowEventLayout';
 import { WithIntervalMotionLayer } from './WithIntervalMotionLayer';
@@ -63,10 +63,10 @@ const ViewingCSRPage = () => {
                 <ChatMessageInput />
               </VStack>
               <DonateBallon width={100} x={200} y={-100} duration={1} delay={1}></DonateBallon>
-              <VStack width="25vw">
+              <VStack width="25vw" maxH="100vh" overflowY="hidden">
                 <RankingView />
                 <ChatBox />
-                <AudioAnalyze />
+                <AudioAnalyser />
               </VStack>
               <ViewingSideMenuBar />
             </HStack>

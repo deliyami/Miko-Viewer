@@ -39,7 +39,7 @@ const RankingView: FC = () => {
   }, [socket]);
 
   return (
-    <VStack width="full" position="relative" backgroundColor="#202020" border="2px" borderColor="#262626" textColor="white" h="130px" maxH="130px" overflowY="scroll">
+    <VStack width="full" position="relative" backgroundColor="#202020" border="2px" borderColor="#262626" textColor="white" flexBasis="150px" overflowY="scroll">
       <Box color="yellow" fontSize="2xl" pos="absolute" left="2" top="2">
         <RiVipCrownLine />
       </Box>

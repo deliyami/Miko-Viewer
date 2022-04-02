@@ -84,6 +84,7 @@ const ChatMessageInput = () => {
           {/* <FormControl> */}
           <Input
             id="chat-input"
+            autoComplete="off"
             zIndex={10}
             ref={inputRef}
             width="50vw"

@@ -1,4 +1,4 @@
-import { Box, Text, VStack } from '@chakra-ui/react';
+import { Box, Heading, VStack } from '@chakra-ui/react';
 import { messagesState } from '@src/state/recoil/viewingState';
 import { useEffect, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -22,7 +22,7 @@ const ChatBox = () => {
 
   return (
     <VStack backgroundColor="#202020" border="2px" borderColor="#262626" width="full" textColor="white">
-      <Text>채팅</Text>
+      <Heading size="sm">チャット</Heading>
       <VStack height="75vh" width="full" overflow="scroll" p="4">
         {messages.length > 0
           ? messages.map((data, idx) => {
