@@ -107,7 +107,7 @@ const MyUserBox: FC = () => {
         <Text fontSize="6xl" id={uuid + 'motion'}></Text>
         <Text fontSize="3xl" width="30vw" id={uuid + 'chat'}></Text>
       </Box>
-      <TempAddScoreLogic />
+      {/* <TempAddScoreLogic /> */}
     </Box>
   );
 };
