@@ -63,7 +63,7 @@ const ViewingCSRPage = () => {
                 <ChatMessageInput />
               </VStack>
               <DonateBallon width={100} x={200} y={-100} duration={1} delay={1}></DonateBallon>
-              <VStack width="25vw" maxH="100vh" overflowY="hidden">
+              <VStack width="25vw" h="100vh" maxH="100vh" overflow="hidden">
                 <RankingView />
                 <ChatBox />
                 <AudioAnalyser />

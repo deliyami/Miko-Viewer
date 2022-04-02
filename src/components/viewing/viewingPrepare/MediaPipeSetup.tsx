@@ -1,7 +1,7 @@
-import '@mediapipe/camera_utils';
+// import '@mediapipe/camera_utils';
+// import '@mediapipe/control_utils';
+// import '@mediapipe/drawing_utils';
 import * as cam from '@mediapipe/camera_utils';
-import '@mediapipe/control_utils';
-import '@mediapipe/drawing_utils';
 import { Results } from '@mediapipe/pose';
 import { setBorn } from '@src/helper/setBornAvatar';
 import { model } from '@src/state/recoil/modelState';
@@ -80,7 +80,7 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
   );
 
   useEffect(() => {
-    let camera;
+    let camera: cam.Camera;
     const setupMediapipe = () => {
       if (videoRef.current) {
         let isMediaPipeSetup = false;
@@ -96,14 +96,12 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
           height: VIDEO_HEIGHT,
         });
         camera.start().then(() => {
-          console.log('camera start');
+          // console.log('camera start');
         });
         setPeerChange(true);
       }
     };
-    console.log('myStream', myPeerId);
     if (myStream) {
-      console.log('aaa');
       const videoElement = videoRef.current;
       if (videoElement.srcObject) {
         videoElement.srcObject = myStream;
@@ -115,7 +113,7 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
     }
 
     return () => {
-      camera?.stop();
+      // camera?.stop();
     };
   }, [myStream, videoRef.current]);
 

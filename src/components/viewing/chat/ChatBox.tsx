@@ -21,9 +21,9 @@ const ChatBox = () => {
   }, [messages]);
 
   return (
-    <VStack backgroundColor="#202020" border="2px" borderColor="#262626" width="full" textColor="white">
+    <VStack flexGrow="1" backgroundColor="#202020" border="2px" borderColor="#262626" overflow="scroll" width="full" textColor="white">
       <Heading size="sm">チャット</Heading>
-      <VStack height="75vh" width="full" overflow="scroll" p="4">
+      <VStack width="full" height="full" overflow="scroll" p="4" alignItems="start">
         {messages.length > 0
           ? messages.map((data, idx) => {
               return <Message key={idx} data={data} />;

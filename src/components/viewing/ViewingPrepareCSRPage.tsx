@@ -53,6 +53,8 @@ const ViewingPrepareCSRPage = () => {
 
   const handleCleanUp = () => {
     console.log('handleCleanUp');
+    // aPose.close();
+
     if (myStream) {
       myStream.getTracks().forEach(track => {
         track.stop();
@@ -80,7 +82,6 @@ const ViewingPrepareCSRPage = () => {
   });
 
   useEffect(() => {
-    // aPose.initialize();
     return () => {
       handleCleanUp();
     };
