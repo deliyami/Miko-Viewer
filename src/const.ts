@@ -3,6 +3,9 @@ import { DoneItem } from './types/share/DoneItem';
 // Debug Mode
 export const dummyMotion = true;
 
+// VALUE
+export const MAX_MSGS = 500;
+
 // Const
 export const LOGIN_COOKIE = 'isLogin';
 export const LARAVEL_SESSION = 'laravel_session';

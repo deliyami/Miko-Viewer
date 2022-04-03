@@ -16,7 +16,7 @@ const Message: FC<{ data: ChatMessageInterface }> = ({ data: { sender, text, amo
     const colorIdx = Math.floor(Math.min(MAX_AMOUNT, amount) / Math.floor(MAX_AMOUNT / COLORS.length));
 
     return (
-      <VStack bgColor={COLORS[colorIdx]} w="full" alignSelf={sender === name ? 'start' : 'end'} borderRadius="base">
+      <VStack my="1" bgColor={COLORS[colorIdx]} w="full" alignSelf={sender === name ? 'start' : 'end'} borderRadius="base">
         <HStack w="full" bgColor={DARKEN_COLORS[colorIdx]} px="2" py="1">
           {avatar && <Avatar size="md" src={avatar} padding="0.5" />}
           <VStack w="full" alignItems="start" justifyContent="center">
@@ -35,7 +35,7 @@ const Message: FC<{ data: ChatMessageInterface }> = ({ data: { sender, text, amo
 
   const CommonChat: FC = () => {
     return (
-      <Flex>
+      <Flex my="1" pl="2">
         <Text flexGrow="1">
           <Tag as="span" mr="2">
             {sender}

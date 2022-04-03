@@ -1,3 +1,4 @@
+import { MAX_MSGS } from '@src/const';
 import setMotionToAvatar from '@src/helper/setMotionToAvatar';
 import showChatToRoom from '@src/helper/showChatToRoom';
 import { toastLog } from '@src/helper/toastLog';
@@ -199,7 +200,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
     const getBroadcastedNewMessage = (data: ChatMessageInterface) => {
       setMessages(
         produce(prevMsgs => {
-          const MAX_MSGS = 30;
           const len = prevMsgs.length;
           if (len > MAX_MSGS) prevMsgs.splice(0, len - MAX_MSGS);
           prevMsgs.push(data);
