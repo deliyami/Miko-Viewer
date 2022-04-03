@@ -28,8 +28,19 @@ const ChatBox = () => {
         produce(prevMsgs => {
           const len = prevMsgs.length;
           if (len > MAX_MSGS) {
-            prevMsgs.splice(0, len - MAX_MSGS + MAX_MSGS * 0.5);
+            const deleteLength = Math.round(len - MAX_MSGS + MAX_MSGS * 0.5);
+            prevMsgs.splice(0, deleteLength);
+            const hList = [];
+            const w = cache.getWidth(0, 0);
+            for (let i = 0; i < prevMsgs.length; i++) {
+              const h = cache.getHeight(i + deleteLength, 0);
+              hList.push(h);
+            }
+            // console.log(a);
             cache.clearAll();
+            hList.forEach((h, idx) => {
+              cache.set(idx, 0, w, h);
+            });
           }
           prevMsgs.push(data);
           return prevMsgs;
@@ -39,6 +50,7 @@ const ChatBox = () => {
     socket.on('be-broadcast-new-message', getBroadcastedNewMessage);
 
     return () => {
+      cache.clearAll();
       socket.off('be-broadcast-new-message', getBroadcastedNewMessage);
     };
   }, [socket]);
@@ -74,7 +86,7 @@ const ChatBox = () => {
               rowRenderer={rowRenderer}
               rowHeight={cache.rowHeight}
               onScroll={handelOnScroll}
-              overscanRowCount={10}
+              overscanRowCount={2}
               noRowsRenderer={noRowsRenderer}
               scrollToIndex={isBottom ? messages.length - 1 : undefined}
             />
