@@ -86,7 +86,9 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
         let isMediaPipeSetup = false;
         camera = new cam.Camera(videoRef?.current, {
           onFrame: async () => {
-            await aPose.send({ image: videoRef.current });
+            // console.time('MediaPipe - poseSend');
+            // await aPose.send({ image: videoRef.current }); // NOTE  mediaPipe on off
+            // console.timeEnd('MediaPipe - poseSend');
             if (!isMediaPipeSetup) {
               isMediaPipeSetup = true;
               setIsMediaPipeSetup(true);
@@ -96,7 +98,7 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
           height: VIDEO_HEIGHT,
         });
         camera.start().then(() => {
-          // console.log('camera start');
+          console.log('MediaPipe - Camera Start ✅');
         });
         setPeerChange(true);
       }

@@ -1,4 +1,4 @@
-import { Box, HStack, Text } from '@chakra-ui/react';
+import { Box, Center, HStack, Spinner, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { toastLog } from '@src/helper/toastLog';
 import useIvsPlayer from '@src/hooks/useIvsPlayer';
@@ -47,7 +47,6 @@ const VideoPlayer: FC = () => {
   const [muted, setMuted] = useState(false);
 
   const player = useRef<ivs.MediaPlayer>(null);
-  const playerBaseEl = useRef(null);
   const videoEl = useRef(null);
 
   const enterTicketData = useRecoilValue(enterTicketDataState);
@@ -61,40 +60,55 @@ const VideoPlayer: FC = () => {
   // 브라우저 설정으로 인해서 소리와 함께 자동재생이 허용되지 않았을 경우 state 변경
   useEffect(() => {
     if (!player.current) return;
-    setMuted(player.current.isMuted());
+    // setMuted(player.current.isMuted());
   }, [loading]);
 
-  if (!IVSPlayer.isPlayerSupported) {
-    toastLog('info', 'IVS Player Not Supported');
-    router.push('/');
-  }
-
   useEffect(() => {
+    toastLog('info', 'USE EFFECT Video Player');
     const { ENDED, PLAYING, READY, BUFFERING, IDLE } = IVSPlayer.PlayerState;
-    const { ERROR } = IVSPlayer.PlayerEventType;
+    const { REBUFFERING, QUALITY_CHANGED, PLAYBACK_BLOCKED, ERROR, BUFFER_UPDATE, AUDIO_BLOCKED } = IVSPlayer.PlayerEventType;
     const { isPlayerSupported } = IVSPlayer;
-    console.log('ivs useEffect');
     if (!isPlayerSupported) {
-      return console.warn('현재 브라우저는 ivs player를 지원하지 않습니다.');
+      toastLog('error', 'このブラウザでは利用ができません。 ');
+      return router.push('/');
+    }
+    if (!enterTicketData) {
+      return toastLog('error', 'No enterTicketData');
     }
 
     const onStateChange = () => {
       const playerState = player.current.getState();
-
+      // player.current.setLiveLowLatencyEnabled(true);
+      console.log('onStateChange', playerState);
+      console.log(player.current.getQuality());
+      console.log(player.current.getBuffered());
+      console.log(player.current.getBufferDuration());
+      console.log(player.current.isAutoplay());
+      console.log('lowLatency', player.current.isLiveLowLatency());
       switch (playerState) {
         case READY:
-          setSelectableQuality(player.current.getQualities());
+          const qualities = player.current.getQualities();
+          setSelectableQuality(qualities);
+          player.current.setQuality(qualities[0], true); // 왜 이거 안해주면 버퍼링 오래 걸리지
+          player.current.setLiveLowLatencyEnabled(true);
+          player.current.play();
+          break;
+        case BUFFERING:
+          console.log('NOW BUFFERING');
           break;
         default:
           break;
       }
 
-      console.log(`Player State - ${playerState}`);
-      setLoading(playerState !== PLAYING);
+      // setLoading(playerState !== PLAYING);
     };
 
     const onError = err => {
-      console.warn('Player Event - ERROR:', err);
+      toastLog('error', 'IVS Player ERROR', '', err);
+      if (err.type === 'ErrorNoSource') {
+        player.current.load(enterTicketData.playbackUrl + '?token=' + jwt);
+        player.current.play();
+      }
     };
 
     const onTimeMetaData = cue => {
@@ -108,25 +122,44 @@ const VideoPlayer: FC = () => {
       if (result.type === 'qr') {
         setQuizResultMetaDataState(result);
       }
-
-      console.log(player.current.getPosition().toFixed(2));
     };
     // @ts-ignore
-    player.current = IVSPlayer.create(); // web 버전이어서 wasm 넣어줄 필요는 없음.
+    const aPlayer = IVSPlayer.create(); // web 버전이어서 wasm 넣어줄 필요는 없음.
+    player.current = aPlayer;
+    // @ts-ignore
+    player.current.load(enterTicketData.playbackUrl + '?token=' + jwt);
+
+    player.current.setLiveLowLatencyEnabled(true);
+
     player.current.attachHTMLVideoElement(videoEl.current);
 
     player.current.setAutoplay(true);
-    player.current.setVolume(1);
-    player.current.setLiveLowLatencyEnabled(true);
+    player.current.setVolume(0.2);
 
-    // @ts-ignore
-    player.current.load(enterTicketData.playbackUrl + '?token=' + jwt);
     player.current.play();
 
+    player.current.addEventListener(IDLE, onStateChange);
     player.current.addEventListener(READY, onStateChange);
     player.current.addEventListener(PLAYING, onStateChange);
+    player.current.addEventListener(BUFFERING, onStateChange);
     player.current.addEventListener(ENDED, onStateChange);
     player.current.addEventListener(ERROR, onError);
+
+    player.current.addEventListener(REBUFFERING, () => {
+      console.log(REBUFFERING);
+    });
+    player.current.addEventListener(QUALITY_CHANGED, () => {
+      console.log(QUALITY_CHANGED);
+    });
+    player.current.addEventListener(PLAYBACK_BLOCKED, () => {
+      console.log(PLAYBACK_BLOCKED);
+    });
+    player.current.addEventListener(BUFFER_UPDATE, () => {
+      console.log(BUFFER_UPDATE);
+    });
+    player.current.addEventListener(AUDIO_BLOCKED, () => {
+      console.log(AUDIO_BLOCKED);
+    });
     player.current.addEventListener(IVSPlayer.PlayerEventType.TEXT_METADATA_CUE, onTimeMetaData);
 
     const intervalId = setInterval(() => {
@@ -152,16 +185,17 @@ const VideoPlayer: FC = () => {
     }, 1000);
 
     return () => {
-      player.current.play();
+      player.current.removeEventListener(IDLE, onStateChange);
       player.current.removeEventListener(READY, onStateChange);
       player.current.removeEventListener(PLAYING, onStateChange);
-      player.current.removeEventListener(ENDED, onStateChange);
+      player.current.removeEventListener(PLAYING, onStateChange);
+      player.current.removeEventListener(BUFFERING, onStateChange);
       player.current.removeEventListener(ERROR, onError);
       player.current.removeEventListener(IVSPlayer.PlayerEventType.TEXT_METADATA_CUE, onTimeMetaData);
       player.current.delete();
       clearInterval(intervalId);
     };
-  }, [enterTicketData, IVSPlayer]);
+  }, [enterTicketData]);
 
   useEffect(() => {
     const canvas = document.getElementById('ambiance') as HTMLCanvasElement;
@@ -189,18 +223,16 @@ const VideoPlayer: FC = () => {
     } else {
       player.current.pause();
     }
-    console.log(player.current.isPaused());
     setIsPlaying(isPaused);
   };
 
   const toggleMute = () => {
     const shouldMute = !player.current.isMuted();
-
     player.current.setMuted(shouldMute);
     setMuted(shouldMute);
   };
 
-  console.log(player.current?.getState());
+  console.log('player', player.current);
 
   return (
     <Box id="player-wrapper" width="80%" position="relative" overflow="hidden" role="group">
@@ -208,6 +240,9 @@ const VideoPlayer: FC = () => {
       <Box height="100%" width="100%" position="absolute" top="0">
         <QuizView />
         <QuizResultView />
+        <Center position="absolute" w="20px" h="20px" zIndex="300">
+          <Spinner />
+        </Center>
         <Box
           position="absolute"
           top="0"

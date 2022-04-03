@@ -8,6 +8,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
@@ -40,15 +41,19 @@ const ViewingSettingDrawer = forwardRef((_, ref) => {
         <DrawerBody>
           <Heading size="sm">Room Id :{enterRoomId} </Heading>
           <Divider my="6" />
-          <FormControl display="flex" alignItems="center">
-            <FormLabel htmlFor="is-on-model" mb="0">
-              Show Avatar
-            </FormLabel>
-            <Switch id="is-on-model" onChange={() => setIsOnModel(prev => !prev)} />
-            <FormLabel htmlFor="is-on-video-ambiance" mb="0">
-              turn on video ambiance
-            </FormLabel>
-            <Switch id="is-on-video-ambiance" onChange={() => setIsOnVideoAmbiance(prev => !prev)} />
+          <FormControl display="flex" flexDir="column">
+            <Flex justifyContent="space-between">
+              <FormLabel htmlFor="is-on-model" mb="0">
+                Show Avatar
+              </FormLabel>
+              <Switch id="is-on-model" defaultChecked={isOnModel} onChange={() => setIsOnModel(prev => !prev)} />
+            </Flex>
+            <Flex justifyContent="space-between">
+              <FormLabel htmlFor="is-on-video-ambiance" mb="0">
+                turn on video ambiance
+              </FormLabel>
+              <Switch id="is-on-video-ambiance" defaultChecked={isOnVideoAmbiance} onChange={() => setIsOnVideoAmbiance(prev => !prev)} />
+            </Flex>
           </FormControl>
         </DrawerBody>
 
