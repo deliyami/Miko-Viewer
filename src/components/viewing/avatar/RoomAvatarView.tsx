@@ -116,7 +116,7 @@ const RoomAvatarView = () => {
   const peerDataList = useRecoilValue(peerDataListState);
 
   return (
-    <Center gap="5">
+    <Center gap="5" zIndex="inherit">
       <MyUserBox />
       {peerDataList.map(peer => (
         <UserBox peer={peer} key={peer.id} />

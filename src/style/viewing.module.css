@@ -1,0 +1,9 @@
+.ambiance {
+  width: 20%;
+  height: 20%;
+  /* background-color: aqua; */
+  transform: scale(5);
+  -webkit-filter: blur(50px);
+  filter: blur(50px);
+  /* opacity: 0.85; */
+}

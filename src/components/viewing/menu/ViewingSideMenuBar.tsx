@@ -1,4 +1,4 @@
-import { Center, Text, VStack } from '@chakra-ui/react';
+import { Center, StackProps, Text, VStack } from '@chakra-ui/react';
 import DonateModal from '@src/components/viewing/menu/donate/DonateModal';
 import { Children, cloneElement, FC, ReactElement, useRef } from 'react';
 import { BiCamera, BiHelpCircle } from 'react-icons/bi';
@@ -38,9 +38,9 @@ const IconBox: FC<{ text: string; icon: IconType }> = ({ children, text, icon })
   );
 };
 
-const ViewingSideMenuBar: FC = () => {
+const ViewingSideMenuBar: FC<StackProps> = ({ children, ...props }) => {
   return (
-    <VStack width="5rem" bgColor="#202020" minH="100vh">
+    <VStack width="5rem" bgColor="#202020" minH="100vh" {...props}>
       <IconBox icon={BiCamera} text="カメラ">
         <MyCamera />
       </IconBox>

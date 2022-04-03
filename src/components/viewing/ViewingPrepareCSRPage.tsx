@@ -102,10 +102,23 @@ const ViewingPrepareCSRPage = () => {
   useLayoutEffect(() => {
     if (!socket) return;
 
+    let timeoutId;
     if (socket.connected) {
       setIsReadySocket(true);
+    } else {
+      const checkSocketConnected = () => {
+        if (socket.connected) {
+          setIsReadySocket(true);
+        } else {
+          timeoutId = setTimeout(checkSocketConnected, 200);
+        }
+      };
+      timeoutId = setTimeout(checkSocketConnected);
     }
-  }, [socket.connected, socket]);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [socket]);
 
   useLayoutEffect(() => {
     //  on("open")에서 하면 useEffect에서 등록하기 전에 이미 open 되어버림.

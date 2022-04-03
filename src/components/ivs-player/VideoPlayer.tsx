@@ -71,17 +71,27 @@ const VideoPlayer: FC = () => {
     const { ENDED, PLAYING, READY, BUFFERING, IDLE } = IVSPlayer.PlayerState;
     const { ERROR } = IVSPlayer.PlayerEventType;
     const { isPlayerSupported } = IVSPlayer;
+    console.log('ivs useEffect');
     if (!isPlayerSupported) {
       return console.warn('현재 브라우저는 ivs player를 지원하지 않습니다.');
     }
 
+    const canvas = document.getElementById('ambiance') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d');
     const onStateChange = () => {
+      function can() {
+        if (ctx && videoEl.current) {
+          ctx.drawImage(videoEl.current, 0, 0, canvas.width, canvas.height);
+          requestAnimationFrame(can);
+        }
+      }
+      requestAnimationFrame(can);
+
       const playerState = player.current.getState();
 
       switch (playerState) {
         case READY:
           setSelectableQuality(player.current.getQualities());
-          console.log('aaa', player.current.getQualities());
           break;
         default:
           break;
@@ -128,10 +138,10 @@ const VideoPlayer: FC = () => {
     player.current.addEventListener(IVSPlayer.PlayerEventType.TEXT_METADATA_CUE, onTimeMetaData);
 
     const intervalId = setInterval(() => {
-      player.current.setLiveLowLatencyEnabled(true);
+      // player.current.setLiveLowLatencyEnabled(true);
       // player.current.setAutoMaxBitrate(true);
       // player.current.setAutoMaxQuality(true);
-      player.current.play();
+      // player.current.play();
       // console.log("-------------------------------", Date.now());
       // console.log("getBufferDuration", player.current.getBufferDuration()); // 현재 재생 위치보다, 남은 버퍼가  몇초 있는지
       // console.log("getBuffered", player.current.getBuffered()); // 메모리에 저장중이 버퍼 데이터의 시작 초 ~ 끝나는 초
@@ -143,11 +153,10 @@ const VideoPlayer: FC = () => {
       // console.log("isAutoplay", player.current.isAutoplay());
       // console.log("isAutoQualityMode", player.current.isAutoQualityMode());
       // console.log("isLiveLowLatency", player.current.isLiveLowLatency());
-      if (player.current.getBufferDuration() > 7) {
-        player.current.seekTo(player.current.getPosition() + 5.0);
-      }
-
-      console.log('-------------------------------');
+      // if (player.current.getBufferDuration() > 7) {
+      //   player.current.seekTo(player.current.getPosition() + 5.0);
+      // }
+      // console.log('-------------------------------');
     }, 1000);
 
     return () => {
@@ -160,7 +169,7 @@ const VideoPlayer: FC = () => {
       player.current.delete();
       clearInterval(intervalId);
     };
-  }, [enterTicketData]);
+  }, [enterTicketData, IVSPlayer]);
 
   const pause = () => {
     const isPaused = player.current.isPaused();
@@ -171,17 +180,6 @@ const VideoPlayer: FC = () => {
     }
     console.log(player.current.isPaused());
     setIsPlaying(isPaused);
-    // setIsMiniPlayer(false);
-  };
-
-  const resize = () => {
-    const { offsetLeft, offsetTop } = playerBaseEl.current;
-
-    window.scrollTo({
-      top: offsetTop - 20,
-      left: offsetLeft,
-      behavior: 'smooth',
-    });
   };
 
   const toggleMute = () => {
@@ -191,9 +189,7 @@ const VideoPlayer: FC = () => {
     setMuted(shouldMute);
   };
 
-  // if (!isPlayerSupported) {
-  //   return <Text> 지원되지 않는 브라우저 입니다. </Text>;
-  // }
+  console.log(player.current?.getState());
 
   return (
     <Box id="player-wrapper" width="80%" position="relative" overflow="hidden" role="group">

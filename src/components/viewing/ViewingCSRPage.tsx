@@ -3,8 +3,8 @@ import VideoPlayer from '@src/components/ivs-player/VideoPlayer';
 import ChatBox from '@src/components/viewing/chat/ChatBox';
 import { DonateBallon } from '@src/components/viewing/chat/icon/DonateBallon';
 import useIvsPlayer from '@src/hooks/useIvsPlayer';
+import styles from '@src/style/viewing.module.css';
 import { useEffect, useState } from 'react';
-import ivsPlayer from '../ivs-player';
 import RoomAvatarView from './avatar/RoomAvatarView';
 import ChatMessageInput from './chat/ChatMessageInput';
 import ViewingSideMenuBar from './menu/ViewingSideMenuBar';
@@ -28,28 +28,24 @@ const ViewingCSRPage = () => {
           setScriptLoaded(true);
           clearInterval(intervalId);
         }
-      }, 1000);
+      }, 300);
     }
-
-    // const setI = setInterval(() => {
-    //   console.log('*******************');
-    // }, 100);
 
     return () => {
       clearInterval(intervalId);
-      // clearInterval(setI);
     };
   }, [scriptLoaded, IVSPlayer]);
-
-  console.log('ivs player', ivsPlayer);
 
   return (
     <ViewingWindowEventLayout>
       <WithSocketEventLayout>
         <WithIntervalMotionLayer>
           <WithIntervalTaskLayer>
-            <HStack width="100vw" minH="100vh" backgroundColor="#181818">
-              <VStack width="full">
+            <HStack width="100vw" h="full" position="relative" overflow="clip" backgroundColor="#181818">
+              <Center h="full" w="full" zIndex="0" position="absolute">
+                <canvas className={styles.ambiance} id="ambiance" />
+              </Center>
+              <VStack width="full" h="full" position="relative">
                 {IVSPlayer ? (
                   <VideoPlayer />
                 ) : (
@@ -63,12 +59,12 @@ const ViewingCSRPage = () => {
                 <ChatMessageInput />
               </VStack>
               <DonateBallon width={100} x={200} y={-100} duration={1} delay={1}></DonateBallon>
-              <VStack width="25vw" h="100vh" maxH="100vh" overflow="hidden">
+              <VStack width="25vw" h="100vh" maxH="100vh" overflow="hidden" zIndex="0">
                 <RankingView />
                 <ChatBox />
                 <AudioAnalyser />
               </VStack>
-              <ViewingSideMenuBar />
+              <ViewingSideMenuBar zIndex="2" />
             </HStack>
           </WithIntervalTaskLayer>
         </WithIntervalMotionLayer>
