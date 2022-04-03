@@ -4,6 +4,7 @@ import { toastLog } from '@src/helper/toastLog';
 import useIvsPlayer from '@src/hooks/useIvsPlayer';
 import { enterTicketDataState } from '@src/state/recoil/concertState';
 import { msgMetaDataState, quizMetaDataState, quizResultMetaDataState } from '@src/state/recoil/timeMetaDataState';
+import { isOnVideoAmbianceState } from '@src/state/recoil/viewingState';
 import { AllMetaData } from '@src/types/share/TimeMetadataFormat';
 import * as ivs from 'amazon-ivs-player';
 import { useRouter } from 'next/router';
@@ -55,6 +56,7 @@ const VideoPlayer: FC = () => {
   const setQuizResultMetaDataState = useSetRecoilState(quizResultMetaDataState);
   const setQuizMetaDataState = useSetRecoilState(quizMetaDataState);
   const setMsgMetaDataState = useSetRecoilState(msgMetaDataState);
+  const isOnVideoAmbiance = useRecoilValue(isOnVideoAmbianceState);
 
   // 브라우저 설정으로 인해서 소리와 함께 자동재생이 허용되지 않았을 경우 state 변경
   useEffect(() => {
@@ -76,17 +78,7 @@ const VideoPlayer: FC = () => {
       return console.warn('현재 브라우저는 ivs player를 지원하지 않습니다.');
     }
 
-    const canvas = document.getElementById('ambiance') as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d');
     const onStateChange = () => {
-      function can() {
-        if (ctx && videoEl.current) {
-          ctx.drawImage(videoEl.current, 0, 0, canvas.width, canvas.height);
-          requestAnimationFrame(can);
-        }
-      }
-      requestAnimationFrame(can);
-
       const playerState = player.current.getState();
 
       switch (playerState) {
@@ -170,6 +162,25 @@ const VideoPlayer: FC = () => {
       clearInterval(intervalId);
     };
   }, [enterTicketData, IVSPlayer]);
+
+  useEffect(() => {
+    const canvas = document.getElementById('ambiance') as HTMLCanvasElement;
+    let requestAnimationId;
+    if (canvas && isOnVideoAmbiance) {
+      const ctx = canvas.getContext('2d');
+      const drawAmbiance = () => {
+        if (ctx && videoEl.current) {
+          ctx.drawImage(videoEl.current, 0, 0, canvas.width, canvas.height);
+          requestAnimationId = requestAnimationFrame(drawAmbiance);
+        }
+      };
+      requestAnimationId = requestAnimationFrame(drawAmbiance);
+    }
+
+    return () => {
+      cancelAnimationFrame(requestAnimationId);
+    };
+  }, [isOnVideoAmbiance]);
 
   const pause = () => {
     const isPaused = player.current.isPaused();

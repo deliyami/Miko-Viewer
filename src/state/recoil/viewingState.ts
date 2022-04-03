@@ -59,3 +59,8 @@ export const isOnModelState = atom({
   key: 'isOnModelState',
   default: true,
 });
+
+export const isOnVideoAmbianceState = atom({
+  key: 'isOnVideoAmbianceState',
+  default: false,
+});

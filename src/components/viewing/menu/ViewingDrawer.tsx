@@ -15,7 +15,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { enterRoomIdAsyncState } from '@src/state/recoil/concertState';
-import { isOnModelState } from '@src/state/recoil/viewingState';
+import { isOnModelState, isOnVideoAmbianceState } from '@src/state/recoil/viewingState';
 import React, { forwardRef, useImperativeHandle } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
@@ -23,6 +23,7 @@ const ViewingSettingDrawer = forwardRef((_, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const enterRoomId = useRecoilValue(enterRoomIdAsyncState);
   const [isOnModel, setIsOnModel] = useRecoilState(isOnModelState);
+  const [isOnVideoAmbiance, setIsOnVideoAmbiance] = useRecoilState(isOnVideoAmbianceState);
 
   useImperativeHandle(ref, () => ({
     open: () => {
@@ -44,6 +45,10 @@ const ViewingSettingDrawer = forwardRef((_, ref) => {
               Show Avatar
             </FormLabel>
             <Switch id="is-on-model" onChange={() => setIsOnModel(prev => !prev)} />
+            <FormLabel htmlFor="is-on-video-ambiance" mb="0">
+              turn on video ambiance
+            </FormLabel>
+            <Switch id="is-on-video-ambiance" onChange={() => setIsOnVideoAmbiance(prev => !prev)} />
           </FormControl>
         </DrawerBody>
 
