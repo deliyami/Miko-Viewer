@@ -3,8 +3,8 @@ import { useUser } from '@src/state/swr/useUser';
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import React, { FC } from 'react';
 
-const COLORS = ['#36C5F0', '#2EB67D', '#E01E5A', '#ECB22E', '#E51670'];
-const DARKEN_COLORS = ['#0a6b88', '#175b3e', '#700f2c', '#815d0b', '#720b38'];
+const COLORS = ['#36C5F0', '#2EB67D', '#E01E5A', '#ECB22E', '#E51670', 'red'];
+const DARKEN_COLORS = ['#0a6b88', '#175b3e', '#700f2c', '#815d0b', '#720b38', 'red'];
 const MAX_AMOUNT = 10000;
 
 const Message: FC<{ data: ChatMessageInterface }> = ({ data: { sender, text, amount, timestamp } }) => {
@@ -13,7 +13,7 @@ const Message: FC<{ data: ChatMessageInterface }> = ({ data: { sender, text, amo
   } = useUser();
 
   const SuperChat: FC = () => {
-    const colorIdx = Math.floor(Math.min(MAX_AMOUNT, amount) / Math.floor(MAX_AMOUNT / COLORS.length));
+    const colorIdx = Math.floor((Math.min(MAX_AMOUNT, amount) / MAX_AMOUNT) * (COLORS.length - 1));
 
     return (
       <VStack my="1" bgColor={COLORS[colorIdx]} w="full" alignSelf={sender === name ? 'start' : 'end'} borderRadius="base">
