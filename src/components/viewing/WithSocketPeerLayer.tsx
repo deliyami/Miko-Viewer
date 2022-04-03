@@ -1,4 +1,3 @@
-import { MAX_MSGS } from '@src/const';
 import setMotionToAvatar from '@src/helper/setMotionToAvatar';
 import showChatToRoom from '@src/helper/showChatToRoom';
 import { toastLog } from '@src/helper/toastLog';
@@ -10,7 +9,6 @@ import { curUserTicketState, enterRoomIdAsyncState } from '@src/state/recoil/con
 import { latestScoreState } from '@src/state/recoil/scoreState';
 import { messagesState, myStreamState, PeerDataInterface, peerDataListState, PickUserData } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
-import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import { DataConnectionEvent } from '@src/types/DataConnectionEventType';
 import produce from 'immer';
 import { useRouter } from 'next/router';
@@ -197,17 +195,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
       );
     };
 
-    const getBroadcastedNewMessage = (data: ChatMessageInterface) => {
-      setMessages(
-        produce(prevMsgs => {
-          const len = prevMsgs.length;
-          if (len > MAX_MSGS) prevMsgs.splice(0, len - MAX_MSGS);
-          prevMsgs.push(data);
-          return prevMsgs;
-        }),
-      );
-    };
-
     const failEnterRoom = () => {
       // TODO 새로운 방 번호를 얻고 입장.
       toastLog('info', 'ルームが満員であらたま、他のルームに再接続しています。');
@@ -227,7 +214,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
 
     socket.on('be-new-user-come', newUserCome);
     socket.on('be-broadcast-peer-id', getAnswerFromRoomBroadcast);
-    socket.on('be-broadcast-new-message', getBroadcastedNewMessage);
     socket.on('be-fail-enter-room', failEnterRoom);
     socket.on('be-user-left', userLeft);
     socket.on('be-send-user-score', getMyScore);
@@ -237,7 +223,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
       if (user.data) {
         socket.off('be-new-user-come', newUserCome);
         socket.off('be-broadcast-peer-id', getAnswerFromRoomBroadcast);
-        socket.off('be-broadcast-new-message', getBroadcastedNewMessage);
         socket.off('be-user-left', userLeft);
         socket.off('be-send-user-score', getMyScore);
         handleLeavePage();

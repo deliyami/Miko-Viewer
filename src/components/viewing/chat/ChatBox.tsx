@@ -1,8 +1,12 @@
 import { Box, Heading, VStack } from '@chakra-ui/react';
+import { MAX_MSGS } from '@src/const';
+import useSocket from '@src/hooks/useSocket';
 import { messagesState } from '@src/state/recoil/viewingState';
-import { useRef, useState } from 'react';
+import { ChatMessageInterface } from '@src/types/ChatMessageType';
+import produce from 'immer';
+import { useEffect, useRef, useState } from 'react';
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import Message from './Message';
 
 const cache = new CellMeasurerCache({
@@ -12,10 +16,32 @@ const cache = new CellMeasurerCache({
 });
 
 const ChatBox = () => {
-  const messages = useRecoilValue(messagesState);
+  const [messages, setMessages] = useRecoilState(messagesState);
   const messagesEndRef = useRef(null);
   const [isBottom, setIsBottom] = useState(false);
   const listRef = useRef<List>(null);
+  const socket = useSocket();
+
+  useEffect(() => {
+    const getBroadcastedNewMessage = (data: ChatMessageInterface) => {
+      setMessages(
+        produce(prevMsgs => {
+          const len = prevMsgs.length;
+          if (len > MAX_MSGS) {
+            prevMsgs.splice(0, len - MAX_MSGS + MAX_MSGS * 0.5);
+            cache.clearAll();
+          }
+          prevMsgs.push(data);
+          return prevMsgs;
+        }),
+      );
+    };
+    socket.on('be-broadcast-new-message', getBroadcastedNewMessage);
+
+    return () => {
+      socket.off('be-broadcast-new-message', getBroadcastedNewMessage);
+    };
+  }, [socket]);
 
   const rowRenderer: ListRowRenderer = ({ index, key, parent, style }) => {
     return (
@@ -26,7 +52,6 @@ const ChatBox = () => {
       </CellMeasurer>
     );
   };
-
   const noRowsRenderer = () => {
     return <Box>チャットがありません。</Box>;
   };
