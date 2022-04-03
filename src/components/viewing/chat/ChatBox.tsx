@@ -59,7 +59,7 @@ const ChatBox = () => {
     return (
       <CellMeasurer cache={cache} columnIndex={0} rowIndex={index} key={key} parent={parent}>
         <div style={style}>
-          <Message key={index} data={messages[index]} />
+          <Message data={messages[index]} />
         </div>
       </CellMeasurer>
     );
@@ -75,6 +75,7 @@ const ChatBox = () => {
   return (
     <VStack flexGrow="1" backgroundColor="#202020" border="2px" borderColor="#262626" overflow="scroll" width="full" textColor="white">
       <Heading size="sm">チャット</Heading>
+
       <VStack width="full" height="full" overflow="hidden" alignItems="start">
         <AutoSizer>
           {({ width, height }) => (
@@ -86,7 +87,7 @@ const ChatBox = () => {
               rowRenderer={rowRenderer}
               rowHeight={cache.rowHeight}
               onScroll={handelOnScroll}
-              overscanRowCount={2}
+              overscanRowCount={1}
               noRowsRenderer={noRowsRenderer}
               scrollToIndex={isBottom ? messages.length - 1 : undefined}
             />

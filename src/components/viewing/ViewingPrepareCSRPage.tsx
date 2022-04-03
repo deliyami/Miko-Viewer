@@ -69,6 +69,7 @@ const ViewingPrepareCSRPage = () => {
     }
 
     if (myPeer) {
+      myPeer.disconnect();
       myPeer.destroy();
     }
 

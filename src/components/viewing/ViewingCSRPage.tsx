@@ -1,11 +1,12 @@
 import { Center, HStack, Text, VStack } from '@chakra-ui/react';
 import VideoPlayer from '@src/components/ivs-player/VideoPlayer';
-import ChatBox from '@src/components/viewing/chat/ChatBox';
+// import ChatBox from '@src/components/viewing/chat/ChatBox';
 import { DonateBallon } from '@src/components/viewing/chat/icon/DonateBallon';
 import useIvsPlayer from '@src/hooks/useIvsPlayer';
 import styles from '@src/style/viewing.module.css';
 import { useEffect, useState } from 'react';
 import RoomAvatarView from './avatar/RoomAvatarView';
+import ChatBox from './chat/ChatBox';
 import ChatMessageInput from './chat/ChatMessageInput';
 import ViewingSideMenuBar from './menu/ViewingSideMenuBar';
 import AudioAnalyser from './rightContainer/audioAnalyze/AudioAnalyser';

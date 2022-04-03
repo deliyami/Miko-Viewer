@@ -16,8 +16,6 @@ const DynamicViewingPage = dynamic(() => import('../../../components/viewing/Vie
 
 const ViewingPage = () => {
   const userTicket = useRecoilValue(curUserTicketState);
-  console.log('userTicket- viewing page', userTicket);
-
   const router = useRouter();
   const handleDenyAccess = () => {
     setTimeout(() => {

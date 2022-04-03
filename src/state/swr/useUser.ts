@@ -27,6 +27,7 @@ const useUser = () => {
     errorRetryCount: 2,
     use: [laggy],
     suspense: true,
+    revalidateOnMount: false, // NOTE Message에서 마운트 되면서 전체 페이지가 리랜더링 되었음.
   });
 
   useEffect(() => {
