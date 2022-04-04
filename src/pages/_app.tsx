@@ -1,7 +1,7 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from '@src/theme';
 import { NextPage } from 'next';
-import { AppProps } from 'next/app';
+import { AppProps, NextWebVitalsMetric } from 'next/app';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
@@ -85,3 +85,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 }
 
 export default MyApp;
+
+export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric) {
+  console.log({ id, name, label, value });
+}

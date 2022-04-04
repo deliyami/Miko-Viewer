@@ -22,21 +22,24 @@ const AudioAnalyser = () => {
   const [volume, setVolume] = useState(0);
 
   useEffect(() => {
-    const audioContext = new AudioContext();
-    const audioSource = audioContext.createMediaStreamSource(myStream);
-    const analyser = audioContext.createAnalyser();
-    analyser.fftSize = 512;
-    audioSource.connect(analyser);
-    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+    let intervalId;
+    if (myStream) {
+      const audioContext = new AudioContext();
+      const audioSource = audioContext.createMediaStreamSource(myStream);
+      const analyser = audioContext.createAnalyser();
+      analyser.fftSize = 512;
+      audioSource.connect(analyser);
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-    const volumeCallback = () => {
-      analyser.getByteTimeDomainData(dataArray);
-      const volumeSum = dataArray.reduce((prev, cur) => prev + cur, 0);
-      const processedVolume = processVolume(Math.max(0, volumeSum - 32500));
-      setVolume(processedVolume);
-      addedScoreForSeconds.addScore(processedVolume % 10); // 0~10 점
-    };
-    const intervalId = setInterval(volumeCallback, VOLUME_CHECK_INTERVAL);
+      const volumeCallback = () => {
+        analyser.getByteTimeDomainData(dataArray);
+        const volumeSum = dataArray.reduce((prev, cur) => prev + cur, 0);
+        const processedVolume = processVolume(Math.max(0, volumeSum - 32500));
+        setVolume(processedVolume);
+        addedScoreForSeconds.addScore(processedVolume % 10); // 0~10 점
+      };
+      intervalId = setInterval(volumeCallback, VOLUME_CHECK_INTERVAL);
+    }
 
     return () => {
       clearInterval(intervalId);

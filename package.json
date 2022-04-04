@@ -2,7 +2,7 @@
   "private": true,
   "name": "Miko-Viewer",
   "scripts": {
-    "dev": "next",
+    "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
