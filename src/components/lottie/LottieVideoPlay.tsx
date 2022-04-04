@@ -4,10 +4,15 @@ import { FC } from 'react';
 
 const LottieVideoPlay: FC = () => {
   const options: LottieOptions = {
+    renderer: 'canvas',
     animationData: videoPlayJson,
     loop: true,
     autoplay: true,
     className: 'LottieVideoPlay',
+    style: {
+      width: '300px',
+      height: '300px',
+    },
   };
 
   const { View } = useLottie(options);
