@@ -8,7 +8,7 @@ import { DoneItem, DoneSendInterface } from '@src/types/share/DoneItem';
 //   }
 const DONATEITEM = {} as { [id: number]: DoneItem };
 
-export const PATHNAME: DonateIconName[] = ['Battery', 'Confetti', 'FourStar', 'GreenHeart', 'Gift', 'Mental', 'Night', 'StarBurst'];
+export const PATHNAME: DonateIconName[] = ['Confetti', 'FourStar', 'GreenHeart', 'Gift', 'Night', 'StarBurst'];
 for (let i: number = 0; i < PATHNAME.length; i++) {
   DONATEITEM[i] = {
     price: 10000 * i,

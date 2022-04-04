@@ -67,10 +67,8 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
         }
 
         if (results.poseLandmarks[12].y > results.poseLandmarks[14].y && results.poseLandmarks[11].y > results.poseLandmarks[13].y && pointRef.current.length === 0) {
-          //   console.log('pushing');
           pointRef.current.push(0);
         } else if (results.poseLandmarks[16].y > results.poseLandmarks[12].y && results.poseLandmarks[15].y > results.poseLandmarks[11].y && pointRef.current.length !== 0) {
-          //   console.log('popping');
           pointRef.current.pop();
           addedScoreForSeconds.addScore(Math.floor(Math.random() * 101) + 100);
         }
@@ -86,9 +84,9 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
         let isMediaPipeSetup = false;
         camera = new cam.Camera(videoRef?.current, {
           onFrame: async () => {
-            // console.time('MediaPipe - poseSend');
-            // await aPose.send({ image: videoRef.current }); // NOTE  mediaPipe on off
-            // console.timeEnd('MediaPipe - poseSend');
+            console.time('MediaPipe - poseSend');
+            await aPose.send({ image: videoRef.current }); // NOTE  mediaPipe on off
+            console.timeEnd('MediaPipe - poseSend');
             if (!isMediaPipeSetup) {
               isMediaPipeSetup = true;
               setIsMediaPipeSetup(true);

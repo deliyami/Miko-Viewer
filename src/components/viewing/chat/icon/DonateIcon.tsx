@@ -6,6 +6,7 @@ import { FC, forwardRef } from 'react';
 /* eslint-disable */
 export const DonateIcon: FC<DonateProps> = forwardRef(({ path, loop = true, autoplay = true, width = 100 }, ref) => {
   const options: LottieOptions = {
+    renderer: 'canvas',
     animationData: JSONExporter[PATHNAME[path]],
     loop,
     autoplay,
