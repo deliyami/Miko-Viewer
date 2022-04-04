@@ -31,7 +31,7 @@ const nextConfig = {
   },
   productionBrowserSourceMaps: false, // default false
   swcMinify: true,
-  reactStrictMode: true,
+  reactStrictMode: false, // 이거 하니깐 Socket 에러남
   compress: true, // default nginx에서 압축할 경우 false
   distDir: '.next', // default
   generateBuildId: async () => {
