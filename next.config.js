@@ -41,19 +41,17 @@ const nextConfig = {
     return [
       {
         // Apply these headers to all routes in your application.
-        source: '/:path*',
-        headers: {
-          key: 'X-DNS-Prefetch-Control',
-          value: 'on',
-        },
-      },
-      {
-        // Apply these headers to all routes in your application.
-        source: '/:path*',
-        headers: {
-          key: 'Strict-Transport-Security',
-          value: 'max-age=63072000; includeSubDomains; preload',
-        },
+        source: '/:path',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
+        ],
       },
     ];
   },

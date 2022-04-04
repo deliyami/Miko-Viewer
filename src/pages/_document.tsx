@@ -35,9 +35,10 @@ export default class Document extends NextDocument {
           />
           {/*  temp  */}
           <meta name="theme-color" content="#39c5bb" />
-          <link rel="icon" type="image/png" sizes="192x192" href="/images/icon/android-chrome-192x192.png" />
-          <link rel="icon" type="image/png" sizes="16x16" href="/images/icon/favicon-16x16.png" />
-          <link rel="icon" type="image/png" sizes="32x32" href="/images/icon/favicon-32x32.png" />
+          <link rel="icon" type="image/png" sizes="192x192" href="/image/icon/android-chrome-192x192.png" />
+          <link rel="icon" type="image/png" sizes="16x16" href="/image/icon/favicon-16x16.png" />
+          <link rel="icon" type="image/png" sizes="32x32" href="/image/icon/favicon-32x32.png" />
+          <link rel="shortcut icon" href="/image/icon/favicon.ico" />
           {/* <link rel="icon" type="image/png" sizes="96x96" href="/images/icon/favicon-96x96.png" /> */}
           <link rel="manifest" href="/manifest.json" />
           <link
