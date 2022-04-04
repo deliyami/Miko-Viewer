@@ -1,11 +1,14 @@
 import { Avatar, Box, Flex, FlexProps, HStack, Icon, Image, Menu, MenuButton, MenuItem, MenuList, Text, useColorModeValue, VStack } from '@chakra-ui/react';
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
+import { FiHome } from '@react-icons/all-files/fi/FiHome';
+import { FiList } from '@react-icons/all-files/fi/FiList';
+import { FiStar } from '@react-icons/all-files/fi/FiStar';
+import { IconType } from '@react-icons/all-files/lib';
 import { S3_URL } from '@src/const';
 import { useUser } from '@src/state/swr/useUser';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactText, Suspense, useState } from 'react';
-import { IconType } from 'react-icons';
-import { FiChevronDown, FiHome, FiList, FiStar } from 'react-icons/fi';
 import { LoginBtn, LogoutBtn } from '../common/button/LogoutBtn';
 
 interface LinkItemProps {

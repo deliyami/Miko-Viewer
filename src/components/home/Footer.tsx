@@ -1,7 +1,9 @@
 import { Box, Container, Heading, Icon, Stack, Text } from '@chakra-ui/react';
+import { FaInstagram } from '@react-icons/all-files/fa/FaInstagram';
+import { FaTwitter } from '@react-icons/all-files/fa/FaTwitter';
+import { FaYoutube } from '@react-icons/all-files/fa/FaYoutube';
 import dayjs from 'dayjs';
 import Link from 'next/link';
-import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 
 export default function SmallWithLogoLeft() {
   const nowYear = dayjs(new Date()).format('YYYY');

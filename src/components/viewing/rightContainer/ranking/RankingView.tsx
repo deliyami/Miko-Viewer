@@ -1,11 +1,11 @@
 import { Box, BoxProps, Center, Divider, Heading, VStack } from '@chakra-ui/react';
+import { RiVipCrownLine } from '@react-icons/all-files/ri/RiVipCrownLine';
 import useSocket from '@src/hooks/useSocket';
 import { latestScoreState } from '@src/state/recoil/scoreState';
 import { myRankState } from '@src/state/recoil/viewing/rankState';
 import { useUser } from '@src/state/swr/useUser';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import { FC, useEffect, useState } from 'react';
-import { RiVipCrownLine } from 'react-icons/ri';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 const MotionBox = motion<Omit<BoxProps, 'transition'>>(Box);

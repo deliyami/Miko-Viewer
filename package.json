@@ -5,7 +5,8 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "cross-env ANALYZE=true next build"
   },
   "dependencies": {
     "@babylonjs/core": "^4.2.2",
@@ -20,6 +21,7 @@
     "@mediapipe/control_utils_3d": "^0.3.1635987963",
     "@mediapipe/drawing_utils": "^0.3.1620248257",
     "@mediapipe/pose": "^0.5.1635988162",
+    "@react-icons/all-files": "^4.1.0",
     "@types/react-virtualized": "^9.21.20",
     "@types/video.js": "^7.3.31",
     "amazon-ivs-player": "^1.8.0",
@@ -30,6 +32,7 @@
     "babylonjs-viewer": "^3.2.1",
     "chart.js": "^3.7.1",
     "cookie": "^0.4.2",
+    "cross-env": "^7.0.3",
     "dayjs": "^1.11.0",
     "framer-motion": "^6.2.8",
     "immer": "^9.0.12",
@@ -47,7 +50,6 @@
     "react-chartjs-2": "^4.0.1",
     "react-dom": "^18.0.0-rc.0",
     "react-hook-form": "^7.27.1",
-    "react-icons": "^4.3.1",
     "react-virtualized": "^9.22.3",
     "recoil": "^0.6.1",
     "socket.io-client": "^4.4.1",

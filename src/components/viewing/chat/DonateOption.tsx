@@ -13,6 +13,7 @@ import {
   Portal,
   useDisclosure,
 } from '@chakra-ui/react';
+import { RiGiftFill } from '@react-icons/all-files/ri/RiGiftFill';
 import { S3_URL } from '@src/const';
 import addDonateToRoom from '@src/helper/addDonateToRoom';
 import useSocket from '@src/hooks/useSocket';
@@ -21,7 +22,6 @@ import { DONATEITEM, PATHNAME } from '@src/state/shareObject/shareDonateObject';
 import { useUser } from '@src/state/swr/useUser';
 import { DoneSendInterface } from '@src/types/share/DoneItem';
 import { FC, memo } from 'react';
-import { RiGiftFill } from 'react-icons/ri';
 import { useRecoilState } from 'recoil';
 
 type Prop = {};

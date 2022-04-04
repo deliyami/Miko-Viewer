@@ -13,8 +13,8 @@ import {
   SliderTrack,
   Text,
 } from '@chakra-ui/react';
+import { RiMoneyDollarCircleFill } from '@react-icons/all-files/ri/RiMoneyDollarCircleFill';
 import { Dispatch, FC, SetStateAction } from 'react';
-import { RiMoneyDollarCircleFill } from 'react-icons/ri';
 
 type Prop = {
   amount: number;

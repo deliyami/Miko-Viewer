@@ -1,6 +1,6 @@
-import { Flex, Text, Button } from '@chakra-ui/react';
+import { Button, Flex, Text } from '@chakra-ui/react';
+import { FaArrowRight } from '@react-icons/all-files/fa/FaArrowRight';
 import { useRouter } from 'next/router';
-import { FaArrowRight } from 'react-icons/fa';
 
 const OrderSummary = ({ rawItem, selectedCount }) => {
   const router = useRouter();

@@ -1,11 +1,12 @@
 import { Center, StackProps, Text, VStack } from '@chakra-ui/react';
+import { BiCamera } from '@react-icons/all-files/bi/BiCamera';
+import { BiHelpCircle } from '@react-icons/all-files/bi/BiHelpCircle';
+import { FaDonate } from '@react-icons/all-files/fa/FaDonate';
+import { FiShoppingBag } from '@react-icons/all-files/fi/FiShoppingBag';
+import { IoSettingsOutline } from '@react-icons/all-files/io5/IoSettingsOutline';
+import { IconType } from '@react-icons/all-files/lib';
 import DonateModal from '@src/components/viewing/menu/donate/DonateModal';
 import { Children, cloneElement, FC, ReactElement, useRef } from 'react';
-import { BiCamera, BiHelpCircle } from 'react-icons/bi';
-import { FaDonate } from 'react-icons/fa';
-import { FiShoppingBag } from 'react-icons/fi';
-import { IoSettingsOutline } from 'react-icons/io5';
-import { IconType } from 'react-icons/lib';
 import MyCamera from './MyCamera';
 import SideShop from './sideshop/SideShop';
 import ViewingSettingDrawer from './ViewingDrawer';

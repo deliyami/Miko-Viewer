@@ -1,7 +1,8 @@
 import { Box, Flex, Popover, PopoverBody, PopoverContent, PopoverHeader, PopoverTrigger, Text, VStack } from '@chakra-ui/react';
+import { IoCheckmarkSharp } from '@react-icons/all-files/io5/IoCheckmarkSharp';
+import { IoSettingsSharp } from '@react-icons/all-files/io5/IoSettingsSharp';
 import * as ivs from 'amazon-ivs-player';
 import { FC, MouseEventHandler, MutableRefObject } from 'react';
-import { IoCheckmarkSharp, IoSettingsSharp } from 'react-icons/io5';
 
 const VideoQualitySelect: FC<{
   player: MutableRefObject<ivs.MediaPlayer>;

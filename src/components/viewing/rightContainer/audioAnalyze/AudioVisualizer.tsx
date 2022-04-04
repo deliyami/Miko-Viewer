@@ -1,7 +1,7 @@
 import { Box, BoxProps, Flex, HStack, Text } from '@chakra-ui/react';
+import { RiVoiceprintLine } from '@react-icons/all-files/ri/RiVoiceprintLine';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { memo } from 'react';
-import { RiVoiceprintLine } from 'react-icons/ri';
 
 type Props = {
   normalizedVolume: number;

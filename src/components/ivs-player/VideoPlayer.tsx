@@ -1,5 +1,9 @@
 import { Box, Center, HStack, Spinner, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import { BiVolumeFull } from '@react-icons/all-files/bi/BiVolumeFull';
+import { BiVolumeMute } from '@react-icons/all-files/bi/BiVolumeMute';
+import { IoPause } from '@react-icons/all-files/io5/IoPause';
+import { IoPlay } from '@react-icons/all-files/io5/IoPlay';
 import { toastLog } from '@src/helper/toastLog';
 import useIvsPlayer from '@src/hooks/useIvsPlayer';
 import { enterTicketDataState } from '@src/state/recoil/concertState';
@@ -9,8 +13,6 @@ import { AllMetaData } from '@src/types/share/TimeMetadataFormat';
 import * as ivs from 'amazon-ivs-player';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useRef, useState } from 'react';
-import { BiVolumeFull, BiVolumeMute } from 'react-icons/bi';
-import { IoPause, IoPlay } from 'react-icons/io5';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import QuizResultView from './QuizResultView';
 import QuizView from './QuizView';
