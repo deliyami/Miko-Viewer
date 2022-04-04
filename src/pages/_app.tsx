@@ -2,6 +2,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import theme from '@src/theme';
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import Peer from 'peerjs';
@@ -72,9 +73,14 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component?.getLayout || (page => page);
   //  NOTE getLayout을 recoilRoot보다 밖에 두면 Layout이 동일하지 않는 이상 초기화됨.
   return (
-    <ChakraProvider resetCSS theme={theme}>
-      <RecoilRoot>{getLayout(<Component {...pageProps} />)}</RecoilRoot>
-    </ChakraProvider>
+    <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+      </Head>
+      <ChakraProvider resetCSS theme={theme}>
+        <RecoilRoot>{getLayout(<Component {...pageProps} />)}</RecoilRoot>
+      </ChakraProvider>
+    </>
   );
 }
 

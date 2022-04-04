@@ -204,7 +204,9 @@ const VideoPlayer: FC = () => {
       const ctx = canvas.getContext('2d');
       const drawAmbiance = () => {
         if (ctx && videoEl.current) {
+          // console.time('draw ambiance');
           ctx.drawImage(videoEl.current, 0, 0, canvas.width, canvas.height);
+          // console.timeEnd('draw ambiance');
           requestAnimationId = requestAnimationFrame(drawAmbiance);
         }
       };
