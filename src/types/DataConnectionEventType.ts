@@ -1,6 +1,6 @@
 import { ChatMessageInterface } from './ChatMessageType';
 import { ChatMotionInterface } from './ChatMotionType';
-import { DonateInterface } from './DonateTypes';
+import { DoneInterface } from './DoneTypes';
 
 interface ChatEvent {
   type: 'chat';
@@ -17,11 +17,11 @@ interface UpdateScoreEvent {
   data: number;
 }
 
-interface DonateEvent {
-  type: 'donate';
-  data: DonateInterface;
+interface DoneEvent {
+  type: 'done';
+  data: DoneInterface;
 }
 
-type DataConnectionEvent = ChatEvent | MotionEvent | UpdateScoreEvent | DonateEvent;
+type DataConnectionEvent = ChatEvent | MotionEvent | UpdateScoreEvent | DoneEvent;
 
 export type { DataConnectionEvent };

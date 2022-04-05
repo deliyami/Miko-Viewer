@@ -1,11 +1,12 @@
-import { waitingDonate } from '@src/state/shareObject/shareDonateObject';
+import { waitingDone } from '@src/state/shareObject/shareDoneObject';
 import { DoneSendInterface } from '@src/types/share/DoneItem';
 
-const addDonateToRoom = (data: DoneSendInterface) => {
-  waitingDonate.push(data);
+const addDoneToRoom = (data: DoneSendInterface) => {
+  waitingDone[waitingDone.length] = data;
+  // waitingDone.push(data);
 };
 
-export default addDonateToRoom;
+export default addDoneToRoom;
 // export interface DoneItem {
 //   price: number;
 //   name: string;

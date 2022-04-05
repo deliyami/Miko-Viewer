@@ -1,5 +1,5 @@
 import { Box, Button, Center, Input, ScaleFade } from '@chakra-ui/react';
-import { DonateOption } from '@src/components/viewing/chat/DonateOption';
+import { DoneOption } from '@src/components/viewing/chat/DoneOption';
 import sendToAllPeers from '@src/helper/sendToAllPeers';
 import showChatToRoom from '@src/helper/showChatToRoom';
 import useSocket from '@src/hooks/useSocket';
@@ -97,7 +97,7 @@ const ChatMessageInput = () => {
             placeholder="Message"
             onKeyUp={onKeyDownHandler}
           />
-          <DonateOption />
+          <DoneOption />
           <SuperChatOption amount={amount} setAmount={setAmount} />
           <Button type="submit" onClick={onSubmitHandler} colorScheme={amount === 0 ? 'cyan' : 'messenger'}>
             送る

@@ -8,7 +8,7 @@ const animate: AnimationControls | TargetAndTransition | VariantLabels | boolean
   scale: [0, 1.1, 1],
 };
 
-const DonateAnimationBox: FC<Props> = ({ children, retry, duration = 2, delay = 5, x, y }) => {
+const DoneAnimationBox: FC<Props> = ({ children, retry, duration, delay = 5, x, y }) => {
   const transition: Transition = {
     damping: 10,
     duration,
@@ -29,4 +29,4 @@ const DonateAnimationBox: FC<Props> = ({ children, retry, duration = 2, delay = 
   );
 };
 
-export default DonateAnimationBox;
+export default DoneAnimationBox;

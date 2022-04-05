@@ -1,7 +1,7 @@
 import { Center, HStack, Text, VStack } from '@chakra-ui/react';
 import VideoPlayer from '@src/components/ivs-player/VideoPlayer';
 // import ChatBox from '@src/components/viewing/chat/ChatBox';
-import { DonateBallon } from '@src/components/viewing/chat/icon/DonateBallon';
+import { DoneBallon } from '@src/components/viewing/chat/icon/DoneBallon';
 import useIvsPlayer from '@src/hooks/useIvsPlayer';
 import styles from '@src/style/viewing.module.css';
 import { useEffect, useState } from 'react';
@@ -59,7 +59,7 @@ const ViewingCSRPage = () => {
                 <RoomAvatarView />
                 <ChatMessageInput />
               </VStack>
-              <DonateBallon width={100} x={200} y={-100} duration={1} delay={1}></DonateBallon>
+              <DoneBallon width={150} x={200} y={-100} duration={2} delay={1}></DoneBallon>
               <VStack width="25vw" h="100vh" maxH="100vh" overflow="hidden" zIndex="0">
                 <RankingView />
                 <ChatBox />

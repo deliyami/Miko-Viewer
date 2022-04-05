@@ -13,9 +13,9 @@ const COLOR = {
   textHigh: ['#000000', '#FFFFFF'],
   textMedium: ['#000000DD', '#FFFFFFDD'],
   textDisabled: ['#00000055', '#FFFFFF55'],
-  donateCharBody: ['#47C8C0', '#B2F5EA'],
-  donateOuterBox: ['#55557b', '#47C8C0'],
-  donateInnerBox: ['#E1E1E1', '#E2E8F0'],
+  doneCharBody: ['#47C8C0', '#B2F5EA'],
+  doneOuterBox: ['#55557b', '#47C8C0'],
+  doneInnerBox: ['#E1E1E1', '#E2E8F0'],
 };
 
 // const BODY_COLOR = '#47c8c0';
