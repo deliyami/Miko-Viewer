@@ -30,9 +30,12 @@ export const DoneBallon: FC<Props> = props => {
     // addDoneToRoom(data);
     // waitingDone.push(data);
     waitingDone[waitingDone.length] = data;
-    if (!doneApt) {
-      setDoneApt(e => !e);
-    }
+    setDoneApt(e => {
+      if (!e) {
+        return true;
+      }
+      return e;
+    });
   };
   useEffect(() => {
     socket.on('be-broadcast-done-item', getBroadcastedNewDone);
@@ -42,9 +45,6 @@ export const DoneBallon: FC<Props> = props => {
   }, [socket]);
 
   const doneHandler = () => {
-    if (!doneApt) {
-      return;
-    }
     const tempDone = waitingDone;
     const thisDone = waitingDone[0];
     if (typeof thisDone === 'undefined') {
@@ -55,6 +55,9 @@ export const DoneBallon: FC<Props> = props => {
     setIsRunning(true);
   };
   useEffect(() => {
+    if (!doneApt) {
+      return;
+    }
     doneHandler();
   }, [doneApt]);
   const retry = () => {
