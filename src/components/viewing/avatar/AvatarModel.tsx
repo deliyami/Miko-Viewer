@@ -24,6 +24,7 @@ export const AvatarModel: FC<{
           camera.setTarget(new BABYLON.Vector3(0, 2.5, 0));
           camera.setPosition(new BABYLON.Vector3(0, 1.8, 4.7));
 
+          // 카메라 컨트롤러, 모델뜨는 canvas 드래그로 조절 가능
           // camera.attachControl(true);
 
           const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, -1), scene);
@@ -75,10 +76,6 @@ export const AvatarModel: FC<{
           scene.render();
         });
       }
-
-      // if (window) {
-      //   window.addEventListener("resize", resize);
-      // }
 
       return () => {
         scene.getEngine().dispose();

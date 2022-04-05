@@ -16,19 +16,6 @@ export const DoneBallon: FC<Props> = props => {
   const socket = useSocket();
 
   const getBroadcastedNewDone = (data: DoneSendInterface) => {
-    // const data: DoneSendInterface = {
-    //   sender: user.data.name,
-    //   itemId: index,
-    //   timestamp: Date.now(),
-    // };
-
-    // showChatToRoom(user.data.uuid, newMessage, 5); // 이거보고 만들 것
-
-    // socket.emit('fe-send-donation', data);
-    const value = 0;
-    console.log(value);
-    // addDoneToRoom(data);
-    // waitingDone.push(data);
     waitingDone[waitingDone.length] = data;
     setDoneApt(e => {
       if (!e) {
@@ -45,7 +32,6 @@ export const DoneBallon: FC<Props> = props => {
   }, [socket]);
 
   const doneHandler = () => {
-    const tempDone = waitingDone;
     const thisDone = waitingDone[0];
     if (typeof thisDone === 'undefined') {
       setDoneApt(false);
