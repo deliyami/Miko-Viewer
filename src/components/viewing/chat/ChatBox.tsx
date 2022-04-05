@@ -4,7 +4,8 @@ import useSocket from '@src/hooks/useSocket';
 import { messagesState } from '@src/state/recoil/viewingState';
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import produce from 'immer';
-import { useEffect, useRef, useState } from 'react';
+// @ts-ignore
+import { useDeferredValue, useEffect, useRef, useState } from 'react';
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized';
 import { useRecoilState } from 'recoil';
 import Message from './Message';
@@ -21,6 +22,10 @@ const ChatBox = () => {
   const [isBottom, setIsBottom] = useState(false);
   const listRef = useRef<List>(null);
   const socket = useSocket();
+
+  const deferredMessages = useDeferredValue(messages, {
+    timeoutMs: 1000,
+  });
 
   useEffect(() => {
     const getBroadcastedNewMessage = (data: ChatMessageInterface) => {
@@ -59,7 +64,7 @@ const ChatBox = () => {
     return (
       <CellMeasurer cache={cache} columnIndex={0} rowIndex={index} key={key} parent={parent}>
         <div style={style}>
-          <Message data={messages[index]} />
+          <Message data={deferredMessages[index]} />
         </div>
       </CellMeasurer>
     );
@@ -83,13 +88,13 @@ const ChatBox = () => {
               ref={listRef}
               width={width}
               height={height}
-              rowCount={messages.length}
+              rowCount={deferredMessages.length}
               rowRenderer={rowRenderer}
               rowHeight={cache.rowHeight}
               onScroll={handelOnScroll}
               overscanRowCount={1}
               noRowsRenderer={noRowsRenderer}
-              scrollToIndex={isBottom ? messages.length - 1 : undefined}
+              scrollToIndex={isBottom ? deferredMessages.length - 1 : undefined}
             />
           )}
         </AutoSizer>

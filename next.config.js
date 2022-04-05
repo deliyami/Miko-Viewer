@@ -21,7 +21,7 @@ const nextConfig = {
   },
   experimental: {
     reactRoot: true,
-    nextScriptWorkers: true,
+    nextScriptWorkers: false,
     modularizeImports: {},
   },
   compiler: {
