@@ -25,9 +25,9 @@ const nextConfig = {
     modularizeImports: {},
   },
   compiler: {
-    removeConsole: {
-      exclude: ['error', 'info'],
-    },
+    // removeConsole: {
+    //   exclude: ['error', 'info'],
+    // },
   },
   productionBrowserSourceMaps: false, // default false
   swcMinify: true,

@@ -33,6 +33,25 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   useEffect(() => {
     console.log('MyApp UseEffect');
+
+    const serviceWorkerLoad = () => {
+      navigator.serviceWorker.register('/sw/initial.js').then(
+        function (registration) {
+          console.log('Service Worker registration successful with scope: ', registration.scope);
+        },
+        function (err) {
+          console.log('Service Worker registration failed: ', err);
+        },
+      );
+    };
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', serviceWorkerLoad);
+    }
+
+    return () => {
+      window.removeEventListener('load', serviceWorkerLoad);
+    };
   }, []);
 
   useEffect(() => {
@@ -87,5 +106,5 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 export default MyApp;
 
 export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric) {
-  console.log({ id, name, label, value });
+  // console.log({ id, name, label, value });
 }

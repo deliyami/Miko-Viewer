@@ -4,7 +4,7 @@ import { FC } from 'react';
 
 const LottieVideoPlay: FC = () => {
   const options: LottieOptions = {
-    renderer: 'canvas',
+    renderer: 'svg',
     animationData: videoPlayJson,
     loop: true,
     autoplay: true,

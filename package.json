@@ -22,6 +22,7 @@
     "@mediapipe/drawing_utils": "^0.3.1620248257",
     "@mediapipe/pose": "^0.5.1635988162",
     "@react-icons/all-files": "^4.1.0",
+    "@types/offscreencanvas": "^2019.6.4",
     "@types/react-virtualized": "^9.21.20",
     "@types/video.js": "^7.3.31",
     "amazon-ivs-player": "^1.8.0",

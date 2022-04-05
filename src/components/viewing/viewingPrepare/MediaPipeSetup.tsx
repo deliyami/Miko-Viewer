@@ -1,6 +1,3 @@
-// import '@mediapipe/camera_utils';
-// import '@mediapipe/control_utils';
-// import '@mediapipe/drawing_utils';
 import * as cam from '@mediapipe/camera_utils';
 import { Results } from '@mediapipe/pose';
 import { setBorn } from '@src/helper/setBornAvatar';
@@ -84,9 +81,8 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
         let isMediaPipeSetup = false;
         camera = new cam.Camera(videoRef?.current, {
           onFrame: async () => {
-            console.time('MediaPipe - poseSend');
-            await aPose.send({ image: videoRef.current }); // NOTE  mediaPipe on off
-            console.timeEnd('MediaPipe - poseSend');
+            await aPose.initialize();
+            aPose.send({ image: videoRef.current }); // NOTE  mediaPipe on off
             if (!isMediaPipeSetup) {
               isMediaPipeSetup = true;
               setIsMediaPipeSetup(true);

@@ -26,7 +26,7 @@ export const chSuperDoneItemSendedIdx = 8;
 
 export const S3_URL = 'https://miko-image.s3.ap-northeast-2.amazonaws.com/';
 
-export const MY_AVATAR_ID = 'kirari'; // 이거 변경하면 @src/components/viewing/GlobalModel.ts에 default value변경해야함
+export const MY_AVATAR_ID = 'myAvatar'; // 이거 변경하면 @src/components/viewing/GlobalModel.ts에 default value변경해야함
 
 // Env
 const ENV_PREFIX = 'NEXT_PUBLIC_';

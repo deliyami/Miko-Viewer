@@ -24,7 +24,7 @@ const ChatBox = () => {
   const socket = useSocket();
 
   const deferredMessages = useDeferredValue(messages, {
-    timeoutMs: 1000,
+    timeoutMs: 5000,
   });
 
   useEffect(() => {

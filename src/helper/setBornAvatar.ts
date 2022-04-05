@@ -1,6 +1,3 @@
-import '@mediapipe/camera_utils';
-import '@mediapipe/control_utils';
-import '@mediapipe/drawing_utils';
 import { FaceDirection } from '@src/types/FaceDirectionType';
 import { Model } from '@src/types/ModelType';
 import * as BABYLON from 'babylonjs';
