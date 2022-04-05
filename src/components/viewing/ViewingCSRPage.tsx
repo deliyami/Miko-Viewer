@@ -59,7 +59,7 @@ const ViewingCSRPage = () => {
                 <RoomAvatarView />
                 <ChatMessageInput />
               </VStack>
-              <DoneBallon width={100} x={200} y={-100} duration={3} delay={1}></DoneBallon>
+              <DoneBallon width={150} x={200} y={-100} duration={2} delay={1}></DoneBallon>
               <VStack width="25vw" h="100vh" maxH="100vh" overflow="hidden" zIndex="0">
                 <RankingView />
                 <ChatBox />

@@ -1,12 +1,12 @@
 import { Box, Button, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, VStack } from '@chakra-ui/react';
-import { donateState } from '@src/state/recoil/donateState';
+import { doneState } from '@src/state/recoil/doneState';
 import { useUser } from '@src/state/swr/useUser';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { useSetRecoilState } from 'recoil';
 
-const DonateModal = forwardRef((_, ref) => {
+const DoneModal = forwardRef((_, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const setDonate = useSetRecoilState(donateState);
+  const setDone = useSetRecoilState(doneState);
   const nicknameInputRef = useRef(null);
   const coinInputRef = useRef(null);
   const contentInputRef = useRef(null);
@@ -23,7 +23,7 @@ const DonateModal = forwardRef((_, ref) => {
   const onSubmitHandler = e => {
     e.preventDefault();
     console.log('donation go!');
-    setDonate({ nickname: name, coin: coinInputRef.current.value, content: contentInputRef.current.value, start: 1 });
+    setDone({ nickname: name, coin: coinInputRef.current.value, content: contentInputRef.current.value, start: 1 });
     onClose();
   };
 
@@ -57,6 +57,6 @@ const DonateModal = forwardRef((_, ref) => {
   );
 });
 
-DonateModal.displayName = 'DonateEffect';
+DoneModal.displayName = 'DoneEffect';
 
-export default DonateModal;
+export default DoneModal;

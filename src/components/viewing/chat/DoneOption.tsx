@@ -16,8 +16,8 @@ import {
 import { RiGiftFill } from '@react-icons/all-files/ri/RiGiftFill';
 import { S3_URL } from '@src/const';
 import useSocket from '@src/hooks/useSocket';
-import { donateAccept } from '@src/state/recoil/donateState';
-import { DONATEITEM, PATHNAME } from '@src/state/shareObject/shareDonateObject';
+import { doneAccept } from '@src/state/recoil/doneState';
+import { DONEITEM, PATHNAME } from '@src/state/shareObject/shareDoneObject';
 import { useUser } from '@src/state/swr/useUser';
 import { DoneSendInterface } from '@src/types/share/DoneItem';
 import { FC, memo } from 'react';
@@ -27,7 +27,7 @@ export const DoneOption: FC = memo(() => {
   const user = useUser();
   const socket = useSocket();
   const { onOpen, onClose, isOpen } = useDisclosure();
-  const [donateApt, setDonateApt] = useRecoilState(donateAccept);
+  const [doneApt, setDoneApt] = useRecoilState(doneAccept);
 
   const doneSendHandler = (index: number) => {
     const data: DoneSendInterface = {
@@ -39,9 +39,9 @@ export const DoneOption: FC = memo(() => {
     // showChatToRoom(user.data.uuid, newMessage, 5); // 이거보고 만들 것
 
     // socket.emit('fe-send-donation', data);
-    // addDonateToRoom(data);
+    // addDoneToRoom(data);
     socket.emit('fe-send-done', data);
-    // if (!donateApt) setDonateApt(e => !e);
+    // if (!doneApt) setDoneApt(e => !e);
     onClose();
   };
 
@@ -55,7 +55,7 @@ export const DoneOption: FC = memo(() => {
       <Portal>
         <PopoverContent>
           <PopoverArrow />
-          <PopoverHeader>Donate!</PopoverHeader>
+          <PopoverHeader>Done!</PopoverHeader>
           <PopoverCloseButton />
           <PopoverBody>
             <Grid templateColumns="repeat(3, 1fr)">
@@ -63,10 +63,10 @@ export const DoneOption: FC = memo(() => {
                 <Box
                   key={i}
                   onClick={() => {
-                    doneSendHandler(DONATEITEM[i].id);
+                    doneSendHandler(DONEITEM[i].id);
                   }}
                 >
-                  <Image src={`${S3_URL}donateSVG/${value}.svg`} alt="donateSVG"></Image>
+                  <Image src={`${S3_URL}doneSVG/${value}.svg`} alt="doneSVG"></Image>
                 </Box>
               ))}
             </Grid>

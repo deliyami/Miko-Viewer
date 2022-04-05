@@ -5,7 +5,7 @@ import { FaDonate } from '@react-icons/all-files/fa/FaDonate';
 import { FiShoppingBag } from '@react-icons/all-files/fi/FiShoppingBag';
 import { IoSettingsOutline } from '@react-icons/all-files/io5/IoSettingsOutline';
 import { IconType } from '@react-icons/all-files/lib';
-import DonateModal from '@src/components/viewing/menu/donate/DonateModal';
+import DoneModal from '@src/components/viewing/menu/done/DoneModal';
 import { Children, cloneElement, FC, ReactElement, useRef } from 'react';
 import MyCamera from './MyCamera';
 import SideShop from './sideshop/SideShop';
@@ -51,8 +51,8 @@ const ViewingSideMenuBar: FC<StackProps> = ({ children, ...props }) => {
       <IconBox icon={FiShoppingBag} text="グッズ">
         <SideShop />
       </IconBox>
-      <IconBox icon={FaDonate} text="donate">
-        <DonateModal />
+      <IconBox icon={FaDonate} text="done">
+        <DoneModal />
       </IconBox>
       <IconBox icon={BiHelpCircle} text="ヘルプ">
         <ViewingHelp />

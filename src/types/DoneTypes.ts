@@ -1,4 +1,4 @@
-type DonateIconName =
+type DoneIconName =
   | 'GreenHeart'
   | 'AvatarIcon'
   | 'CircularAudio'
@@ -18,10 +18,10 @@ type DonateIconName =
   | 'StarBurst'
   | 'MoneyRain';
 
-type DonateProps = {
+type DoneProps = {
   path: number;
   loop?: boolean;
   autoplay?: boolean;
   width?: number;
 };
-export type { DonateIconName, DonateProps };
+export type { DoneIconName, DoneProps };
