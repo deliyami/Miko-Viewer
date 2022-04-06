@@ -33,7 +33,7 @@ const ChatBoxRender: FC<{ messages: any[] }> = memo(({ messages }) => {
   };
 
   const handelOnScroll = ({ clientHeight, scrollHeight, scrollTop }) => {
-    setIsBottom(clientHeight + scrollTop === scrollHeight);
+    setIsBottom(clientHeight + scrollTop + 30 >= scrollHeight);
   };
 
   return (

@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, HStack, Tag, Text, VStack } from '@chakra-ui/react';
+import styles from '@src/style/css/chat.module.scss';
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import React, { FC } from 'react';
 
@@ -11,32 +11,28 @@ const Message: FC<{ data: ChatMessageInterface }> = ({ data: { sender, text, amo
     const colorIdx = Math.floor((Math.min(MAX_AMOUNT, amount) / MAX_AMOUNT) * (COLORS.length - 1));
 
     return (
-      <VStack my="1" bgColor={COLORS[colorIdx]} w="full" borderRadius="base">
-        <HStack w="full" bgColor={DARKEN_COLORS[colorIdx]} px="2" py="1">
-          <VStack w="full" alignItems="start" justifyContent="center">
-            <Heading size="md" fontWeight="600" isTruncated>
-              {sender}
-            </Heading>
-            <Heading size="sm">{amount}円</Heading>
-          </VStack>
-        </HStack>
-        <Box w="full" px="2" py="1">
-          <Text fontWeight="bold">{text}</Text>
-        </Box>
-      </VStack>
+      <div className={styles['super-chat']} style={{ backgroundColor: COLORS[colorIdx] }}>
+        <div style={{ backgroundColor: DARKEN_COLORS[colorIdx] }}>
+          <div>
+            <h2>{sender}</h2>
+            <h2>{amount}円</h2>
+          </div>
+        </div>
+        <div>
+          <p>{text}</p>
+        </div>
+      </div>
     );
   };
 
   const CommonChat: FC = () => {
     return (
-      <Flex my="1" pl="2">
-        <Text flexGrow="1">
-          <Tag as="span" mr="2">
-            {sender}
-          </Tag>
+      <div className={styles['common-chat']}>
+        <p>
+          <span>{sender}</span>
           {text}
-        </Text>
-      </Flex>
+        </p>
+      </div>
     );
   };
 

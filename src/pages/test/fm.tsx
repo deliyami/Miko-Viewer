@@ -1,7 +1,9 @@
 import { Center, Heading } from '@chakra-ui/react';
 import { BiVolumeMute } from '@react-icons/all-files/bi/BiVolumeMute';
 import { MotionBox } from '@src/components/common/motion/MotionChakra';
+import { AvatarScore } from '@src/components/viewing/avatar/AvatarScore';
 import { Variants } from 'framer-motion';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 const circleMotion: Variants = {
@@ -14,7 +16,7 @@ const circleMotion: Variants = {
       [100, 100],
     ];
     return {
-      opacity: [1, 1],
+      opacity: [0, 1],
       x: xy[idx][0],
       y: xy[idx][1],
       width: '200px',
@@ -35,19 +37,34 @@ const circleMotion: Variants = {
 const iconMotion: Variants = {};
 const COLORS = ['#36C5F0', '#2EB67D', '#E01E5A', '#ECB22E', '#E51670', '#36C5F0', '#2EB67D', '#E01E5A', '#ECB22E', '#E51670'];
 
+const Child = () => {
+  console.log('Child clg');
+  useEffect(() => {
+    console.log('child useEffect');
+
+    return () => {
+      console.log('child useEffect return');
+    };
+  }, []);
+
+  return <></>;
+};
+
 const Test = () => {
-  console.log('aaaaaaaaaaaa');
+  console.log('parent clg');
 
   const [time, setTime] = useState(Date.now());
 
   useEffect(() => {
     console.log('bbbbbbbb');
-
-    return () => {};
+    console.log('parent useEffect');
+    return () => {
+      console.log('parent useEffect return ');
+    };
   }, []);
 
   useEffect(() => {
-    const id = setInterval(() => setTime(Date.now()), 111);
+    const id = setInterval(() => setTime(Date.now()), 211);
 
     return () => {
       clearInterval(id);
@@ -55,19 +72,23 @@ const Test = () => {
   }, []);
 
   return (
-    <Center w="full" h="full" flexDir="column">
+    <Center w="full" h="100vh" flexDir="column">
       <Heading>Motion test</Heading>
-      <Heading>Motion test</Heading>
+      <Link href="/">home</Link>
       <MotionBox initial="" position="relative" whileHover="hover" display="flex" justifyContent="center" alignItems="center" w="100px" h="100px" bgColor="red">
         {new Array(4).fill(0).map((_, idx, arr) => (
           <MotionBox key="idx" variants={circleMotion} custom={[idx + 1, arr.length]} position="absolute" w="50px" h="50px">
-            <MotionBox display="flex" alignItems="center" justifyContent="center" variants={iconMotion} w="full" h="full" borderRadius="full" backgroundColor="white" border="2px">
+            <MotionBox display="flex" alignItems="center" justifyContent="center" variants={iconMotion} w="full" h="full">
               <BiVolumeMute size="30px" />
             </MotionBox>
           </MotionBox>
         ))}
       </MotionBox>
       <Heading>{time}</Heading>
+      <Center backgroundColor="black" width="500px" h="100px" padding="10">
+        <AvatarScore score={time} />
+      </Center>
+      <Child />
     </Center>
   );
 };
