@@ -5,9 +5,8 @@ import { BiVolumeMute } from '@react-icons/all-files/bi/BiVolumeMute';
 import { FiMoreHorizontal } from '@react-icons/all-files/fi/FiMoreHorizontal';
 import { AvatarModel } from '@src/components/viewing/avatar/AvatarModel';
 import { NEXT_URL } from '@src/const';
-import { latestScoreState } from '@src/state/recoil/scoreState';
 import { isOnModelState, PeerDataInterface } from '@src/state/recoil/viewingState';
-import { createRef, FC, useEffect, useState } from 'react';
+import { createRef, memo, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AvatarConnectionStatus } from './AvatarConnectionStatus';
 import { AvatarMenu } from './AvatarMenu';
@@ -15,11 +14,15 @@ import { AvatarScore } from './AvatarScore';
 
 const AVATAR_SIZE = 200;
 
-export const Peer3DAvatar: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
+type Props = {
+  peer: PeerDataInterface;
+};
+
+export const Peer3DAvatar = memo<Props>(({ peer }) => {
   const { id: uuid, data, dataConnection, mediaStream, mediaConnection } = peer;
-  const scores = useRecoilValue(latestScoreState);
+
   const audioRef = createRef<HTMLAudioElement>();
-  const score = scores?.[uuid] ?? 0;
+
   const [muted, setMuted] = useState(false);
   const isOnModel = useRecoilValue(isOnModelState);
 
@@ -29,11 +32,11 @@ export const Peer3DAvatar: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
       mediaStream.getAudioTracks()[0].enabled = true;
       audio.srcObject = mediaStream;
     }
+    console.log('abacdf');
     return () => {};
   }, [mediaStream]);
 
   const handleMute = () => {
-    console.log('mute');
     setMuted(prev => !prev);
   };
 
@@ -48,7 +51,7 @@ export const Peer3DAvatar: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
     >
       <AvatarMenu>
         <Center onClick={handleMute} cursor="pointer" zIndex="3" borderRadius="full" border="2px" padding="1">
-          {muted ? <AiOutlineSound size="20px" /> : <BiVolumeMute size="20px" />}
+          {muted ? <BiVolumeMute size="20px" /> : <AiOutlineSound size="20px" />}
           <audio autoPlay muted={muted} ref={audioRef}>
             audio
           </audio>
@@ -71,7 +74,11 @@ export const Peer3DAvatar: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
       </Heading>
       <AvatarConnectionStatus dataConnection={dataConnection} mediaStream={mediaStream} />
 
-      <AvatarScore score={scores?.[uuid] ?? 0} />
+      <AvatarScore uuid={uuid} />
     </Box>
   );
-};
+});
+
+Peer3DAvatar.displayName = 'Peer3DAvatar';
+// 친구 추가
+// 상세보기

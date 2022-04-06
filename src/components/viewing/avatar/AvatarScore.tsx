@@ -1,17 +1,22 @@
 import { Flex } from '@chakra-ui/react';
 import { MotionBox } from '@src/components/common/motion/MotionChakra';
+import { latestScoreState } from '@src/state/recoil/scoreState';
 import { AnimatePresence } from 'framer-motion';
 import { memo } from 'react';
+import { useRecoilValue } from 'recoil';
 
 const AVATAR_SIZE = 200;
 
 const COLORS = ['#36C5F0', '#2EB67D', '#E01E5A', '#ECB22E', '#E51670', '#36C5F0', '#2EB67D', '#E01E5A', '#ECB22E', '#E51670'];
 
 type Props = {
-  score: number;
+  uuid: string;
 };
 
-export const AvatarScore = memo<Props>(({ score }) => {
+export const AvatarScore = memo<Props>(({ uuid }) => {
+  const scores = useRecoilValue(latestScoreState);
+  const score = scores?.[uuid] ?? 0;
+
   return (
     <Flex position="relative" w={AVATAR_SIZE + 'px'} fontWeight="bold" fontSize="xl" textStyle="mm">
       <AnimatePresence>

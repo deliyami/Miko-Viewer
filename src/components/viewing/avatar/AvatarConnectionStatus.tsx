@@ -2,7 +2,7 @@ import { Box, Divider } from '@chakra-ui/react';
 import { MotionBox } from '@src/components/common/motion/MotionChakra';
 import { Variants } from 'framer-motion';
 import Peer from 'peerjs';
-import { FC, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 const avatarStatusMotion: Variants = {
   initial: {
@@ -40,7 +40,9 @@ type Props = {
   mediaStream?: MediaStream;
 };
 
-export const AvatarConnectionStatus: FC<Props> = ({ dataConnection, mediaStream }) => {
+const CONNECTION_CHECK_INTERVAL = 5000;
+
+export const AvatarConnectionStatus = memo<Props>(({ dataConnection, mediaStream }) => {
   const setRerender = useState(0)[1];
   const isOkData = dataConnection?.open;
   const isOkMedia = mediaStream?.active;
@@ -48,6 +50,15 @@ export const AvatarConnectionStatus: FC<Props> = ({ dataConnection, mediaStream 
   const fireRerender = () => {
     setRerender(prev => prev + 1);
   };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fireRerender();
+    }, CONNECTION_CHECK_INTERVAL);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   return (
     <Box onMouseEnter={fireRerender}>
@@ -62,4 +73,5 @@ export const AvatarConnectionStatus: FC<Props> = ({ dataConnection, mediaStream 
       </MotionBox>
     </Box>
   );
-};
+});
+AvatarConnectionStatus.displayName = 'AvatarConnectionStatus';

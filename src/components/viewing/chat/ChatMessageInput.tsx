@@ -7,11 +7,11 @@ import { chatModeState, isShowChatInputState, peerDataListState } from '@src/sta
 import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
 import { useUser } from '@src/state/swr/useUser';
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
-import { FormEvent, KeyboardEventHandler, useRef, useState } from 'react';
+import { FormEvent, KeyboardEventHandler, memo, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { SuperChatOption } from './SuperChatOption';
 
-const ChatMessageInput = () => {
+const ChatMessageInput = memo(() => {
   const socket = useSocket();
   const user = useUser();
   const [isShow, setIsShow] = useRecoilState(isShowChatInputState);
@@ -107,6 +107,8 @@ const ChatMessageInput = () => {
       </ScaleFade>
     </Box>
   );
-};
+});
+
+ChatMessageInput.displayName = 'ChatMessageInput';
 
 export default ChatMessageInput;

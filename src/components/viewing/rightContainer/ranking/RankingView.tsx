@@ -1,17 +1,14 @@
-import { Box, BoxProps, Center, Divider, Heading, VStack } from '@chakra-ui/react';
+import { Box, Center, Divider, Heading, VStack } from '@chakra-ui/react';
 import { RiVipCrownLine } from '@react-icons/all-files/ri/RiVipCrownLine';
+import { MotionBox } from '@src/components/common/motion/MotionChakra';
 import useSocket from '@src/hooks/useSocket';
 import { latestScoreState } from '@src/state/recoil/scoreState';
 import { myRankState } from '@src/state/recoil/viewing/rankState';
 import { useUser } from '@src/state/swr/useUser';
-import { AnimatePresence, motion } from 'framer-motion';
-import { FC, useEffect, useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { FC, memo, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-const MotionBox = motion<Omit<BoxProps, 'transition'>>(Box);
-
-const COLORS = ['#36C5F0', '#2EB67D', '#E01E5A', '#ECB22E', '#E51670', 'red'];
-//
 const GRADIENTS = [
   'linear(to-l, #ef32d9, #89fffd)', // 1
   'linear(to-l, #a1ffce, #faffd1)', // 2
@@ -20,24 +17,17 @@ const GRADIENTS = [
   'linear(to-l, #eacda3, #d6ae7b)',
 ];
 
-const RankingView: FC = () => {
+const MyRanking = memo(() => {
   const { data: user } = useUser();
-  const socket = useSocket();
-
-  const [myRank, setMyRank] = useRecoilState(myRankState);
   const latestScore = useRecoilValue(latestScoreState);
-
-  const [ranks, setRank] = useState([]);
+  const socket = useSocket();
+  const [myRank, setMyRank] = useRecoilState(myRankState);
 
   useEffect(() => {
-    const broadcastRank = getRank => {
-      setRank(getRank);
-    };
     const getMyRank = (newMyRank: number) => {
       setMyRank(newMyRank);
     };
 
-    socket.on('be-broadcast-rank', broadcastRank);
     socket.on('be-update-myRank', getMyRank);
 
     const updateMyRankInterval = setInterval(() => {
@@ -45,28 +35,39 @@ const RankingView: FC = () => {
     }, 1000);
 
     return () => {
-      socket.off('be-broadcast-rank', broadcastRank);
       socket.off('be-update-myRank', getMyRank);
       clearInterval(updateMyRankInterval);
     };
   }, [socket]);
 
+  return <Heading size="sm">{myRank ? `MyRank: ${myRank}位 - ${latestScore[user.uuid]}  ` : 'loading'} </Heading>;
+});
+
+MyRanking.displayName = 'MyRanking';
+
+const Top5Rank = memo(() => {
+  const socket = useSocket();
+  const [ranks, setRank] = useState([]);
+
+  useEffect(() => {
+    const broadcastRank = getRank => {
+      setRank(getRank);
+    };
+
+    socket.on('be-broadcast-rank', broadcastRank);
+
+    const updateMyRankInterval = setInterval(() => {
+      socket.emit('fe-get-myRank');
+    }, 1000);
+
+    return () => {
+      socket.off('be-broadcast-rank', broadcastRank);
+      clearInterval(updateMyRankInterval);
+    };
+  }, [socket]);
+
   return (
-    <VStack
-      width="full"
-      flexShrink="0"
-      minH="150px"
-      position="relative"
-      backgroundColor="#202020"
-      border="2px"
-      borderColor="#262626"
-      textColor="white"
-      flexBasis="150px"
-      overflowY="scroll"
-    >
-      <Box color="yellow" fontSize="2xl" pos="absolute" left="2" top="2">
-        <RiVipCrownLine />
-      </Box>
+    <>
       <AnimatePresence>
         {ranks.map(({ value, score }, idx) => {
           return (
@@ -91,8 +92,32 @@ const RankingView: FC = () => {
           <Heading>No Data</Heading>
         </Center>
       )}
+    </>
+  );
+});
+
+Top5Rank.displayName = 'Top5Rank';
+
+const RankingView: FC = () => {
+  return (
+    <VStack
+      width="full"
+      flexShrink="0"
+      minH="150px"
+      position="relative"
+      backgroundColor="#202020"
+      border="2px"
+      borderColor="#262626"
+      textColor="white"
+      flexBasis="150px"
+      overflowY="scroll"
+    >
+      <Box color="yellow" fontSize="2xl" pos="absolute" left="2" top="2">
+        <RiVipCrownLine />
+      </Box>
+      <Top5Rank />
       <Divider />
-      <Heading size="sm">{myRank ? `MyRank: ${myRank}位 - ${latestScore[user.uuid]}  ` : 'loading'} </Heading>
+      <MyRanking />
     </VStack>
   );
 };

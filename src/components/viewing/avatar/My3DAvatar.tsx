@@ -5,21 +5,19 @@ import { BiVolumeMute } from '@react-icons/all-files/bi/BiVolumeMute';
 import { FiMoreHorizontal } from '@react-icons/all-files/fi/FiMoreHorizontal';
 import { AvatarModel } from '@src/components/viewing/avatar/AvatarModel';
 import { NEXT_URL } from '@src/const';
-import { latestScoreState } from '@src/state/recoil/scoreState';
 import { isOnModelState } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
-import { FC } from 'react';
+import { memo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AvatarMenu } from './AvatarMenu';
 import { AvatarScore } from './AvatarScore';
 
 const AVATAR_SIZE = 200;
 
-export const My3DAvatar: FC = () => {
+export const My3DAvatar = memo(() => {
   const {
     data: { uuid },
   } = useUser();
-  const scores = useRecoilValue(latestScoreState);
   const isOnModel = useRecoilValue(isOnModelState);
 
   return (
@@ -42,7 +40,7 @@ export const My3DAvatar: FC = () => {
           <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={uuid} antialias></AvatarModel>
         </Box>
       )}
-      <AvatarScore score={scores?.[uuid] ?? 0} />
+      <AvatarScore uuid={uuid} />
       <Box width="full" position="absolute" top="0" h="2rem" color="white" pointerEvents="none">
         <Text fontSize="6xl" id={uuid + 'motion'}></Text>
         <Text fontSize="3xl" width="30vw" id={uuid + 'chat'}></Text>
@@ -50,4 +48,6 @@ export const My3DAvatar: FC = () => {
       {/* <TempAddScoreLogic /> */}
     </Box>
   );
-};
+});
+
+My3DAvatar.displayName = 'My3DAvatar';
