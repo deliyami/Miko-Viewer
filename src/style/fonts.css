@@ -1,0 +1,8 @@
+/* local fonts */
+
+@font-face {
+  font-family: 'mm10thpixel';
+  src: url('/fonts/mm10thpixel.woff');
+  font-weight: 600;
+  font-style: normal;
+}

@@ -41,10 +41,9 @@ export default class Document extends NextDocument {
           <link rel="shortcut icon" href="/image/icon/favicon.ico" />
           {/* <link rel="icon" type="image/png" sizes="96x96" href="/images/icon/favicon-96x96.png" /> */}
           <link rel="manifest" href="/manifest.json" />
-          <link
-            rel="stylesheet"
-            href="//fonts.googleapis.com/css?family=Titillium+Web:700|Source+Serif+Pro:400,700|Merriweather+Sans:400,700|Source+Sans+Pro:400,300,600,700,300italic,400italic,600italic,700italic&display=swap"
-          />
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+          <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" />
         </Head>
         <body>
           {/* Make Color mode to persists when you refresh the page. */}

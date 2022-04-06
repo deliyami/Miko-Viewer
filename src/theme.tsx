@@ -1,7 +1,7 @@
 import { extendTheme, ThemeConfig } from '@chakra-ui/react';
 import { createBreakpoints } from '@chakra-ui/theme-tools';
 
-const fonts = { mono: `'Menlo', monospace` };
+const fonts = { heading: 'Noto Sans JP, "Hiragino Kaku Gothic Pro",Meiryo,sans-serif', body: 'Noto Sans JP,"Hiragino Kaku Gothic ProN",Meiryo, sans-serif' };
 
 const breakpoints = createBreakpoints({
   sm: '40em',
@@ -80,6 +80,9 @@ const theme = extendTheme({
       fontWeight: 'semibold',
       lineHeight: '110%',
       letterSpacing: '-1%',
+    },
+    mm: {
+      fontFamily: 'mm10thpixel',
     },
   },
   colors: {

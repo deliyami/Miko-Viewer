@@ -1,4 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react';
+import '@src/style/fonts.css';
 import theme from '@src/theme';
 import { NextPage } from 'next';
 import { AppProps, NextWebVitalsMetric } from 'next/app';
@@ -18,9 +19,6 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-// if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
-//   require('@src/mocks');
-// }
 declare global {
   interface Window {
     socket: Socket;
