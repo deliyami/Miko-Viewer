@@ -7,7 +7,7 @@ import useMyPeer from '@src/hooks/useMyPeer';
 import useSocket from '@src/hooks/useSocket';
 import { curUserTicketState, enterRoomIdAsyncState } from '@src/state/recoil/concertState';
 import { latestScoreState } from '@src/state/recoil/scoreState';
-import { messagesState, myStreamState, PeerDataInterface, peerDataListState, PickUserData } from '@src/state/recoil/viewingState';
+import { myStreamState, PeerDataInterface, peerDataListState, PickUserData } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
 import { DataConnectionEvent } from '@src/types/DataConnectionEventType';
 import produce from 'immer';
@@ -33,13 +33,13 @@ const WithSocketEventLayout: FC = ({ children }) => {
 
   const setLatestScoreState = useSetRecoilState(latestScoreState);
   const setPeerDataList = useSetRecoilState(peerDataListState);
-  const setMessages = useSetRecoilState(messagesState);
+  // const setMessages = useSetRecoilState(messagesState);
 
   // 정리 코드
   const handleLeavePage = () => {
     console.log('withSocketPeerLayer - handleLeavePage');
     setPeerDataList([]);
-    setMessages([]);
+    // setMessages([]);
   };
 
   useBeforeunload(() => {

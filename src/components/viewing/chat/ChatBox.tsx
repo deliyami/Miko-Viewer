@@ -1,13 +1,11 @@
 import { Box, Heading, VStack } from '@chakra-ui/react';
 import { MAX_MSGS } from '@src/const';
 import useSocket from '@src/hooks/useSocket';
-import { messagesState } from '@src/state/recoil/viewingState';
 import { ChatMessageInterface } from '@src/types/ChatMessageType';
 import produce from 'immer';
 // @ts-ignore
-import { useDeferredValue, useEffect, useRef, useState } from 'react';
+import { FC, memo, useEffect, useRef, useState } from 'react';
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized';
-import { useRecoilState } from 'recoil';
 import Message from './Message';
 
 const cache = new CellMeasurerCache({
@@ -16,55 +14,16 @@ const cache = new CellMeasurerCache({
   fixedWidth: true,
 });
 
-const ChatBox = () => {
-  const [messages, setMessages] = useRecoilState(messagesState);
+const ChatBoxRender: FC<{ messages: any[] }> = memo(({ messages }) => {
   const messagesEndRef = useRef(null);
   const [isBottom, setIsBottom] = useState(false);
   const listRef = useRef<List>(null);
-  const socket = useSocket();
-
-  const deferredMessages = useDeferredValue(messages, {
-    timeoutMs: 5000,
-  });
-
-  useEffect(() => {
-    const getBroadcastedNewMessage = (data: ChatMessageInterface) => {
-      setMessages(
-        produce(prevMsgs => {
-          const len = prevMsgs.length;
-          if (len > MAX_MSGS) {
-            const deleteLength = Math.round(len - MAX_MSGS + MAX_MSGS * 0.5);
-            prevMsgs.splice(0, deleteLength);
-            const hList = [];
-            const w = cache.getWidth(0, 0);
-            for (let i = 0; i < prevMsgs.length; i++) {
-              const h = cache.getHeight(i + deleteLength, 0);
-              hList.push(h);
-            }
-            // console.log(a);
-            cache.clearAll();
-            hList.forEach((h, idx) => {
-              cache.set(idx, 0, w, h);
-            });
-          }
-          prevMsgs.push(data);
-          return prevMsgs;
-        }),
-      );
-    };
-    socket.on('be-broadcast-new-message', getBroadcastedNewMessage);
-
-    return () => {
-      cache.clearAll();
-      socket.off('be-broadcast-new-message', getBroadcastedNewMessage);
-    };
-  }, [socket]);
 
   const rowRenderer: ListRowRenderer = ({ index, key, parent, style }) => {
     return (
       <CellMeasurer cache={cache} columnIndex={0} rowIndex={index} key={key} parent={parent}>
         <div style={style}>
-          <Message data={deferredMessages[index]} />
+          <Message data={messages[index]} />
         </div>
       </CellMeasurer>
     );
@@ -78,28 +37,92 @@ const ChatBox = () => {
   };
 
   return (
+    <VStack width="full" height="full" overflow="hidden" alignItems="start">
+      <AutoSizer>
+        {({ width, height }) => (
+          <List
+            ref={listRef}
+            width={width}
+            height={height}
+            rowCount={messages.length}
+            rowRenderer={rowRenderer}
+            rowHeight={cache.rowHeight}
+            onScroll={handelOnScroll}
+            overscanRowCount={1}
+            noRowsRenderer={noRowsRenderer}
+            scrollToIndex={isBottom ? messages.length - 1 : undefined}
+          />
+        )}
+      </AutoSizer>
+      <Box float="left" id="end-of-chatbox" style={{ clear: 'both' }} ref={messagesEndRef} />
+    </VStack>
+  );
+});
+
+ChatBoxRender.displayName = 'ChatBoxRender';
+
+const MESSAGE_THROTTLE_TIME = 1000 * 0.3;
+
+const ChatBox = () => {
+  const socket = useSocket();
+  const [messages, setMessages] = useState([]);
+  const messagesBuffer = useRef([]);
+  const updatedTimestamp = useRef(Date.now());
+  const setTimeoutId = useRef(null);
+
+  useEffect(() => {
+    const getBroadcastedNewMessage = (data: ChatMessageInterface) => {
+      const curTimestamp = Date.now();
+
+      const handleSetMessages = () => {
+        setMessages(
+          produce(prevMsgs => {
+            const len = prevMsgs.length;
+            if (len > MAX_MSGS) {
+              const deleteLength = Math.round(len - MAX_MSGS + MAX_MSGS * 0.5);
+              prevMsgs.splice(0, deleteLength);
+              const heightList = [];
+              const width = cache.getWidth(0, 0);
+              for (let i = 0; i < prevMsgs.length; i++) {
+                const h = cache.getHeight(i + deleteLength, 0);
+                heightList.push(h);
+              }
+              cache.clearAll();
+              heightList.forEach((h, idx) => {
+                cache.set(idx, 0, width, h);
+              });
+            }
+            prevMsgs.push(...messagesBuffer.current.splice(0, messagesBuffer.current.length));
+            // prevMsgs = [...prevMsgs, ...];
+          }),
+        );
+      };
+
+      clearTimeout(setTimeoutId.current);
+      messagesBuffer.current.push(data);
+
+      if (curTimestamp - updatedTimestamp.current < MESSAGE_THROTTLE_TIME) {
+        setTimeoutId.current = setTimeout(() => {
+          handleSetMessages();
+        }, MESSAGE_THROTTLE_TIME);
+      } else {
+        updatedTimestamp.current = curTimestamp;
+        handleSetMessages();
+      }
+    };
+    socket.on('be-broadcast-new-message', getBroadcastedNewMessage);
+
+    return () => {
+      clearTimeout(setTimeoutId.current);
+      cache.clearAll();
+      socket.off('be-broadcast-new-message', getBroadcastedNewMessage);
+    };
+  }, [socket]);
+
+  return (
     <VStack flexGrow="1" backgroundColor="#202020" border="2px" borderColor="#262626" overflow="scroll" width="full" textColor="white">
       <Heading size="sm">チャット</Heading>
-
-      <VStack width="full" height="full" overflow="hidden" alignItems="start">
-        <AutoSizer>
-          {({ width, height }) => (
-            <List
-              ref={listRef}
-              width={width}
-              height={height}
-              rowCount={deferredMessages.length}
-              rowRenderer={rowRenderer}
-              rowHeight={cache.rowHeight}
-              onScroll={handelOnScroll}
-              overscanRowCount={1}
-              noRowsRenderer={noRowsRenderer}
-              scrollToIndex={isBottom ? deferredMessages.length - 1 : undefined}
-            />
-          )}
-        </AutoSizer>
-        <Box float="left" id="end-of-chatbox" style={{ clear: 'both' }} ref={messagesEndRef} />
-      </VStack>
+      <ChatBoxRender messages={messages} />
     </VStack>
   );
 };
