@@ -19,10 +19,22 @@ const LogoutBtn = () => {
   };
 
   return (
-    <Flex px={5} onClick={logoutHandler} align="center" borderRadius="lg" cursor="pointer">
-      <Icon mr="4" fontSize="20" as={FiLogOut} />
-      <Text>Logout</Text>
-    </Flex>
+    <Box onClick={logoutHandler}>
+      <Flex
+        w="full"
+        p={2}
+        align="center"
+        borderRadius="lg"
+        cursor="pointer"
+        _hover={{
+          bg: 'cyan.400',
+          color: 'white',
+        }}
+      >
+        <Icon mx="4" fontSize="20" as={FiLogOut} />
+        <Text>Logout</Text>
+      </Flex>
+    </Box>
   );
 };
 
@@ -32,6 +44,7 @@ const LoginBtn = () => {
       <Link href="/login" style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
         <a>
           <Flex
+            w="full"
             align="center"
             p="2"
             mx="2"

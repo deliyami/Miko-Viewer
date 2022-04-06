@@ -6,9 +6,9 @@ import { withSuspense } from './withSuspenseHOC';
 const Layout = ({ children }) => {
   return (
     <>
-      <Box minH="85vh">
+      <Box minH="100vh">
         <MenuBar />
-        <Box ml={60} p="4" my={30} h="auto" minH="100%" paddingBottom="100px">
+        <Box ml={{ base: 0, md: 60 }} mt="10" p="4" paddingBottom="100px">
           {children}
         </Box>
       </Box>

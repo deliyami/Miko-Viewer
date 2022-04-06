@@ -7,11 +7,10 @@ export default function SmallWithLogoLeft() {
   const nowYear = dayjs(new Date()).format('YYYY');
 
   return (
-    <Box bg="#F7FAFC" ml={60} p={10}>
+    <Box bg="#F7FAFC" ml={{ base: 0, md: 60 }} p={10}>
       <Container
         as={Stack}
         maxW={'6xl'}
-        direction="row"
         direction={{ base: 'column', md: 'row' }}
         spacing={4}
         justify={{ base: 'center', md: 'space-between' }}
