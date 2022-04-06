@@ -10,7 +10,7 @@ import { ReactElement } from 'react';
 const UserTicketList = () => {
   const router = useRouter();
   const { data: userData } = useUser();
-  const isUsedId = parseInt(router.query.isUsedId as string);
+  const isUsedId = parseInt(router.query.isUsedId as string, 10);
 
   const { data: userTickets } = useUserTickets({
     with: ['ticket', 'concert'],
@@ -53,7 +53,7 @@ const UserTicketList = () => {
 
 const MyListPage = () => {
   const router = useRouter();
-  const isUsedId = parseInt(router.query.isUsedId as string);
+  const isUsedId = parseInt(router.query.isUsedId as string, 10);
 
   const onClickUsed = clickId => {
     router.push(`/my/lists/ticket/?isUsedId=${clickId}`);

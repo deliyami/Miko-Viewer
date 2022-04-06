@@ -12,7 +12,7 @@ const Category = () => {
   return (
     <Box>
       {categoryArray.map((category, idx) => (
-        <Button key={idx + 1} onClick={() => setCategory(idx + 1)} m="10px" colorScheme="blue">
+        <Button key={idx + 1} onClick={() => setCategory(idx + 1)} m={1} variant="ghost" colorScheme="cyan" _hover={{ bg: 'cyan.300', color: 'white' }}>
           {category}
         </Button>
       ))}

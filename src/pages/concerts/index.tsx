@@ -1,5 +1,5 @@
 import { SearchIcon } from '@chakra-ui/icons';
-import { Box, Center, Flex, Heading, HStack, IconButton, Input, Spacer, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, HStack, Icon, Input, InputGroup, InputLeftElement, InputRightElement, Text, VStack } from '@chakra-ui/react';
 import PaginationBtn from '@src/components/common/button/PaginationBtn';
 import Category from '@src/components/concert/Category';
 import ConcertList from '@src/components/home/ConcertList';
@@ -10,6 +10,7 @@ import { Concert } from '@src/types/share/Concert';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { KeyboardEventHandler, ReactElement, useState } from 'react';
+import { FiFilter } from 'react-icons/fi';
 
 type Data = {
   data?: Pagination<Concert>;
@@ -35,23 +36,29 @@ const SearchBox = () => {
   };
   return (
     <HStack>
-      <Input w="90%" variant="flushed" value={searchQuery} required onChange={onChangeSearch} onKeyUp={enterKey} />
-      <IconButton aria-label="Search database" icon={<SearchIcon />} type="submit" onClick={onClickSearch} />
+      <InputGroup size="md">
+        <InputLeftElement pointerEvents="none" children={<SearchIcon color="gray.300" />} />
+        <Input w="full" pr="4.5rem" type="text" placeholder="Enter title" value={searchQuery} onKeyUp={enterKey} required onChange={onChangeSearch} />
+        <InputRightElement width="4.5rem">
+          <Button h="1.75rem" size="sm" onClick={onClickSearch} type="submit" mr={2}>
+            Search
+          </Button>
+        </InputRightElement>
+      </InputGroup>
     </HStack>
   );
 };
 
 export const getServerSideProps: GetServerSideProps<Data> = async context => {
   const URL_CONCERTS = '/concerts';
-  const categoryId = parseInt(context.query.category_id as string);
+  const categoryId = parseInt(context.query.category_id as string, 10);
   const page = context.query.page as string;
   const search = context.query.search as string;
 
   const result = await getDataFromLaravel<Pagination<Concert>>(URL_CONCERTS, {
-    sort: ['-id'],
     filter: categoryId ? [['category_id', categoryId]] : null,
-    page: parseInt(page),
-    per_page: 6,
+    page: parseInt(page, 10),
+    per_page: 9,
     search,
   });
 
@@ -65,40 +72,42 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
 
 export default function ConcertPage({ data, categoryId }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
+  const [show, setShow] = useState(false);
+
   const handleDenyAccess = () => {
     setTimeout(() => {
       router.push('/');
     }, 1000);
   };
   if (!data) handleDenyAccess();
-  if (!data)
+  if (!data) {
     return (
       <Center height="auto" width="full">
         <Text fontSize="7xl">비정상 접근</Text>
       </Center>
     );
+  }
+
+  const showCate = () => {
+    setShow(!show);
+  };
 
   return (
     <Flex justifyContent="center">
-      <Box w="1000px">
-        <Flex>
-          <Heading fontWeight="700" size="2xl" my="20px">
-            Concert List
-          </Heading>
-          <Spacer />
-          <SearchBox />
+      <Box>
+        <SearchBox />
+        <Flex justifyContent="start" mt={3} mb={8}>
+          <Icon boxSize={5} m={3} onClick={showCate} cursor="pointer" as={FiFilter} />
+          {show && <Category />}
         </Flex>
-        <Category />
-        <VStack mt={14} spacing={16}>
-          {data ? (
-            <>
-              <ConcertList data={data.data} />
-              <PaginationBtn data={data.meta} url={`/concerts?category_id=${categoryId}`} />
-            </>
-          ) : (
-            'no data'
-          )}
-        </VStack>
+        {data ? (
+          <VStack spacing={5}>
+            <ConcertList data={data.data} />
+            <PaginationBtn data={data.meta} url={`/concerts?category_id=${categoryId}`} />
+          </VStack>
+        ) : (
+          'no data'
+        )}
       </Box>
     </Flex>
   );
