@@ -1,6 +1,6 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import '@src/style/fonts.css';
-import theme from '@src/theme';
+import '@src/style/css/fonts.css';
+import theme from '@src/style/theme';
 import { NextPage } from 'next';
 import { AppProps, NextWebVitalsMetric } from 'next/app';
 import Head from 'next/head';

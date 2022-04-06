@@ -1,5 +1,6 @@
 import * as cam from '@mediapipe/camera_utils';
 import { Results } from '@mediapipe/pose';
+import { isMediaPipeOn } from '@src/const';
 import { setBorn } from '@src/helper/setBornAvatar';
 import { model } from '@src/state/recoil/modelState';
 import { latestMotionState } from '@src/state/recoil/motionState';
@@ -99,13 +100,13 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
     };
     if (myStream) {
       const videoElement = videoRef.current;
-      if (videoElement.srcObject) {
-        videoElement.srcObject = myStream;
-      } else {
-        videoElement.srcObject = myStream;
-        setupMediapipe();
-      }
+      videoElement.srcObject = myStream;
       videoElement.volume = 0;
+      if (isMediaPipeOn) {
+        setupMediapipe();
+      } else {
+        setIsMediaPipeSetup(true);
+      }
     }
 
     return () => {

@@ -42,7 +42,7 @@ const ViewingCSRPage = () => {
       <WithSocketEventLayout>
         <WithIntervalMotionLayer>
           <WithIntervalTaskLayer>
-            <HStack width="100vw" h="full" position="relative" overflow="clip" backgroundColor="#181818">
+            <HStack width="100vw" h="full" position="relative" color="white" overflow="clip" backgroundColor="#181818">
               <Center h="full" w="full" zIndex="0" position="absolute">
                 <canvas className={styles.ambiance} id="ambiance" />
               </Center>

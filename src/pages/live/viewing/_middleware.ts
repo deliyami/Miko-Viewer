@@ -1,4 +1,4 @@
-import { USER_TICKET_COOKIE } from '@src/const';
+import { NEXT_URL, USER_TICKET_COOKIE } from '@src/const';
 import { checkLogin } from '@src/helper/api/checkLogin';
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 
@@ -12,7 +12,8 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
   if (isNotLogin) return redirect;
 
   if (!userTicketId) {
-    return NextResponse.redirect('/');
+    // NOTE 절대값 경로만 써야함.
+    return NextResponse.redirect(NEXT_URL);
   }
 
   // const { data } = await getDataFromLaravel<CommonDataResponse<UserTicket>>(

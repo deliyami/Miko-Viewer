@@ -1,12 +1,14 @@
-import { Box, Button, Center, Tag, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Text } from '@chakra-ui/react';
 import { AvatarModel } from '@src/components/viewing/avatar/AvatarModel';
 import { NEXT_URL } from '@src/const';
 import { latestScoreState } from '@src/state/recoil/scoreState';
-import { isOnModelState, myStreamState, PeerDataInterface, peerDataListState } from '@src/state/recoil/viewingState';
+import { isOnModelState, PeerDataInterface, peerDataListState } from '@src/state/recoil/viewingState';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
 import { useUser } from '@src/state/swr/useUser';
 import { createRef, FC, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import { AvatarConnectionStatus } from './AvatarConnectionStatus';
+import { ScoreView } from './AvatarScore';
 
 const AVATAR_SIZE = 200;
 
@@ -59,11 +61,11 @@ const UserBox: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
         </>
       )}
       <Box width="full" position="absolute" top="0" h="2rem" color="white">
-        <Text fontSize="1xl">スコア</Text>
-        <Text fontSize="2xl">{scores?.[uuid] ?? 0}</Text>
         <Text fontSize="6xl" id={uuid + 'motion'}></Text>
         <Text fontSize="3xl" width="30vw" id={uuid + 'chat'}></Text>
       </Box>
+      <AvatarConnectionStatus dataConnection={dataConnection} mediaStream={mediaStream} />
+      <ScoreView score={scores?.[uuid] ?? 0} />
       <Box width="full" position="absolute" bottom="0" h="2rem" color="white">
         <Button size="sm" onClick={handleMute} colorScheme="facebook">
           {muted ? '뮤트됨' : '재생중'}
@@ -71,8 +73,6 @@ const UserBox: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
             audio
           </audio>
         </Button>
-        <Tag> Data {dataConnection ? '👌' : '❌'} </Tag>
-        <Tag> media {mediaStream ? '👌' : '❌'}</Tag>
       </Box>
     </Box>
   );
@@ -82,7 +82,6 @@ const MyUserBox: FC = () => {
   const {
     data: { uuid },
   } = useUser();
-  const myStream = useRecoilValue(myStreamState);
   const scores = useRecoilValue(latestScoreState);
   const isOnModel = useRecoilValue(isOnModelState);
 
@@ -98,12 +97,10 @@ const MyUserBox: FC = () => {
       {isOnModel && (
         <Box overflow="hidden" position="relative">
           <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={uuid} antialias></AvatarModel>
-          {/* {myStream && <ModelMotion myPeerId={uuid} mediaStream={myStream}></ModelMotion>} */}
         </Box>
       )}
+      <ScoreView score={scores?.[uuid] ?? 0} />
       <Box width="full" position="absolute" top="0" h="2rem" color="white">
-        <Text fontSize="1xl">スコア</Text>
-        <Text fontSize="2xl">{scores?.[uuid] ?? 0}</Text>
         <Text fontSize="6xl" id={uuid + 'motion'}></Text>
         <Text fontSize="3xl" width="30vw" id={uuid + 'chat'}></Text>
       </Box>
@@ -114,7 +111,6 @@ const MyUserBox: FC = () => {
 
 const RoomAvatarView = () => {
   const peerDataList = useRecoilValue(peerDataListState);
-
   return (
     <Center gap="5" zIndex="inherit">
       <MyUserBox />

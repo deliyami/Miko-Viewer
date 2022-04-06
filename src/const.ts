@@ -1,5 +1,7 @@
 import { DoneItem } from './types/share/DoneItem';
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 // Debug Mode
 export const dummyMotion = true;
 
@@ -39,3 +41,6 @@ export const NEXT_URL = process.env[ENV_PREFIX + 'NEXT_URL'] ?? 'http://localhos
 
 // URL
 export const URL_USER_TICKET = '/user_tickets';
+
+// 개발 기능 on/ off
+export const isMediaPipeOn = process.env[ENV_PREFIX + 'MEDIA_PIPE_IS_ON'] === 'true';
