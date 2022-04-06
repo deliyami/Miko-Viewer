@@ -49,7 +49,7 @@ const BackdropFilters = () => {
   return (
     <Box as={VStack} sx={outerBoxStyles} mb={7}>
       <VStack maxW="80vh" spacing={5} my={10} p={5} backdropFilter="auto" backdropBlur="8px">
-        <Heading color="white">Connect on SoundCloud</Heading>
+        <Heading color="white">Connect on Miko</Heading>
         <Text color="white"> Discover, stream, and share a constantly expanding mix of music from emerging and major artists around the world.</Text>
         <Link href="/login">
           <a>
