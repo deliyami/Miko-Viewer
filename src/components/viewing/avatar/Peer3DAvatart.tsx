@@ -1,4 +1,8 @@
-import { Box, Button, Text } from '@chakra-ui/react';
+import { Box, Center, Heading, Text } from '@chakra-ui/react';
+import { AiOutlineSound } from '@react-icons/all-files/ai/AiOutlineSound';
+import { AiOutlineUserAdd } from '@react-icons/all-files/ai/AiOutlineUserAdd';
+import { BiVolumeMute } from '@react-icons/all-files/bi/BiVolumeMute';
+import { FiMoreHorizontal } from '@react-icons/all-files/fi/FiMoreHorizontal';
 import { AvatarModel } from '@src/components/viewing/avatar/AvatarModel';
 import { NEXT_URL } from '@src/const';
 import { latestScoreState } from '@src/state/recoil/scoreState';
@@ -6,12 +10,13 @@ import { isOnModelState, PeerDataInterface } from '@src/state/recoil/viewingStat
 import { createRef, FC, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AvatarConnectionStatus } from './AvatarConnectionStatus';
-import { ScoreView } from './AvatarScore';
+import { AvatarMenu } from './AvatarMenu';
+import { AvatarScore } from './AvatarScore';
 
 const AVATAR_SIZE = 200;
 
 export const Peer3DAvatar: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
-  const { id: uuid, data, dataConnection, mediaStream } = peer;
+  const { id: uuid, data, dataConnection, mediaStream, mediaConnection } = peer;
   const scores = useRecoilValue(latestScoreState);
   const audioRef = createRef<HTMLAudioElement>();
   const score = scores?.[uuid] ?? 0;
@@ -28,6 +33,7 @@ export const Peer3DAvatar: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
   }, [mediaStream]);
 
   const handleMute = () => {
+    console.log('mute');
     setMuted(prev => !prev);
   };
 
@@ -40,25 +46,32 @@ export const Peer3DAvatar: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
       backgroundRepeat="no-repeat"
       backgroundSize="cover"
     >
+      <AvatarMenu>
+        <Center onClick={handleMute} cursor="pointer" zIndex="3" borderRadius="full" border="2px" padding="1">
+          {muted ? <AiOutlineSound size="20px" /> : <BiVolumeMute size="20px" />}
+          <audio autoPlay muted={muted} ref={audioRef}>
+            audio
+          </audio>
+        </Center>
+        <AiOutlineSound size="20px" />
+        <AiOutlineUserAdd size="20px" />
+        <FiMoreHorizontal size="20px" />
+      </AvatarMenu>
       {isOnModel && (
-        <>
+        <Box overflow="hidden" position="relative" pointerEvents="none">
           <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={uuid} antialias></AvatarModel>
-        </>
+        </Box>
       )}
       <Box width="full" position="absolute" top="0" h="2rem" color="white">
         <Text fontSize="6xl" id={uuid + 'motion'}></Text>
         <Text fontSize="3xl" width="30vw" id={uuid + 'chat'}></Text>
       </Box>
+      <Heading position="absolute" top="2" left="1" fontSize="1.2rem">
+        {data.name}
+      </Heading>
       <AvatarConnectionStatus dataConnection={dataConnection} mediaStream={mediaStream} />
-      <ScoreView score={scores?.[uuid] ?? 0} />
-      <Box width="full" position="absolute" bottom="0" h="2rem" color="white">
-        <Button size="sm" onClick={handleMute} colorScheme="facebook">
-          {muted ? '뮤트됨' : '재생중'}
-          <audio autoPlay muted={muted} ref={audioRef}>
-            audio
-          </audio>
-        </Button>
-      </Box>
+
+      <AvatarScore score={scores?.[uuid] ?? 0} />
     </Box>
   );
 };

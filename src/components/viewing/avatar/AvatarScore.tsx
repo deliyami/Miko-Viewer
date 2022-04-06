@@ -11,7 +11,7 @@ type Props = {
   score: number;
 };
 
-export const ScoreView = memo<Props>(({ score }) => {
+export const AvatarScore = memo<Props>(({ score }) => {
   return (
     <Flex position="relative" w={AVATAR_SIZE + 'px'} fontWeight="bold" fontSize="xl" textStyle="mm">
       <AnimatePresence>
@@ -39,4 +39,4 @@ export const ScoreView = memo<Props>(({ score }) => {
   );
 });
 
-ScoreView.displayName = 'ScoreView';
+AvatarScore.displayName = 'ScoreView';
