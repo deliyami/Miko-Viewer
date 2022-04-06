@@ -4,7 +4,7 @@ import useSocket from '@src/hooks/useSocket';
 import { latestScoreState } from '@src/state/recoil/scoreState';
 import { myRankState } from '@src/state/recoil/viewing/rankState';
 import { useUser } from '@src/state/swr/useUser';
-import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { FC, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
@@ -67,32 +67,30 @@ const RankingView: FC = () => {
       <Box color="yellow" fontSize="2xl" pos="absolute" left="2" top="2">
         <RiVipCrownLine />
       </Box>
-      <LayoutGroup>
-        <AnimatePresence>
-          {ranks.map(({ value, score }, idx) => {
-            return (
-              <MotionBox
-                key={value}
-                layoutId={value}
-                transition={{ duration: 0.2 }}
-                initial={{ y: -30 }}
-                animate={{ y: 0, scale: [0.6, 1.0] }}
-                exit={{ x: 100 }}
-                textShadow="text-shadow: 2px 1px 0px rgba(255, 255, 255, 1);"
-              >
-                <Heading size="sm" bgClip="text" bgGradient={GRADIENTS[idx]} key={value + idx}>
-                  {idx + 1}位: {value} - {score}点
-                </Heading>
-              </MotionBox>
-            );
-          })}
-        </AnimatePresence>
-        {ranks.length === 0 && (
-          <Center h="full" w="full">
-            <Heading>No Data</Heading>
-          </Center>
-        )}
-      </LayoutGroup>
+      <AnimatePresence>
+        {ranks.map(({ value, score }, idx) => {
+          return (
+            <MotionBox
+              key={value}
+              layoutId={value}
+              transition={{ duration: 0.2 }}
+              initial={{ y: -30 }}
+              animate={{ y: 0, scale: [0.6, 1.0] }}
+              exit={{ x: 100 }}
+              textShadow="text-shadow: 2px 1px 0px rgba(255, 255, 255, 1);"
+            >
+              <Heading size="sm" bgClip="text" bgGradient={GRADIENTS[idx]} key={value + idx}>
+                {idx + 1}位: {value} - {score}点
+              </Heading>
+            </MotionBox>
+          );
+        })}
+      </AnimatePresence>
+      {ranks.length === 0 && (
+        <Center h="full" w="full">
+          <Heading>No Data</Heading>
+        </Center>
+      )}
       <Divider />
       <Heading size="sm">{myRank ? `MyRank: ${myRank}位 - ${latestScore[user.uuid]}  ` : 'loading'} </Heading>
     </VStack>

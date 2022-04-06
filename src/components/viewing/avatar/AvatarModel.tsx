@@ -34,10 +34,6 @@ export const AvatarModel: FC<{
 
           BABYLON.MeshBuilder.CreateGround('ground', { width: 30, height: 6 }, scene);
           BABYLON.SceneLoader.ImportMesh('', path, '', scene, (...args) => {
-            if (peerId) {
-              console.log('나는야 신나고 즐겁지');
-            }
-
             args[4][27].rotate(new BABYLON.Vector3(0, 1, 0), Math.PI, 2);
             const borns = args[4];
             const originalBorns: BABYLON.Quaternion[] = [];

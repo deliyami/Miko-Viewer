@@ -1,123 +1,37 @@
-import { Box, Button, Center, Text } from '@chakra-ui/react';
-import { AvatarModel } from '@src/components/viewing/avatar/AvatarModel';
-import { NEXT_URL } from '@src/const';
-import { latestScoreState } from '@src/state/recoil/scoreState';
-import { isOnModelState, PeerDataInterface, peerDataListState } from '@src/state/recoil/viewingState';
-import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
-import { useUser } from '@src/state/swr/useUser';
-import { createRef, FC, useEffect, useState } from 'react';
+import { Center } from '@chakra-ui/react';
+import { MotionBox } from '@src/components/common/motion/MotionChakra';
+import { peerDataListState } from '@src/state/recoil/viewingState';
+import { AnimatePresence, LayoutGroup } from 'framer-motion';
+import { FC } from 'react';
 import { useRecoilValue } from 'recoil';
-import { AvatarConnectionStatus } from './AvatarConnectionStatus';
-import { ScoreView } from './AvatarScore';
+import { My3DAvatar } from './My3DAvatar';
+import { Peer3DAvatar } from './Peer3DAvatart';
 
-const AVATAR_SIZE = 200;
-
-const TempAddScoreLogic = () => {
-  useEffect(() => {
-    const setIntervalId = setInterval(() => {
-      addedScoreForSeconds.addScore(Math.round(Math.random() * 10));
-    }, 1000);
-    return () => {
-      clearInterval(setIntervalId);
-    };
-  }, []);
-
-  return <Box></Box>;
-};
-
-const UserBox: FC<{ peer: PeerDataInterface }> = ({ peer }) => {
-  const { id: uuid, data, dataConnection, mediaStream } = peer;
-  const scores = useRecoilValue(latestScoreState);
-  const audioRef = createRef<HTMLAudioElement>();
-  const score = scores?.[uuid] ?? 0;
-  const [muted, setMuted] = useState(false);
-  const isOnModel = useRecoilValue(isOnModelState);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (audio && mediaStream) {
-      mediaStream.getAudioTracks()[0].enabled = true;
-      audio.srcObject = mediaStream;
-    }
-    return () => {};
-  }, [mediaStream]);
-
-  const handleMute = () => {
-    setMuted(prev => !prev);
-  };
-
+const AvatarEnterEffect: FC<{ layoutId: string }> = ({ children, layoutId }) => {
   return (
-    <Box
-      position="relative"
-      width={AVATAR_SIZE}
-      height={AVATAR_SIZE}
-      backgroundImage={!isOnModel && "url('/image/temp/avatar.png')"}
-      backgroundRepeat="no-repeat"
-      backgroundSize="cover"
-    >
-      {isOnModel && (
-        <>
-          <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={uuid} antialias></AvatarModel>
-        </>
-      )}
-      <Box width="full" position="absolute" top="0" h="2rem" color="white">
-        <Text fontSize="6xl" id={uuid + 'motion'}></Text>
-        <Text fontSize="3xl" width="30vw" id={uuid + 'chat'}></Text>
-      </Box>
-      <AvatarConnectionStatus dataConnection={dataConnection} mediaStream={mediaStream} />
-      <ScoreView score={scores?.[uuid] ?? 0} />
-      <Box width="full" position="absolute" bottom="0" h="2rem" color="white">
-        <Button size="sm" onClick={handleMute} colorScheme="facebook">
-          {muted ? '뮤트됨' : '재생중'}
-          <audio autoPlay muted={muted} ref={audioRef}>
-            audio
-          </audio>
-        </Button>
-      </Box>
-    </Box>
-  );
-};
-
-const MyUserBox: FC = () => {
-  const {
-    data: { uuid },
-  } = useUser();
-  const scores = useRecoilValue(latestScoreState);
-  const isOnModel = useRecoilValue(isOnModelState);
-
-  return (
-    <Box
-      position="relative"
-      width={AVATAR_SIZE}
-      height={AVATAR_SIZE}
-      backgroundImage={!isOnModel && "url('/image/temp/avatar.png')"}
-      backgroundRepeat="no-repeat"
-      backgroundSize="cover"
-    >
-      {isOnModel && (
-        <Box overflow="hidden" position="relative">
-          <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={uuid} antialias></AvatarModel>
-        </Box>
-      )}
-      <ScoreView score={scores?.[uuid] ?? 0} />
-      <Box width="full" position="absolute" top="0" h="2rem" color="white">
-        <Text fontSize="6xl" id={uuid + 'motion'}></Text>
-        <Text fontSize="3xl" width="30vw" id={uuid + 'chat'}></Text>
-      </Box>
-      {/* <TempAddScoreLogic /> */}
-    </Box>
+    <MotionBox layoutId={layoutId} animate={{ scale: [0, 1], opacity: [0, 1], transition: { duration: 0.3 } }} exit={{ opacity: [1, 0], y: [0, 300] }}>
+      {children}
+    </MotionBox>
   );
 };
 
 const RoomAvatarView = () => {
   const peerDataList = useRecoilValue(peerDataListState);
   return (
-    <Center gap="5" zIndex="inherit">
-      <MyUserBox />
-      {peerDataList.map(peer => (
-        <UserBox peer={peer} key={peer.id} />
-      ))}
-    </Center>
+    <LayoutGroup>
+      <Center gap="5" zIndex="inherit">
+        <AnimatePresence>
+          <AvatarEnterEffect key="me" layoutId="meAvatar">
+            <My3DAvatar key="me" />
+          </AvatarEnterEffect>
+          {peerDataList.map(peer => (
+            <AvatarEnterEffect key={peer.id} layoutId={'peerAvatar' + peer.id}>
+              <Peer3DAvatar key={peer.id} peer={peer} />
+            </AvatarEnterEffect>
+          ))}
+        </AnimatePresence>
+      </Center>
+    </LayoutGroup>
   );
 };
 

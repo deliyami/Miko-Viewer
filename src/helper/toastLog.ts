@@ -1,4 +1,5 @@
 import { createStandaloneToast } from '@chakra-ui/react';
+
 const toast = createStandaloneToast();
 
 type toastLogType = (type: 'error' | 'info' | 'warning' | 'success', title: string, desc?: string, err?: Error) => void;
@@ -16,7 +17,8 @@ export const toastLog: toastLogType = (type, title, desc, err) => {
   }
 
   toast({
-    title: title,
+    title,
+    position: 'top-left',
     description: desc,
     status: type,
     duration: 5000,

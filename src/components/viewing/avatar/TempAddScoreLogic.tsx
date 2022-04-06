@@ -1,0 +1,15 @@
+import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
+import { useEffect } from 'react';
+
+export const TempAddScoreLogic = () => {
+  useEffect(() => {
+    const setIntervalId = setInterval(() => {
+      addedScoreForSeconds.addScore(Math.round(Math.random() * 10));
+    }, 1000);
+    return () => {
+      clearInterval(setIntervalId);
+    };
+  }, []);
+
+  return <></>;
+};
