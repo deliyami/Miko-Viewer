@@ -14,14 +14,14 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { RiMoneyDollarCircleFill } from '@react-icons/all-files/ri/RiMoneyDollarCircleFill';
-import { Dispatch, FC, SetStateAction } from 'react';
+import { Dispatch, memo, SetStateAction } from 'react';
 
-type Prop = {
+type Props = {
   amount: number;
   setAmount: Dispatch<SetStateAction<number>>;
 };
 
-export const SuperChatOption: FC<Prop> = ({ amount, setAmount }) => {
+export const SuperChatOption = memo<Props>(({ amount, setAmount }) => {
   return (
     <Popover placement="top" offset={[0, 30]}>
       <PopoverTrigger>
@@ -46,6 +46,6 @@ export const SuperChatOption: FC<Prop> = ({ amount, setAmount }) => {
       </Portal>
     </Popover>
   );
-};
+});
 
 SuperChatOption.displayName = 'SuperChatOption';

@@ -9,6 +9,7 @@ import { isOnModelState } from '@src/state/recoil/viewingState';
 import { useUser } from '@src/state/swr/useUser';
 import { memo } from 'react';
 import { useRecoilValue } from 'recoil';
+import { AvatarEnterEffect } from './AvatarEnterEffect';
 import { AvatarMenu } from './AvatarMenu';
 import { AvatarScore } from './AvatarScore';
 
@@ -21,32 +22,34 @@ export const My3DAvatar = memo(() => {
   const isOnModel = useRecoilValue(isOnModelState);
 
   return (
-    <Box
-      position="relative"
-      width={AVATAR_SIZE}
-      height={AVATAR_SIZE}
-      backgroundImage={!isOnModel && "url('/image/temp/avatar.png')"}
-      backgroundRepeat="no-repeat"
-      backgroundSize="cover"
-    >
-      <AvatarMenu>
-        <BiVolumeMute size="20px" />
-        <AiOutlineSound size="20px" />
-        <AiOutlineUserAdd size="20px" />
-        <FiMoreHorizontal size="20px" />
-      </AvatarMenu>
-      {isOnModel && (
-        <Box overflow="hidden" position="relative" pointerEvents="none">
-          <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={uuid} antialias></AvatarModel>
+    <AvatarEnterEffect key="me" layoutId="meAvatar">
+      <Box
+        position="relative"
+        width={AVATAR_SIZE}
+        height={AVATAR_SIZE}
+        backgroundImage={!isOnModel && "url('/image/temp/avatar.png')"}
+        backgroundRepeat="no-repeat"
+        backgroundSize="cover"
+      >
+        <AvatarMenu>
+          <BiVolumeMute size="20px" />
+          <AiOutlineSound size="20px" />
+          <AiOutlineUserAdd size="20px" />
+          <FiMoreHorizontal size="20px" />
+        </AvatarMenu>
+        {isOnModel && (
+          <Box overflow="hidden" position="relative" pointerEvents="none">
+            <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={uuid} antialias></AvatarModel>
+          </Box>
+        )}
+        <AvatarScore uuid={uuid} />
+        <Box width="full" position="absolute" top="0" h="2rem" color="white" pointerEvents="none">
+          <Text fontSize="6xl" id={uuid + 'motion'}></Text>
+          <Text fontSize="3xl" width="30vw" id={uuid + 'chat'}></Text>
         </Box>
-      )}
-      <AvatarScore uuid={uuid} />
-      <Box width="full" position="absolute" top="0" h="2rem" color="white" pointerEvents="none">
-        <Text fontSize="6xl" id={uuid + 'motion'}></Text>
-        <Text fontSize="3xl" width="30vw" id={uuid + 'chat'}></Text>
+        {/* <TempAddScoreLogic /> */}
       </Box>
-      {/* <TempAddScoreLogic /> */}
-    </Box>
+    </AvatarEnterEffect>
   );
 });
 

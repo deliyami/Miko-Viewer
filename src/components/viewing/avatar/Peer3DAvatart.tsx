@@ -9,6 +9,7 @@ import { isOnModelState, PeerDataInterface } from '@src/state/recoil/viewingStat
 import { createRef, memo, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AvatarConnectionStatus } from './AvatarConnectionStatus';
+import { AvatarEnterEffect } from './AvatarEnterEffect';
 import { AvatarMenu } from './AvatarMenu';
 import { AvatarScore } from './AvatarScore';
 
@@ -41,41 +42,43 @@ export const Peer3DAvatar = memo<Props>(({ peer }) => {
   };
 
   return (
-    <Box
-      position="relative"
-      width={AVATAR_SIZE}
-      height={AVATAR_SIZE}
-      backgroundImage={!isOnModel && "url('/image/temp/avatar.png')"}
-      backgroundRepeat="no-repeat"
-      backgroundSize="cover"
-    >
-      <AvatarMenu>
-        <Center onClick={handleMute} cursor="pointer" zIndex="3" borderRadius="full" border="2px" padding="1">
-          {muted ? <BiVolumeMute size="20px" /> : <AiOutlineSound size="20px" />}
-          <audio autoPlay muted={muted} ref={audioRef}>
-            audio
-          </audio>
-        </Center>
-        <AiOutlineSound size="20px" />
-        <AiOutlineUserAdd size="20px" />
-        <FiMoreHorizontal size="20px" />
-      </AvatarMenu>
-      {isOnModel && (
-        <Box overflow="hidden" position="relative" pointerEvents="none">
-          <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={uuid} antialias></AvatarModel>
+    <AvatarEnterEffect key={peer.id} layoutId={'peerAvatar' + peer.id}>
+      <Box
+        position="relative"
+        width={AVATAR_SIZE}
+        height={AVATAR_SIZE}
+        backgroundImage={!isOnModel && "url('/image/temp/avatar.png')"}
+        backgroundRepeat="no-repeat"
+        backgroundSize="cover"
+      >
+        <AvatarMenu>
+          <Center onClick={handleMute} cursor="pointer" zIndex="3" borderRadius="full" border="2px" padding="1">
+            {muted ? <BiVolumeMute size="20px" /> : <AiOutlineSound size="20px" />}
+            <audio autoPlay muted={muted} ref={audioRef}>
+              audio
+            </audio>
+          </Center>
+          <AiOutlineSound size="20px" />
+          <AiOutlineUserAdd size="20px" />
+          <FiMoreHorizontal size="20px" />
+        </AvatarMenu>
+        {isOnModel && (
+          <Box overflow="hidden" position="relative" pointerEvents="none">
+            <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={uuid} antialias></AvatarModel>
+          </Box>
+        )}
+        <Box width="full" position="absolute" top="0" h="2rem" color="white">
+          <Text fontSize="6xl" id={uuid + 'motion'}></Text>
+          <Text fontSize="3xl" width="30vw" id={uuid + 'chat'}></Text>
         </Box>
-      )}
-      <Box width="full" position="absolute" top="0" h="2rem" color="white">
-        <Text fontSize="6xl" id={uuid + 'motion'}></Text>
-        <Text fontSize="3xl" width="30vw" id={uuid + 'chat'}></Text>
-      </Box>
-      <Heading position="absolute" top="2" left="1" fontSize="1.2rem">
-        {data.name}
-      </Heading>
-      <AvatarConnectionStatus dataConnection={dataConnection} mediaStream={mediaStream} />
+        <Heading position="absolute" top="2" left="1" fontSize="1.2rem">
+          {data.name}
+        </Heading>
+        <AvatarConnectionStatus dataConnection={dataConnection} mediaStream={mediaStream} />
 
-      <AvatarScore uuid={uuid} />
-    </Box>
+        <AvatarScore uuid={uuid} />
+      </Box>
+    </AvatarEnterEffect>
   );
 });
 

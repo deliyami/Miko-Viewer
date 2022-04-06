@@ -6,7 +6,7 @@ import { latestScoreState } from '@src/state/recoil/scoreState';
 import { myRankState } from '@src/state/recoil/viewing/rankState';
 import { useUser } from '@src/state/swr/useUser';
 import { AnimatePresence } from 'framer-motion';
-import { FC, memo, useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 const GRADIENTS = [
@@ -45,6 +45,27 @@ const MyRanking = memo(() => {
 
 MyRanking.displayName = 'MyRanking';
 
+const RankItem = memo<{ value: string; idx: number; score: number }>(({ idx, score, value }) => {
+  return (
+    <MotionBox
+      key={value}
+      layoutId={value}
+      transition={{ duration: 0.2 }}
+      initial={{ y: -30 }}
+      animate={{ y: 0, scale: [0.6, 1.0] }}
+      exit={{ x: 100 }}
+      textShadow="text-shadow: 2px 1px 0px rgba(255, 255, 255, 1);"
+    >
+      <Heading size="sm" bgClip="text" bgGradient={GRADIENTS[idx]} key={value + idx}>
+        {idx + 1}位: {value} - {score}点
+      </Heading>
+    </MotionBox>
+  );
+});
+
+RankItem.displayName = '';
+RankItem.displayName = '';
+
 const Top5Rank = memo(() => {
   const socket = useSocket();
   const [ranks, setRank] = useState([]);
@@ -69,23 +90,9 @@ const Top5Rank = memo(() => {
   return (
     <>
       <AnimatePresence>
-        {ranks.map(({ value, score }, idx) => {
-          return (
-            <MotionBox
-              key={value}
-              layoutId={value}
-              transition={{ duration: 0.2 }}
-              initial={{ y: -30 }}
-              animate={{ y: 0, scale: [0.6, 1.0] }}
-              exit={{ x: 100 }}
-              textShadow="text-shadow: 2px 1px 0px rgba(255, 255, 255, 1);"
-            >
-              <Heading size="sm" bgClip="text" bgGradient={GRADIENTS[idx]} key={value + idx}>
-                {idx + 1}位: {value} - {score}点
-              </Heading>
-            </MotionBox>
-          );
-        })}
+        {ranks.map(({ value, score }, idx) => (
+          <RankItem key="value" score={score} idx={idx} value={value} />
+        ))}
       </AnimatePresence>
       {ranks.length === 0 && (
         <Center h="full" w="full">
