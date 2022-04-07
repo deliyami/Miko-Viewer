@@ -1,7 +1,7 @@
 // NOTE 일부 "undefined"로 저장되는 경우가 있었음.
 import { AtomEffect } from 'recoil';
 
-export const localStorageBooleanEffect: (key: string) => AtomEffect<boolean> =
+export const localStorageNumberEffect: (key: string) => AtomEffect<number> =
   key =>
   ({ setSelf, onSet }) => {
     if (typeof window === 'undefined') return;
@@ -10,13 +10,14 @@ export const localStorageBooleanEffect: (key: string) => AtomEffect<boolean> =
     if (savedValue != null) {
       try {
         const parsed = JSON.parse(savedValue);
-        if (parsed === 'true') {
-          setSelf(true);
+        if (!Number.isNaN(parsed)) {
+          // 옳바른 숫자일때
+          setSelf(parseFloat(parsed));
         } else {
-          setSelf(false);
+          setSelf(undefined);
         }
       } catch {
-        setSelf(false);
+        setSelf(undefined);
       }
     }
 

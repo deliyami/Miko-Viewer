@@ -19,7 +19,7 @@ export const My3DAvatar = memo(() => {
   const {
     data: { uuid },
   } = useUser();
-  const avatarOnOff = useRecoilValue(isOnAvatarState);
+  const isOnAvatar = useRecoilValue(isOnAvatarState);
 
   return (
     <AvatarEnterEffect key="me" layoutId="meAvatar">
@@ -27,7 +27,7 @@ export const My3DAvatar = memo(() => {
         position="relative"
         width={AVATAR_SIZE}
         height={AVATAR_SIZE}
-        backgroundImage={!avatarOnOff && "url('/image/temp/avatar.png')"}
+        backgroundImage={!isOnAvatar && "url('/image/temp/avatar.png')"}
         backgroundRepeat="no-repeat"
         backgroundSize="cover"
       >
@@ -37,7 +37,7 @@ export const My3DAvatar = memo(() => {
           <AiOutlineUserAdd size="20px" />
           <FiMoreHorizontal size="20px" />
         </AvatarMenu>
-        {avatarOnOff && (
+        {isOnAvatar && (
           <Box overflow="hidden" position="relative" pointerEvents="none">
             <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={uuid} antialias></AvatarModel>
           </Box>

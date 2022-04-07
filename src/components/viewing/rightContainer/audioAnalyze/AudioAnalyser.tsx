@@ -1,5 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 import AudioVisualizer from '@src/components/viewing/rightContainer/audioAnalyze/AudioVisualizer';
+import { isOnAudioAnalyzerState } from '@src/state/recoil/devState';
 import { myStreamState } from '@src/state/recoil/viewingState';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
 import { useEffect, useState } from 'react';
@@ -19,11 +20,13 @@ const processVolume = volume => {
 
 const AudioAnalyser = () => {
   const myStream = useRecoilValue(myStreamState);
+  const isOnAudioAnalyzer = useRecoilValue(isOnAudioAnalyzerState);
+
   const [volume, setVolume] = useState(0);
 
   useEffect(() => {
     let intervalId;
-    if (myStream) {
+    if (myStream && isOnAudioAnalyzer) {
       const audioContext = new AudioContext();
       const audioSource = audioContext.createMediaStreamSource(myStream);
       const analyser = audioContext.createAnalyser();
@@ -44,7 +47,7 @@ const AudioAnalyser = () => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [myStream]);
+  }, [myStream, isOnAudioAnalyzer]);
 
   return (
     <Flex width="full" flexBasis="30px" backgroundColor="#202020" border="2px" borderColor="#262626" textColor="white" py="1" px="0.5">

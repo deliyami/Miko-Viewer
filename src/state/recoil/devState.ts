@@ -1,32 +1,45 @@
 import { atom } from 'recoil';
 import { localStorageBooleanEffect } from './effects/localStorageBooleanEffect';
+import { localStorageNumberEffect } from './effects/localStorageNumberEffect';
 
 export const isOnAvatarState = atom<boolean>({
   key: 'isOnAvatarState',
-  default: undefined,
+  default: true,
   effects: [localStorageBooleanEffect('isOnAvatarState')],
 });
 
 export const isOnVideoAmbianceState = atom<boolean>({
   key: 'isOnVideoAmbianceState',
-  default: undefined,
+  default: true,
   effects: [localStorageBooleanEffect('isOnVideoAmbianceState')],
 });
 
 export const isOnMediaPipeState = atom<boolean>({
   key: 'isOnMediaPipeState',
-  default: undefined,
+  default: true,
   effects: [localStorageBooleanEffect('isOnMediaPipeState')],
 });
 
 export const isOnRankingState = atom<boolean>({
   key: 'isOnRankingState',
-  default: undefined,
+  default: true,
   effects: [localStorageBooleanEffect('isOnRankingState')],
 });
 
 export const isOnMyRankingState = atom<boolean>({
   key: 'isOnMyRankingState',
-  default: undefined,
+  default: true,
   effects: [localStorageBooleanEffect('isOnMyRankingState')],
+});
+
+export const isOnAudioAnalyzerState = atom<boolean>({
+  key: 'isOnAudioAnalyzerState',
+  default: true,
+  effects: [localStorageBooleanEffect('isOnAudioAnalyzerState')],
+});
+
+export const myAvatarReplicateNumState = atom<number>({
+  key: 'myAvatarReplicateNumState',
+  default: 0,
+  effects: [localStorageNumberEffect('myAvatarReplicateNumState')],
 });
