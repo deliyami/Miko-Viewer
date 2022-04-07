@@ -1,7 +1,7 @@
 import { Flex, Radio, RadioGroup, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 
-const NoteCheck = () => {
+const NotifyCheck = () => {
   const [radio, setRadio] = useState('0');
   return (
     <Flex justifyContent={'space-between'} alignItems={'center'}>
@@ -19,4 +19,4 @@ const NoteCheck = () => {
     </Flex>
   );
 };
-export default NoteCheck;
+export default NotifyCheck;

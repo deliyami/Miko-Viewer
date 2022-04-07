@@ -1,21 +1,46 @@
 import { ArrowForwardIcon, PlusSquareIcon } from '@chakra-ui/icons';
 import { Button, ButtonGroup, Flex, IconButton, Popover, PopoverBody, PopoverContent, PopoverFooter, PopoverTrigger } from '@chakra-ui/react';
-import router from 'next/router';
+import { LARAVEL_URL } from '@src/const';
+import { useUser } from '@src/state/swr/useUser';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-const PopOver = ({ count, color, size, cartCount, setCartCount }) => {
+const PopOver = ({ count, color, size, setCount, setColor, setSize, cartCount, setCartCount }) => {
   const [isOpen, setIsOpen] = useState(false);
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
   const [cartIsOpen, setCartIsOpen] = useState(false);
   const cartOpen = () => setCartIsOpen(true);
   const cartClose = () => setCartIsOpen(false);
+  const router = useRouter();
+  const user = useUser();
+  // axios.defaults.withCredentials = true;
   function onCart() {
     console.log('onCart');
     if (count == 0 || color == '' || size == '') {
       alert('オプションを全部選択して下さい。');
     } else if (count !== 0 && color !== '' && size !== '') {
       setCartCount(cartCount + 1);
+      axios
+        .post(
+          `${LARAVEL_URL}/cart_products`,
+          {
+            user_id: user.data.id,
+            size,
+            color,
+            product_id: router.query.product_id,
+            quantity: count,
+          },
+          // { withCredentials: true },
+        )
+        .then(response => {
+          console.log(response);
+          setSize('');
+          setColor('');
+          setCount(0);
+        })
+        .catch(error => console.log(error));
     }
   }
   function onBuy() {
@@ -23,7 +48,7 @@ const PopOver = ({ count, color, size, cartCount, setCartCount }) => {
     if (count == 0 || color == '' || size == '') {
       alert('オプションを全部選択して下さい。');
     } else if (count !== 0 && color !== '' && size !== '') {
-      router.push(`/concerts/${router.query.id}/products/pay`);
+      router.push(`/concerts/${router.query.id}/products/purchase`);
     }
   }
   return (

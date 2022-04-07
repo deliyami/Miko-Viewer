@@ -1,4 +1,19 @@
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Button, Flex, Link, Table, TableCaption, TableContainer, Tbody, Td } from '@chakra-ui/react';
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Button,
+  Flex,
+  Link,
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+} from '@chakra-ui/react';
 import { NEXT_URL } from '@src/const';
 import { useRouter } from 'next/router';
 
@@ -6,7 +21,10 @@ const Paydone = () => {
   const router = useRouter();
   return (
     <Flex flexDir={'column'}>
-      <TableContainer>
+      <Text fontSize={'3xl'} textAlign={'center'} my={'5%'}>
+        ありがとうございます。ご注文手続きが完了しました。
+      </Text>
+      <TableContainer alignSelf={'center'} w={'50%'}>
         <Table mb={'15%'}>
           <TableCaption textAlign={'left'}>
             会員様は、会員メニュー内の

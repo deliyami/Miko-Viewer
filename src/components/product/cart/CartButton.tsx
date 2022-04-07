@@ -2,7 +2,7 @@ import { Button, Flex, Image, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-const CartButton = ({ cartCount, count, size, color, item }) => {
+const CartButton = ({ cartCount }) => {
   const router = useRouter();
   // console.log(props);
   return (
@@ -10,13 +10,6 @@ const CartButton = ({ cartCount, count, size, color, item }) => {
     <Link
       href={{
         pathname: `/concerts/${router.query.id}/products/cart`,
-        query: {
-          cartCount,
-          count,
-          size,
-          color,
-          item: JSON.stringify(item),
-        },
       }}
     >
       <Flex flexDirection={'column'}>

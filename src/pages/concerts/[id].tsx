@@ -149,6 +149,9 @@ export default function LiveDetailPage({ concert, tickets }: InferGetServerSideP
             <Tab color="gray" onClick={() => onClickSale(1)}>
               販売終了
             </Tab>
+            <Tab color="gray" onClick={() => router.push(`/concerts/${concertId}/products`)}>
+              グッズリスト
+            </Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
