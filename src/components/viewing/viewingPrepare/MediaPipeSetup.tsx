@@ -1,7 +1,7 @@
 import * as cam from '@mediapipe/camera_utils';
 import { Results } from '@mediapipe/pose';
-import { isMediaPipeOn } from '@src/const';
 import { setBorn } from '@src/helper/setBornAvatar';
+import { isOnMediaPipeState } from '@src/state/recoil/devState';
 import { model } from '@src/state/recoil/modelState';
 import { latestMotionState } from '@src/state/recoil/motionState';
 import { myStreamState, peerDataListState } from '@src/state/recoil/viewingState';
@@ -25,6 +25,7 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const myStream = useRecoilValue(myStreamState);
   const peers = useRecoilValue(peerDataListState);
+  const isOnMediaPipe = useRecoilValue(isOnMediaPipeState);
   const motionState = useRecoilValue(latestMotionState);
   const modelState = useRecoilValue(model);
   const user = useUser();
@@ -102,7 +103,7 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
       const videoElement = videoRef.current;
       videoElement.srcObject = myStream;
       videoElement.volume = 0;
-      if (isMediaPipeOn) {
+      if (isOnMediaPipe) {
         setupMediapipe();
       } else {
         setIsMediaPipeSetup(true);

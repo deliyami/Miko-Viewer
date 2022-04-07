@@ -2,6 +2,7 @@ import { Box, Center, Divider, Heading, VStack } from '@chakra-ui/react';
 import { RiVipCrownLine } from '@react-icons/all-files/ri/RiVipCrownLine';
 import { MotionBox } from '@src/components/common/motion/MotionChakra';
 import useSocket from '@src/hooks/useSocket';
+import { isOnMyRankingState, isOnRankingState } from '@src/state/recoil/devState';
 import { latestScoreState } from '@src/state/recoil/scoreState';
 import { myRankState } from '@src/state/recoil/viewing/rankState';
 import { useUser } from '@src/state/swr/useUser';
@@ -21,6 +22,7 @@ const MyRanking = memo(() => {
   const { data: user } = useUser();
   const latestScore = useRecoilValue(latestScoreState);
   const socket = useSocket();
+  const isOnMyRanking = useRecoilValue(isOnMyRankingState);
   const [myRank, setMyRank] = useRecoilState(myRankState);
 
   useEffect(() => {
@@ -29,10 +31,12 @@ const MyRanking = memo(() => {
     };
 
     socket.on('be-update-myRank', getMyRank);
-
-    const updateMyRankInterval = setInterval(() => {
-      socket.emit('fe-get-myRank');
-    }, 1000);
+    let updateMyRankInterval;
+    if (isOnMyRanking) {
+      updateMyRankInterval = setInterval(() => {
+        socket.emit('fe-get-myRank');
+      }, 1000);
+    }
 
     return () => {
       socket.off('be-update-myRank', getMyRank);
@@ -68,24 +72,20 @@ RankItem.displayName = '';
 
 const Top5Rank = memo(() => {
   const socket = useSocket();
+  const isOnRanking = useRecoilValue(isOnRankingState);
   const [ranks, setRank] = useState([]);
 
   useEffect(() => {
     const broadcastRank = getRank => {
       setRank(getRank);
     };
-
-    socket.on('be-broadcast-rank', broadcastRank);
-
-    const updateMyRankInterval = setInterval(() => {
-      socket.emit('fe-get-myRank');
-    }, 1000);
-
+    if (isOnRanking) {
+      socket.on('be-broadcast-rank', broadcastRank);
+    }
     return () => {
       socket.off('be-broadcast-rank', broadcastRank);
-      clearInterval(updateMyRankInterval);
     };
-  }, [socket]);
+  }, [socket, isOnRanking]);
 
   return (
     <>

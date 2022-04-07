@@ -5,7 +5,7 @@ import { BiVolumeMute } from '@react-icons/all-files/bi/BiVolumeMute';
 import { FiMoreHorizontal } from '@react-icons/all-files/fi/FiMoreHorizontal';
 import { AvatarModel } from '@src/components/viewing/avatar/AvatarModel';
 import { NEXT_URL } from '@src/const';
-import { isOnModelState } from '@src/state/recoil/viewingState';
+import { isOnAvatarState } from '@src/state/recoil/devState';
 import { useUser } from '@src/state/swr/useUser';
 import { memo } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -19,7 +19,7 @@ export const My3DAvatar = memo(() => {
   const {
     data: { uuid },
   } = useUser();
-  const isOnModel = useRecoilValue(isOnModelState);
+  const avatarOnOff = useRecoilValue(isOnAvatarState);
 
   return (
     <AvatarEnterEffect key="me" layoutId="meAvatar">
@@ -27,7 +27,7 @@ export const My3DAvatar = memo(() => {
         position="relative"
         width={AVATAR_SIZE}
         height={AVATAR_SIZE}
-        backgroundImage={!isOnModel && "url('/image/temp/avatar.png')"}
+        backgroundImage={!avatarOnOff && "url('/image/temp/avatar.png')"}
         backgroundRepeat="no-repeat"
         backgroundSize="cover"
       >
@@ -37,7 +37,7 @@ export const My3DAvatar = memo(() => {
           <AiOutlineUserAdd size="20px" />
           <FiMoreHorizontal size="20px" />
         </AvatarMenu>
-        {isOnModel && (
+        {avatarOnOff && (
           <Box overflow="hidden" position="relative" pointerEvents="none">
             <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={uuid} antialias></AvatarModel>
           </Box>

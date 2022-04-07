@@ -16,14 +16,14 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { enterRoomIdAsyncState } from '@src/state/recoil/concertState';
-import { isOnModelState, isOnVideoAmbianceState } from '@src/state/recoil/viewingState';
+import { isOnAvatarState, isOnVideoAmbianceState } from '@src/state/recoil/devState';
 import React, { forwardRef, useImperativeHandle } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 const ViewingSettingDrawer = forwardRef((_, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const enterRoomId = useRecoilValue(enterRoomIdAsyncState);
-  const [isOnModel, setIsOnModel] = useRecoilState(isOnModelState);
+  const [isOnModel, setIsOnModel] = useRecoilState(isOnAvatarState);
   const [isOnVideoAmbiance, setIsOnVideoAmbiance] = useRecoilState(isOnVideoAmbianceState);
 
   useImperativeHandle(ref, () => ({

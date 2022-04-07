@@ -54,13 +54,3 @@ export const isReadyIvsState = atom({
   key: 'ivsScriptLoadedState',
   default: false,
 });
-
-export const isOnModelState = atom({
-  key: 'isOnModelState',
-  default: true,
-});
-
-export const isOnVideoAmbianceState = atom({
-  key: 'isOnVideoAmbianceState',
-  default: false,
-});

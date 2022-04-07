@@ -1,4 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react';
+import { DevDrawer } from '@src/components/common/dev/DevDrawer';
 import '@src/style/css/fonts.css';
 import theme from '@src/style/theme';
 import { NextPage } from 'next';
@@ -95,7 +96,10 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
       </Head>
       <ChakraProvider resetCSS theme={theme}>
-        <RecoilRoot>{getLayout(<Component {...pageProps} />)}</RecoilRoot>
+        <RecoilRoot>
+          <DevDrawer />
+          {getLayout(<Component {...pageProps} />)}
+        </RecoilRoot>
       </ChakraProvider>
     </>
   );

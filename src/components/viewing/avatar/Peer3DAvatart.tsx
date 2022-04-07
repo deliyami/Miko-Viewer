@@ -5,7 +5,8 @@ import { BiVolumeMute } from '@react-icons/all-files/bi/BiVolumeMute';
 import { FiMoreHorizontal } from '@react-icons/all-files/fi/FiMoreHorizontal';
 import { AvatarModel } from '@src/components/viewing/avatar/AvatarModel';
 import { NEXT_URL } from '@src/const';
-import { isOnModelState, PeerDataInterface } from '@src/state/recoil/viewingState';
+import { isOnAvatarState } from '@src/state/recoil/devState';
+import { PeerDataInterface } from '@src/state/recoil/viewingState';
 import { createRef, memo, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AvatarConnectionStatus } from './AvatarConnectionStatus';
@@ -25,7 +26,7 @@ export const Peer3DAvatar = memo<Props>(({ peer }) => {
   const audioRef = createRef<HTMLAudioElement>();
 
   const [muted, setMuted] = useState(false);
-  const isOnModel = useRecoilValue(isOnModelState);
+  const isOnModel = useRecoilValue(isOnAvatarState);
 
   useEffect(() => {
     const audio = audioRef.current;
