@@ -21,7 +21,7 @@ const OptionSelect = ({ color, size, count, setCartCount, cartCount, setColor, s
   return (
     <Flex w="100%" flexDirection={'column'}>
       <Flex w={'80%'} mt="5%" alignSelf="end" mb={'19%'}>
-        <PopOver setCartCount={setCartCount} cartCount={cartCount} count={count} size={size} color={color}></PopOver>
+        <PopOver setCartCount={setCartCount} cartCount={cartCount} setCount={setCount} setSize={setSize} setColor={setColor} count={count} size={size} color={color}></PopOver>
       </Flex>
       <Select mb={'4%'} placeholder="数量" value={count} onChange={onCountChange}>
         {countArr.map((count, key) => {

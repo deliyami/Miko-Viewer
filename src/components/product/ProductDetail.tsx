@@ -1,12 +1,26 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
-import { useState } from 'react';
+import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
+import { useUser } from '@src/state/swr/useUser';
+import { Cart } from '@src/types/share/Cart';
+import { Pagination } from '@src/types/share/common/common';
+import { useEffect, useState } from 'react';
 import CartButton from './cart/CartButton';
 import OptionSelect from './OptionSelect';
 
 const ProductDetail = ({ item }) => {
   console.log(item);
-  const [cartCount, setCartCount] = useState(0);
+  const user = useUser();
+  const [cart, setCart] = useState();
+  const [cartCount, setCartCount] = useState(cart);
+  console.log(user);
+  const URL_PRODUCTS = `/cart_products/${user.data.id}`;
+  useEffect(() => {
+    if (user.data) {
+      getDataFromLaravel<Pagination<Cart>>(URL_PRODUCTS).then(response => setCartCount(response.data.length));
+    }
+    console.log(cart);
+  }, [cartCount]);
   const [count, setCount] = useState(0);
   const [color, setColor] = useState('');
   const [size, setSize] = useState('');
@@ -41,7 +55,7 @@ const ProductDetail = ({ item }) => {
         </Flex>
       </Flex>
       <Flex alignItems={'end'}>
-        <CartButton item={item} count={count} color={color} size={size} cartCount={cartCount}></CartButton>
+        <CartButton cartCount={cartCount}></CartButton>
       </Flex>
     </Flex>
   );
