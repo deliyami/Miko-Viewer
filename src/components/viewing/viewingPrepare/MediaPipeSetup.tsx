@@ -78,13 +78,20 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
 
   useEffect(() => {
     let camera: cam.Camera;
+    let latestPoseEnded = true;
     const setupMediapipe = () => {
       if (videoRef.current) {
         let isMediaPipeSetup = false;
         camera = new cam.Camera(videoRef?.current, {
           onFrame: async () => {
             await aPose.initialize();
-            aPose.send({ image: videoRef.current }); // NOTE  mediaPipe on off
+            if (latestPoseEnded && isOnMediaPipe) {
+              latestPoseEnded = false;
+              aPose.send({ image: videoRef.current }).then(() => {
+                latestPoseEnded = true;
+              });
+            } else {
+            }
             if (!isMediaPipeSetup) {
               isMediaPipeSetup = true;
               setIsMediaPipeSetup(true);
@@ -113,7 +120,7 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
     return () => {
       // camera?.stop();
     };
-  }, [myStream, videoRef.current]);
+  }, [myStream, videoRef.current, isOnMediaPipe]);
 
   useEffect(() => {
     aPose.onResults(onResults);
