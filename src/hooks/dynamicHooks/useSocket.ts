@@ -12,7 +12,6 @@ export const useSocket = () => {
       })
         .on('connect', () => {
           console.log('socket connect 👌 ', window.socket.connected);
-          // window.socket.emit('fe-new-user-request-join', peerId, roomId, userData, concertId, ticketId, userTicketId);
         })
         .on('connect_error', err => {
           console.error('socket_connect_error', err);

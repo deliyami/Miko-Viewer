@@ -3,6 +3,7 @@ import { DevDrawer } from '@src/components/common/dev/DevDrawer';
 import RootEventCatchLayout from '@src/layout/RootEventCatchLayout';
 import '@src/style/css/fonts.css';
 import theme from '@src/style/theme';
+import type * as ivs from 'amazon-ivs-player';
 import { NextPage } from 'next';
 import { AppProps, NextWebVitalsMetric } from 'next/app';
 import Head from 'next/head';
@@ -25,6 +26,7 @@ declare global {
   interface Window {
     socket: Socket;
     myPeer: Peer;
+    IVSPlayer: typeof ivs;
   }
 }
 

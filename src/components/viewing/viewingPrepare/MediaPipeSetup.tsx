@@ -1,24 +1,25 @@
 import * as cam from '@mediapipe/camera_utils';
 import { Results } from '@mediapipe/pose';
-import { setBorn } from '@src/helper';
+import { setBorn, toastLog } from '@src/helper';
 import { isOnMediaPipeState, latestMotionState, model, myStreamState, peerDataListState } from '@src/state/recoil';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
 import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { aPose } from '@src/state/shareObject/sharePose';
 import { useUser } from '@src/state/swr';
 import * as Kalidokit from 'kalidokit';
-import React, { Dispatch, FC, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import React, { Dispatch, memo, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
+import { SetterOrUpdater, useRecoilValue } from 'recoil';
 
 type Props = {
   //   isMediaPipeSetup: boolean;
   setIsMediaPipeSetup: Dispatch<SetStateAction<boolean>>;
+  setMediaPipeError: SetterOrUpdater<string>;
 };
 
 const VIDEO_WIDTH = 320;
 const VIDEO_HEIGHT = 240;
 
-const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
+const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const myStream = useRecoilValue(myStreamState);
   const peers = useRecoilValue(peerDataListState);
@@ -81,21 +82,34 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
         let isMediaPipeSetup = false;
         camera = new cam.Camera(videoRef?.current, {
           onFrame: async () => {
-            await aPose.initialize();
-            if (latestPoseEnded && isOnMediaPipe) {
-              latestPoseEnded = false;
-              aPose.send({ image: videoRef.current }).then(() => {
-                latestPoseEnded = true;
-              });
-            } else {
-            }
-            if (!isMediaPipeSetup) {
-              isMediaPipeSetup = true;
-              setIsMediaPipeSetup(true);
+            try {
+              await aPose.initialize();
+              if (latestPoseEnded && isOnMediaPipe) {
+                latestPoseEnded = false;
+                //  TODO  send 2번쨰 인자 at 의미
+                aPose
+                  .send({ image: videoRef.current })
+                  .then(() => {
+                    latestPoseEnded = true;
+                  })
+                  .catch(err => {
+                    console.error('media pipe error', err);
+                  });
+              } else {
+              }
+              if (!isMediaPipeSetup) {
+                isMediaPipeSetup = true;
+                setIsMediaPipeSetup(true);
+              }
+            } catch (err) {
+              toastLog('error', 'mediaPipe error');
+              console.error(err);
+              setMediaPipeError(err);
             }
           },
           width: VIDEO_WIDTH,
           height: VIDEO_HEIGHT,
+          // facingMode:'user' // TODO 이 옵션 의미
         });
         camera.start().then(() => {
           console.log('MediaPipe - Camera Start ✅');
@@ -136,6 +150,6 @@ const MediaPipeSetup: FC<Props> = ({ setIsMediaPipeSetup }) => {
       ></video>
     </>
   );
-};
+});
 
 export default MediaPipeSetup;

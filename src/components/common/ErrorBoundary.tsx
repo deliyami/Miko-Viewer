@@ -1,3 +1,4 @@
+import { Button, Center, Heading, HStack } from '@chakra-ui/react';
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 
 interface Props {
@@ -25,12 +26,13 @@ class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div>
-          <h2>Oops, there is an error!</h2>
-          <button type="button" onClick={() => this.setState({ hasError: false })}>
-            Try again?
-          </button>
-        </div>
+        <Center width="full" height="full" flexDir="column">
+          <Heading>error!</Heading>
+          <HStack>
+            <Button onClick={() => this.setState({ hasError: false })}> Retry </Button>
+            <Button onClick={() => window.location.reload()}>Refresh </Button>
+          </HStack>
+        </Center>
       );
     }
 

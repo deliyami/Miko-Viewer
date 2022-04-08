@@ -16,8 +16,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
   const user = useUser();
   const myPeerUniqueID = user.data?.uuid;
 
-  // NOTE getUserMedia를 할때마다 새로운 객체가 나와서, getUserMedia를 한번만 실행하도록 개선
-  // 또한 미묘한 시간 오차로 인한 오류가 있었음
   const myStream = useRecoilValue(myStreamState);
   const roomId = useRecoilValue(enterRoomIdAsyncState);
   const userTicket = useRecoilValue(curUserTicketState);
@@ -25,13 +23,10 @@ const WithSocketEventLayout: FC = ({ children }) => {
 
   const setLatestScoreState = useSetRecoilState(latestScoreState);
   const setPeerDataList = useSetRecoilState(peerDataListState);
-  // const setMessages = useSetRecoilState(messagesState);
 
-  // 정리 코드
   const handleLeavePage = () => {
     console.log('withSocketPeerLayer - handleLeavePage');
     setPeerDataList([]);
-    // setMessages([]);
   };
 
   useBeforeunload(() => {
@@ -93,6 +88,19 @@ const WithSocketEventLayout: FC = ({ children }) => {
       }
     });
 
+    const peerOnDataConnection = (dataConnection: DataConnection): void => {
+      addDataConnectionToPeersDataList(dataConnection);
+      addEventToDataConnection(dataConnection);
+    };
+    myPeer.on('connection', peerOnDataConnection);
+
+    const peerOnCall = (mediaConnection: MediaConnection): void => {
+      addMediaConnectionToPeersDataList(mediaConnection, mediaConnection.peer);
+      addEventToMediaConnection(mediaConnection);
+      mediaConnection.answer(myStream);
+    };
+    myPeer.on('call', peerOnCall);
+
     const addEventToDataConnection = (dataConnection: DataConnection) => {
       const id = dataConnection.peer;
       dataConnection.on('data', (event: DataConnectionEvent) => {
@@ -127,17 +135,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
         addMediaStreamToPeersDataList(remoteStream, mediaConnection.peer);
       });
     };
-
-    myPeer.on('connection', dataConnection => {
-      addDataConnectionToPeersDataList(dataConnection);
-      addEventToDataConnection(dataConnection);
-    });
-
-    myPeer.on('call', mediaConnection => {
-      addMediaConnectionToPeersDataList(mediaConnection, mediaConnection.peer);
-      addEventToMediaConnection(mediaConnection);
-      mediaConnection.answer(myStream);
-    });
 
     const newUserCome = (otherPeerId: string, roomID: string, otherUserData: PeerDataInterface['data'], otherSocketId) => {
       // console.log('newUserCome', otherPeerId, otherUserData.email);
@@ -213,6 +210,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
         socket.off('be-broadcast-peer-id', getAnswerFromRoomBroadcast);
         socket.off('be-user-left', userLeft);
         socket.off('be-send-user-score', getMyScore);
+        myPeer.off('connection', peerOnDataConnection);
+        myPeer.off('call', peerOnCall);
         handleLeavePage();
       }
     };

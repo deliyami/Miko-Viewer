@@ -14,7 +14,7 @@ export const UpdateTicketTime: FC = () => {
     const updateData = {};
     const now = dayjs();
     addMinutes.forEach((m, idx) => {
-      if (m) {
+      if (m || m === 0) {
         updateData[property[idx]] = now.add(m, 'm').unix();
       }
     });

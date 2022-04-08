@@ -2,7 +2,7 @@ import { Alert, AlertIcon, Box, BoxProps, Heading, HStack, Spinner, Tag, VStack 
 import { toastLog } from '@src/helper';
 import { useBeforeunload } from '@src/hooks';
 import { useMyPeer, useSocket } from '@src/hooks/dynamicHooks';
-import { myStreamState, prepareAnimationDurationState } from '@src/state/recoil';
+import { ivsErrorState, mediapipeErrorState, myStreamState, peerErrorState, prepareAnimationDurationState, socketErrorState, streamErrorState } from '@src/state/recoil';
 import { AnimatePresence, motion } from 'framer-motion';
 import Script from 'next/script';
 import { useEffect, useLayoutEffect, useState } from 'react';
@@ -22,12 +22,17 @@ const MotionViewingCSRPage = motion(ViewingCSRPage);
 
 // Prepare 단계를 둠으로써 State 상태 관리
 const ViewingPrepareCSRPage = () => {
+  const [fireRerender, setFireRerender] = useState(0);
   const [isMediapipeSetup, setIsMediapipeSetup] = useState(false);
+  const [mediapipeError, setMediapipeError] = useRecoilState(mediapipeErrorState);
   const [isReadySocket, setIsReadySocket] = useState(false);
+  const [socketError, setSocketError] = useRecoilState(socketErrorState);
   const [isReadyStream, setIsReadyStream] = useState(false);
+  const [streamError, setStreamError] = useRecoilState(streamErrorState);
   const [isReadyPeer, setIsReadyPeer] = useState(false);
-  const [peerError, setPeerError] = useState(undefined);
-  const [isReadyIvs, setIsReadyIvs] = useState(false);
+  const [peerError, setPeerError] = useRecoilState(peerErrorState);
+  const [isReadyIvs, setIsReadyIvs] = useState(window.IVSPlayer ? true : false); // script 로드는 이미 로드된 상태면 fire되지 않음.
+  const [ivsError, setIvsError] = useRecoilState(ivsErrorState);
   const prepareAnimationDuration = useRecoilValue(prepareAnimationDurationState);
 
   const isAllReady = isReadyPeer && isReadySocket && isReadyStream && isReadyIvs && isMediapipeSetup;
@@ -38,6 +43,10 @@ const ViewingPrepareCSRPage = () => {
   const socket = useSocket();
   const myPeer = useMyPeer();
 
+  const handleFireRerender = () => {
+    setFireRerender(prev => prev + 1);
+  };
+
   useEffect(() => {
     //  isAllReady의 상태가 방영된 상태로 Framer Motion이 exit 애니메이션을 실행하게 하기위해 AllReady가 2종류 임
     if (isAllReady) {
@@ -47,13 +56,8 @@ const ViewingPrepareCSRPage = () => {
     }
   }, [isAllReady]);
 
-  // const roomId = useRecoilValue(enterRoomIdAsyncState);
-  // const userTicket = useRecoilValue(curUserTicketState);
-  // const { concertId, ticketId, id: userTicketId } = userTicket;
-
   const handleCleanUp = () => {
     console.log('handleCleanUp');
-    // aPose.close();
 
     if (myStream) {
       myStream.getTracks().forEach(track => {
@@ -75,6 +79,12 @@ const ViewingPrepareCSRPage = () => {
 
     window.socket = undefined;
     window.myPeer = undefined;
+
+    setMediapipeError(undefined);
+    setSocketError(undefined);
+    setStreamError(undefined);
+    setPeerError(undefined);
+    setIvsError(undefined);
   };
 
   useBeforeunload(() => {
@@ -95,8 +105,9 @@ const ViewingPrepareCSRPage = () => {
         setIsReadyStream(true);
       })
       .catch(err => {
-        toastLog('error', 'get stream fail', '', err);
+        // toastLog('error', 'get stream fail', '', err);
         console.error(err);
+        setStreamError('カメラの接続に失敗しました。');
       });
   }, []);
 
@@ -123,12 +134,24 @@ const ViewingPrepareCSRPage = () => {
 
   useLayoutEffect(() => {
     //  on("open")에서 하면 useEffect에서 등록하기 전에 이미 open 되어버림.
+    let setTimeoutId;
     if (myPeer.open) {
       setIsReadyPeer(true);
+    } else {
+      myPeer.reconnect();
+      setTimeoutId = setTimeout(handleFireRerender, 200);
     }
+    return () => {
+      clearTimeout(setTimeoutId);
+    };
   }, [myPeer.open]);
   useLayoutEffect(() => {
     if (!myPeer) return;
+
+    const handleClose = () => {
+      toastLog('error', 'myPeer destroyed', 'peer가 파괴되었습니다..');
+      myPeer.destroy();
+    };
 
     const handlePeerDisconnected = () => {
       //   myPeer.reconnect();
@@ -137,9 +160,18 @@ const ViewingPrepareCSRPage = () => {
 
     const handlePeerError = e => {
       toastLog('error', 'myPeer error', '심각한 에러발생 로그창 확인.');
-      setPeerError(e.type as string);
       console.error('handlePeerError', e.type, e);
+      switch (e.type as string) {
+        case 'unavailable-id':
+          setPeerError('このIDで既に接続しているユーザーがいます。');
+          break;
+        default:
+          setPeerError(e.type as string);
+          break;
+      }
     };
+
+    myPeer.on('close', handleClose);
 
     myPeer.on('disconnected', handlePeerDisconnected);
 
@@ -190,12 +222,15 @@ const ViewingPrepareCSRPage = () => {
                   <Tag colorScheme={isMediapipeSetup ? 'green' : 'red'}>motion</Tag>
                 </HStack>
                 <HStack>
-                  {peerError && (
-                    <Alert status="error">
-                      <AlertIcon />
-                      {peerError}
-                    </Alert>
-                  )}
+                  {[mediapipeError, socketError, streamError, peerError, ivsError].map((errorText, idx) => {
+                    if (errorText)
+                      return (
+                        <Alert status="error">
+                          <AlertIcon />
+                          {peerError}
+                        </Alert>
+                      );
+                  })}
                 </HStack>
               </Box>
               <Script
@@ -203,17 +238,18 @@ const ViewingPrepareCSRPage = () => {
                 // @ts-ignore
                 strategy="afterInteractive" // NOTE 왜 before하면 새로고침시 에러?, onLoad도 작동 안함?
                 onLoad={e => {
-                  console.log('ivs script load', e);
+                  console.log('ivs script loaded', e);
                   setIsReadyIvs(true);
                 }}
-                onError={e => {
-                  toastLog('error', 'failed to load ivs script', '', e);
+                onError={err => {
+                  toastLog('error', 'failed to load ivs script', '', err);
+                  setIvsError(err);
                 }}
               />
             </VStack>
           </MotionBox>
         )}
-        <MediaPipeSetup setIsMediaPipeSetup={setIsMediapipeSetup} />
+        <MediaPipeSetup setIsMediaPipeSetup={setIsMediapipeSetup} setMediaPipeError={setMediapipeError} />
       </AnimatePresence>
     </>
   );

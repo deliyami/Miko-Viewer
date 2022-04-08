@@ -22,11 +22,6 @@ const jwt =
   'eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9.eyJhd3M6Y2hhbm5lbC1hcm4iOiJhcm46YXdzOml2czp1cy1lYXN0LTE6MTIxMzIzNjg0MTI4OmNoYW5uZWwvQ2o1eW5rOTdzRUp2IiwiYXdzOmFjY2Vzcy1jb250cm9sLWFsbG93LW9yaWdpbiI6IioiLCJleHAiOjE2NDY4MDg2MjQsImlhdCI6MTY0NDM4OTg2OX0.fmdaERbkxkNAThbJtFNv-JScxNl0dy1TSsS7gYWZmOWokUS-teTlZrMKwRvfaIXrUPRpBH7KQoI0n6wOOuOqwODM24mOpgv7OrUb6GBfTllKFes0XZ3sMCpey6bnkzya';
 
 // NOTE aws cli 실행할때 region 설정 주의
-declare global {
-  interface Window {
-    IVSPlayer: typeof ivs;
-  }
-}
 
 const Video = styled.video`
   background-color: #292929;
@@ -36,7 +31,6 @@ const Video = styled.video`
   top: 0;
 `;
 
-//  TODO  브라우저에 따라서 window에 IVSPlayer 없음
 const VideoPlayer: FC = () => {
   const IVSPlayer = useIvsPlayer();
   const router = useRouter();
