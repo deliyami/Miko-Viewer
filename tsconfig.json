@@ -19,6 +19,7 @@
       "@src/*": ["src/*"],
       "@public/*": ["public/*"]
     },
+    "typeRoots": ["./src/types"],
     "incremental": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
