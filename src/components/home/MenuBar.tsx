@@ -103,7 +103,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       <IconButton display={{ base: 'flex', md: 'none' }} onClick={onOpen} variant="outline" aria-label="open menu" icon={<FiMenu />} />
       <HStack display={{ base: 'flex', md: 'none' }}>
         <Image boxSize="60px" src={S3_URL + 'logo/KakaoTalk_Photo_2022-04-05-16-28-12+003.png'} alt="miko-logo" />
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
+        <Text fontSize="2xl" fontWeight="bold">
           Miko
         </Text>
       </HStack>
@@ -167,7 +167,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <HStack>
           <Image boxSize="60px" src={S3_URL + 'logo/KakaoTalk_Photo_2022-04-05-16-28-12+003.png'} alt="miko-logo" />
-          <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
+          <Text fontSize="2xl" fontWeight="bold">
             Miko
           </Text>
         </HStack>

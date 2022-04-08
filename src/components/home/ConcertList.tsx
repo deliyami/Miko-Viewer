@@ -1,4 +1,4 @@
-import { AspectRatio, Box, Heading, Image, SimpleGrid, Spinner, Text, VStack } from '@chakra-ui/react';
+import { AspectRatio, Box, Heading, Image, Spinner, Text, VStack } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
 import { Concert } from '@src/types/share/Concert';
 import Link from 'next/link';
@@ -43,17 +43,13 @@ const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
 const ConcertList: FC<{ data: Concert[] }> = ({ data }) => {
   const concerts = data;
   return (
-    <Box minW={{ lg: '80vh', xl: '120vh' }}>
-      <SimpleGrid columns={[2, null, 3]} spacing="40px">
-        <Suspense fallback={<Spinner thickness="3px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />}>
-          {concerts?.map((concert, index) => (
-            <Box key={index}>
-              <ConcertCard concert={concert} />
-            </Box>
-          ))}
-        </Suspense>
-      </SimpleGrid>
-    </Box>
+    <Suspense fallback={<Spinner thickness="3px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />}>
+      {concerts?.map((concert, index) => (
+        <Box key={index}>
+          <ConcertCard concert={concert} />
+        </Box>
+      ))}
+    </Suspense>
   );
 };
 

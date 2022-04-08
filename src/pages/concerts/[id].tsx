@@ -108,11 +108,16 @@ const LiveInformation: FC<{ data: Concert }> = ({ data: concert }) => {
       justify={{ base: 'center', md: 'space-between' }}
       align={{ base: 'center', md: 'start' }}
     >
-      <Image borderRadius="2%" boxSize="350px" src={S3_URL + concert.coverImage} alt="Concert Image" />
+      {/* <AspectRatio ratio={1}>
+        <Image src={S3_URL + concert.coverImage} objectFit="cover" alt="concertImage" />
+      </AspectRatio> */}
+
+      <Image borderRadius="2%" boxSize="sm" objectFit="cover" src={S3_URL + concert.coverImage} alt="Concert Image" />
+
       <Box px={4}>
-        <Flex mb={5} direction={{ base: 'column', md: 'row' }} minW={{ base: '50vh', md: '70vh' }}>
+        <Flex mb={3} direction={{ base: 'column', md: 'row' }} minW={{ base: '50vh', md: '70vh' }}>
           <Heading fontWeight="700">{concert.title}</Heading>
-          <Text pt={3} pl={{ base: '0px', md: '10' }}>
+          <Text pt={{ base: '0', md: '4' }} pl={{ base: '0', md: '5' }}>
             {concert.artist}
           </Text>
         </Flex>

@@ -31,7 +31,7 @@ const PrivateRoomIdInput = () => {
     if (queryRoomId) {
       setRoomId(queryRoomId as string);
     }
-  }, [router.query.roomId]);
+  }, [router.query.roomId as string]);
 
   const createRoomIdHandler = () => {
     setRoomId(nanoid());

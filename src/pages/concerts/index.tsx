@@ -1,6 +1,5 @@
 import { SearchIcon } from '@chakra-ui/icons';
-import { Box, Button, Center, Flex, HStack, Icon, Input, InputGroup, InputLeftElement, InputRightElement, Text, VStack } from '@chakra-ui/react';
-import { FiFilter } from '@react-icons/all-files/fi/FiFilter';
+import { Box, Button, Center, Flex, HStack, Icon, Input, InputGroup, InputLeftElement, InputRightElement, SimpleGrid, Text, VStack } from '@chakra-ui/react';
 import PaginationBtn from '@src/components/common/button/PaginationBtn';
 import Category from '@src/components/concert/Category';
 import ConcertList from '@src/components/home/ConcertList';
@@ -11,6 +10,7 @@ import { Concert } from '@src/types/share/Concert';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { KeyboardEventHandler, ReactElement, useState } from 'react';
+import { FiFilter } from 'react-icons/fi';
 
 type Data = {
   data?: Pagination<Concert>;
@@ -36,8 +36,10 @@ const SearchBox = () => {
   };
   return (
     <HStack>
-      <InputGroup size="md">
-        <InputLeftElement pointerEvents="none" children={<SearchIcon color="gray.300" />} />
+      <InputGroup size="md" maxW={{ xl: '120vh' }}>
+        <InputLeftElement>
+          <SearchIcon pointerEvents="none" color="gray.300" />
+        </InputLeftElement>
         <Input w="full" pr="4.5rem" type="text" placeholder="Enter title" value={searchQuery} onKeyUp={enterKey} required onChange={onChangeSearch} />
         <InputRightElement width="4.5rem">
           <Button h="1.75rem" size="sm" onClick={onClickSearch} type="submit" mr={2}>
@@ -102,7 +104,11 @@ export default function ConcertPage({ data, categoryId }: InferGetServerSideProp
         </Flex>
         {data ? (
           <VStack spacing={5}>
-            <ConcertList data={data.data} />
+            <Box minW={{ xl: '120vh' }}>
+              <SimpleGrid columns={[2, null, 3]} spacing="40px">
+                <ConcertList data={data.data} />
+              </SimpleGrid>
+            </Box>
             <PaginationBtn data={data.meta} url={`/concerts?category_id=${categoryId}`} />
           </VStack>
         ) : (
@@ -112,6 +118,7 @@ export default function ConcertPage({ data, categoryId }: InferGetServerSideProp
     </Flex>
   );
 }
+
 ConcertPage.getLayout = function getLayout(page: ReactElement) {
   return <BasicLayout>{page}</BasicLayout>;
 };
