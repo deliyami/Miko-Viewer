@@ -4,7 +4,7 @@ import { sendToAllPeers, showChatToRoom } from '@src/helper';
 import { useSocket } from '@src/hooks/dynamicHooks';
 import { chatModeState, isShowChatInputState, peerDataListState } from '@src/state/recoil';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import { ChatMessageInterface } from '@src/types/dto/ChatMessageType';
 import { FormEvent, KeyboardEventHandler, memo, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';

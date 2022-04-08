@@ -3,7 +3,7 @@ import { useSocket } from '@src/hooks/dynamicHooks';
 import { latestScoreState, peerDataListState } from '@src/state/recoil';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
 import { roomMemberScores } from '@src/state/shareObject/shareRoomMemberScores';
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import produce from 'immer';
 import { FC, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';

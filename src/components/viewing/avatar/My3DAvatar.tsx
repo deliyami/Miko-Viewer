@@ -6,7 +6,7 @@ import { FiMoreHorizontal } from '@react-icons/all-files/fi/FiMoreHorizontal';
 import { AvatarModel } from '@src/components/viewing/avatar/AvatarModel';
 import { NEXT_URL } from '@src/const';
 import { isOnAvatarState } from '@src/state/recoil';
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import { memo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AvatarEnterEffect } from './AvatarEnterEffect';

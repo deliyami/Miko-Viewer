@@ -1,7 +1,7 @@
 import { ArrowForwardIcon, PlusSquareIcon } from '@chakra-ui/icons';
 import { Button, ButtonGroup, Flex, IconButton, Popover, PopoverBody, PopoverContent, PopoverFooter, PopoverTrigger } from '@chakra-ui/react';
 import { LARAVEL_URL } from '@src/const';
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useState } from 'react';

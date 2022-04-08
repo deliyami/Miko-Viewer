@@ -3,7 +3,7 @@ import { RiVipCrownLine } from '@react-icons/all-files/ri/RiVipCrownLine';
 import { MotionBox } from '@src/components/common/motion/MotionChakra';
 import { useSocket } from '@src/hooks/dynamicHooks';
 import { isOnMyRankingState, isOnRankingState, latestScoreState, myRankState } from '@src/state/recoil';
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import { AnimatePresence } from 'framer-motion';
 import { memo, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';

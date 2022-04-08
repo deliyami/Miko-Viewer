@@ -2,7 +2,7 @@ import { Box, Button, Center, Circle, Divider, Flex, Heading, HStack, Spacer, Sp
 import PaginationBtn from '@src/components/common/button/PaginationBtn';
 import BasicLayout from '@src/layout/BasicLayout';
 import { fetcher } from '@src/state/fetcher';
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import { Coin } from '@src/types/share/Coin';
 import { User } from '@src/types/share/User';
 import { useRouter } from 'next/router';

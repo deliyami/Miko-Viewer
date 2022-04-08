@@ -1,7 +1,7 @@
 import { sendToAllPeers, setBorn } from '@src/helper';
 import { latestMotionState, model, peerDataListState } from '@src/state/recoil';
 import { roomMemberMotions, sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import produce from 'immer';
 import { FC, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';

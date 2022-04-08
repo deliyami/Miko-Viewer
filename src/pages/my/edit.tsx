@@ -2,7 +2,7 @@ import { SmallCloseIcon } from '@chakra-ui/icons';
 import { Avatar, AvatarBadge, Button, Center, Flex, FormControl, FormLabel, Heading, IconButton, Image, Input, Stack } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
 import BasicLayout from '@src/layout/BasicLayout';
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import { ReactElement } from 'react';
 
 export default function EditPage(): JSX.Element {

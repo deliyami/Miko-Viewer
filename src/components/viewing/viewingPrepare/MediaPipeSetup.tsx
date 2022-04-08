@@ -5,7 +5,7 @@ import { isOnMediaPipeState, latestMotionState, model, myStreamState, peerDataLi
 import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
 import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { aPose } from '@src/state/shareObject/sharePose';
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import * as Kalidokit from 'kalidokit';
 import React, { Dispatch, FC, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';

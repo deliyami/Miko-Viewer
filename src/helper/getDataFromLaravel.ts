@@ -1,5 +1,5 @@
 import { axiosI } from '@src/state/fetcher';
-import { createFSWQueryString } from '@src/state/swr/helper/createQueryStringKey';
+import { createFSWQueryString } from '@src/state/swr/createQueryStringKey';
 import { CommonFSW } from '@src/types/share/common/common';
 import { AxiosError, AxiosResponse } from 'axios';
 

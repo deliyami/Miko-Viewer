@@ -2,8 +2,7 @@ import { Box, Flex, Tab, Table, TabList, TabPanel, TabPanels, Tabs, Tbody, Text,
 import PaginationBtn from '@src/components/common/button/PaginationBtn';
 import ConcertTicket from '@src/components/ConcertTicket';
 import BasicLayout from '@src/layout/BasicLayout';
-import { useUser } from '@src/state/swr/useUser';
-import { useUserTickets } from '@src/state/swr/useUserTicket';
+import { useUser, useUserTickets } from '@src/state/swr';
 import { useRouter } from 'next/router';
 import { ReactElement } from 'react';
 

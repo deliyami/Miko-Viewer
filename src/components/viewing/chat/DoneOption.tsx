@@ -17,7 +17,7 @@ import { RiGiftFill } from '@react-icons/all-files/ri/RiGiftFill';
 import { S3_URL } from '@src/const';
 import { useSocket } from '@src/hooks/dynamicHooks';
 import { DONEITEM, PATHNAME } from '@src/state/shareObject/shareDoneObject';
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import { DoneSendInterface } from '@src/types/share/DoneItem';
 import { FC, memo } from 'react';
 

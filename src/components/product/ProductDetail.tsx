@@ -1,7 +1,7 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
 import { getDataFromLaravel } from '@src/helper';
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import { Cart } from '@src/types/local/Cart';
 import { Pagination } from '@src/types/share/common/common';
 import { useEffect, useState } from 'react';

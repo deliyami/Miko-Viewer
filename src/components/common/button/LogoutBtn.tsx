@@ -2,7 +2,7 @@ import { Box, Flex, Icon, Link, Text } from '@chakra-ui/react';
 import { FiLogIn } from '@react-icons/all-files/fi/FiLogIn';
 import { FiLogOut } from '@react-icons/all-files/fi/FiLogOut';
 import { axiosI } from '@src/state/fetcher';
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import { useRouter } from 'next/router';
 
 const LogoutBtn = () => {

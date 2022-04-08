@@ -1,7 +1,7 @@
 import { Box, Button, Center, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link, Stack, Text } from '@chakra-ui/react';
 import { FcGoogle } from '@react-icons/all-files/fc/FcGoogle';
 import BasicLayout from '@src/layout/BasicLayout';
-import { useLogin, useUser } from '@src/state/swr/useUser';
+import { useLogin, useUser } from '@src/state/swr';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';

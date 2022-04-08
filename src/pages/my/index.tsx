@@ -1,7 +1,7 @@
 import { Avatar, Badge, Box, Button, Center, Flex, Heading, HStack, Image, Input, Link, Stack, Text, useColorModeValue } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
 import BasicLayout from '@src/layout/BasicLayout';
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import { User } from '@src/types/share/User';
 import { FC, ReactElement } from 'react';
 

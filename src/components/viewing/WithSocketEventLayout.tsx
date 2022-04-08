@@ -2,7 +2,7 @@ import { setMotionToAvatar, showChatToRoom, toastLog, updateUserScore } from '@s
 import { useBeforeunload } from '@src/hooks';
 import { useMyPeer, useSocket } from '@src/hooks/dynamicHooks';
 import { curUserTicketState, enterRoomIdAsyncState, latestScoreState, myStreamState, PeerDataInterface, peerDataListState, PickUserData } from '@src/state/recoil';
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import { DataConnectionEvent } from '@src/types/dto/DataConnectionEventType';
 import produce from 'immer';
 import { DataConnection, MediaConnection } from 'peerjs';

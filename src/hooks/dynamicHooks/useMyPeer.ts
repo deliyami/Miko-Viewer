@@ -1,4 +1,4 @@
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import Peer from 'peerjs';
 import { useRef } from 'react';
 

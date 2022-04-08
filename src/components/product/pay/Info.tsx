@@ -1,14 +1,14 @@
 import { Flex, Input, Text } from '@chakra-ui/react';
 import CommonDivider from '@src/components/common/divider/CommonDivider';
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import { useState } from 'react';
 import Address from './Address';
 import Buttons from './Buttons';
 import NotifyCheck from './NotifyCheck';
 
-const Info = ({ tabIndex,setTabIndex }) => {
+const Info = ({ tabIndex, setTabIndex }) => {
   const [address, setAddress] = useState('');
-//   const router = useRouter();
+  //   const router = useRouter();
   const user = useUser();
   return (
     <Flex flexDirection={'column'} w={'50%'} h="100%" p={'2%'} ml={'25%'}>

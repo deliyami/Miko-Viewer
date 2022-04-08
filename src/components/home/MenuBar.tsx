@@ -17,7 +17,7 @@ import {
   Text,
   useColorModeValue,
   useDisclosure,
-  VStack
+  VStack,
 } from '@chakra-ui/react';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiHome } from '@react-icons/all-files/fi/FiHome';
@@ -26,7 +26,7 @@ import { FiMenu } from '@react-icons/all-files/fi/FiMenu';
 import { FiStar } from '@react-icons/all-files/fi/FiStar';
 import { IconType } from '@react-icons/all-files/lib';
 import { S3_URL } from '@src/const';
-import { useUser } from '@src/state/swr/useUser';
+import { useUser } from '@src/state/swr';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactText, useState } from 'react';

@@ -1,6 +1,6 @@
 import { Box, Center, Text, VStack } from '@chakra-ui/react';
 import BasicLayout from '@src/layout/BasicLayout';
-import { useOAuthLogin } from '@src/state/swr/useUser';
+import { useOAuthLogin } from '@src/state/swr';
 import { useRouter } from 'next/dist/client/router';
 import { ReactElement, useEffect, useState } from 'react';
 
