@@ -30,7 +30,6 @@ export default function ProductsPage({ data }) {
   console.log(data.length);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  // const [isLargerThan960] = useMediaQuery('(min-width: 960px)');
   const [selected, setSelected] = useState('新着順');
   useEffect(() => {
     if (data) {
@@ -71,11 +70,12 @@ export default function ProductsPage({ data }) {
 
   return (
     <Flex flexDirection={'column'} alignItems={'center'} h="full" w={'full'} justifyContent={'center'} p={'2%'}>
-      {isLoading ? (
+      {isLoading && (
         <Flex alignItems={'center'} justifyContent="center">
           <Spinner size={'xl'}></Spinner>
         </Flex>
-      ) : data.data.length === 0 ? (
+      )}
+      {!isLoading && data.data.length === 0 ? (
         <Text color={'gray.300'} fontSize={'4xl'} cursor="default">
           このコンサートの賞品は用意しておりません。
         </Text>
@@ -84,12 +84,14 @@ export default function ProductsPage({ data }) {
           <Text mb={'3%'} fontSize={'5xl'}>
             {router.query.id}번 콘서트의 상품
           </Text>
-          <Select mb={'3%'} alignSelf={'end'} textAlign={'center'} w={'15%'} size={'md'} value={selected} onChange={onSelectedChanged}>
-            <option>新着順</option>
-            <option>売れている順</option>
-            <option>価格が安い順</option>
-            <option>価格が高い順</option>
-          </Select>
+          <label htmlFor="sort">
+            <Select id="sort" mb={'3%'} alignSelf={'end'} textAlign={'center'} w={'15%'} size={'md'} value={selected} onChange={onSelectedChanged}>
+              <option>新着順</option>
+              <option>売れている順</option>
+              <option>価格が安い順</option>
+              <option>価格が高い順</option>
+            </Select>
+          </label>
           <Flex>
             <ProductsList data={data}></ProductsList>
           </Flex>

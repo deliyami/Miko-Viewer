@@ -150,7 +150,6 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const [isShow, setIsShow] = useState(false);
   const router = useRouter();
   const nowPath = router.pathname as string;
-  // console.log(router.pathname);
 
   const ShowSubLinks = () => {
     setIsShow(!isShow);

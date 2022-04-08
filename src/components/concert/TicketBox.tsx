@@ -66,7 +66,6 @@ const TicketDetail: FC<{ data: Ticket }> = ({ data: ticket }) => {
 };
 
 const TicketPrice: FC<{ data: Ticket }> = ({ data: ticket }) => {
-  //   console.log(ticket);
   const today = new Date();
   const saleStartDate = new Date(ticket.saleStartDate);
   const saleEndDate = new Date(ticket.saleEndDate);
@@ -92,7 +91,6 @@ const TicketPrice: FC<{ data: Ticket }> = ({ data: ticket }) => {
 };
 
 const TicketBox: FC<{ data: Ticket }> = ({ data: ticket }) => {
-  // console.log('Ticket Box', ticket);
   return (
     <>
       <Container

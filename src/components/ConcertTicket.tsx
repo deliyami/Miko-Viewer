@@ -31,7 +31,6 @@ const TicketDetail: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   const screening = today.isBetween(compareStartDate, compareEndDate, 'minute', '[]');
   const beforeScreening = today.isAfter(compareEndDate, 'minute');
 
-  // console.log(screening);
   return (
     <Tr _hover={{ bg: screening ? '#F0FFF4' : (beforeScreening && '#FAF5FF') || '#EBF8FF' }} cursor={screening && 'pointer'}>
       <Td>

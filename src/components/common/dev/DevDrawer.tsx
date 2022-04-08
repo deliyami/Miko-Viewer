@@ -161,8 +161,6 @@ export const DevDrawer: FC = () => {
     setIsOnRanking(localStorage.getItem('isOnRankingState') === 'true');
     setIsOnMyRanking(localStorage.getItem('isOnMyRankingState') === 'true');
     setIsOnAudioAnalyzer(localStorage.getItem('isOnAudioAnalyzerState') === 'true');
-
-    return () => {};
   }, []);
 
   const handleSetAll = (aBoolean: boolean) => {

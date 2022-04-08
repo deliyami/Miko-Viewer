@@ -7,11 +7,7 @@ const Timer = memo<{ durationTime: number }>(({ children, durationTime }) => {
   const [remainTime, setRemainTime] = useState(durationTime);
 
   useEffect(() => {
-    setInterval(() => {});
-
-    return () => {
-      // second
-    };
+    return () => {};
   }, []);
 
   return <Box h="3%" w="70%" bgColor="white"></Box>;

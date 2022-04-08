@@ -83,22 +83,26 @@ const CameraSwitch: FC = () => {
 
   return (
     <Box>
-      <label htmlFor="cameraSelect">카메라 선택</label>
-      <Select id="cameraSelect" aria-label="카메라 선택" placeholder="Select option" onChange={handelCameraChange}>
-        {cameras.map(camera => (
-          <option key={camera.deviceId} value={camera.deviceId}>
-            {camera.label}
-          </option>
-        ))}
-      </Select>
-      <label htmlFor="audioSelect">오디오 선택 선택</label>
-      <Select id="audioSelect" aria-label="오디오 선택" placeholder="Select option" onChange={handelAudioChange}>
-        {audios.map(audio => (
-          <option key={audio.deviceId} value={audio.deviceId}>
-            {audio.label}
-          </option>
-        ))}
-      </Select>
+      <label htmlFor="cameraSelect">
+        카메라 선택
+        <Select id="cameraSelect" aria-label="카메라 선택" placeholder="Select option" onChange={handelCameraChange}>
+          {cameras.map(camera => (
+            <option key={camera.deviceId} value={camera.deviceId}>
+              {camera.label}
+            </option>
+          ))}
+        </Select>
+      </label>
+      <label htmlFor="audioSelect">
+        오디오 선택 선택
+        <Select id="audioSelect" aria-label="오디오 선택" placeholder="Select option" onChange={handelAudioChange}>
+          {audios.map(audio => (
+            <option key={audio.deviceId} value={audio.deviceId}>
+              {audio.label}
+            </option>
+          ))}
+        </Select>
+      </label>
     </Box>
   );
 };

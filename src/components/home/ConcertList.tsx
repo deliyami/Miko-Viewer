@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { FC, Suspense } from 'react';
 
 const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
-  // console.log(concert);
   return (
     <Box className="movie">
       <Link href={`/concerts/${concert.id}`}>
