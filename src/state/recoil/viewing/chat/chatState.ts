@@ -1,4 +1,4 @@
-import { ChatMessageInterface } from '@src/types/ChatMessageType';
+import { ChatMessageInterface } from '@src/types/dto/ChatMessageType';
 import { atom } from 'recoil';
 
 export const messagesState = atom<ChatMessageInterface[]>({

@@ -1,4 +1,4 @@
-import { CommonProps } from './common/common';
+import { CommonProps } from '../share/common/common';
 
 export interface Cart extends CommonProps {
   userId: number;

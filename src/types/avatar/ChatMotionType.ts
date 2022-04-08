@@ -1,4 +1,4 @@
-import { FaceDirection } from '@src/types/FaceDirectionType';
+import { FaceDirection } from '@src/types/avatar/FaceDirectionType';
 import * as Kalidokit from 'kalidokit';
 
 interface ChatMotionInterface {

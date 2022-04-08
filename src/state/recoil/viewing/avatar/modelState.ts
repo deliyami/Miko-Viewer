@@ -1,4 +1,4 @@
-import { Model } from '@src/types/ModelType';
+import { Model } from '@src/types/avatar/ModelType';
 import { atom } from 'recoil';
 
 const model = atom<{ [peerId: string]: Model | any }>({

@@ -1,5 +1,5 @@
 import { MY_AVATAR_ID } from '@src/const';
-import { ChatMotionInterface, MotionInterface } from '@src/types/ChatMotionType';
+import { ChatMotionInterface, MotionInterface } from '@src/types/avatar/ChatMotionType';
 
 class SendMotionForFrames {
   private motion: ChatMotionInterface;

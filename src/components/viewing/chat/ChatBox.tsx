@@ -1,7 +1,7 @@
 import { Box, Heading, VStack } from '@chakra-ui/react';
 import { MAX_MSGS } from '@src/const';
 import { useSocket } from '@src/hooks/dynamicHooks';
-import { ChatMessageInterface } from '@src/types/ChatMessageType';
+import { ChatMessageInterface } from '@src/types/dto/ChatMessageType';
 import produce from 'immer';
 // @ts-ignore
 import { FC, memo, useEffect, useRef, useState } from 'react';

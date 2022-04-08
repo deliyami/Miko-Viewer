@@ -3,7 +3,7 @@ import { useBeforeunload } from '@src/hooks';
 import { useMyPeer, useSocket } from '@src/hooks/dynamicHooks';
 import { curUserTicketState, enterRoomIdAsyncState, latestScoreState, myStreamState, PeerDataInterface, peerDataListState, PickUserData } from '@src/state/recoil';
 import { useUser } from '@src/state/swr/useUser';
-import { DataConnectionEvent } from '@src/types/DataConnectionEventType';
+import { DataConnectionEvent } from '@src/types/dto/DataConnectionEventType';
 import produce from 'immer';
 import { DataConnection, MediaConnection } from 'peerjs';
 import { FC, useCallback, useEffect } from 'react';

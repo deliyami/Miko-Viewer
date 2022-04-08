@@ -1,5 +1,5 @@
 import { PeerDataInterface } from '@src/state/recoil';
-import { DataConnectionEvent } from '@src/types/DataConnectionEventType';
+import { DataConnectionEvent } from '@src/types/dto/DataConnectionEventType';
 
 export const sendToAllPeers = (peers: PeerDataInterface[], data: DataConnectionEvent) => {
   // console.log('sent to all Peer', peers, data);

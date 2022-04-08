@@ -1,5 +1,5 @@
-import { DoneIconName } from '@src/types/DoneTypes';
 import { DoneItem, DoneSendInterface } from '@src/types/share/DoneItem';
+import { DoneIconName } from '@src/types/share/DoneTypes';
 
 const DONEITEM = {} as { [id: number]: DoneItem };
 

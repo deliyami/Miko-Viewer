@@ -1,5 +1,5 @@
-import { FaceDirection } from '@src/types/FaceDirectionType';
-import { Model } from '@src/types/ModelType';
+import { FaceDirection } from '@src/types/avatar/FaceDirectionType';
+import { Model } from '@src/types/avatar/ModelType';
 import * as BABYLON from 'babylonjs';
 import * as Kalidokit from 'kalidokit';
 

@@ -5,7 +5,7 @@ import { useSocket } from '@src/hooks/dynamicHooks';
 import { chatModeState, isShowChatInputState, peerDataListState } from '@src/state/recoil';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
 import { useUser } from '@src/state/swr/useUser';
-import { ChatMessageInterface } from '@src/types/ChatMessageType';
+import { ChatMessageInterface } from '@src/types/dto/ChatMessageType';
 import { FormEvent, KeyboardEventHandler, memo, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { SuperChatOption } from './SuperChatOption';

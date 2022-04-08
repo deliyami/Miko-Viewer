@@ -1,5 +1,5 @@
 import styles from '@src/style/css/chat.module.scss';
-import { ChatMessageInterface } from '@src/types/ChatMessageType';
+import { ChatMessageInterface } from '@src/types/dto/ChatMessageType';
 import React, { FC } from 'react';
 
 const COLORS = ['#36C5F0', '#2EB67D', '#E01E5A', '#ECB22E', '#E51670', 'red'];
