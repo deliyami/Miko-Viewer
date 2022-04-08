@@ -7,8 +7,8 @@ export interface Concert extends CommonProps {
   title: string;
   artist: string;
   detail: string;
-
   content: string;
+  salesVolume: number;
   isPublic: boolean;
   allConcertStartDate: string;
   allConcertEndDate: string;
