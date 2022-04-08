@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-const useUnload = (fn: any) => {
+export const useUnload = (fn: any) => {
   const cb = useRef(fn);
 
   useEffect(() => {
@@ -11,5 +11,3 @@ const useUnload = (fn: any) => {
     };
   }, [cb]);
 };
-
-export default useUnload;

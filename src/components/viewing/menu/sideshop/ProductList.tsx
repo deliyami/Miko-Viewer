@@ -2,7 +2,7 @@ import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import Loading from '@src/components/common/Loading';
 import { S3_URL } from '@src/const';
 import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
-import { enterTicketDataState } from '@src/state/recoil/viewing/curData/curTicketState';
+import { enterTicketDataState } from '@src/state/recoil';
 import { Pagination } from '@src/types/share/common/common';
 import { Product } from '@src/types/share/Product';
 import { useEffect, useState } from 'react';

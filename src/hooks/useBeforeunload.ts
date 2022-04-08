@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-const useBeforeunload = (handler: (event: BeforeUnloadEvent) => void) => {
+export const useBeforeunload = (handler: (event: BeforeUnloadEvent) => void) => {
   const eventListenerRef = useRef<any>();
 
   useEffect(() => {
@@ -29,5 +29,3 @@ const useBeforeunload = (handler: (event: BeforeUnloadEvent) => void) => {
     };
   }, []);
 };
-
-export default useBeforeunload;

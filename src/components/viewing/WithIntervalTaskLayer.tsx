@@ -1,7 +1,6 @@
 import sendToAllPeers from '@src/helper/sendToAllPeers';
-import useSocket from '@src/hooks/useSocket';
-import { peerDataListState } from '@src/state/recoil/viewing/connection/peerState';
-import { latestScoreState } from '@src/state/recoil/viewing/scoreRank/scoreState';
+import { useSocket } from '@src/hooks/dynamicHooks';
+import { latestScoreState, peerDataListState } from '@src/state/recoil';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
 import { roomMemberScores } from '@src/state/shareObject/shareRoomMemberScores';
 import { useUser } from '@src/state/swr/useUser';

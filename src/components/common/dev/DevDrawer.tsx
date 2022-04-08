@@ -25,7 +25,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { toastLog } from '@src/helper/toastLog';
-import useWindowEvent from '@src/hooks/useWIndowEvent';
+import { useWindowEvent } from '@src/hooks';
 import { axiosI } from '@src/state/fetcher';
 import {
   isOnAudioAnalyzerState,
@@ -36,7 +36,7 @@ import {
   isOnVideoAmbianceState,
   myAvatarReplicateNumState,
   prepareAnimationDurationState,
-} from '@src/state/recoil/devState/devState';
+} from '@src/state/recoil';
 import dayjs from 'dayjs';
 import produce from 'immer';
 import React, { ChangeEventHandler, FC, useEffect, useRef, useState } from 'react';

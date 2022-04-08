@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { RiGiftFill } from '@react-icons/all-files/ri/RiGiftFill';
 import { S3_URL } from '@src/const';
-import useSocket from '@src/hooks/useSocket';
+import { useSocket } from '@src/hooks/dynamicHooks';
 import { DONEITEM, PATHNAME } from '@src/state/shareObject/shareDoneObject';
 import { useUser } from '@src/state/swr/useUser';
 import { DoneSendInterface } from '@src/types/share/DoneItem';

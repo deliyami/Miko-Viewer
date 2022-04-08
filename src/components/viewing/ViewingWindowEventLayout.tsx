@@ -1,4 +1,4 @@
-import { isShowChatInputState } from '@src/state/recoil/viewing/chat/chatState';
+import { isShowChatInputState } from '@src/state/recoil';
 import { FC, useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 

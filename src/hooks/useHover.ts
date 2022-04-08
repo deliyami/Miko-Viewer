@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-export function useHover() {
+export const useHover = () => {
   const [value, setValue] = useState(false);
   const ref = useRef(null);
   const handleMouseOver = () => setValue(true);
@@ -20,4 +20,4 @@ export function useHover() {
     [ref.current], // Recall only if ref changes
   );
   return [ref, value];
-}
+};

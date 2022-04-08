@@ -4,7 +4,7 @@ import { useRef } from 'react';
 
 type ExtendPeer = InstanceType<typeof Peer> & { open: boolean };
 
-const useMyPeer = () => {
+export const useMyPeer = () => {
   const { data } = useUser();
 
   const myPeer = useRef<ExtendPeer>(
@@ -46,5 +46,3 @@ const useMyPeer = () => {
 
   return myPeer.current;
 };
-
-export default useMyPeer;

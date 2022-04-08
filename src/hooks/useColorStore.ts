@@ -18,14 +18,8 @@ const COLOR = {
   doneInnerBox: ['#E1E1E1', '#E2E8F0'],
 };
 
-// const BODY_COLOR = '#47c8c0';
-// const BALLON_OUTER = '#55557b';
-// const BALLON_INNER = '#e1e1e1';
-
-const useColorStore = (colorKey: keyof typeof COLOR) => {
+export const useColorStore = (colorKey: keyof typeof COLOR) => {
   const [light, black] = COLOR[colorKey];
   const color = useColorModeValue(light, black);
   return color;
 };
-
-export default useColorStore;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const useIvsPlayer = () => {
+export const useIvsPlayer = () => {
   const [IVSPlayer, setIVSPlayer] = useState(window.IVSPlayer);
 
   useEffect(() => {
@@ -19,5 +19,3 @@ const useIvsPlayer = () => {
 
   return IVSPlayer;
 };
-
-export default useIvsPlayer;

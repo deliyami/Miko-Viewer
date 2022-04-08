@@ -1,6 +1,6 @@
 import { Box, Center, SimpleGrid, Text } from '@chakra-ui/react';
-import useSocket from '@src/hooks/useSocket';
-import { quizMetaDataState } from '@src/state/recoil/viewing/metadata/quizMetaDataState';
+import { useSocket } from '@src/hooks/dynamicHooks';
+import { quizMetaDataState } from '@src/state/recoil';
 import { memo, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
@@ -8,7 +8,7 @@ const Timer = memo<{ durationTime: number }>(({ children, durationTime }) => {
   const [remainTime, setRemainTime] = useState(durationTime);
 
   useEffect(() => {
-    setInterval(() => {});
+    // setInterval(() => {});
 
     return () => {
       // second

@@ -2,7 +2,7 @@ import { Center, HStack, Text, VStack } from '@chakra-ui/react';
 import VideoPlayer from '@src/components/ivs-player/VideoPlayer';
 // import ChatBox from '@src/components/viewing/chat/ChatBox';
 import { DoneBallon } from '@src/components/viewing/chat/icon/DoneBallon';
-import useIvsPlayer from '@src/hooks/useIvsPlayer';
+import { useIvsPlayer } from '@src/hooks/dynamicHooks';
 import styles from '@src/style/viewing.module.css';
 import { useEffect, useState } from 'react';
 import RoomAvatarView from './avatar/RoomAvatarView';
@@ -14,7 +14,7 @@ import RankingView from './rightContainer/ranking/RankingView';
 import ViewingWindowEventLayout from './ViewingWindowEventLayout';
 import { WithIntervalMotionLayer } from './WithIntervalMotionLayer';
 import { WithIntervalTaskLayer } from './WithIntervalTaskLayer';
-import WithSocketEventLayout from './WithSocketPeerLayer';
+import WithSocketEventLayout from './WithSocketEventLayout';
 
 const ViewingCSRPage = () => {
   const IVSPlayer = useIvsPlayer();

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export default function useWindowEvent<K extends keyof WindowEventMap>(type: K, handler: (e: WindowEventMap[K]) => any, passive: boolean | AddEventListenerOptions = false) {
+export const useWindowEvent = <K extends keyof WindowEventMap>(type: K, handler: (e: WindowEventMap[K]) => any, passive: boolean | AddEventListenerOptions = false) => {
   useEffect(() => {
     // initiate the event handler
     window.addEventListener(type, handler, passive);
@@ -10,4 +10,4 @@ export default function useWindowEvent<K extends keyof WindowEventMap>(type: K, 
       window.removeEventListener(type, handler);
     };
   });
-}
+};

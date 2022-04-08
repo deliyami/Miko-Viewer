@@ -15,8 +15,7 @@ import {
   Switch,
   useDisclosure,
 } from '@chakra-ui/react';
-import { isOnAvatarState, isOnVideoAmbianceState } from '@src/state/recoil/devState/devState';
-import { enterRoomIdAsyncState } from '@src/state/recoil/viewing/curData/curRoomState';
+import { enterRoomIdAsyncState, isOnAvatarState, isOnVideoAmbianceState } from '@src/state/recoil';
 import React, { forwardRef, useImperativeHandle } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 

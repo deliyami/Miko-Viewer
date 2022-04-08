@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 import { MotionBox } from '@src/components/common/motion/MotionChakra';
-import { latestScoreState } from '@src/state/recoil/viewing/scoreRank/scoreState';
+import { latestScoreState } from '@src/state/recoil';
 import { AnimatePresence } from 'framer-motion';
 import { memo } from 'react';
 import { useRecoilValue } from 'recoil';

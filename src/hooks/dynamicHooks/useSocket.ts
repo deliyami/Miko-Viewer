@@ -2,7 +2,7 @@ import { SOCKET_URL } from '@src/const';
 import { useRef } from 'react';
 import io, { Socket } from 'socket.io-client';
 
-const useSocket = () => {
+export const useSocket = () => {
   const socket = useRef<Socket>(
     window.socket ??
       io(SOCKET_URL, {
@@ -30,5 +30,3 @@ const useSocket = () => {
 
   return socket.current;
 };
-
-export default useSocket;

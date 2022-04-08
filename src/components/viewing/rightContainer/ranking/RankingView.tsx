@@ -1,10 +1,8 @@
 import { Box, Center, Divider, Heading, VStack } from '@chakra-ui/react';
 import { RiVipCrownLine } from '@react-icons/all-files/ri/RiVipCrownLine';
 import { MotionBox } from '@src/components/common/motion/MotionChakra';
-import useSocket from '@src/hooks/useSocket';
-import { isOnMyRankingState, isOnRankingState } from '@src/state/recoil/devState/devState';
-import { myRankState } from '@src/state/recoil/viewing/scoreRank/rankState';
-import { latestScoreState } from '@src/state/recoil/viewing/scoreRank/scoreState';
+import { useSocket } from '@src/hooks/dynamicHooks';
+import { isOnMyRankingState, isOnRankingState, latestScoreState, myRankState } from '@src/state/recoil';
 import { useUser } from '@src/state/swr/useUser';
 import { AnimatePresence } from 'framer-motion';
 import { memo, useEffect, useState } from 'react';

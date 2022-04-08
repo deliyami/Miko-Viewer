@@ -1,5 +1,5 @@
 import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link, Stack } from '@chakra-ui/react';
-import useColorStore from '@src/hooks/useColorStore';
+import { useColorStore } from '@src/hooks';
 import BasicLayout from '@src/layout/BasicLayout';
 import { useUser } from '@src/state/swr/useUser';
 import Head from 'next/head';

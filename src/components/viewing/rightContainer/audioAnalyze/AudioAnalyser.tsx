@@ -1,8 +1,7 @@
 import { Flex } from '@chakra-ui/react';
 import AudioVisualizer from '@src/components/viewing/rightContainer/audioAnalyze/AudioVisualizer';
 import Teachablemachine from '@src/pages/test/teachablemachine';
-import { isOnAudioAnalyzerState } from '@src/state/recoil/devState/devState';
-import { myStreamState } from '@src/state/recoil/viewing/connection/streamState';
+import { isOnAudioAnalyzerState, myStreamState } from '@src/state/recoil';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
