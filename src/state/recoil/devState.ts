@@ -43,3 +43,9 @@ export const myAvatarReplicateNumState = atom<number>({
   default: 0,
   effects: [localStorageNumberEffect('myAvatarReplicateNumState')],
 });
+
+export const prepareAnimationDurationState = atom<number>({
+  key: 'prepareAnimationDurationState',
+  default: 2,
+  effects: [localStorageNumberEffect('prepareAnimationDurationState')],
+});

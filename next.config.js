@@ -6,6 +6,19 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 const withPWA = require('next-pwa');
 
+const ContentSecurityPolicy = `
+  media-src blob:;
+  worker-src blob:;
+  connect-src localhost:3000 *.live-video.net;
+  script-src localhost:3000;
+  script-src localhost:3000 'wasm-unsafe-eval';
+`;
+// const ContentSecurityPolicy = `
+//   media-src blob:;
+//   connect-src 'self' *.live-video.net;
+//   script-src 'self';
+// `;
+
 /**
  * @type {import('next').NextConfig}
  */
@@ -50,6 +63,10 @@ const nextConfig = {
           {
             key: 'Strict-Transport-Security',
             value: 'max-age=63072000; includeSubDomains; preload',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim(),
           },
         ],
       },

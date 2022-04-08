@@ -3,11 +3,12 @@ import { toastLog } from '@src/helper/toastLog';
 import useBeforeunload from '@src/hooks/useBeforeunload';
 import useMyPeer from '@src/hooks/useMyPeer';
 import useSocket from '@src/hooks/useSocket';
+import { prepareAnimationDurationState } from '@src/state/recoil/devState';
 import { isReadyIvsState, myStreamState } from '@src/state/recoil/viewingState';
 import { AnimatePresence, motion } from 'framer-motion';
 import Script from 'next/script';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import LottieVideoPlay from '../lottie/lottieVideoPlay';
 import ViewingCSRPage from './ViewingCSRPage';
 import MediaPipeSetup from './viewingPrepare/MediaPipeSetup';
@@ -29,6 +30,7 @@ const ViewingPrepareCSRPage = () => {
   const [isReadyPeer, setIsReadyPeer] = useState(false);
   const [peerError, setPeerError] = useState(undefined);
   const [isReadyIvs, setIsReadyIvs] = useRecoilState(isReadyIvsState);
+  const prepareAnimationDuration = useRecoilValue(prepareAnimationDurationState);
 
   const isAllReady = isReadyPeer && isReadySocket && isReadyStream && isReadyIvs && isMediapipeSetup;
   const [asyncIsAllReady, setAsyncIsAllReady] = useState<boolean>(isAllReady);
@@ -161,7 +163,7 @@ const ViewingPrepareCSRPage = () => {
           <MotionBox
             key="live-prepare"
             exit={{ x: 0, opacity: [1, 1, 1, 0], color: ['#000000', '#FFFFFFFF', '#FFFFFF00', '#FFFFFF00'], backgroundColor: ['#FFFFFF', '#282828FF', '#282828FF', '#28282800'] }}
-            transition={{ duration: 2, times: [0, 0.6, 0.85, 1], type: 'keyframes' }}
+            transition={{ duration: prepareAnimationDuration, times: [0, 0.6, 0.85, 1], type: 'keyframes' }}
             display="flex"
             position="fixed"
             zIndex="10000"
@@ -199,7 +201,7 @@ const ViewingPrepareCSRPage = () => {
                 </HStack>
               </Box>
               <Script
-                src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js"
+                src="https://player.live-video.net/1.8.0/amazon-ivs-player.min.js"
                 // @ts-ignore
                 strategy="afterInteractive" // NOTE 왜 before하면 새로고침시 에러?, onLoad도 작동 안함?
                 onLoad={e => {

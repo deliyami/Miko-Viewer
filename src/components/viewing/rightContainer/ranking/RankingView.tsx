@@ -91,7 +91,7 @@ const Top5Rank = memo(() => {
     <>
       <AnimatePresence>
         {ranks.map(({ value, score }, idx) => (
-          <RankItem key="value" score={score} idx={idx} value={value} />
+          <RankItem key={value} score={score} idx={idx} value={value} />
         ))}
       </AnimatePresence>
       {ranks.length === 0 && (

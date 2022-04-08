@@ -35,10 +35,11 @@ import {
   isOnRankingState,
   isOnVideoAmbianceState,
   myAvatarReplicateNumState,
+  prepareAnimationDurationState,
 } from '@src/state/recoil/devState';
 import dayjs from 'dayjs';
 import produce from 'immer';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { ChangeEventHandler, FC, useEffect, useRef, useState } from 'react';
 import { SetterOrUpdater, useRecoilState } from 'recoil';
 import CommonDivider from '../divider/CommonDivider';
 
@@ -46,7 +47,7 @@ import CommonDivider from '../divider/CommonDivider';
 
 const UpdateTicketTime: FC = () => {
   const property = ['saleStartDate', 'saleEndDate', 'concertStartDate', 'concertEndDate', 'archiveEndTime'];
-  const [addMinutes, setAddMinutes] = useState([null, null, 0, 10, 100]);
+  const [addMinutes, setAddMinutes] = useState([undefined, undefined, 0, 10, 100]);
   const [ticketId, setTicketId] = useState(1);
   const handleUpdateTicketData = async () => {
     const updateData = {};
@@ -144,6 +145,7 @@ export const DevDrawer: FC = () => {
   const [isOnRanking, setIsOnRanking] = useRecoilState(isOnRankingState);
   const [isOnMyRanking, setIsOnMyRanking] = useRecoilState(isOnMyRankingState);
   const [isOnAudioAnalyzer, setIsOnAudioAnalyzer] = useRecoilState(isOnAudioAnalyzerState);
+  const [prepareAnimationDuration, setPrepareAnimationDuration] = useRecoilState(prepareAnimationDurationState);
   const btnRef = useRef();
 
   useWindowEvent('keyup', e => {
@@ -172,9 +174,17 @@ export const DevDrawer: FC = () => {
     setIsOnAudioAnalyzer(aBoolean);
   };
 
+  const handleUpdatePrepareAnimationDuration: ChangeEventHandler<HTMLInputElement> = e => {
+    if (e.target.value === '') {
+      setPrepareAnimationDuration(0);
+    } else if (!Number.isNaN(parseFloat(e.target.value))) {
+      setPrepareAnimationDuration(parseFloat(e.target.value));
+    }
+  };
+
   return (
     <Portal>
-      <Button ref={btnRef} colorScheme="teal" w="1" p="0" m="0" onClick={onOpen} position="fixed" top="32" left="0" zIndex="101">
+      <Button ref={btnRef} colorScheme="teal" visibility={isOpen ? 'hidden' : 'visible'} w="1" p="0" m="0" onClick={onOpen} position="fixed" top="32" left="0" zIndex="101">
         D
       </Button>
       <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={btnRef}>
@@ -195,6 +205,10 @@ export const DevDrawer: FC = () => {
               <CustomSwitch label="turn on ranking update" isOn={isOnRanking} set={setIsOnRanking} />
               <CustomSwitch label="turn on my ranking update" isOn={isOnMyRanking} set={setIsOnMyRanking} />
               <CustomSwitch label="turn on my audio analyzer" isOn={isOnAudioAnalyzer} set={setIsOnAudioAnalyzer} />
+              <HStack>
+                <Text>Prepare Ani Duration(s)</Text>
+                <Input value={prepareAnimationDuration} onChange={handleUpdatePrepareAnimationDuration} />
+              </HStack>
             </FormControl>
             <CommonDivider />
             <ReplicateMyAvatarOption />
