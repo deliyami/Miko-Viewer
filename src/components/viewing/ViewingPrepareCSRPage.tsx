@@ -1,8 +1,7 @@
 import { Alert, AlertIcon, Box, BoxProps, Heading, HStack, Spinner, Tag, VStack } from '@chakra-ui/react';
 import { toastLog } from '@src/helper';
-import { useBeforeunload, useMyPeer, useSocket } from '@src/hooks';
-// import { prepareAnimationDurationState } from '@src/state/recoil';
-// import { myStreamState } from '@src/state/recoil';
+import { useBeforeunload } from '@src/hooks';
+import { useMyPeer, useSocket } from '@src/hooks/dynamicHooks';
 import { myStreamState, prepareAnimationDurationState } from '@src/state/recoil';
 import { AnimatePresence, motion } from 'framer-motion';
 import Script from 'next/script';

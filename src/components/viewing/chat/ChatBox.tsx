@@ -1,11 +1,13 @@
 import { Box, Heading, VStack } from '@chakra-ui/react';
 import { MAX_MSGS } from '@src/const';
 import { useSocket } from '@src/hooks/dynamicHooks';
+import { isOnChatState } from '@src/state/recoil';
 import { ChatMessageInterface } from '@src/types/dto/ChatMessageType';
 import produce from 'immer';
 // @ts-ignore
 import { FC, memo, useEffect, useRef, useState } from 'react';
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized';
+import { useRecoilValue } from 'recoil';
 import Message from './Message';
 
 const cache = new CellMeasurerCache({
@@ -61,7 +63,7 @@ const ChatBoxRender: FC<{ messages: any[] }> = memo(({ messages }) => {
 
 ChatBoxRender.displayName = 'ChatBoxRender';
 
-const MESSAGE_THROTTLE_TIME = 1000 * 0.3;
+const MESSAGE_THROTTLE_TIME = 1000 * 1;
 
 const ChatBox = () => {
   const socket = useSocket();
@@ -69,6 +71,7 @@ const ChatBox = () => {
   const messagesBuffer = useRef([]);
   const updatedTimestamp = useRef(Date.now());
   const setTimeoutId = useRef(null);
+  const isOnChat = useRecoilValue(isOnChatState);
 
   useEffect(() => {
     const getBroadcastedNewMessage = (data: ChatMessageInterface) => {
@@ -104,20 +107,20 @@ const ChatBox = () => {
       if (curTimestamp - updatedTimestamp.current < MESSAGE_THROTTLE_TIME) {
         setTimeoutId.current = setTimeout(() => {
           handleSetMessages();
-        }, MESSAGE_THROTTLE_TIME);
+        }, MESSAGE_THROTTLE_TIME - (curTimestamp - updatedTimestamp.current));
       } else {
         updatedTimestamp.current = curTimestamp;
         handleSetMessages();
       }
     };
-    socket.on('be-broadcast-new-message', getBroadcastedNewMessage);
+    if (isOnChat) socket.on('be-broadcast-new-message', getBroadcastedNewMessage);
 
     return () => {
       clearTimeout(setTimeoutId.current);
       cache.clearAll();
       socket.off('be-broadcast-new-message', getBroadcastedNewMessage);
     };
-  }, [socket]);
+  }, [socket, isOnChat]);
 
   return (
     <VStack flexGrow="1" backgroundColor="#202020" border="2px" borderColor="#262626" overflow="scroll" width="full" textColor="white">

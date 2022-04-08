@@ -38,14 +38,20 @@ export const isOnAudioAnalyzerState = atom<boolean>({
   effects: [localStorageBooleanEffect('isOnAudioAnalyzerState')],
 });
 
-export const myAvatarReplicateNumState = atom<number>({
-  key: 'myAvatarReplicateNumState',
-  default: 0,
-  effects: [localStorageNumberEffect('myAvatarReplicateNumState')],
+export const isOnChatState = atom<boolean>({
+  key: 'isOnChatState',
+  default: true,
+  effects: [localStorageBooleanEffect('isOnChatState')],
 });
 
 export const prepareAnimationDurationState = atom<number>({
   key: 'prepareAnimationDurationState',
   default: 2,
   effects: [localStorageNumberEffect('prepareAnimationDurationState')],
+});
+
+export const myAvatarReplicateNumState = atom<number>({
+  key: 'myAvatarReplicateNumState',
+  default: 0,
+  effects: [localStorageNumberEffect('myAvatarReplicateNumState')],
 });
