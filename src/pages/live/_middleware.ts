@@ -1,4 +1,4 @@
-import { checkLogin } from '@src/helper/checkLogin';
+import { checkLogin } from '@src/helper/api';
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(req: NextRequest, ev: NextFetchEvent) {

@@ -1,5 +1,5 @@
 import { NEXT_URL, USER_TICKET_COOKIE } from '@src/const';
-import { checkLogin } from '@src/helper/checkLogin';
+import { checkLogin } from '@src/helper/api';
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 
 const allowedParams = ['roomId'];
