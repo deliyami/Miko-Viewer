@@ -1,6 +1,6 @@
 import { axiosI } from '@src/state/fetcher';
 import { createFSWQueryString } from '@src/state/swr/helper/createQueryStringKey';
-import { CommonFSW } from '@src/types/share/common/common';
+import { CommonFSW } from '@src/types/share/common';
 import { AxiosError, AxiosResponse } from 'axios';
 
 export const getDataFromLaravel = async <T>(url: string, query?: CommonFSW): Promise<AxiosResponse<T>> => {

@@ -1,8 +1,8 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { getDataFromLaravel } from '@src/helper';
 import { useUser } from '@src/state/swr';
-import { Cart } from '@src/types/local/Cart';
-import { Pagination } from '@src/types/share/common/common';
+import { Cart } from '@src/types/local';
+import { Pagination } from '@src/types/share/common';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import CartItem from './CartItem';

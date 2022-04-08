@@ -18,7 +18,7 @@ import { S3_URL } from '@src/const';
 import { useSocket } from '@src/hooks/dynamicHooks';
 import { DONEITEM, PATHNAME } from '@src/state/shareObject/shareDoneObject';
 import { useUser } from '@src/state/swr';
-import { DoneSendInterface } from '@src/types/share/DoneItem';
+import { DoneSendInterface } from '@src/types/share';
 import { FC, memo } from 'react';
 
 export const DoneOption: FC = memo(() => {

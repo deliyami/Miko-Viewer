@@ -7,7 +7,7 @@ import { IoPlay } from '@react-icons/all-files/io5/IoPlay';
 import { toastLog } from '@src/helper';
 import { useIvsPlayer } from '@src/hooks/dynamicHooks';
 import { enterTicketDataState, isOnVideoAmbianceState, msgMetaDataState, quizMetaDataState, quizResultMetaDataState } from '@src/state/recoil';
-import { AllMetaData } from '@src/types/share/TimeMetadataFormat';
+import { AllMetaData } from '@src/types/share';
 import * as ivs from 'amazon-ivs-player';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useRef, useState } from 'react';

@@ -1,6 +1,6 @@
 import { AspectRatio, Box, Heading, Image, Spinner, Text, VStack } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
-import { Concert } from '@src/types/share/Concert';
+import { Concert } from '@src/types/share';
 import Link from 'next/link';
 import { FC, Suspense } from 'react';
 

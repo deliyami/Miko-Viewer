@@ -1,5 +1,5 @@
-import { CommonDataResponse, CommonFSW, Pagination } from '@src/types/share/common/common';
-import { Concert } from '@src/types/share/Concert';
+import { Concert } from '@src/types/share';
+import { CommonDataResponse, CommonFSW, Pagination } from '@src/types/share/common';
 import useSWR from 'swr';
 import { fetcher } from '../fetcher';
 import { createFSWQueryString } from './helper/createQueryStringKey';

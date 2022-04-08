@@ -1,4 +1,4 @@
-import { CommonProps } from './common/common';
+import { CommonProps } from './common';
 
 export interface Product extends CommonProps {
   concertId: number;

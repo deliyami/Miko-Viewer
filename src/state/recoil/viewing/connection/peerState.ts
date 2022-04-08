@@ -1,4 +1,4 @@
-import { User } from '@src/types/share/User';
+import { User } from '@src/types/share';
 import { DataConnection, MediaConnection } from 'peerjs';
 import { atom } from 'recoil';
 

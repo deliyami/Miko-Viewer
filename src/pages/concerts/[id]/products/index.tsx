@@ -2,8 +2,8 @@
 import { Flex, Select, Spinner, Text } from '@chakra-ui/react';
 import { getDataFromLaravel } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
-import { Pagination } from '@src/types/share/common/common';
-import { Product } from '@src/types/share/Product';
+import { Product } from '@src/types/share';
+import { Pagination } from '@src/types/share/common';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect, useState } from 'react';

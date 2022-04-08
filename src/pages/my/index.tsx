@@ -2,7 +2,7 @@ import { Avatar, Badge, Box, Button, Center, Flex, Heading, HStack, Image, Input
 import { S3_URL } from '@src/const';
 import BasicLayout from '@src/layout/BasicLayout';
 import { useUser } from '@src/state/swr';
-import { User } from '@src/types/share/User';
+import { User } from '@src/types/share';
 import { FC, ReactElement } from 'react';
 
 const MyCard: FC<{ data: User }> = ({ data }) => {

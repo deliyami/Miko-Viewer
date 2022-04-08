@@ -1,4 +1,4 @@
-import { CommonFSW } from '@src/types/share/common/common';
+import { CommonFSW } from '@src/types/share/common';
 
 const createFSWQueryString = (query: CommonFSW): string => {
   const { filter, sort, start, end, with: aWith, per_page, page, search } = query;

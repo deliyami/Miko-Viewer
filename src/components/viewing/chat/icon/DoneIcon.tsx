@@ -1,6 +1,6 @@
 import { JSONExporter } from '@src/components/viewing/chat/icon/JSONExporter';
 import { PATHNAME } from '@src/state/shareObject/shareDoneObject';
-import { DoneProps } from '@src/types/share/DoneTypes';
+import { DoneProps } from '@src/types/share';
 import { LottieOptions, useLottie } from 'lottie-react';
 import { FC, forwardRef } from 'react';
 /* eslint-disable */

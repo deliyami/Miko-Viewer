@@ -1,7 +1,7 @@
 import { Box, Flex, SimpleGrid, Text, useMediaQuery } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
-import { Pagination } from '@src/types/share/common/common';
-import { Product } from '@src/types/share/Product';
+import { Product } from '@src/types/share';
+import { Pagination } from '@src/types/share/common';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC } from 'react';

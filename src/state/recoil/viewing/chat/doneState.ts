@@ -1,4 +1,4 @@
-import { DoneSendInterface } from '@src/types/share/DoneItem';
+import { DoneSendInterface } from '@src/types/share';
 import { atom } from 'recoil';
 
 const doneState = atom<DoneSendInterface>({

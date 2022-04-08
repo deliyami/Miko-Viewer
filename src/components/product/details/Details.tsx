@@ -1,10 +1,10 @@
-import { Box, Flex, Text, SimpleGrid } from '@chakra-ui/react';
-import { Product } from '@src/types/share/Product';
+import { Box, Flex, SimpleGrid, Text } from '@chakra-ui/react';
+import { Product } from '@src/types/share';
 import { FC, useState } from 'react';
-import Detail from './Detail';
 import Comment from './Comment';
-import QnA from './QnA';
 import Delivery from './Delivery';
+import Detail from './Detail';
+import QnA from './QnA';
 
 const Details: FC<{ item: Product[] }> = ({ item }) => {
   const [ch, setCh] = useState(1);
@@ -12,7 +12,7 @@ const Details: FC<{ item: Product[] }> = ({ item }) => {
   return (
     <Flex flexDirection={'column'} w={'100vw'} overflow="auto" mt={'4%'} h="120vh">
       <Box alignSelf={'center'} w={'60%'} borderTop="2px" cursor={'pointer'}>
-        <SimpleGrid bg="gray.100" alignItems={'center'} columns={4} h={"80px"} fontSize={'xl'} textAlign={'center'}>
+        <SimpleGrid bg="gray.100" alignItems={'center'} columns={4} h={'80px'} fontSize={'xl'} textAlign={'center'}>
           <Box onClick={() => setCh(1)}>
             <Text>アイテム説明</Text>
           </Box>

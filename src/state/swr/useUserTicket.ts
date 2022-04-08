@@ -1,4 +1,4 @@
-import { CommonDataResponse, CommonFSW, Pagination } from '@src/types/share/common/common';
+import { CommonDataResponse, CommonFSW, Pagination } from '@src/types/share/common';
 import useSWR from 'swr';
 import { UserTicket } from '../../types/share/UserTicket';
 import { fetcher } from '../fetcher';

@@ -1,4 +1,4 @@
-import { QuizMetaData, QuizResultMetaData } from '@src/types/share/TimeMetadataFormat';
+import { QuizMetaData, QuizResultMetaData } from '@src/types/share';
 import { atom } from 'recoil';
 
 export const quizMetaDataState = atom<QuizMetaData | undefined>({

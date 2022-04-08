@@ -1,16 +1,16 @@
 import { SearchIcon } from '@chakra-ui/icons';
 import { Box, Button, Center, Flex, HStack, Icon, Input, InputGroup, InputLeftElement, InputRightElement, SimpleGrid, Text, VStack } from '@chakra-ui/react';
+import { FiFilter } from '@react-icons/all-files/fi/FiFilter';
 import PaginationBtn from '@src/components/common/button/PaginationBtn';
 import Category from '@src/components/concert/Category';
 import ConcertList from '@src/components/home/ConcertList';
 import { getDataFromLaravel } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
-import { Pagination } from '@src/types/share/common/common';
-import { Concert } from '@src/types/share/Concert';
+import { Concert } from '@src/types/share';
+import { Pagination } from '@src/types/share/common';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { KeyboardEventHandler, ReactElement, useState } from 'react';
-import { FiFilter } from 'react-icons/fi';
 
 type Data = {
   data?: Pagination<Concert>;

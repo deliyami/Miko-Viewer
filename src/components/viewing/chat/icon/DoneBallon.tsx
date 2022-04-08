@@ -3,7 +3,7 @@ import { DoneIcon } from '@src/components/viewing/chat/icon/DoneIcon';
 import { useSocket } from '@src/hooks/dynamicHooks';
 import { doneAccept } from '@src/state/recoil';
 import { waitingDone } from '@src/state/shareObject/shareDoneObject';
-import { DoneSendInterface } from '@src/types/share/DoneItem';
+import { DoneSendInterface } from '@src/types/share';
 import { FC, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 

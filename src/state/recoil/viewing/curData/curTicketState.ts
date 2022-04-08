@@ -1,4 +1,4 @@
-import { UserTicket } from '@src/types/share/UserTicket';
+import { UserTicket } from '@src/types/share';
 import { atom, selector } from 'recoil';
 import { localStorageEffect } from '../../effects/localStorageEffect ';
 

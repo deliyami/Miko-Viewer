@@ -1,6 +1,6 @@
-import { CommonProps } from './common/common';
+import { CommonProps } from './common';
 
-declare interface Concert extends CommonProps {
+export interface Concert extends CommonProps {
   categoryId: number;
   user: number;
   coverImage: string;
@@ -14,4 +14,4 @@ declare interface Concert extends CommonProps {
   allConcertEndDate: string;
 }
 
-declare type CreateConcertData = Pick<Concert, 'coverImage' | 'title' | 'artist' | 'detail' | 'content' | 'categoryId' | 'allConcertStartDate' | 'allConcertEndDate'>;
+export type CreateConcertData = Pick<Concert, 'coverImage' | 'title' | 'artist' | 'detail' | 'content' | 'categoryId' | 'allConcertStartDate' | 'allConcertEndDate'>;

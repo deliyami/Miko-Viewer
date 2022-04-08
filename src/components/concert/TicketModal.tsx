@@ -27,7 +27,7 @@ import {
 } from '@chakra-ui/react';
 import { convertDate } from '@src/helper';
 import { useUser } from '@src/state/swr';
-import { Ticket } from '@src/types/share/Ticket';
+import { Ticket } from '@src/types/share';
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
 

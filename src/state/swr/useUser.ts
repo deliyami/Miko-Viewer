@@ -1,5 +1,5 @@
 import { axiosI, fetcher } from '@src/state/fetcher';
-import { LoginData, User } from '@src/types/share/User';
+import { LoginData, User } from '@src/types/share';
 import { useEffect } from 'react';
 import { mutate } from 'swr';
 import useSWRImmutable from 'swr/immutable';
