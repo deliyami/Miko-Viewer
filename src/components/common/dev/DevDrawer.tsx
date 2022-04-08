@@ -24,7 +24,7 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { toastLog } from '@src/helper/toastLog';
+import { toastLog } from '@src/helper';
 import { useWindowEvent } from '@src/hooks';
 import { axiosI } from '@src/state/fetcher';
 import {

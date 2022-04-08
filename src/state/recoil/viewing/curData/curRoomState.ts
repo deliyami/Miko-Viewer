@@ -1,5 +1,5 @@
 import { NEST_URL } from '@src/const';
-import { toastLog } from '@src/helper/toastLog';
+import { toastLog } from '@src/helper';
 import axios from 'axios';
 import { atom, selector } from 'recoil';
 import { localStorageEffect } from '../../effects';

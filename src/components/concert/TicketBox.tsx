@@ -1,5 +1,5 @@
 import { Box, Button, Container, Divider, Grid, GridItem, HStack, Stack, Text } from '@chakra-ui/react';
-import convertDate from '@src/helper/convertDate';
+import { convertDate } from '@src/helper';
 import { Ticket } from '@src/types/share/Ticket';
 import React, { FC } from 'react';
 import TicketModal from './TicketModal';

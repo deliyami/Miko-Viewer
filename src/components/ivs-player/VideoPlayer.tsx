@@ -4,7 +4,7 @@ import { BiVolumeFull } from '@react-icons/all-files/bi/BiVolumeFull';
 import { BiVolumeMute } from '@react-icons/all-files/bi/BiVolumeMute';
 import { IoPause } from '@react-icons/all-files/io5/IoPause';
 import { IoPlay } from '@react-icons/all-files/io5/IoPlay';
-import { toastLog } from '@src/helper/toastLog';
+import { toastLog } from '@src/helper';
 import { useIvsPlayer } from '@src/hooks/dynamicHooks';
 import { enterTicketDataState, isOnVideoAmbianceState, msgMetaDataState, quizMetaDataState, quizResultMetaDataState } from '@src/state/recoil';
 import { AllMetaData } from '@src/types/share/TimeMetadataFormat';

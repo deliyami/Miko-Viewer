@@ -19,12 +19,10 @@ const FORMAT = {
   ISO8601NoZ: 'YYYY-MM-DDThh:mm:00',
 };
 
-const convertDate = (data: dayjs.ConfigType, format: keyof typeof FORMAT = 'YMD') => {
+export const convertDate = (data: dayjs.ConfigType, format: keyof typeof FORMAT = 'YMD') => {
   return dayjs(data).format(FORMAT[format]);
 };
 
 export const convertDateUTC = (data: dayjs.ConfigType, format: keyof typeof FORMAT = 'YMD') => {
   return dayjs.utc(data).format(FORMAT[format]);
 };
-
-export default convertDate;

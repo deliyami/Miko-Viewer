@@ -1,7 +1,6 @@
 import { Box, Button, Center, Input, ScaleFade } from '@chakra-ui/react';
 import { DoneOption } from '@src/components/viewing/chat/DoneOption';
-import sendToAllPeers from '@src/helper/sendToAllPeers';
-import showChatToRoom from '@src/helper/showChatToRoom';
+import { sendToAllPeers, showChatToRoom } from '@src/helper';
 import { useSocket } from '@src/hooks/dynamicHooks';
 import { chatModeState, isShowChatInputState, peerDataListState } from '@src/state/recoil';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';

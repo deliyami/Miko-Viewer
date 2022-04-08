@@ -2,7 +2,7 @@ import { Box, Flex, Text } from '@chakra-ui/react';
 import AllItem from '@src/components/product/AllItem';
 import Details from '@src/components/product/details/Details';
 import ProductDetail from '@src/components/product/ProductDetail';
-import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
+import { getDataFromLaravel } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
 import { Pagination } from '@src/types/share/common/common';
 import { Product } from '@src/types/share/Product';
@@ -18,7 +18,7 @@ type Data = {
 
 export const getServerSideProps: GetServerSideProps<Data> = async context => {
   const URL_PRODUCTS = '/products';
-  let concertId = parseInt((context.query.id as string) ?? '1');
+  const concertId = parseInt((context.query.id as string) ?? '1');
   // let categoryId = parseInt((context.query.category_id as string) ?? "1");
   // const page = context.query.page as string;
   // const search = context.query.search as string;

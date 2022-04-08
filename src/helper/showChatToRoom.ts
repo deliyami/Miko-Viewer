@@ -11,4 +11,4 @@ const showChatToRoom = (id: string, text: string, time: number = 5) => {
   hideChatSetTimeOut[id] = timerId;
 };
 
-export default showChatToRoom;
+export { showChatToRoom };

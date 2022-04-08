@@ -1,4 +1,4 @@
-import sendToAllPeers from '@src/helper/sendToAllPeers';
+import { sendToAllPeers } from '@src/helper';
 import { useSocket } from '@src/hooks/dynamicHooks';
 import { latestScoreState, peerDataListState } from '@src/state/recoil';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';

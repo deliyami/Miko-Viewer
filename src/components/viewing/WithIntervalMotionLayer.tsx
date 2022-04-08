@@ -1,5 +1,4 @@
-import sendToAllPeers from '@src/helper/sendToAllPeers';
-import { setBorn } from '@src/helper/setBornAvatar';
+import { sendToAllPeers, setBorn } from '@src/helper';
 import { latestMotionState, model, peerDataListState } from '@src/state/recoil';
 import { roomMemberMotions, sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { useUser } from '@src/state/swr/useUser';

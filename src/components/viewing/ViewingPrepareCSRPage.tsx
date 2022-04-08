@@ -1,5 +1,5 @@
 import { Alert, AlertIcon, Box, BoxProps, Heading, HStack, Spinner, Tag, VStack } from '@chakra-ui/react';
-import { toastLog } from '@src/helper/toastLog';
+import { toastLog } from '@src/helper';
 import { useBeforeunload, useMyPeer, useSocket } from '@src/hooks';
 // import { prepareAnimationDurationState } from '@src/state/recoil';
 // import { myStreamState } from '@src/state/recoil';

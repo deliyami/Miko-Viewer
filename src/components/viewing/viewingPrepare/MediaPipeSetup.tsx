@@ -1,6 +1,6 @@
 import * as cam from '@mediapipe/camera_utils';
 import { Results } from '@mediapipe/pose';
-import { setBorn } from '@src/helper/setBornAvatar';
+import { setBorn } from '@src/helper';
 import { isOnMediaPipeState, latestMotionState, model, myStreamState, peerDataListState } from '@src/state/recoil';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
 import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';

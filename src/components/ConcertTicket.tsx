@@ -1,6 +1,6 @@
 import { Badge, Box, Button, HStack, Image, Td, Text, Tr } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
-import convertDate from '@src/helper/convertDate';
+import { convertDate } from '@src/helper';
 import { curUserTicketState } from '@src/state/recoil';
 import { UserTicket } from '@src/types/share/UserTicket';
 import dayjs from 'dayjs';

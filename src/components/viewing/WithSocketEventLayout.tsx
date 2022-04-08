@@ -1,7 +1,4 @@
-import setMotionToAvatar from '@src/helper/setMotionToAvatar';
-import showChatToRoom from '@src/helper/showChatToRoom';
-import { toastLog } from '@src/helper/toastLog';
-import { updateUserScore } from '@src/helper/updateUserScore';
+import { setMotionToAvatar, showChatToRoom, toastLog, updateUserScore } from '@src/helper';
 import { useBeforeunload } from '@src/hooks';
 import { useMyPeer, useSocket } from '@src/hooks/dynamicHooks';
 import { curUserTicketState, enterRoomIdAsyncState, latestScoreState, myStreamState, PeerDataInterface, peerDataListState, PickUserData } from '@src/state/recoil';

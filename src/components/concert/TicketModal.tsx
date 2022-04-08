@@ -23,9 +23,9 @@ import {
   Spacer,
   Square,
   Text,
-  useDisclosure
+  useDisclosure,
 } from '@chakra-ui/react';
-import convertDate from '@src/helper/convertDate';
+import { convertDate } from '@src/helper';
 import { useUser } from '@src/state/swr/useUser';
 import { Ticket } from '@src/types/share/Ticket';
 import { useRouter } from 'next/router';

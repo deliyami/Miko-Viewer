@@ -3,7 +3,7 @@ import { Box, Button, Center, Flex, HStack, Icon, Input, InputGroup, InputLeftEl
 import PaginationBtn from '@src/components/common/button/PaginationBtn';
 import Category from '@src/components/concert/Category';
 import ConcertList from '@src/components/home/ConcertList';
-import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
+import { getDataFromLaravel } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
 import { Pagination } from '@src/types/share/common/common';
 import { Concert } from '@src/types/share/Concert';

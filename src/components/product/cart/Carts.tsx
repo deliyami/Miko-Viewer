@@ -1,5 +1,5 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
-import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
+import { getDataFromLaravel } from '@src/helper';
 import { useUser } from '@src/state/swr/useUser';
 import { Cart } from '@src/types/share/Cart';
 import { Pagination } from '@src/types/share/common/common';
