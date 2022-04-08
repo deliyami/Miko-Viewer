@@ -1,12 +1,13 @@
 import * as cam from '@mediapipe/camera_utils';
 import { Results } from '@mediapipe/pose';
 import { setBorn } from '@src/helper/setBornAvatar';
-import { isOnMediaPipeState } from '@src/state/recoil/devState';
-import { model } from '@src/state/recoil/modelState';
-import { latestMotionState } from '@src/state/recoil/motionState';
-import { myStreamState, peerDataListState } from '@src/state/recoil/viewingState';
+import { isOnMediaPipeState } from '@src/state/recoil/devState/devState';
+import { model } from '@src/state/recoil/viewing/avatar/modelState';
+import { latestMotionState } from '@src/state/recoil/viewing/avatar/motionState';
+import { peerDataListState } from '@src/state/recoil/viewing/connection/peerState';
+import { myStreamState } from '@src/state/recoil/viewing/connection/streamState';
+import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
 import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
-import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
 import { aPose } from '@src/state/shareObject/sharePose';
 import { useUser } from '@src/state/swr/useUser';
 import * as Kalidokit from 'kalidokit';

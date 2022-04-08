@@ -1,7 +1,7 @@
 import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react';
 import CameraScreen from '@src/components/common/meidaView/CameraScreen';
 import CameraSwitch from '@src/components/common/meidaView/CameraSwitch';
-import { myStreamState } from '@src/state/recoil/viewingState';
+import { myStreamState } from '@src/state/recoil/viewing/connection/streamState';
 import { forwardRef, useImperativeHandle } from 'react';
 import { useRecoilValue } from 'recoil';
 

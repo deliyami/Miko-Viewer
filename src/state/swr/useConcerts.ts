@@ -2,7 +2,7 @@ import { CommonDataResponse, CommonFSW, Pagination } from '@src/types/share/comm
 import { Concert } from '@src/types/share/Concert';
 import useSWR from 'swr';
 import { fetcher } from '../fetcher';
-import { createFSWQueryString } from './createQueryStringKey';
+import { createFSWQueryString } from './helper/createQueryStringKey';
 import laggy from './middleware/laggy';
 
 const URL_CONCERTS = '/concerts';

@@ -1,7 +1,7 @@
 import { Center, Text } from '@chakra-ui/react';
 import { Container } from '@src/components/Container';
 import ViewingLayout from '@src/layout/ViewingLayout';
-import { curUserTicketState } from '@src/state/recoil/concertState';
+import { curUserTicketState } from '@src/state/recoil/viewing/curData/curTicketState';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useRouter } from 'next/router';

@@ -1,7 +1,7 @@
 import { Badge, Box, Button, HStack, Image, Td, Text, Tr } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
 import convertDate from '@src/helper/convertDate';
-import { curUserTicketState } from '@src/state/recoil/concertState';
+import { curUserTicketState } from '@src/state/recoil/viewing/curData/curTicketState';
 import { UserTicket } from '@src/types/share/UserTicket';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';

@@ -1,6 +1,6 @@
 import { Center } from '@chakra-ui/react';
-import { myAvatarReplicateNumState } from '@src/state/recoil/devState';
-import { peerDataListState } from '@src/state/recoil/viewingState';
+import { myAvatarReplicateNumState } from '@src/state/recoil/devState/devState';
+import { peerDataListState } from '@src/state/recoil/viewing/connection/peerState';
 import { AnimatePresence, LayoutGroup } from 'framer-motion';
 import { useRecoilValue } from 'recoil';
 import { My3DAvatar } from './My3DAvatar';

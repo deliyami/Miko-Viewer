@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
-import { localStorageBooleanEffect } from './effects/localStorageBooleanEffect';
-import { localStorageNumberEffect } from './effects/localStorageNumberEffect';
+import { localStorageBooleanEffect } from '../effects/localStorageBooleanEffect';
+import { localStorageNumberEffect } from '../effects/localStorageNumberEffect';
 
 export const isOnAvatarState = atom<boolean>({
   key: 'isOnAvatarState',

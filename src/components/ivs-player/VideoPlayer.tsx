@@ -6,9 +6,10 @@ import { IoPause } from '@react-icons/all-files/io5/IoPause';
 import { IoPlay } from '@react-icons/all-files/io5/IoPlay';
 import { toastLog } from '@src/helper/toastLog';
 import useIvsPlayer from '@src/hooks/useIvsPlayer';
-import { enterTicketDataState } from '@src/state/recoil/concertState';
-import { isOnVideoAmbianceState } from '@src/state/recoil/devState';
-import { msgMetaDataState, quizMetaDataState, quizResultMetaDataState } from '@src/state/recoil/timeMetaDataState';
+import { isOnVideoAmbianceState } from '@src/state/recoil/devState/devState';
+import { enterTicketDataState } from '@src/state/recoil/viewing/curData/curTicketState';
+import { msgMetaDataState } from '@src/state/recoil/viewing/metadata/msgMetaDataState';
+import { quizMetaDataState, quizResultMetaDataState } from '@src/state/recoil/viewing/metadata/quizMetaDataState';
 import { AllMetaData } from '@src/types/share/TimeMetadataFormat';
 import * as ivs from 'amazon-ivs-player';
 import { useRouter } from 'next/router';
@@ -81,12 +82,16 @@ const VideoPlayer: FC = () => {
     const onStateChange = () => {
       const playerState = player.current.getState();
       // player.current.setLiveLowLatencyEnabled(true);
+      console.log('-------------------');
       console.log('onStateChange', playerState);
-      console.log(player.current.getQuality());
-      console.log(player.current.getBuffered());
-      console.log(player.current.getBufferDuration());
-      console.log(player.current.isAutoplay());
+      console.log('quality', player.current.getQuality());
+      console.log('buffer time', player.current.getBuffered(), 'buffered duration', player.current.getBufferDuration());
+      console.log('is auto play', player.current.isAutoplay());
       console.log('lowLatency', player.current.isLiveLowLatency());
+      console.log('-------------------');
+
+      setLoading(playerState === READY || playerState === BUFFERING);
+
       switch (playerState) {
         case READY:
           const qualities = player.current.getQualities();
@@ -98,11 +103,17 @@ const VideoPlayer: FC = () => {
         case BUFFERING:
           console.log('NOW BUFFERING');
           break;
+        case PLAYING:
+          break;
+        case IDLE: // 스스로 멈췄을때
+          toastLog('info', 'idle');
+          break;
+        case ENDED: // TODO 끝났을떄 로직
+          toastLog('info', 'ENDED');
+          break;
         default:
           break;
       }
-
-      // setLoading(playerState !== PLAYING);
     };
 
     const onError = err => {
@@ -128,16 +139,15 @@ const VideoPlayer: FC = () => {
     // @ts-ignore
     const aPlayer = IVSPlayer.create(); // web 버전이어서 wasm 넣어줄 필요는 없음.
     player.current = aPlayer;
+    player.current.setLiveLowLatencyEnabled(true);
+    player.current.setRebufferToLive(true); // NOTE
+    console.log('is low?', player.current.isLiveLowLatency());
     // @ts-ignore
     player.current.load(enterTicketData.playbackUrl + '?token=' + jwt);
-
-    player.current.setLiveLowLatencyEnabled(true);
-
     player.current.attachHTMLVideoElement(videoEl.current);
 
     player.current.setAutoplay(true);
     player.current.setVolume(0.2);
-
     player.current.play();
 
     player.current.addEventListener(IDLE, onStateChange);
@@ -147,20 +157,34 @@ const VideoPlayer: FC = () => {
     player.current.addEventListener(ENDED, onStateChange);
     player.current.addEventListener(ERROR, onError);
 
-    player.current.addEventListener(REBUFFERING, () => {
-      console.log(REBUFFERING);
+    player.current.addEventListener(REBUFFERING, e => {
+      console.log(REBUFFERING, e);
     });
-    player.current.addEventListener(QUALITY_CHANGED, () => {
-      console.log(QUALITY_CHANGED);
+    player.current.addEventListener(QUALITY_CHANGED, e => {
+      console.log(QUALITY_CHANGED, e);
     });
-    player.current.addEventListener(PLAYBACK_BLOCKED, () => {
-      console.log(PLAYBACK_BLOCKED);
+    player.current.addEventListener(PLAYBACK_BLOCKED, e => {
+      console.log(PLAYBACK_BLOCKED, e);
     });
-    player.current.addEventListener(BUFFER_UPDATE, () => {
-      console.log(BUFFER_UPDATE);
+    player.current.addEventListener(BUFFER_UPDATE, e => {
+      console.log(BUFFER_UPDATE, e);
+      // const bufferlen = player.current.getBufferDuration();
+      // if (bufferlen > 3.0) {
+      //   player.current.seekTo(player.current.getPosition() + bufferlen - 1.1);
+      // } else if (bufferlen > 2.0) {
+      //   player.current.setPlaybackRate(1.5);
+      // } else if (bufferlen > 1.5) {
+      //   player.current.setPlaybackRate(1.25);
+      // } else if (bufferlen > 1.35) {
+      //   player.current.setPlaybackRate(1.1);
+      // } else if (bufferlen > 1.1) {
+      //   player.current.setPlaybackRate(1.05);
+      // } else {
+      //   player.current.setPlaybackRate(1);
+      // }
     });
-    player.current.addEventListener(AUDIO_BLOCKED, () => {
-      console.log(AUDIO_BLOCKED);
+    player.current.addEventListener(AUDIO_BLOCKED, e => {
+      console.log(AUDIO_BLOCKED, e);
     });
     player.current.addEventListener(IVSPlayer.PlayerEventType.TEXT_METADATA_CUE, onTimeMetaData);
 
@@ -244,8 +268,8 @@ const VideoPlayer: FC = () => {
       <Box height="100%" width="100%" position="absolute" top="0">
         <QuizView />
         <QuizResultView />
-        <Center position="absolute" w="20px" h="20px" zIndex="300">
-          <Spinner />
+        <Center position="absolute" w="full" h="full" zIndex="300" pointerEvents="none">
+          {loading && <Spinner boxSize="36" />}
         </Center>
         <Box
           position="absolute"

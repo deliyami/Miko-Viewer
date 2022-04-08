@@ -1,8 +1,9 @@
 import sendToAllPeers from '@src/helper/sendToAllPeers';
 import useSocket from '@src/hooks/useSocket';
-import { latestScoreState } from '@src/state/recoil/scoreState';
-import { peerDataListState } from '@src/state/recoil/viewingState';
-import { addedScoreForSeconds, roomMemberScores } from '@src/state/shareObject/shareObject';
+import { peerDataListState } from '@src/state/recoil/viewing/connection/peerState';
+import { latestScoreState } from '@src/state/recoil/viewing/scoreRank/scoreState';
+import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
+import { roomMemberScores } from '@src/state/shareObject/shareRoomMemberScores';
 import { useUser } from '@src/state/swr/useUser';
 import produce from 'immer';
 import { FC, useEffect } from 'react';

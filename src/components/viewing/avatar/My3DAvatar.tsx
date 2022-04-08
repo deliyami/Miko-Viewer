@@ -5,7 +5,7 @@ import { BiVolumeMute } from '@react-icons/all-files/bi/BiVolumeMute';
 import { FiMoreHorizontal } from '@react-icons/all-files/fi/FiMoreHorizontal';
 import { AvatarModel } from '@src/components/viewing/avatar/AvatarModel';
 import { NEXT_URL } from '@src/const';
-import { isOnAvatarState } from '@src/state/recoil/devState';
+import { isOnAvatarState } from '@src/state/recoil/devState/devState';
 import { useUser } from '@src/state/swr/useUser';
 import { memo } from 'react';
 import { useRecoilValue } from 'recoil';

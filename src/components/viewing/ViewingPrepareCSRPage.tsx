@@ -3,8 +3,8 @@ import { toastLog } from '@src/helper/toastLog';
 import useBeforeunload from '@src/hooks/useBeforeunload';
 import useMyPeer from '@src/hooks/useMyPeer';
 import useSocket from '@src/hooks/useSocket';
-import { prepareAnimationDurationState } from '@src/state/recoil/devState';
-import { isReadyIvsState, myStreamState } from '@src/state/recoil/viewingState';
+import { prepareAnimationDurationState } from '@src/state/recoil/devState/devState';
+import { myStreamState } from '@src/state/recoil/viewing/connection/streamState';
 import { AnimatePresence, motion } from 'framer-motion';
 import Script from 'next/script';
 import { useEffect, useLayoutEffect, useState } from 'react';
@@ -29,7 +29,7 @@ const ViewingPrepareCSRPage = () => {
   const [isReadyStream, setIsReadyStream] = useState(false);
   const [isReadyPeer, setIsReadyPeer] = useState(false);
   const [peerError, setPeerError] = useState(undefined);
-  const [isReadyIvs, setIsReadyIvs] = useRecoilState(isReadyIvsState);
+  const [isReadyIvs, setIsReadyIvs] = useState(false);
   const prepareAnimationDuration = useRecoilValue(prepareAnimationDurationState);
 
   const isAllReady = isReadyPeer && isReadySocket && isReadyStream && isReadyIvs && isMediapipeSetup;

@@ -1,6 +1,6 @@
 import { Box, Center, SimpleGrid, Text } from '@chakra-ui/react';
 import useSocket from '@src/hooks/useSocket';
-import { quizMetaDataState } from '@src/state/recoil/timeMetaDataState';
+import { quizMetaDataState } from '@src/state/recoil/viewing/metadata/quizMetaDataState';
 import { memo, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 

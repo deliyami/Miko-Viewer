@@ -1,4 +1,4 @@
-import { model } from '@src/state/recoil/modelState';
+import { model } from '@src/state/recoil/viewing/avatar/modelState';
 import * as BABYLON from 'babylonjs';
 import 'babylonjs-loaders';
 import produce from 'immer';

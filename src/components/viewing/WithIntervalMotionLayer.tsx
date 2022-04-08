@@ -1,8 +1,8 @@
 import sendToAllPeers from '@src/helper/sendToAllPeers';
 import { setBorn } from '@src/helper/setBornAvatar';
-import { model } from '@src/state/recoil/modelState';
-import { latestMotionState } from '@src/state/recoil/motionState';
-import { peerDataListState } from '@src/state/recoil/viewingState';
+import { model } from '@src/state/recoil/viewing/avatar/modelState';
+import { latestMotionState } from '@src/state/recoil/viewing/avatar/motionState';
+import { peerDataListState } from '@src/state/recoil/viewing/connection/peerState';
 import { roomMemberMotions, sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { useUser } from '@src/state/swr/useUser';
 import produce from 'immer';

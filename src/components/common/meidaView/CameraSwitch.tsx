@@ -1,6 +1,7 @@
 import { Box, Select } from '@chakra-ui/react';
 import { toastLog } from '@src/helper/toastLog';
-import { myStreamState, peerDataListState } from '@src/state/recoil/viewingState';
+import { peerDataListState } from '@src/state/recoil/viewing/connection/peerState';
+import { myStreamState } from '@src/state/recoil/viewing/connection/streamState';
 import produce from 'immer';
 import { ChangeEventHandler, FC, useEffect, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';

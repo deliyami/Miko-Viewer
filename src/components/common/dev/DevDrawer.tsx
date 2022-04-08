@@ -36,7 +36,7 @@ import {
   isOnVideoAmbianceState,
   myAvatarReplicateNumState,
   prepareAnimationDurationState,
-} from '@src/state/recoil/devState';
+} from '@src/state/recoil/devState/devState';
 import dayjs from 'dayjs';
 import produce from 'immer';
 import React, { ChangeEventHandler, FC, useEffect, useRef, useState } from 'react';

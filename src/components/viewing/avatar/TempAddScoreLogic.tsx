@@ -1,4 +1,4 @@
-import { addedScoreForSeconds } from '@src/state/shareObject/shareObject';
+import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
 import { useEffect } from 'react';
 
 export const TempAddScoreLogic = () => {
