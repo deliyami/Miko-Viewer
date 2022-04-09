@@ -1,14 +1,20 @@
 import { CommonFSW } from '@src/types/share/common';
 
+const isNull = (p: any) => {
+  return !p && p !== 0;
+};
+
 const createFSWQueryString = (query: CommonFSW): string => {
-  const { filter, sort, start, end, with: aWith, per_page, page, search } = query;
+  const { filter, sort, start, end, with: aWith, perPage, page, search } = query;
+  console.log('query', query);
   const url = new URLSearchParams();
   if (filter) {
-    let filterString = '';
-    for (const [area, value] of filter) {
-      if (filterString !== '') filterString += ',';
-      filterString += area + ':' + value;
-    }
+    const filterString = filter.reduce((prev, [area, value]) => {
+      if (isNull(value)) return prev;
+      let next = prev;
+      if (prev !== '') next += ',';
+      return next + area + ':' + value;
+    }, '');
     url.set('filter', filterString);
   }
   if (sort) {
@@ -23,8 +29,8 @@ const createFSWQueryString = (query: CommonFSW): string => {
     url.set('end', end);
   }
 
-  if (per_page) {
-    url.set('per_page', per_page.toString());
+  if (perPage) {
+    url.set('per_page', perPage.toString());
   }
 
   if (page) {

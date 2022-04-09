@@ -30,7 +30,7 @@ export interface CommonFSW {
    * Pagination 전용
    * 미 입력시 Default per_page 적용됨
    */
-  per_page?: number;
+  perPage?: number;
   /**
    * @example: 10
    * Pagination 전용
@@ -42,6 +42,15 @@ export interface CommonFSW {
    * boolean mode로 작동
    */
   search?: string;
+}
+
+export interface CommonFindId {
+  /**
+   * @example: ["concerts","user"]
+   * Join 기능
+   * Laravel Model 파일을 열어 메소드 이름과 동일하게 입력해주면 됨.
+   */
+  with?: string[];
 }
 
 export interface Pagination<T> {
