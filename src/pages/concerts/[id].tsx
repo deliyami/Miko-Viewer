@@ -1,3 +1,4 @@
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -99,6 +100,7 @@ const LiveInformation: FC<{ data: Concert }> = ({ data: concert }) => {
 
   return (
     <Container
+      className="concert"
       as={Stack}
       maxW={'6xl'}
       direction={{ base: 'column', md: 'row' }}
@@ -106,14 +108,9 @@ const LiveInformation: FC<{ data: Concert }> = ({ data: concert }) => {
       justify={{ base: 'center', md: 'space-between' }}
       align={{ base: 'center', md: 'start' }}
     >
-      {/* <AspectRatio ratio={1}>
-        <Image src={S3_URL + concert.coverImage} objectFit="cover" alt="concertImage" />
-      </AspectRatio> */}
-
-      <Image borderRadius="2%" boxSize="sm" objectFit="cover" src={S3_URL + concert.coverImage} alt="Concert Image" />
-
+      <Image borderRadius="2%" boxSize="sm" src={S3_URL + concert.coverImage} objectFit="cover" alt="concertImage" fallbackSrc="/defaultImage.png" />
       <Box px={4}>
-        <Flex mb={3} direction={{ base: 'column', md: 'row' }} minW={{ base: '50vh', md: '70vh' }}>
+        <Flex mb={3} direction={{ base: 'column', md: 'row' }} minW={{ md: '50vh' }}>
           <Heading fontWeight="700">{concert.title}</Heading>
           <Text pt={{ base: '0', md: '4' }} pl={{ base: '0', md: '5' }}>
             {concert.artist}
@@ -133,14 +130,24 @@ const LiveInformation: FC<{ data: Concert }> = ({ data: concert }) => {
                 <Text fontWeight="440">{concert.content}</Text>
               </Collapse>
               {concert.content.length > 50 && (
-                <Button size="sm" onClick={handleToggle} mt={2} fontSize="16px" borderRadius="2px">
-                  詳細情報を{show ? '閉じる' : '見る'}
+                <Button color="orange" size="sm" onClick={handleToggle} mt={2} borderRadius="4px">
+                  {show ? '閉じる' : 'もっと見る'}
+                  {show ? <ChevronUpIcon /> : <ChevronDownIcon />}
                 </Button>
               )}
             </div>
           </GridItem>
         </Grid>
       </Box>
+      <style>
+        {`
+          .concert img {
+            border-radius: 12px;
+            transition: transform 0.2s ease-in-out;
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+          }
+       `}
+      </style>
     </Container>
   );
 };
@@ -158,7 +165,7 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
 
   return {
     props: {
-      concert: concertData?.data ?? null,
+      concert: concertData?.data.data ?? null,
       tickets: ticketsData?.data ?? null,
     },
   };
@@ -186,7 +193,7 @@ export default function LiveDetailPage({ concert, tickets }: InferGetServerSideP
   return (
     <Flex justifyContent="center">
       <Box>
-        <LiveInformation data={concert.data} />
+        <LiveInformation data={concert} />
         <TicketTab data={tickets.data} />
       </Box>
     </Flex>

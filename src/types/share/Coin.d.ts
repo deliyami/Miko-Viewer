@@ -5,4 +5,5 @@ export interface Coin {
   chatId: number;
   type: number;
   variation: number;
+  createdAt: string;
 }

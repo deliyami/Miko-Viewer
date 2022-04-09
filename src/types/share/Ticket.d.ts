@@ -4,6 +4,7 @@ import { Concert } from './Concert';
 
 export interface Ticket {
   id: number;
+  createdAt: string;
   concertId: number;
   concert?: Concert;
   price: number;

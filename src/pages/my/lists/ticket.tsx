@@ -27,9 +27,9 @@ const UserTicketList = () => {
           <Tr>
             <Th> </Th>
             <Th>予約日</Th>
-            <Th>予約番号</Th>
             <Th>Title</Th>
-            <Th>{isUsedId === 1 ? 'アーカイブ視聴期間' : '公演期間'}</Th>
+            <Th>公演期間</Th>
+            <Th>アーカイブ視聴期間</Th>
             <Th>公演時間</Th>
             <Th>現状</Th>
           </Tr>

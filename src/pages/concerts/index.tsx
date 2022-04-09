@@ -13,7 +13,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { KeyboardEventHandler, ReactElement, useEffect, useState } from 'react';
 
-const PER_PAGE = 9;
+const PER_PAGE = 12;
 
 type Data = {
   iniData?: Pagination<Concert>;
@@ -44,7 +44,7 @@ const SearchBox = () => {
   };
   return (
     <HStack>
-      <InputGroup size="md" maxW={{ xl: '120vh' }}>
+      <InputGroup size="md" maxW={{ xl: '115vh' }}>
         <InputLeftElement>
           <SearchIcon pointerEvents="none" color="gray.300" />
         </InputLeftElement>
@@ -135,8 +135,8 @@ export default function ConcertPage({ iniData, initialParam }: InferGetServerSid
           </Box>
         </Flex>
         {concertsData ? (
-          <VStack spacing={5}>
-            <Box minW={{ xl: '120vh' }}>
+          <VStack spacing={10}>
+            <Box minW={{ xl: '115vh' }}>
               <SimpleGrid columns={[2, null, 3]} spacing="40px">
                 <ConcertList data={concertsData.data} />
               </SimpleGrid>

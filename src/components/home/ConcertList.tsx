@@ -1,24 +1,29 @@
-import { AspectRatio, Box, Heading, Image, Spinner, Text, VStack } from '@chakra-ui/react';
+import { AspectRatio, Box, Image, Spinner, Text } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
+import { convertDate } from '@src/helper';
 import { Concert } from '@src/types/share';
 import Link from 'next/link';
 import { FC, Suspense } from 'react';
 
 const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
+  const concertStartDate = convertDate(concert.allConcertStartDate, 'YMDHM');
+  // console.log(concert);
   return (
     <Box className="movie">
       <Link href={`/concerts/${concert.id}`}>
         <a>
           <Box maxW="300px">
             <AspectRatio maxW="300px" ratio={1}>
-              <Image src={S3_URL + concert.coverImage} objectFit="cover" alt="concertImage" />
+              <Image src={S3_URL + concert.coverImage} objectFit="cover" alt="concertImage" fallbackSrc="/defaultImage.png" />
             </AspectRatio>
-            <VStack pt={3} align="center">
-              <Heading size="sm" fontSize="22px">
+            <Box my={2}>
+              <Text color="gray.700" fontSize="sm">
+                {concertStartDate}
+              </Text>
+              <Text fontSize="xl" fontWeight="bold">
                 {concert.title}
-              </Heading>
-              <Text textStyle="body">{concert.artist}</Text>
-            </VStack>
+              </Text>
+            </Box>
           </Box>
         </a>
       </Link>

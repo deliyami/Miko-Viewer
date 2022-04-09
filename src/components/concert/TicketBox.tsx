@@ -1,4 +1,4 @@
-import { Box, Button, Container, Divider, Grid, GridItem, HStack, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Container, Divider, HStack, Stack, Text } from '@chakra-ui/react';
 import { convertDate } from '@src/helper';
 import { Ticket } from '@src/types/share';
 import React, { FC } from 'react';
@@ -32,30 +32,32 @@ const TicketDetail: FC<{ data: Ticket }> = ({ data: ticket }) => {
   return (
     <>
       {new Date(ticket.saleStartDate) < today ? (
-        <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(7, 1fr)" minW="50vh">
-          <GridItem rowSpan={1} colSpan={2} minW="10vh">
-            <Text fontWeight="350" color="#696969">
-              公演期間
-            </Text>
-            <Text fontWeight="350" color="#696969">
-              公演時間
-            </Text>
-            <Text fontWeight="350" color="#696969">
-              販売期間
-            </Text>
-            <Text fontWeight="350" color="#696969">
-              アーカイブ視聴期間
-            </Text>
-          </GridItem>
-          <GridItem rowSpan={1} colSpan={5} minW="40vh">
-            <Text fontWeight="440">
-              {startDate} ~ {endDate}
-            </Text>
-            <Text fontWeight="440">{ticket.runningTime}分</Text>
-            <Text fontWeight="440">{saleEndDate}まで</Text>
-            <Text fontWeight="440">{archiveEndTime}まで</Text>
-          </GridItem>
-        </Grid>
+        <>
+          <HStack>
+            <Box minW="16vh">
+              <Text fontWeight="350" color="#696969">
+                公演期間
+              </Text>
+              <Text fontWeight="350" color="#696969">
+                公演時間
+              </Text>
+              <Text fontWeight="350" color="#696969">
+                販売期間
+              </Text>
+              <Text fontWeight="350" color="#696969">
+                アーカイブ視聴期間
+              </Text>
+            </Box>
+            <Box minW="40vh">
+              <Text fontWeight="440">
+                {startDate} ~ {endDate}
+              </Text>
+              <Text fontWeight="440">{ticket.runningTime}分</Text>
+              <Text fontWeight="440">{saleEndDate}まで</Text>
+              <Text fontWeight="440">{archiveEndTime}まで</Text>
+            </Box>
+          </HStack>
+        </>
       ) : (
         <Box>
           <Text m={9}>まだチケット購入期間ではありません。</Text>

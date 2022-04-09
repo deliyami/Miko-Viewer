@@ -1,4 +1,4 @@
-import { Badge, Box, Button, HStack, Image, Td, Text, Tr } from '@chakra-ui/react';
+import { Badge, Box, Button, Center, HStack, Image, Td, Text, Tr } from '@chakra-ui/react';
 import { S3_URL } from '@src/const';
 import { convertDate } from '@src/helper';
 import { curUserTicketState } from '@src/state/recoil';
@@ -8,7 +8,131 @@ import { useRouter } from 'next/router';
 import { FC } from 'react';
 import { useSetRecoilState } from 'recoil';
 
-const TicketDetail: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
+const TicketButton: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
+  const router = useRouter();
+
+  // /live/enter으로 이동
+  const setCurUseTicket = useSetRecoilState(curUserTicketState);
+  const useTicketHandler = () => {
+    setCurUseTicket(userTicket);
+    router.push('/live/enter');
+  };
+
+  // 날짜 비교
+  const compareStartDate = dayjs(userTicket.ticket.concertStartDate);
+  const compareEndDate = dayjs(userTicket.ticket.concertEndDate);
+  const compareArchiveDate = dayjs(userTicket.ticket.archiveEndTime);
+  const today = dayjs(new Date());
+  const screeningBefore = today.isBefore(compareStartDate, 'minute'); // 상영전
+  const archiveAfter = today.isAfter(compareArchiveDate, 'minute'); // 다시보기 끝나는 날 이후
+  const screening = today.isBetween(compareStartDate, compareEndDate, 'minute', '[]'); // 상영중
+  const archiving = today.isBetween(compareEndDate, compareArchiveDate, 'minute', '[]'); // 다시보기 - 공연 끝나는 날부터 아카이브 끝나는 날까지
+
+  return (
+    <>
+      {screening ? (
+        <Button onClick={useTicketHandler} colorScheme="green" size="sm" fontWeight="800" fontSize="14px" _hover={{ bg: 'green', color: 'white' }}>
+          コンサート入場
+        </Button>
+      ) : (
+        archiving && (
+          <Button colorScheme="purple" size="sm" fontWeight="800" fontSize="14px" _hover={{ bg: 'purple.500', color: 'white' }}>
+            アーカイブ視聴
+          </Button>
+        )
+      )}
+      {screeningBefore && (
+        <Center>
+          <Text color="#3182CE" fontWeight="550" fontSize="16px">
+            上映前
+          </Text>
+        </Center>
+      )}
+      {archiveAfter && (
+        <Button size="sm" color="white" bg="#4A5568" disabled variant="solid" borderRadius={15} _hover={{ bg: '#4A5568' }}>
+          アーカイブ期間満了
+        </Button>
+      )}
+    </>
+  );
+};
+
+const ImageBadge: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
+  // 날짜 비교
+  const compareStartDate = dayjs(userTicket.ticket.concertStartDate);
+  const compareEndDate = dayjs(userTicket.ticket.concertEndDate);
+  const compareArchiveDate = dayjs(userTicket.ticket.archiveEndTime);
+  const today = dayjs(new Date());
+  const diff = compareStartDate.diff(today, 's') as number; // 시작일로부터 남은 시간(초)
+  const previewAlarm = diff <= 1200 && diff > 0;
+  const screening = today.isBetween(compareStartDate, compareEndDate, 'minute', '[]');
+  const archiving = today.isBetween(compareEndDate, compareArchiveDate, 'minute', '[]'); // 다시보기 - 공연 끝나는 날부터 아카이브 끝나는 날까지
+
+  return (
+    <HStack align="stretch">
+      <Image w="120px" h="120px" objectFit="cover" alt="concertImage" fallbackSrc="/defaultImage.png" src={S3_URL + userTicket.concert.coverImage} />
+      {previewAlarm && (
+        <Box>
+          <Badge variant="solid" colorScheme="blue" fontSize="13px">
+            間も無く
+          </Badge>
+        </Box>
+      )}
+      {screening && (
+        <Box>
+          <Badge variant="solid" colorScheme="green" fontSize="13px">
+            上映中
+          </Badge>
+        </Box>
+      )}
+      {archiving && (
+        <Box>
+          <Badge variant="solid" colorScheme="purple" fontSize="13px">
+            アーカイブ期間
+          </Badge>
+        </Box>
+      )}
+    </HStack>
+  );
+};
+
+const TicketInfo: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
+  // 티켓 정보
+  const startDate = convertDate(userTicket.ticket.concertStartDate, 'YMDHM');
+  const endDate = convertDate(userTicket.ticket.concertEndDate, 'YMDHM');
+  const archiveEndTime = convertDate(userTicket.ticket.archiveEndTime, 'YMD');
+  const paymentTime = convertDate(userTicket.ticket.createdAt, 'YMD');
+
+  // 날짜 비교
+  const compareStartDate = dayjs(userTicket.ticket.concertStartDate);
+  const compareEndDate = dayjs(userTicket.ticket.concertEndDate);
+  const compareArchiveDate = dayjs(userTicket.ticket.archiveEndTime);
+  const today = dayjs(new Date());
+  const screening = today.isBetween(compareStartDate, compareEndDate, 'minute', '[]');
+  const beforeScreening = today.isAfter(compareEndDate, 'minute');
+  const archiving = today.isBetween(compareEndDate, compareArchiveDate, 'minute', '[]'); // 다시보기 - 공연 끝나는 날부터 아카이브 끝나는 날까지
+
+  return (
+    <Tr _hover={{ bg: screening ? '#F0FFF4' : (beforeScreening && '#FAF5FF') || '#EBF8FF' }} cursor={(screening || archiving) && 'pointer'}>
+      <Td>
+        <ImageBadge userTicket={userTicket} />
+      </Td>
+      <Td>{paymentTime}</Td>
+      <Td>{userTicket.concert.title}</Td>
+      <Td>
+        {startDate}
+        <br />~{endDate}
+      </Td>
+      <Td>{archiveEndTime + 'まで'}</Td>
+      <Td>{userTicket.ticket.runningTime}分</Td>
+      <Td>
+        <TicketButton userTicket={userTicket} />
+      </Td>
+    </Tr>
+  );
+};
+
+const UsedTicket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   const router = useRouter();
 
   // /live/enter으로 이동
@@ -19,70 +143,6 @@ const TicketDetail: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   };
 
   // 티켓 정보
-  const startDate = convertDate(userTicket.ticket.concertStartDate, 'YMDHM');
-  const endDate = convertDate(userTicket.ticket.concertEndDate, 'YMDHM');
-
-  // 날짜 비교
-  const compareStartDate = dayjs(userTicket.ticket.concertStartDate);
-  const compareEndDate = dayjs(userTicket.ticket.concertEndDate);
-  const today = dayjs(new Date());
-  const diff = compareStartDate.diff(today, 'm') as number; // 시작일로부터 남은 시간(분)
-  const showBadge = diff <= 120 && diff > 0; // 남은 시간 2시간 전부터 알림
-  const screening = today.isBetween(compareStartDate, compareEndDate, 'minute', '[]');
-  const beforeScreening = today.isAfter(compareEndDate, 'minute');
-
-  return (
-    <Tr _hover={{ bg: screening ? '#F0FFF4' : (beforeScreening && '#FAF5FF') || '#EBF8FF' }} cursor={screening && 'pointer'}>
-      <Td>
-        <HStack align="stretch">
-          <Image w="120px" h="120px" src={S3_URL + userTicket.concert.coverImage} />
-          {showBadge && (
-            <Box>
-              <Badge variant="solid" colorScheme="blue" fontSize="13px">
-                間も無く
-              </Badge>
-            </Box>
-          )}
-          {screening && (
-            <Box>
-              <Badge variant="solid" colorScheme="green" fontSize="13px">
-                上映中
-              </Badge>
-            </Box>
-          )}
-        </HStack>
-      </Td>
-      <Td>????/??/??</Td>
-      <Td isNumeric>{userTicket.id}</Td>
-      <Td>{userTicket.concert.title}</Td>
-      <Td>
-        {startDate}
-        <br />~{endDate}
-      </Td>
-      <Td>{userTicket.ticket.runningTime}分</Td>
-      <Td>
-        {screening ? (
-          <Button onClick={useTicketHandler} colorScheme="green" size="sm" fontWeight="800" fontSize="14px">
-            コンサート入場
-          </Button>
-        ) : (
-          (beforeScreening && (
-            <Button colorScheme="purple" size="sm" fontWeight="800" fontSize="14px">
-              アーカイブ視聴
-            </Button>
-          )) || (
-            <Text color="#3182CE" fontWeight="550" fontSize="17px">
-              上映前
-            </Text>
-          )
-        )}
-      </Td>
-    </Tr>
-  );
-};
-
-const UsedTicket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
-  // 티켓 정보
   const archiveEndTime = convertDate(userTicket.ticket.archiveEndTime, 'YMD');
 
   // 날짜 비교
@@ -90,26 +150,28 @@ const UsedTicket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   const today = dayjs(new Date());
   const archiving = today.isSameOrBefore(compareArchiveEndDate);
 
+  const compareStartDate = dayjs(userTicket.ticket.concertStartDate);
+  const compareEndDate = dayjs(userTicket.ticket.concertEndDate);
+  const screening = today.isBetween(compareStartDate, compareEndDate, 'second', '[]');
+
   console.log(archiving);
   return (
-    <Tr _hover={{ bg: archiving ? '#FAF5FF' : '#FFF5F7' }} cursor={archiving && 'pointer'}>
+    <Tr _hover={{ bg: screening ? '#F0FFF4' : (archiving && '#FAF5FF') || '#FFF5F7' }} cursor={archiving && 'pointer'}>
       <Td>
-        <Image w="120px" h="120px" src={S3_URL + userTicket.concert.coverImage} />
-      </Td>
-      <Td>????/??/??</Td>
-      <Td isNumeric>{userTicket.id}</Td>
-      <Td>{userTicket.concert.title}</Td>
-      <Td>{archiveEndTime + 'まで'}</Td>
-      <Td>{userTicket.ticket.runningTime}分</Td>
-      <Td>
-        {archiving ? (
-          <Button colorScheme="purple" size="sm" fontWeight="800" fontSize="14px">
-            アーカイブ視聴
+        {screening ? (
+          <Button onClick={useTicketHandler} colorScheme="green" size="sm" fontWeight="800" fontSize="14px" _hover={{ bg: 'green', color: 'white' }}>
+            コンサート入場
           </Button>
         ) : (
-          <Text color="#ED64A6" fontWeight="550" fontSize="17px">
-            アーカイブ期間満了
-          </Text>
+          (archiving && (
+            <Button colorScheme="purple" size="sm" fontWeight="800" fontSize="14px" _hover={{ bg: 'purple.500', color: 'white' }}>
+              アーカイブ視聴
+            </Button>
+          )) || (
+            <Button size="sm" color="white" bg="#4A5568" disabled variant="solid" borderRadius={15} _hover={{ bg: '#4A5568' }}>
+              アーカイブ期間満了
+            </Button>
+          )
         )}
       </Td>
     </Tr>
@@ -120,7 +182,7 @@ const ConcertTicket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   const router = useRouter();
   const isUsedId = parseInt(router.query.isUsedId as string, 10);
 
-  return <>{isUsedId ? <UsedTicket userTicket={userTicket} /> : <TicketDetail userTicket={userTicket} />}</>;
+  return <TicketInfo userTicket={userTicket} />;
 };
 
 export default ConcertTicket;
