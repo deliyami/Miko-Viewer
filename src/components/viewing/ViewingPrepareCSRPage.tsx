@@ -162,7 +162,8 @@ const ViewingPrepareCSRPage = () => {
       toastLog('error', 'myPeer error', '심각한 에러발생 로그창 확인.');
       console.error('handlePeerError', e.type, e);
       switch (e.type as string) {
-        case 'unavailable-id':
+        case 'unavailable-id': // id가 중복되었을 경우
+          myPeer.disconnect(); // reconnect를 위해 한번 disconnect를 할 필요가 있다.
           setPeerError('このIDで既に接続しているユーザーがいます。');
           break;
         default:

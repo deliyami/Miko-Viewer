@@ -5,6 +5,7 @@ import { curUserTicketState, enterRoomIdAsyncState, latestScoreState, myStreamSt
 import { useUser } from '@src/state/swr';
 import { DataConnectionEvent } from '@src/types/dto/DataConnectionEventType';
 import produce from 'immer';
+import { useRouter } from 'next/router';
 import { DataConnection, MediaConnection } from 'peerjs';
 import { FC, useCallback, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -23,6 +24,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
 
   const setLatestScoreState = useSetRecoilState(latestScoreState);
   const setPeerDataList = useSetRecoilState(peerDataListState);
+
+  const router = useRouter();
 
   const handleLeavePage = () => {
     console.log('withSocketPeerLayer - handleLeavePage');
@@ -137,7 +140,6 @@ const WithSocketEventLayout: FC = ({ children }) => {
     };
 
     const newUserCome = (otherPeerId: string, roomID: string, otherUserData: PeerDataInterface['data'], otherSocketId) => {
-      // console.log('newUserCome', otherPeerId, otherUserData.email);
       toastLog('info', `${otherUserData.name}がルームに入場しました。`);
       const peerIdDuplicateWithMe = otherPeerId === myPeerUniqueID;
       if (peerIdDuplicateWithMe) {
@@ -197,11 +199,19 @@ const WithSocketEventLayout: FC = ({ children }) => {
       );
     };
 
+    const shouldOutFromRoom = () => {
+      toastLog('info', 'concert ended', '방에서 나가야함.');
+      setTimeout(() => {
+        router.push('/');
+      }, 1000);
+    };
+
     socket.on('be-new-user-come', newUserCome);
     socket.on('be-broadcast-peer-id', getAnswerFromRoomBroadcast);
     socket.on('be-fail-enter-room', failEnterRoom);
     socket.on('be-user-left', userLeft);
     socket.on('be-send-user-score', getMyScore);
+    socket.on('be-go-out-room', shouldOutFromRoom);
 
     return () => {
       console.log('withSocketPeerLayer - useEffect 작동함');
@@ -210,6 +220,8 @@ const WithSocketEventLayout: FC = ({ children }) => {
         socket.off('be-broadcast-peer-id', getAnswerFromRoomBroadcast);
         socket.off('be-user-left', userLeft);
         socket.off('be-send-user-score', getMyScore);
+        socket.off('be-go-out-room', shouldOutFromRoom);
+
         myPeer.off('connection', peerOnDataConnection);
         myPeer.off('call', peerOnCall);
         handleLeavePage();

@@ -7,6 +7,7 @@ export const curUserTicketState = atom<UserTicket>({
   default: undefined,
   effects: [localStorageEffect('curUserTicket')],
 });
+
 export const enterTicketDataState = selector({
   key: 'enterConcert',
   get: ({ get }) => {

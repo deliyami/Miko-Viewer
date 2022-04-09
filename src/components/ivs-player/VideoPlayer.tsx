@@ -9,6 +9,7 @@ import { useIvsPlayer } from '@src/hooks/dynamicHooks';
 import { enterTicketDataState, isOnVideoAmbianceState, msgMetaDataState, quizMetaDataState, quizResultMetaDataState } from '@src/state/recoil';
 import { AllMetaData } from '@src/types/share';
 import * as ivs from 'amazon-ivs-player';
+import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useRef, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -88,8 +89,6 @@ const VideoPlayer: FC = () => {
           const qualities = player.current.getQualities();
           setSelectableQuality(qualities);
           player.current.setQuality(qualities[0], true); // 왜 이거 안해주면 버퍼링 오래 걸리지
-          player.current.setLiveLowLatencyEnabled(true);
-          player.current.play();
           break;
         case BUFFERING:
           console.log('NOW BUFFERING');
@@ -100,7 +99,11 @@ const VideoPlayer: FC = () => {
           toastLog('info', 'idle');
           break;
         case ENDED: // TODO 끝났을떄 로직
-          toastLog('info', 'ENDED');
+          if (dayjs(enterTicketData.concertEndDate).isAfter(Date.now())) {
+            toastLog('info', 'コンサートが終了しました。');
+          } else {
+            toastLog('error', '動画ストリーミングに問題が発生しています。');
+          }
           break;
         default:
           break;
