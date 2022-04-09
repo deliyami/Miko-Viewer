@@ -92,12 +92,12 @@ export const getStaticProps: GetStaticProps<{
   // NOTE  undefined를 구조부해 할당할려고 해서 에러 났었음.
   //  getStaticProps에 대해서는 서버 에러일때를 생각하고 에러 핸들링
   const newResult = await getDataFromLaravel<Pagination<Concert>>('/concerts', {
-    per_page: 4,
+    perPage: 4,
   });
 
   const topResult = await getDataFromLaravel<Pagination<Concert>>('/concerts', {
     sort: ['-sales_volume'],
-    per_page: 3,
+    perPage: 3,
   });
 
   return {
@@ -111,7 +111,6 @@ export const getStaticProps: GetStaticProps<{
 export default function HomePage({ newData, topData }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { data: userData } = useUser();
 
-  console.log(newData);
   return (
     <>
       <Head>

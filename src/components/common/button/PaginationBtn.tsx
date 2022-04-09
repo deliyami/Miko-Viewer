@@ -1,11 +1,11 @@
 import { Button, Center, Flex } from '@chakra-ui/react';
 import { Meta } from '@src/types/share/common';
-import { useRouter } from 'next/router';
+import { NextRouter, useRouter } from 'next/router';
 import { ComponentProps, FC } from 'react';
 
 type Props = {
   data: Meta;
-  url: string;
+  options?: Parameters<NextRouter['push']>[2];
 };
 
 const PageBtn: FC<{ text: number | string } & ComponentProps<typeof Button>> = ({ text, ...props }) => {
@@ -19,20 +19,30 @@ const PageBtn: FC<{ text: number | string } & ComponentProps<typeof Button>> = (
 const MAX_TOTAL_BTN = 11;
 const MAX_SIDE_BTN = Math.floor(MAX_TOTAL_BTN / 2);
 
-const PaginationBtn: FC<Props> = ({ data: { current_page, last_page }, url }) => {
+const PaginationBtn: FC<Props> = ({ data: { current_page, last_page }, options }) => {
   const router = useRouter();
   const [curPage, lastPage, startPage] = [current_page, last_page, 1];
 
   const onPageChangeHandler = page => {
-    router.push(url + `&page=${page}`, null, { scroll: false });
+    router.query.page = page + '';
+    router.push(router, null, { scroll: false, ...options });
   };
 
   const onBeforePageHandler = () => {
-    router.push(url + `&page=${curPage - 1}`, null, { scroll: false });
+    router.query.page = curPage - 1 + '';
+    router.push(router, null, { scroll: false, ...options });
   };
 
   const onNextPageHandler = () => {
-    router.push(url + `&page=${curPage + 1}`, null, { scroll: false });
+    router.query.page = curPage + 1 + '';
+    router.push(router, null, { scroll: false, ...options });
+  };
+
+  const handleToScrollInto = () => {
+    const el = document.getElementById('scroll-into');
+    if (el) {
+      el.scrollIntoView();
+    }
   };
 
   const leftBtnNum = Math.max(curPage - startPage, 0);
@@ -40,7 +50,7 @@ const PaginationBtn: FC<Props> = ({ data: { current_page, last_page }, url }) =>
 
   return (
     <Flex justifyContent="center">
-      <Flex justifyContent="center" columnGap="10px">
+      <Flex justifyContent="center" columnGap="10px" onClick={handleToScrollInto}>
         <Center width="30px">{curPage !== startPage && <PageBtn text="<" onClick={onBeforePageHandler} />}</Center>
         <Center flexGrow="1" gap="5px">
           {new Array(leftBtnNum)
