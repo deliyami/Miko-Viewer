@@ -36,7 +36,7 @@ const SearchBox = () => {
   };
   return (
     <HStack>
-      <InputGroup size="md" maxW={{ xl: '120vh' }}>
+      <InputGroup size="md" maxW={{ xl: '115vh' }}>
         <InputLeftElement>
           <SearchIcon pointerEvents="none" color="gray.300" />
         </InputLeftElement>
@@ -60,7 +60,7 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
   const result = await getDataFromLaravel<Pagination<Concert>>(URL_CONCERTS, {
     filter: categoryId ? [['category_id', categoryId]] : null,
     page: parseInt(page, 10),
-    per_page: 9,
+    per_page: 12,
     search,
   });
 
@@ -103,8 +103,8 @@ export default function ConcertPage({ data, categoryId }: InferGetServerSideProp
           {show && <Category />}
         </Flex>
         {data ? (
-          <VStack spacing={5}>
-            <Box minW={{ xl: '120vh' }}>
+          <VStack spacing={10}>
+            <Box minW={{ xl: '115vh' }}>
               <SimpleGrid columns={[2, null, 3]} spacing="40px">
                 <ConcertList data={data.data} />
               </SimpleGrid>

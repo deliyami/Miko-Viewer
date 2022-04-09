@@ -3,6 +3,7 @@ import {
   Box,
   BoxProps,
   CloseButton,
+  Collapse,
   Drawer,
   DrawerContent,
   Flex,
@@ -17,7 +18,7 @@ import {
   Text,
   useColorModeValue,
   useDisclosure,
-  VStack,
+  VStack
 } from '@chakra-ui/react';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiHome } from '@react-icons/all-files/fi/FiHome';
@@ -29,8 +30,9 @@ import { S3_URL } from '@src/const';
 import { useUser } from '@src/state/swr';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { ReactText, useState } from 'react';
+import React, { ReactText } from 'react';
 import { LoginBtn, LogoutBtn } from '../common/button/LogoutBtn';
+
 
 interface LinkItemProps {
   name: string;
@@ -106,7 +108,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
     >
       <IconButton display={{ base: 'flex', md: 'none' }} onClick={onOpen} variant="outline" aria-label="open menu" icon={<FiMenu />} />
       <HStack display={{ base: 'flex', md: 'none' }}>
-        <Image boxSize="60px" src={S3_URL + 'logo/KakaoTalk_Photo_2022-04-05-16-28-12+003.png'} alt="miko-logo" />
+        <Image boxSize="60px" src="/logo/logo3.png" alt="miko-logo" />
         <Text fontSize="2xl" fontWeight="bold">
           Miko
         </Text>
@@ -147,13 +149,11 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
-  const [isShow, setIsShow] = useState(false);
   const router = useRouter();
   const nowPath = router.pathname as string;
-
-  const ShowSubLinks = () => {
-    setIsShow(!isShow);
-  };
+  const { data: user } = useUser();
+  // console.log(router.pathname);
+  const { isOpen, onToggle } = useDisclosure();
 
   return (
     <Box
@@ -169,7 +169,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <HStack>
-          <Image boxSize="60px" src={S3_URL + 'logo/KakaoTalk_Photo_2022-04-05-16-28-12+003.png'} alt="miko-logo" />
+          <Image boxSize="60px" src="/logo/logo3.png" alt="miko-logo" />
           <Text fontSize="2xl" fontWeight="bold">
             Miko
           </Text>
@@ -186,11 +186,13 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
           </a>
         </Link>
       ))}
-      <NavItem onClick={ShowSubLinks} icon={FiStar}>
-        My Page
-      </NavItem>
-      {isShow &&
-        SubLinkItems.map(link => (
+      {user && (
+        <NavItem onClick={onToggle} icon={FiStar}>
+          My Page
+        </NavItem>
+      )}
+      <Collapse in={isOpen} animateOpacity>
+        {SubLinkItems.map(link => (
           <Link href={link.url} key={link.name}>
             <a>
               <NavItem color={nowPath === link.url && 'cyan.400'} icon={link.icon} pl={12}>
@@ -199,6 +201,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
             </a>
           </Link>
         ))}
+      </Collapse>
     </Box>
   );
 };

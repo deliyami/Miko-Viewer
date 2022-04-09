@@ -47,7 +47,7 @@ const BackdropFilters = () => {
   );
 };
 
-const NewList: FC<{ data: Concert }> = ({ data }) => {
+const NewList: FC<{ data: Concert[] }> = ({ data }) => {
   return (
     <Box>
       <Flex py={3} mt={3}>
@@ -70,7 +70,7 @@ const NewList: FC<{ data: Concert }> = ({ data }) => {
   );
 };
 
-const ComingList: FC<{ data: Concert }> = ({ data }) => {
+const TopList: FC<{ data: Concert[] }> = ({ data }) => {
   return (
     <Box>
       <Flex py={3} mt={3}>
@@ -88,6 +88,7 @@ const ComingList: FC<{ data: Concert }> = ({ data }) => {
 // TIP 무조건 서버에서 실행됨, Dev모드에서는 매번 실행
 export const getStaticProps: GetStaticProps<{
   newData: Concert[];
+  topData: Concert[];
 }> = async context => {
   // NOTE  undefined를 구조부해 할당할려고 해서 에러 났었음.
   //  getStaticProps에 대해서는 서버 에러일때를 생각하고 에러 핸들링
@@ -125,7 +126,7 @@ export default function HomePage({ newData, topData }: InferGetStaticPropsType<t
             <NewList data={newData} />
           </Box>
           <Box>
-            <ComingList data={topData} />
+            <TopList data={topData} />
           </Box>
         </Box>
       </Flex>
