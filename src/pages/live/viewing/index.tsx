@@ -3,6 +3,7 @@ import { Container } from '@src/components/Container';
 import ViewingLayout from '@src/layout/ViewingLayout';
 import { curUserTicketState } from '@src/state/recoil';
 import dayjs from 'dayjs';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -15,7 +16,42 @@ const DynamicViewingPage = dynamic(() => import('../../../components/viewing/Vie
   suspense: true,
 });
 
-const ViewingPage = () => {
+type Data = {};
+
+export const getServerSideProps: GetServerSideProps<Data> = async context => {
+  const userTicketId = context.req.cookies.userTickId;
+
+  // const { data: data2 } = await axiosI.get('test');
+  // console.log('laravel', data2);
+
+  // const { data } = await axiosI
+  //   .get<{ isOk: boolean }>('/test', { baseURL: 'http://172.30.16.1:3001/api', headers: { 'Content-Type': 'application/json', Accept: 'application/json' } })
+  //   .catch(err => {
+  //     console.error(err);
+  //     throw err;
+  //   });
+
+  /*  const { data } = await axios.post<{ isOk: boolean }>('http://localhost:3001' + '/room/check-ticket', { userTicketId }, { withCredentials: true }).catch(err => {
+    console.error(err);
+    throw err;
+  });
+ */
+
+  // if (!data?.isOk) {
+  //   return {
+  //     redirect: {
+  //       permanent: false,
+  //       destination: '/',
+  //     },
+  //   };
+  // }
+
+  return {
+    props: {},
+  };
+};
+
+export default function ViewingPage(): InferGetServerSidePropsType<typeof getServerSideProps> {
   const userTicket = useRecoilValue(curUserTicketState);
   const router = useRouter();
   const handleDenyAccess = () => {
@@ -54,10 +90,8 @@ const ViewingPage = () => {
       <DynamicViewingPage />
     </Container>
   );
-};
+}
 
 ViewingPage.getLayout = function getLayout(page: ReactElement) {
   return <ViewingLayout>{page}</ViewingLayout>;
 };
-
-export default ViewingPage;

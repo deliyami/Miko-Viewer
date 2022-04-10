@@ -18,9 +18,9 @@ const PER_PAGE = 12;
 type Data = {
   iniData?: Pagination<Concert>;
   initialParam: {
-    categoryId: number;
-    page: number;
-    search: string;
+    categoryId?: number;
+    page?: number;
+    search?: string;
   };
 };
 
@@ -61,14 +61,15 @@ const SearchBox = () => {
 
 export const getServerSideProps: GetServerSideProps<Data> = async context => {
   const URL_CONCERTS = '/concerts';
+
   const categoryId = parseInt(context.query.category_id as string, 10);
   const page = parseInt(context.query.page as string, 10);
   const search = context.query.search as string;
 
   const result = await getDataFromLaravel<Pagination<Concert>>(URL_CONCERTS, {
     filter: categoryId ? [['category_id', categoryId]] : null,
-    page: page,
     perPage: PER_PAGE,
+    page,
     search,
   });
 
@@ -76,8 +77,8 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
     props: {
       iniData: result?.data ?? null,
       initialParam: {
-        categoryId,
-        page,
+        ...(categoryId ? { categoryId } : {}),
+        ...(page ? { page } : {}),
         ...(search ? { search } : {}),
       },
     },
@@ -94,14 +95,14 @@ export default function ConcertPage({ iniData, initialParam }: InferGetServerSid
   const { data: concertsData } = usePageLaravel('/concerts', query, { fallbackData: iniData });
 
   useEffect(() => {
-    const param = parseInt(router.query.page as string);
-    if (isNaN(param)) return setPage(null);
+    const param = parseInt(router.query.page as string, 10);
+    if (Number.isNaN(param)) return setPage(null);
     setPage(param);
   }, [router.query.page]);
 
   useEffect(() => {
-    const param = parseInt(router.query.category_id as string);
-    if (isNaN(param)) return setCategoryId(null);
+    const param = parseInt(router.query.category_id as string, 10);
+    if (Number.isNaN(param)) return setCategoryId(null);
     setCategoryId(param);
   }, [router.query.category_id]);
 
