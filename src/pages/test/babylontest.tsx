@@ -1,6 +1,6 @@
 import { Button, Center, Input, VStack } from '@chakra-ui/react';
 import { NEXT_URL } from '@src/const';
-import { model } from '@src/state/recoil/modelState';
+import { model } from '@src/state/recoil/viewing/avatar/modelState';
 import * as BABYLON from 'babylonjs';
 import 'babylonjs-loaders';
 import produce from 'immer';
@@ -37,7 +37,8 @@ const babylontest = () => {
           const camera = new BABYLON.ArcRotateCamera('camera', Math.PI / 2, Math.PI / 2.5, 10, new BABYLON.Vector3(0, 0, 0), scene);
 
           camera.setTarget(new BABYLON.Vector3(0, 2.5, 0));
-          camera.setPosition(new BABYLON.Vector3(0, 1.8, 4.7));
+          // camera.setPosition(new BABYLON.Vector3(0, 1.8, 4.7));
+          camera.setPosition(new BABYLON.Vector3(0, 2, 6));
 
           // 카메라 컨트롤러, 모델뜨는 canvas 드래그로 조절 가능
           camera.attachControl(true);
@@ -66,9 +67,20 @@ const babylontest = () => {
           //     console.log('this is ground');
           //     myDynamicTexture.update();
           //   };
+          // https://raw.githubusercontent.com/:owner/:repo/:branch/:file_path
+          // https://raw.githubusercontent.com/master/babylonjs/public/resources/models/proseka/proseka.glb
 
-          BABYLON.SceneLoader.ImportMesh('', `${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`, '', scene, (...args) => {
+          // BABYLON.SceneLoader.ImportMesh('', `${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`, '', scene, (...args) => {
+          BABYLON.SceneLoader.ImportMesh('', `${NEXT_URL}/resources/babylonjs/models/proseka/proseka_test.glb`, '', scene, (...args) => {
+            // BABYLON.SceneLoader.ImportMesh('', 'https://raw.githubusercontent.com/deliyami/babylonjs/master/public/resources/models/proseka/proseka.glb', '', scene, (...args) => {
             loadedRef.current = args;
+            console.log('after', args);
+            // scene.debugLayer.show({
+            //   embedMode: true,
+            // });
+            // for(let j = 0;j<args[0].length;j++){
+            //     args[0][j].
+            // }
             /*
                 args === import된 model의 정보 array
                 args[0] === BABYLON.AbstractMesh[] (BABYLON.Mesh[]랑 거의 비슷, 형변환해도 문제 없다고 공식 업데이트?문서에 적혀있음) 피부, Mesh. 
@@ -85,18 +97,46 @@ const babylontest = () => {
 
                 scene에서 material이 몇번째 material이 args[0] 이랑 짝지어지는지 확인해봐야함
             */
+            args[4][18].rotate(new BABYLON.Vector3(0, 0, 1), (Math.PI * 7) / 36, 2);
+            args[4][22].rotate(new BABYLON.Vector3(0, 0, 1), -(Math.PI * 7) / 36, 2);
 
-            args[4][27].rotate(new BABYLON.Vector3(0, 1, 0), Math.PI, 2);
+            // args[4][27].rotate(new BABYLON.Vector3(0, 1, 0), Math.PI, 2);
             const borns = args[4];
             const originalBorns: BABYLON.Quaternion[] = [];
             for (let j = 0; j < args[4].length; j++) {
               originalBorns[j] = args[4][j].rotationQuaternion?.clone();
             }
-            args[4][14].rotate(new BABYLON.Vector3(1, 0, 0), -Math.PI / 2, 2);
-            const animations = scene.animationGroups;
-            for (let j = 0; j < animations.length; j++) {
-              animations[j].stop();
-            }
+
+            // const animations = scene.animationGroups;
+            // for (let j = 0; j < animations.length; j++) {
+            //   animations[j].stop();
+            // }
+
+            const createLights = (borns: BABYLON.TransformNode[], index: number, r: number, g: number, b: number, d: number, scene: BABYLON.Scene) => {
+              const born = borns[index]; // 15
+
+              const light = new BABYLON.PointLight(`${index}_point_light`, new BABYLON.Vector3(0, 0, 0.5), scene);
+              light.parent = born;
+              light.intensity = 0.3;
+              light.range = 5;
+              light.shadowMinZ = 0.2;
+              light.shadowMaxZ = 5;
+              light.diffuse = new BABYLON.Color3(r / d, g / d, b / d);
+              light.specular = new BABYLON.Color3(r / d, g / d, b / d);
+            };
+
+            const r = 244;
+            const g = 152;
+            const b = 89;
+            const d = 255;
+
+            scene.materials[10] = new BABYLON.StandardMaterial('hand_light', scene);
+            scene.materials[10].emissiveColor = new BABYLON.Color3(r / d, g / d, b / d);
+            scene.meshes[11].material = scene.materials[10];
+
+            createLights(borns, 15, r, g, b, d, scene);
+            createLights(borns, 20, r, g, b, d, scene);
+
             setAvatar(
               produce(draft => {
                 draft[0] = {
@@ -172,13 +212,14 @@ const babylontest = () => {
               // const ground = groundRef.current;
 
               if (typeof inputRef.current.value === 'undefined') return;
-              const mesh = loadedRef.current[0][inputRef.current.value];
+              const mesh = sceneRef.current.meshes[inputRef.current.value];
+              console.log('this is scene', sceneRef.current);
               const mat = new BABYLON.StandardMaterial('mat', sceneRef.current);
               // mat.diffuseColor = new BABYLON.Color3(230 / 255, 0, 200 / 255);
-              let removeMaterial;
-              if (sceneRef.current.materials[12]) {
-                removeMaterial = sceneRef.current.materials.splice(12, 1);
-              }
+              //   let removeMaterial;
+              //   if (sceneRef.current.materials[12]) {
+              //     removeMaterial = sceneRef.current.materials.splice(12, 1);
+              //   }
               const myDynamicTexture = new BABYLON.DynamicTexture('ground', 300, sceneRef.current, false);
               // ground.material = mat;
               mesh.material = mat;
@@ -193,12 +234,25 @@ const babylontest = () => {
                 const ctx = myDynamicTexture.getContext();
                 // ctx.drawImage(img, 0, 0, 300, 300, 0, 0, 30, 6);
                 ctx.drawImage(img, 0, 0, 300, 300);
-                console.log('this is ground');
                 myDynamicTexture.update();
               };
             }}
           >
             사진 적용
+          </Button>
+
+          <Button
+            onClick={() => {
+              const meshes = sceneRef.current.meshes; // 2~12
+              const materials = sceneRef.current.materials; // 1~10
+              console.log(meshes);
+              for (let i = 1; i < 11; i++) {
+                meshes[i + 1].material = materials[i];
+                if (i >= 11) break;
+              }
+            }}
+          >
+            texture reset
           </Button>
           <Input type="number" placeholder="R color" ref={rRef} defaultValue={255}></Input>
           <Input type="number" placeholder="G color" ref={gRef} defaultValue={255}></Input>
@@ -215,7 +269,7 @@ const babylontest = () => {
               temp.material = mat;
               tmpMaterialRef.current = mat;
               // ambientColor: Color3 === (ambient 주위의) 뭐지 이거 emissive랑 뭐가 다르니?
-              // diffuseColor: Color3 === (diffuse 분산시키다, 확산되다) 반사광이였나? 음영진곳에 light?들어가는 기법...
+              // diffuseColor: Color3 === (diffuse 분산시키다, 확산되다) 반사광이였나? 음영진곳에 light?들어가는 기법... 아닌가 default깔리는 색상이나 texture인가
               // specularColor: Color3 === (specular 거울같이 비추는, 반사하는) 하이라이트
               // emissiveColor: Color3 === (emissive 방사성의, 방사된) 전체적인 light? 색상,
               const r = rRef.current.value;
@@ -225,15 +279,37 @@ const babylontest = () => {
 
               mat.emissiveColor = new BABYLON.Color3(r / d, g / d, b / d);
 
-              const born = loadedRef.current[4][17];
+              const born = loadedRef.current[4][13]; // 9 13
 
-              var light = new BABYLON.PointLight('light', born.position, sceneRef.current);
-              light.parent = meshes[10];
+              var light = new BABYLON.PointLight('pointlight', new BABYLON.Vector3(0, 2, 2), sceneRef.current);
+              //   var light = new BABYLON.PointLight('light', new BABYLON.Vector3(born.absolutePosition.x, born.absolutePosition.y, born.absolutePosition.z), sceneRef.current);
+              //   const light = new BABYLON.HemisphericLight('bright', new BABYLON.Vector3(0, 2, -1), sceneRef.current);
+              light.parent = born;
+
+              const mesh = loadedRef.current[0][1] as BABYLON.AbstractMesh;
+              light.range = 5;
+              light.shadowMinZ = 0.2;
+              light.shadowMaxZ = 5;
               light.diffuse = new BABYLON.Color3(r / d, g / d, b / d);
               light.specular = new BABYLON.Color3(r / d, g / d, b / d);
+              var sphere = BABYLON.MeshBuilder.CreateSphere('sphere', {}, sceneRef.current);
+              sphere.position.y = 4;
             }}
           >
             봉 색상 적용하기
+          </Button>
+          <Button
+            onClick={e => {
+              e.preventDefault();
+              //   draft[0] = {
+              //     borns,
+              //     originalBorns,
+              //     scene,
+              //   };
+              avatar[0].borns[14].rotate(new BABYLON.Vector3(1, 0, 0), Math.PI / 2, 2);
+            }}
+          >
+            팔 회전
           </Button>
           <Button
             onClick={e => {

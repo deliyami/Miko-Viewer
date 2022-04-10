@@ -64,7 +64,7 @@ export const Peer3DAvatar = memo<Props>(({ peer }) => {
         </AvatarMenu>
         {isOnModel && (
           <Box overflow="hidden" position="relative" pointerEvents="none">
-            <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka.glb`} peerId={uuid} antialias></AvatarModel>
+            <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka_tmp.glb`} peerId={uuid} antialias></AvatarModel>
           </Box>
         )}
         <Box width="full" position="absolute" top="0" h="2rem" color="white">

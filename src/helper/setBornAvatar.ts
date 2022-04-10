@@ -68,15 +68,15 @@ const bornTurn = (transBorn: BABYLON.TransformNode[], bornNum: number, kalidoRig
 
 const faceTurn = (transBorn: BABYLON.TransformNode[], faceFront: number, faceLeft: number, faceRight: number) => {
   const avg = (faceLeft + faceRight) / 2;
-  transBorn[7].rotate(new BABYLON.Vector3(0, 1, 0), -(Math.atan2(avg, faceFront) - Math.PI / 4) * 10, 2);
+  transBorn[12].rotate(new BABYLON.Vector3(0, 1, 0), -(Math.atan2(avg, faceFront) - Math.PI / 4) * 10, 2);
 };
 
 export const setBorn = (userBorns: Model, peerId: string, poseRig: Kalidokit.TPose, faceRig: FaceDirection<'left' | 'center' | 'right', number>) => {
   // const userBorns = model[peerId];
   // AVATAR 적절하게 가공하는 곳
   bornReset(userBorns.borns, userBorns.originalBorns);
-  bornTurn(userBorns.borns, 15, poseRig, 0);
-  bornTurn(userBorns.borns, 11, poseRig, 1);
+  bornTurn(userBorns.borns, 22, poseRig, 0);
+  bornTurn(userBorns.borns, 17, poseRig, 1);
   faceTurn(userBorns.borns, faceRig.center, faceRig.left, faceRig.right);
   userBorns.scene.render();
 };
