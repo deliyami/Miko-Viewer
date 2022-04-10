@@ -2,7 +2,7 @@ export * from './addDoneToRoom';
 export * from './convertDate';
 export * from './getDataFromLaravel';
 export * from './sendToAllPeers';
-export * from './setBornAvatar';
+export * from './setBoneAvatar';
 export * from './setCookie';
 export * from './setMotionToAvatar';
 export * from './showChatToRoom';

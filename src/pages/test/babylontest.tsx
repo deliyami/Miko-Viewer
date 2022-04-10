@@ -101,10 +101,10 @@ const babylontest = () => {
             args[4][22].rotate(new BABYLON.Vector3(0, 0, 1), -(Math.PI * 7) / 36, 2);
 
             // args[4][27].rotate(new BABYLON.Vector3(0, 1, 0), Math.PI, 2);
-            const borns = args[4];
-            const originalBorns: BABYLON.Quaternion[] = [];
+            const bones = args[4];
+            const originalBones: BABYLON.Quaternion[] = [];
             for (let j = 0; j < args[4].length; j++) {
-              originalBorns[j] = args[4][j].rotationQuaternion?.clone();
+              originalBones[j] = args[4][j].rotationQuaternion?.clone();
             }
 
             // const animations = scene.animationGroups;
@@ -112,11 +112,11 @@ const babylontest = () => {
             //   animations[j].stop();
             // }
 
-            const createLights = (borns: BABYLON.TransformNode[], index: number, r: number, g: number, b: number, d: number, scene: BABYLON.Scene) => {
-              const born = borns[index]; // 15
+            const createLights = (bones: BABYLON.TransformNode[], index: number, r: number, g: number, b: number, d: number, scene: BABYLON.Scene) => {
+              const bone = bones[index]; // 15
 
               const light = new BABYLON.PointLight(`${index}_point_light`, new BABYLON.Vector3(0, 0, 0.5), scene);
-              light.parent = born;
+              light.parent = bone;
               light.intensity = 0.3;
               light.range = 5;
               light.shadowMinZ = 0.2;
@@ -134,14 +134,14 @@ const babylontest = () => {
             scene.materials[10].emissiveColor = new BABYLON.Color3(r / d, g / d, b / d);
             scene.meshes[11].material = scene.materials[10];
 
-            createLights(borns, 15, r, g, b, d, scene);
-            createLights(borns, 20, r, g, b, d, scene);
+            createLights(bones, 15, r, g, b, d, scene);
+            createLights(bones, 20, r, g, b, d, scene);
 
             setAvatar(
               produce(draft => {
                 draft[0] = {
-                  borns,
-                  originalBorns,
+                  bones,
+                  originalBones,
                   scene,
                 };
               }),
@@ -279,12 +279,12 @@ const babylontest = () => {
 
               mat.emissiveColor = new BABYLON.Color3(r / d, g / d, b / d);
 
-              const born = loadedRef.current[4][13]; // 9 13
+              const bone = loadedRef.current[4][13]; // 9 13
 
               var light = new BABYLON.PointLight('pointlight', new BABYLON.Vector3(0, 2, 2), sceneRef.current);
-              //   var light = new BABYLON.PointLight('light', new BABYLON.Vector3(born.absolutePosition.x, born.absolutePosition.y, born.absolutePosition.z), sceneRef.current);
+              //   var light = new BABYLON.PointLight('light', new BABYLON.Vector3(bone.absolutePosition.x, bone.absolutePosition.y, bone.absolutePosition.z), sceneRef.current);
               //   const light = new BABYLON.HemisphericLight('bright', new BABYLON.Vector3(0, 2, -1), sceneRef.current);
-              light.parent = born;
+              light.parent = bone;
 
               const mesh = loadedRef.current[0][1] as BABYLON.AbstractMesh;
               light.range = 5;
@@ -302,11 +302,11 @@ const babylontest = () => {
             onClick={e => {
               e.preventDefault();
               //   draft[0] = {
-              //     borns,
-              //     originalBorns,
+              //     bones,
+              //     originalBones,
               //     scene,
               //   };
-              avatar[0].borns[14].rotate(new BABYLON.Vector3(1, 0, 0), Math.PI / 2, 2);
+              avatar[0].bones[14].rotate(new BABYLON.Vector3(1, 0, 0), Math.PI / 2, 2);
             }}
           >
             팔 회전

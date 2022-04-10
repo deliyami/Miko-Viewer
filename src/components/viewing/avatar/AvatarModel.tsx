@@ -37,21 +37,21 @@ export const AvatarModel: FC<{
             args[4][18].rotate(new BABYLON.Vector3(0, 0, 1), (Math.PI * 7) / 36, 2);
             args[4][23].rotate(new BABYLON.Vector3(0, 0, 1), -(Math.PI * 7) / 36, 2);
             // args[4][27].rotate(new BABYLON.Vector3(0, 1, 0), Math.PI, 2);
-            const borns = args[4];
-            const originalBorns: BABYLON.Quaternion[] = [];
+            const bones = args[4];
+            const originalBones: BABYLON.Quaternion[] = [];
             for (let j = 0; j < args[4].length; j++) {
-              originalBorns[j] = args[4][j].rotationQuaternion?.clone();
+              originalBones[j] = args[4][j].rotationQuaternion?.clone();
             }
             const animations = scene.animationGroups;
             for (let j = 0; j < animations.length; j++) {
               animations[j].stop();
             }
 
-            const createLights = (borns: BABYLON.TransformNode[], index: number, r: number, g: number, b: number, d: number, scene: BABYLON.Scene) => {
-              const born = borns[index]; // 15
+            const createLights = (bones: BABYLON.TransformNode[], index: number, r: number, g: number, b: number, d: number, scene: BABYLON.Scene) => {
+              const bone = bones[index]; // 15
 
               const light = new BABYLON.PointLight(`${index}_point_light`, new BABYLON.Vector3(0, 0, 0.5), scene);
-              light.parent = born;
+              light.parent = bone;
               light.intensity = 0.3;
               light.range = 5;
               light.shadowMinZ = 0.2;
@@ -69,14 +69,14 @@ export const AvatarModel: FC<{
             scene.materials[10].emissiveColor = new BABYLON.Color3(r / d, g / d, b / d);
             scene.meshes[11].material = scene.materials[10];
 
-            createLights(borns, 15, r, g, b, d, scene);
-            createLights(borns, 20, r, g, b, d, scene);
+            createLights(bones, 15, r, g, b, d, scene);
+            createLights(bones, 20, r, g, b, d, scene);
 
             setModel(
               produce(draft => {
                 draft[peerId] = {
-                  borns,
-                  originalBorns,
+                  bones,
+                  originalBones,
                   scene,
                 };
               }),

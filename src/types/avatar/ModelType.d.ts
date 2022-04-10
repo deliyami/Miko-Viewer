@@ -1,8 +1,8 @@
 import * as BABYLON from 'babylonjs';
 
 type Model = {
-  borns: BABYLON.TransformNode[];
-  originalBorns: BABYLON.Quaternion[];
+  bones: BABYLON.TransformNode[];
+  originalBones: BABYLON.Quaternion[];
   scene: BABYLON.Scene;
 };
 export type { Model };

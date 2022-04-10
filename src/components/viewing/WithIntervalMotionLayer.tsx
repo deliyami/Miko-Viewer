@@ -1,4 +1,4 @@
-import { sendToAllPeers, setBorn } from '@src/helper';
+import { sendToAllPeers, setBone } from '@src/helper';
 import { latestMotionState, model, peerDataListState } from '@src/state/recoil';
 import { roomMemberMotions, sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { useUser } from '@src/state/swr';
@@ -42,7 +42,7 @@ export const WithIntervalMotionLayer: FC = ({ children }) => {
             const newMotion = roomMemberMotions[key];
             const userModel = modelState[key];
             if (newMotion && userModel && key !== user.uuid) {
-              setBorn(userModel, key, newMotion.pose, newMotion.face);
+              setBone(userModel, key, newMotion.pose, newMotion.face);
               draft[key] = newMotion;
               delete roomMemberMotions[key];
             }

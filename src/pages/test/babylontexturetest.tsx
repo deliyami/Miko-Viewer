@@ -101,10 +101,10 @@ const babylontest = () => {
             args[4][22].rotate(new BABYLON.Vector3(0, 0, 1), -(Math.PI * 7) / 36, 2);
 
             // args[4][27].rotate(new BABYLON.Vector3(0, 1, 0), Math.PI, 2);
-            const borns = args[4];
-            const originalBorns: BABYLON.Quaternion[] = [];
+            const bones = args[4];
+            const originalBones: BABYLON.Quaternion[] = [];
             for (let j = 0; j < args[4].length; j++) {
-              originalBorns[j] = args[4][j].rotationQuaternion?.clone();
+              originalBones[j] = args[4][j].rotationQuaternion?.clone();
             }
 
             // for (let j = 0; j < scene.materials.length; j++) {
@@ -137,10 +137,10 @@ const babylontest = () => {
 
             mat.emissiveColor = new BABYLON.Color3(r / d, g / d, b / d);
 
-            const born = borns[15]; // 9 13
+            const bone = bones[15]; // 9 13
 
             const light = new BABYLON.PointLight('pointlight', new BABYLON.Vector3(0, 0, 0.5), sceneRef.current);
-            light.parent = born;
+            light.parent = bone;
             light.intensity = 0.3;
             light.range = 5;
             light.shadowMinZ = 0.2;
@@ -156,8 +156,8 @@ const babylontest = () => {
             setAvatar(
               produce(draft => {
                 draft[0] = {
-                  borns,
-                  originalBorns,
+                  bones,
+                  originalBones,
                   scene,
                 };
               }),
@@ -223,12 +223,12 @@ const babylontest = () => {
             onClick={e => {
               e.preventDefault();
               //   draft[0] = {
-              //     borns,
-              //     originalBorns,
+              //     bones,
+              //     originalBones,
               //     scene,
               //   };
 
-              avatar[0].borns[14].rotate(new BABYLON.Vector3(1, 0, 0), Math.PI / 2, 2);
+              avatar[0].bones[14].rotate(new BABYLON.Vector3(1, 0, 0), Math.PI / 2, 2);
             }}
           >
             팔 회전

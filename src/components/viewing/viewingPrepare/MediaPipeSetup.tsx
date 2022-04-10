@@ -1,6 +1,6 @@
 import * as cam from '@mediapipe/camera_utils';
 import { Results } from '@mediapipe/pose';
-import { setBorn, toastLog } from '@src/helper';
+import { setBone, toastLog } from '@src/helper';
 import { isOnMediaPipeState, latestMotionState, model, myStreamState, peerDataListState } from '@src/state/recoil';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
 import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
@@ -38,8 +38,8 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
         /* eslint-disable */
         modelState &&
         modelState[myPeerId] &&
-        modelState[myPeerId].borns &&
-        modelState[myPeerId].originalBorns &&
+        modelState[myPeerId].bones &&
+        modelState[myPeerId].originalBones &&
         modelState[myPeerId].scene &&
         results &&
         results.poseLandmarks &&
@@ -56,8 +56,8 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
           left: results.poseLandmarks[7].x,
           right: results.poseLandmarks[8].x,
         };
-        // 적절하게 render 호출하는 메소드 setBorn
-        setBorn(modelState[myPeerId], myPeerId, poseRig, faceRig);
+        // 적절하게 render 호출하는 메소드 setBone
+        setBone(modelState[myPeerId], myPeerId, poseRig, faceRig);
         if (peers && sendMotionForFrames) {
           const myMotion = { pose: poseRig, face: faceRig };
           sendMotionForFrames.setMotionStatus(myMotion);
