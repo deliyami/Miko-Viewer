@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Script from 'next/script';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import LottieVideoPlay from '../lottie/lottieVideoPlay';
+import LottieVideoPlay from '../lottie/LottieVideoPlay';
 import ViewingCSRPage from './ViewingCSRPage';
 import MediaPipeSetup from './viewingPrepare/MediaPipeSetup';
 
@@ -31,7 +31,7 @@ const ViewingPrepareCSRPage = () => {
   const [streamError, setStreamError] = useRecoilState(streamErrorState);
   const [isReadyPeer, setIsReadyPeer] = useState(false);
   const [peerError, setPeerError] = useRecoilState(peerErrorState);
-  const [isReadyIvs, setIsReadyIvs] = useState(window.IVSPlayer ? true : false); // script 로드는 이미 로드된 상태면 fire되지 않음.
+  const [isReadyIvs, setIsReadyIvs] = useState(!!window.IVSPlayer); // script 로드는 이미 로드된 상태면 fire되지 않음.
   const [ivsError, setIvsError] = useRecoilState(ivsErrorState);
   const prepareAnimationDuration = useRecoilValue(prepareAnimationDurationState);
 
