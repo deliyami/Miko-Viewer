@@ -1,10 +1,9 @@
 import { fetcher } from '@src/state/fetcher';
-import { CommonDataResponse, CommonFSW, Pagination } from '@src/types/share/common';
+import { CommonDataResponse, CommonFindId, CommonFSW, Pagination } from '@src/types/share/common';
 import { Concert } from '@src/types/share/Concert';
 import { Ticket } from '@src/types/share/Ticket';
 import { UserTicket } from '@src/types/share/UserTicket';
 import useSWR, { SWRConfiguration } from 'swr';
-import { CommonFindId } from './../../types/share/common/index.d';
 import { createFSWQueryString } from './helper/createQueryStringKey';
 import laggy from './middleware/laggy';
 
@@ -14,12 +13,13 @@ import laggy from './middleware/laggy';
 type DataTypeDict = {
   '/concerts': Concert;
   '/tickets': Ticket;
-  '/userTickets': UserTicket;
+  '/user_tickets': UserTicket;
 };
 
 export const usePageLaravel = <K extends keyof DataTypeDict, T = DataTypeDict[K], PT = Pagination<T>>(url: K, query?: CommonFSW, option?: SWRConfiguration<PT>) => {
   let aUrl = url + '?';
-  query && (aUrl += createFSWQueryString(query));
+  aUrl += query ? createFSWQueryString(query) : '';
+  // query && (aUrl += createFSWQueryString(query));
 
   return useSWR<PT>(query ? aUrl : null, fetcher, {
     suspense: true,
@@ -35,7 +35,7 @@ export const useSingleLaravel = <K extends keyof DataTypeDict, T = DataTypeDict[
   option?: SWRConfiguration<CT>,
 ) => {
   let aUrl = `${url}/${id}`;
-  query && (aUrl += createFSWQueryString(query));
+  aUrl += query ? createFSWQueryString(query) : '';
 
   return useSWR<CT>(query ? aUrl : null, fetcher, {
     suspense: true,

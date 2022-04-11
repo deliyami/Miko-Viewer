@@ -27,15 +27,14 @@ import { Concert, Ticket } from '@src/types/share';
 import { Pagination } from '@src/types/share/common';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import React, { FC, ReactElement, useState } from 'react';
+import React, { FC, ReactElement, useMemo, useState } from 'react';
 
 type Data = {
-  concert?: Pagination<Concert>;
+  concert?: Pagination<Concert>['data'];
   tickets?: Pagination<Ticket>;
 };
 
 const TicketTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
-  const today = new Date();
   const [tabNum, setTabNum] = useState(0);
 
   const onClickSale = clickId => {
@@ -45,6 +44,23 @@ const TicketTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
   const colors = useColorModeValue(['blue', 'red'], []);
   const [tabIndex, setTabIndex] = useState(tabNum);
   const colorScheme = colors[tabIndex];
+
+  const [sellingTickets, sellEndTickets] = useMemo(() => {
+    const aSellingTickets = [];
+    const aSellEndTickets = [];
+
+    const today = new Date();
+
+    tickets.forEach(ticket => {
+      if (new Date(ticket.saleEndDate) <= today) {
+        aSellingTickets.push(ticket);
+      } else {
+        aSellEndTickets.push(ticket);
+      }
+    });
+
+    return [aSellingTickets, aSellEndTickets];
+  }, [tickets]);
 
   return (
     <>
@@ -59,34 +75,33 @@ const TicketTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
         </TabList>
         <TabPanels>
           <TabPanel>
-            {tickets?.map(ticket => (
-              <Box key={ticket.id}>
-                {new Date(ticket.saleEndDate) > today && (
+            {sellingTickets.length ? (
+              sellingTickets.map(ticket => (
+                <Box key={ticket.id}>
                   <Box _hover={{ bg: '#EBF8FF' }}>
                     <TicketBox data={ticket} />
                   </Box>
-                )}
-              </Box>
-            ))}
+                </Box>
+              ))
+            ) : (
+              <Box>NoData</Box>
+            )}
           </TabPanel>
           <TabPanel>
-            {tickets?.map(ticket => (
-              <Box key={ticket.id}>
-                {new Date(ticket.saleEndDate) < today && (
+            {sellEndTickets.length ? (
+              sellEndTickets.map(ticket => (
+                <Box key={ticket.id}>
                   <Box _hover={{ bg: '#EBF8FF' }}>
                     <TicketBox data={ticket} />
                   </Box>
-                )}
-              </Box>
-            ))}
+                </Box>
+              ))
+            ) : (
+              <Box>NoData</Box>
+            )}
           </TabPanel>
         </TabPanels>
       </Tabs>
-      {tickets.length === 0 && (
-        <Center>
-          <Text>티켓없음.</Text>
-        </Center>
-      )}
     </>
   );
 };
@@ -165,8 +180,8 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
 
   return {
     props: {
-      concert: concertData?.data.data ?? null,
-      tickets: ticketsData?.data ?? null,
+      concert: concertData?.data.data,
+      tickets: ticketsData?.data,
     },
   };
 };
