@@ -116,6 +116,10 @@ const VideoPlayer: FC = () => {
         player.current.load(enterTicketData.playbackUrl + '?token=' + jwt);
         player.current.play();
       }
+      // if (err.type === 'ErrorNotAvailable') {
+      //   player.current.load(enterTicketData.playbackUrl + '?token=' + jwt);
+      //   player.current.play();
+      // }
     };
 
     const onTimeMetaData = cue => {

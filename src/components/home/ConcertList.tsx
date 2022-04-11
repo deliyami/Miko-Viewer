@@ -3,7 +3,8 @@ import { S3_URL } from '@src/const';
 import { convertDate } from '@src/helper';
 import { Concert } from '@src/types/share';
 import Link from 'next/link';
-import { FC, Suspense } from 'react';
+import { FC } from 'react';
+import AsyncBoundary from '../common/wrapper/AsyncBoundary';
 
 const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
   const concertStartDate = convertDate(concert.allConcertStartDate, 'YMDHM');
@@ -47,13 +48,13 @@ const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
 const ConcertList: FC<{ data: Concert[] }> = ({ data }) => {
   const concerts = data;
   return (
-    <Suspense fallback={<Spinner thickness="3px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />}>
+    <AsyncBoundary pendingFallback={<Spinner thickness="3px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />}>
       {concerts?.map((concert, index) => (
         <Box key={index}>
           <ConcertCard concert={concert} />
         </Box>
       ))}
-    </Suspense>
+    </AsyncBoundary>
   );
 };
 

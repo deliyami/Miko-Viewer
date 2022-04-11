@@ -1,4 +1,5 @@
-import { ComponentType, Suspense, SuspenseProps } from 'react';
+import SSRSuspense from '@src/components/common/wrapper/SSRSuspense';
+import { ComponentType, SuspenseProps } from 'react';
 
 /**
  * Wraps the provide component in a `Suspense`, with the provided fallback.
@@ -13,9 +14,9 @@ import { ComponentType, Suspense, SuspenseProps } from 'react';
 export function withSuspense<P extends string | number | object>(WrappedComponent: ComponentType<P>, fallback: SuspenseProps['fallback'] = null) {
   function ComponentWithSuspense(props: P) {
     return (
-      <Suspense fallback={fallback}>
+      <SSRSuspense fallback={fallback}>
         <WrappedComponent {...props} />
-      </Suspense>
+      </SSRSuspense>
     );
   }
 
