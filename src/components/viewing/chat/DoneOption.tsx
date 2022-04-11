@@ -1,71 +1,41 @@
-import {
-  Box,
-  Button,
-  Grid,
-  Image,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
-  Portal,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Button, Center } from '@chakra-ui/react';
+import { IconType } from '@react-icons/all-files';
 import { RiGiftFill } from '@react-icons/all-files/ri/RiGiftFill';
-import { S3_URL } from '@src/const';
-import { useSocket } from '@src/hooks/dynamicHooks';
-import { DONEITEM, PATHNAME } from '@src/state/shareObject/shareDoneObject';
-import { useUser } from '@src/state/swr';
-import { DoneSendInterface } from '@src/types/share';
-import { FC, memo } from 'react';
+import { ViewingDone } from '@src/components/viewing/chat/ViewingDone';
+import { useColorStore } from '@src/hooks';
+import { Children, cloneElement, FC, memo, ReactElement, useRef } from 'react';
 
-export const DoneOption: FC = memo(() => {
-  const user = useUser();
-  const socket = useSocket();
-  const { onOpen, onClose, isOpen } = useDisclosure();
-
-  const doneSendHandler = (index: number) => {
-    const data: DoneSendInterface = {
-      sender: user.data.name,
-      itemId: index,
-      timestamp: Date.now(),
-    };
-    socket.emit('fe-send-done', data);
-    onClose();
-  };
+const IconBox: FC<{ icon: IconType }> = ({ children, icon }) => {
+  const imperativeRef = useRef(null);
+  const primary = useColorStore('primary');
 
   return (
-    <Popover onClose={onClose} onOpen={onOpen} isOpen={isOpen} offset={[0, 30]}>
-      <PopoverTrigger>
-        <Button>
-          <RiGiftFill />
-        </Button>
-      </PopoverTrigger>
-      <Portal>
-        <PopoverContent>
-          <PopoverArrow />
-          <PopoverHeader>Done!</PopoverHeader>
-          <PopoverCloseButton />
-          <PopoverBody>
-            <Grid templateColumns="repeat(3, 1fr)">
-              {PATHNAME.map((value, i) => (
-                <Box
-                  key={i}
-                  onClick={() => {
-                    doneSendHandler(DONEITEM[i].id);
-                  }}
-                >
-                  <Image src={`${S3_URL}doneSVG/${value}.svg`} alt="doneSVG"></Image>
-                </Box>
-              ))}
-            </Grid>
-          </PopoverBody>
-        </PopoverContent>
-      </Portal>
-    </Popover>
+    <Center
+      onClick={() => {
+        imperativeRef.current.open();
+      }}
+      cursor="pointer"
+      _hover={{ color: primary }}
+    >
+      {Children.map(children, (child, _) =>
+        cloneElement(
+          child as ReactElement,
+          // @ts-ignore
+          { ...child.props, ref: imperativeRef },
+        ),
+      )}
+
+      <Button>{icon({})}</Button>
+    </Center>
+  );
+};
+
+export const DoneOption: FC = memo(() => {
+  return (
+    <IconBox icon={RiGiftFill}>
+      <ViewingDone />
+    </IconBox>
   );
 });
 
-DoneOption.displayName = 'DoneOption';
+DoneOption.displayName = 'TempDoneOption';
