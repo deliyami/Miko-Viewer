@@ -91,7 +91,7 @@ const TicketTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
   );
 };
 
-const LiveInformation: FC<{ data: Concert }> = ({ data: concert }) => {
+const LiveInformation = ({ concert }) => {
   const [show, setShow] = React.useState(false);
   const handleToggle = () => setShow(!show);
 
@@ -110,7 +110,7 @@ const LiveInformation: FC<{ data: Concert }> = ({ data: concert }) => {
     >
       <Image borderRadius="2%" boxSize="sm" src={S3_URL + concert.coverImage} objectFit="cover" alt="concertImage" fallbackSrc="/defaultImage.png" />
       <Box px={4}>
-        <Flex mb={3} direction={{ base: 'column', md: 'row' }} minW={{ md: '50vh' }}>
+        <Flex pb={3} direction={{ base: 'column', md: 'row' }} minW={{ md: '50vh' }}>
           <Heading fontWeight="700">{concert.title}</Heading>
           <Text pt={{ base: '0', md: '4' }} pl={{ base: '0', md: '5' }}>
             {concert.artist}
@@ -154,10 +154,10 @@ const LiveInformation: FC<{ data: Concert }> = ({ data: concert }) => {
 
 export const getServerSideProps: GetServerSideProps<Data> = async context => {
   const concertId = context.query.id as string;
-  const CONCERT_URL_CONCERTS = `/concerts/${concertId}`;
+  const CONCERT_URL_CONCERT = `/concerts/${concertId}`;
   const TICKET_URL_CONCERTS = `/tickets`;
 
-  const concertData = await getDataFromLaravel<Pagination<Concert>>(CONCERT_URL_CONCERTS);
+  const concertData = await getDataFromLaravel<Pagination<Concert>>(CONCERT_URL_CONCERT);
   const ticketsData = await getDataFromLaravel<Pagination<Ticket>>(TICKET_URL_CONCERTS, {
     with: ['concert'],
     filter: [['concert_id', concertId]],
@@ -165,8 +165,8 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
 
   return {
     props: {
-      concert: concertData?.data.data ?? null,
-      tickets: ticketsData?.data ?? null,
+      concert: concertData?.data,
+      tickets: ticketsData?.data,
     },
   };
 };
@@ -188,12 +188,11 @@ export default function LiveDetailPage({ concert, tickets }: InferGetServerSideP
       </Center>
     );
   }
-
   console.log(concert);
   return (
     <Flex justifyContent="center">
       <Box>
-        <LiveInformation data={concert} />
+        <LiveInformation concert={concert.data} />
         <TicketTab data={tickets.data} />
       </Box>
     </Flex>

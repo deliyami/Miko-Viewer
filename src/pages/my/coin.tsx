@@ -2,13 +2,14 @@ import { Box, Button, Center, Circle, Divider, Flex, Heading, HStack, Spacer, Sp
 import PaginationBtn from '@src/components/common/button/PaginationBtn';
 import { convertDate } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
-import { fetcher } from '@src/state/fetcher';
 import { useUser } from '@src/state/swr';
+import { usePageLaravel } from '@src/state/swr/useLaravel';
 import { Coin, User } from '@src/types/share';
+import { CommonFSW } from '@src/types/share/common';
 import { useRouter } from 'next/router';
-import { FC, ReactElement, useEffect, useState } from 'react';
-import useSWR from 'swr';
+import { FC, ReactElement } from 'react';
 
+const PER_PAGE = 10;
 const history = ['コイン 充電', 'チケット 購入', 'スーパーチャット', 'アイテム 使用', 'グッズ 購入'];
 
 const CoinHeader: FC<{ data: User }> = ({ data }) => {
@@ -80,19 +81,24 @@ const CoinHistory: FC<{ data: Coin }> = ({ data }) => {
 };
 export default function CoinPage() {
   const { data: userData } = useUser(); // 현재 로그인 user 정보
-  const [pageIndex, setPageIndex] = useState(1);
   const router = useRouter();
   const page = parseInt(router.query.page as string); // query의 page 번호
+
   // console.log(page);
-  useEffect(() => {
-    if (page) {
-      setPageIndex(page);
-    } else {
-      setPageIndex(1);
-    }
-  });
-  const { data: coinData } = useSWR(`/coin_histories?per_page=10&filter=user_id:${userData.id}&page=${pageIndex}`, fetcher);
-  // console.log(page);
+  const query: CommonFSW = {
+    page,
+    perPage: PER_PAGE,
+    filter: [['user_id', userData.id]],
+  };
+  const { data: coinData } = usePageLaravel('/coin_histories', query);
+
+  if (!coinData) {
+    return (
+      <Center height="auto" width="full">
+        <Text fontSize="7xl">No Data</Text>
+      </Center>
+    );
+  }
 
   return (
     <>
@@ -118,7 +124,7 @@ export default function CoinPage() {
                       </Box>
                     ))}
                     <Center>
-                      <PaginationBtn data={coinData.meta} url={`/my/coin?`} />
+                      <PaginationBtn data={coinData.meta} options={{ shallow: true }} />
                     </Center>
                   </Box>
                 )}

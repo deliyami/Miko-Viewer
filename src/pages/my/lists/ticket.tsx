@@ -1,25 +1,40 @@
-import { Box, Flex, Tab, Table, TabList, TabPanel, TabPanels, Tabs, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import { Box, Center, Flex, Tab, Table, TabList, TabPanel, TabPanels, Tabs, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import PaginationBtn from '@src/components/common/button/PaginationBtn';
 import ConcertTicket from '@src/components/ConcertTicket';
 import BasicLayout from '@src/layout/BasicLayout';
-import { useUser, useUserTickets } from '@src/state/swr';
+import { useUser } from '@src/state/swr';
+import { usePageLaravel } from '@src/state/swr/useLaravel';
+import { CommonFSW } from '@src/types/share/common';
 import { useRouter } from 'next/router';
 import { ReactElement } from 'react';
+
+const PER_PAGE = 3;
 
 const UserTicketList = () => {
   const router = useRouter();
   const { data: userData } = useUser();
   const isUsedId = parseInt(router.query.isUsedId as string, 10);
+  const page = parseInt(router.query.page as string, 10);
 
-  const { data: userTickets } = useUserTickets({
-    with: ['ticket', 'concert'],
+  const query: CommonFSW = {
+    page,
+    perPage: PER_PAGE,
     filter: [
       ['user_id', userData.id],
-      ['is_used', isUsedId],
+      ['is_used', isUsedId ? isUsedId : 0],
     ],
-  });
+    with: ['ticket', 'concert'],
+  };
+  const { data: userTickets } = usePageLaravel('/user_tickets', query);
 
-  console.log(userTickets.data);
+  if (!userTickets) {
+    return (
+      <Center height="auto" width="full">
+        <Text fontSize="7xl">No Data</Text>
+      </Center>
+    );
+  }
+
   return (
     <>
       <Table variant="simple" mb={7}>
@@ -45,7 +60,7 @@ const UserTicketList = () => {
           <Text>チケットがありません。</Text>
         </Flex>
       )}
-      <PaginationBtn data={userTickets.meta} url={`/my/lists/ticket?isUsedId=${isUsedId}`} />
+      <PaginationBtn data={userTickets.meta} options={{ shallow: true }} />
     </>
   );
 };
@@ -55,7 +70,9 @@ const MyListPage = () => {
   const isUsedId = parseInt(router.query.isUsedId as string, 10);
 
   const onClickUsed = clickId => {
-    router.push(`/my/lists/ticket/?isUsedId=${clickId}`);
+    router.query.page = '1';
+    router.query.isUsedId = clickId;
+    router.push(router, undefined, { shallow: true });
   };
 
   return (

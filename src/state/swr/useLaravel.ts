@@ -1,4 +1,5 @@
 import { fetcher } from '@src/state/fetcher';
+import { Coin } from '@src/types/share';
 import { CommonDataResponse, CommonFSW, Pagination } from '@src/types/share/common';
 import { Concert } from '@src/types/share/Concert';
 import { Ticket } from '@src/types/share/Ticket';
@@ -14,7 +15,8 @@ import laggy from './middleware/laggy';
 type DataTypeDict = {
   '/concerts': Concert;
   '/tickets': Ticket;
-  '/userTickets': UserTicket;
+  '/user_tickets': UserTicket;
+  '/coin_histories': Coin;
 };
 
 export const usePageLaravel = <K extends keyof DataTypeDict, T = DataTypeDict[K], PT = Pagination<T>>(url: K, query?: CommonFSW, option?: SWRConfiguration<PT>) => {

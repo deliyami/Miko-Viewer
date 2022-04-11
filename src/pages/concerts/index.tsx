@@ -20,7 +20,7 @@ type Data = {
   initialParam: {
     categoryId: number;
     page: number;
-    search: string;
+    search?: string;
   };
 };
 
@@ -44,7 +44,7 @@ const SearchBox = () => {
   };
   return (
     <HStack>
-      <InputGroup size="md" maxW={{ xl: '115vh' }}>
+      <InputGroup size="md">
         <InputLeftElement>
           <SearchIcon pointerEvents="none" color="gray.300" />
         </InputLeftElement>
@@ -128,15 +128,15 @@ export default function ConcertPage({ iniData, initialParam }: InferGetServerSid
       <Box>
         <Box id="scroll-into" />
         <SearchBox />
-        <Flex pt={3} pb={8}>
-          <Icon boxSize={5} m={3} onClick={handleShowCategoryFilter} cursor="pointer" as={FiFilter} />
+        <HStack py={4}>
+          <Icon boxSize={5} onClick={handleShowCategoryFilter} cursor="pointer" as={FiFilter} />
           <Box visibility={isShowCategoryFilter ? 'visible' : 'hidden'}>
             <CategoryFilter />
           </Box>
-        </Flex>
+        </HStack>
         {concertsData ? (
           <VStack spacing={10}>
-            <Box minW={{ xl: '115vh' }}>
+            <Box minW={{ xl: '120vh' }}>
               <SimpleGrid columns={[2, null, 3]} spacing="40px">
                 <ConcertList data={concertsData.data} />
               </SimpleGrid>

@@ -102,7 +102,7 @@ const TicketBox: FC<{ data: Ticket }> = ({ data: ticket }) => {
         spacing={4}
         justify={{ base: 'center', md: 'space-between' }}
         align={{ base: 'center', md: 'center' }}
-        p={{ base: '4', md: '4' }}
+        p={4}
       >
         <TicketDate data={ticket} />
         <TicketDetail data={ticket} />
