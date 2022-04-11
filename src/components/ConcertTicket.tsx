@@ -43,7 +43,7 @@ const TicketButton: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
       )}
       {screeningBefore && (
         <Center>
-          <Text color="#3182CE" fontWeight="550" fontSize="16px">
+          <Text pr={3} color="#3182CE" fontWeight="550" fontSize="16px">
             上映前
           </Text>
         </Center>
@@ -63,8 +63,8 @@ const ImageBadge: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   const compareEndDate = dayjs(userTicket.ticket.concertEndDate);
   const compareArchiveDate = dayjs(userTicket.ticket.archiveEndTime);
   const today = dayjs(new Date());
-  const diff = compareStartDate.diff(today, 's') as number; // 시작일로부터 남은 시간(초)
-  const previewAlarm = diff <= 1200 && diff > 0;
+  const diff = compareStartDate.diff(today, 'm') as number; // 시작일로부터 남은 시간(초)
+  const previewAlarm = diff <= 60 && diff > 0; // 1시간 전.
   const screening = today.isBetween(compareStartDate, compareEndDate, 'minute', '[]');
   const archiving = today.isBetween(compareEndDate, compareArchiveDate, 'minute', '[]'); // 다시보기 - 공연 끝나는 날부터 아카이브 끝나는 날까지
 
@@ -179,9 +179,6 @@ const UsedTicket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
 };
 
 const ConcertTicket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
-  const router = useRouter();
-  const isUsedId = parseInt(router.query.isUsedId as string, 10);
-
   return <TicketInfo userTicket={userTicket} />;
 };
 

@@ -5,9 +5,8 @@ import { memo } from 'react';
 
 const CategoryFilter = memo(() => {
   const router = useRouter();
-
+  const curCategoryId = parseInt(router.query.category_id as string);
   const setCategory = id => {
-    const curCategoryId = parseInt(router.query.category_id as string);
     if (id === curCategoryId) {
       const { category_id, ...rest } = router.query;
       router.query = rest;
@@ -22,7 +21,15 @@ const CategoryFilter = memo(() => {
   return (
     <Box>
       {categoryArray.map((category, idx) => (
-        <Button key={idx + 1} onClick={() => setCategory(idx + 1)} m={1} variant="ghost" colorScheme="cyan" _hover={{ bg: 'cyan.300', color: 'white' }}>
+        <Button
+          key={idx + 1}
+          onClick={() => setCategory(idx + 1)}
+          m={1}
+          variant="ghost"
+          bg={curCategoryId === idx + 1 && 'cyan.300'}
+          color={curCategoryId === idx + 1 ? 'white' : 'cyan.500'}
+          _hover={{ bg: 'cyan.300', color: 'white' }}
+        >
           {category}
         </Button>
       ))}

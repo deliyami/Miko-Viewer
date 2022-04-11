@@ -51,7 +51,7 @@ const PaginationBtn: FC<Props> = ({ data: { current_page, last_page }, options }
   return (
     <Flex justifyContent="center">
       <Flex justifyContent="center" columnGap="10px" onClick={handleToScrollInto}>
-        <Center width="30px">{curPage !== startPage && <PageBtn text="<" onClick={onBeforePageHandler} />}</Center>
+        <Center width="30px">{curPage !== startPage && <PageBtn px={3} text="<" onClick={onBeforePageHandler} />}</Center>
         <Center flexGrow="1" gap="5px">
           {new Array(leftBtnNum)
             .fill(0)
@@ -66,7 +66,7 @@ const PaginationBtn: FC<Props> = ({ data: { current_page, last_page }, options }
               return <PageBtn key={curPage + idx + 1} text={curPage + idx + 1} onClick={() => onPageChangeHandler(curPage + idx + 1)} />;
             })}
         </Center>
-        <Center width="30px">{curPage !== lastPage && <PageBtn text=">" onClick={onNextPageHandler} />}</Center>
+        <Center width="30px">{curPage !== lastPage && <PageBtn px={3} text=">" onClick={onNextPageHandler} />}</Center>
       </Flex>
     </Flex>
   );

@@ -1,4 +1,4 @@
-import { Box, Button, Container, Divider, HStack, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Container, HStack, Stack, Text } from '@chakra-ui/react';
 import { convertDate } from '@src/helper';
 import { Ticket } from '@src/types/share';
 import React, { FC } from 'react';
@@ -94,22 +94,19 @@ const TicketPrice: FC<{ data: Ticket }> = ({ data: ticket }) => {
 
 const TicketBox: FC<{ data: Ticket }> = ({ data: ticket }) => {
   return (
-    <>
-      <Container
-        as={Stack}
-        maxW={'fill'}
-        direction={{ base: 'column', lg: 'row' }}
-        spacing={4}
-        justify={{ base: 'center', md: 'space-between' }}
-        align={{ base: 'center', md: 'center' }}
-        p={{ base: '4', md: '4' }}
-      >
-        <TicketDate data={ticket} />
-        <TicketDetail data={ticket} />
-        <TicketPrice data={ticket} />
-      </Container>
-      <Divider borderColor="gray.200" />
-    </>
+    <Container
+      as={Stack}
+      maxW={'fill'}
+      direction={{ base: 'column', lg: 'row' }}
+      spacing={4}
+      justify={{ base: 'center', md: 'space-between' }}
+      align={{ base: 'center', md: 'center' }}
+      p={4}
+    >
+      <TicketDate data={ticket} />
+      <TicketDetail data={ticket} />
+      <TicketPrice data={ticket} />
+    </Container>
   );
 };
 
