@@ -13,7 +13,15 @@ export const LOGIN_COOKIE = 'isLogin';
 export const LARAVEL_SESSION = 'laravel_session';
 export const USER_TICKET_COOKIE = 'userTicket';
 export const categoryArray = ['J-POP', 'K-POP', '애니메이션', '재즈/소울', '밴드', '발라드'];
-export const doneItem: DoneItem[] = [{ name: 'ハート', price: 5000, id: 0 }];
+export const doneItem: DoneItem[] = [
+  { name: 'ハート', price: 5000, id: 0, path: 'GreenHeart' },
+  { name: 'コンペート', price: 6000, id: 1, path: 'Confetti' },
+  { name: 'スター', price: 2500, id: 2, path: 'FourStar' },
+  { name: 'ギフト', price: 100000, id: 3, path: 'Gift' },
+  { name: '日々', price: 75000, id: 4, path: 'Night' },
+  { name: 'キラキラ', price: 4000, id: 5, path: 'StarBurst' },
+];
+// export const donePath: string[] = ['GreenHeart', 'Confetti', 'FourStar', 'Gift', 'Night', 'StarBurst'];
 
 export const chType = ['チャージ', 'チケット購入', 'SC送り', 'アイテム使用', 'グッズ購入', 'チケット販売', 'グッズ販売', 'SC受け', 'アイテム受け'];
 export const chChargeIdx = 0;
