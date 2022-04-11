@@ -1,18 +1,17 @@
-import ErrorBoundary from '@src/components/common/ErrorBoundary';
 import Loading from '@src/components/common/Loading';
+import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import { FC } from 'react';
-import { withSuspense } from './withSuspenseHOC';
-
-const Layout = ({ children }) => {
-  return (
-    <ErrorBoundary>
-      <main>{children}</main>
-    </ErrorBoundary>
-  );
-};
 
 const CustomLoading: FC = () => {
   return <Loading></Loading>;
 };
 
-export default withSuspense(Layout, CustomLoading);
+const Layout = ({ children }) => {
+  return (
+    <AsyncBoundary pendingFallback={<CustomLoading />}>
+      <main>{children}</main>
+    </AsyncBoundary>
+  );
+};
+
+export default Layout;
