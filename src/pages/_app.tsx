@@ -1,9 +1,12 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import { DevDrawer } from '@src/components/common/dev/DevDrawer';
+import { LARAVEL_URL, NEST_URL } from '@src/const';
+import { toastLog } from '@src/helper';
 import RootEventCatchLayout from '@src/layout/RootEventCatchLayout';
 import '@src/style/css/fonts.css';
 import theme from '@src/style/theme';
 import type * as ivs from 'amazon-ivs-player';
+import axios from 'axios';
 import { NextPage } from 'next';
 import { AppProps, NextWebVitalsMetric } from 'next/app';
 import Head from 'next/head';
@@ -34,6 +37,17 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
 
   useEffect(() => {
+    // health-check
+    axios.get('/health-check', { baseURL: LARAVEL_URL }).then(value => {
+      if (value.status !== 200) return toastLog('error', 'Laravel Server Error');
+    });
+    axios.get('/health-check', { baseURL: NEST_URL }).then(value => {
+      if (value.status !== 200) return toastLog('error', 'Nest Server Error');
+    });
+  }, []);
+
+  useEffect(() => {
+    // PWA
     console.log('MyApp UseEffect');
 
     const serviceWorkerLoad = () => {
@@ -57,6 +71,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   }, []);
 
   useEffect(() => {
+    // router change events
     router.beforePopState(({ as, options, url }) => {
       console.log('beforePopState');
       console.log(as, options, url);
