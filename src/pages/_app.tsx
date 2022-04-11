@@ -44,6 +44,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     axios.get('/health-check', { baseURL: NEST_URL }).then(value => {
       if (value.status !== 200) return toastLog('error', 'Nest Server Error');
     });
+    console.log('env', process.env);
   }, []);
 
   useEffect(() => {
