@@ -73,6 +73,13 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
     search,
   });
 
+  if (result.status !== 200)
+    return {
+      redirect: {
+        destination: '/500',
+      },
+    };
+
   return {
     props: {
       iniData: result?.data ?? null,

@@ -38,3 +38,7 @@ temp
 .env
 .env.development
 .env.production
+
+# build
+/public/sw.js
+/public/workbox-*

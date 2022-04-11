@@ -13,7 +13,7 @@ function DefaultLoading() {
   );
 }
 
-function DefaultErrorFallback({ error, resetErrorBoundary }) {
+function DefaultErrorFallback({ error, resetErrorBoundary }: ComponentProps<NonNullable<ErrorBoundaryProps['FallbackComponent']>>) {
   return (
     <div role="alert">
       <p>Something went wrong:</p>
