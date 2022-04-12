@@ -11,14 +11,47 @@ import {
   Flex,
   HStack,
   Image,
+  StackProps,
   Text,
+  TextProps,
   useDisclosure,
 } from '@chakra-ui/react';
 import { IconType } from '@react-icons/all-files';
 import { RiGiftFill } from '@react-icons/all-files/ri/RiGiftFill';
 import { doneItem, S3_URL } from '@src/const';
 import { useColorStore } from '@src/hooks';
+import { motion } from 'framer-motion';
 import { Children, cloneElement, FC, forwardRef, memo, ReactElement, useImperativeHandle, useRef, useState } from 'react';
+
+const MotionP = motion<Omit<TextProps, 'transition'>>(Text);
+const MotionHStack = motion<Omit<StackProps, 'transition'>>(HStack);
+
+const container = {
+  animate: {
+    transition: {
+      staggerChildren: 0.35,
+    },
+  },
+};
+
+const letterAnimation = {
+  initial: {
+    y: null,
+  },
+  animate: j => {
+    return {
+      y: -5,
+      transition: {
+        ease: [0.4, 0.1, 0.2, 0.95],
+        // ease: [0.2, 0.2, 1, 0.2],
+        duration: 1.6,
+        repeat: Infinity,
+        repeatType: 'reverse',
+        delay: j * 0.3,
+      },
+    };
+  },
+};
 
 const IconBox: FC<{ icon: IconType }> = ({ children, icon }) => {
   const imperativeRef = useRef(null);
@@ -81,9 +114,10 @@ const DoneHelp = forwardRef((_, ref) => {
                 height="25vh"
                 minHeight="150px"
                 borderRadius="16px"
+                opacity={clicked === 1 ? 1 : 0.5}
                 boxShadow={clicked === i ? `0 0 3px 3px ${primary}` : ''}
-                _focus={{ boxShadow: `0 0 3px 3px ${primary}`, borderRadius: '16px' }}
-                _hover={{ boxShadow: `0 0 3px 3px ${weakPrimary}`, borderRadius: '16px' }}
+                _focus={{ boxShadow: `0 0 3px 3px ${primary}`, borderRadius: '16px', opacity: 1 }}
+                _hover={{ boxShadow: `0 0 3px 3px ${weakPrimary}`, borderRadius: '16px', opacity: 0.8 }}
                 key={i}
                 onClick={() => {
                   doneSelectHandler(i);
@@ -100,7 +134,13 @@ const DoneHelp = forwardRef((_, ref) => {
                 >
                   <Text>{done.name}</Text>
                   <Image style={{ minWidth: '100px', width: '100px' }} src={`${S3_URL}doneSVG/${done.path}.svg`} alt="doneSVG"></Image>
-                  <Text>{done.price}</Text>
+                  <MotionHStack spacing={0} initial="initial" animate="animate" variants={container}>
+                    {`${done.price}`.split('').map((str, j) => (
+                      <MotionP custom={j} initial="initial" animate="animate" variants={clicked === i ? letterAnimation : null} key={j}>
+                        {str}
+                      </MotionP>
+                    ))}
+                  </MotionHStack>
                 </Flex>
               </Button>
             ))}
