@@ -144,7 +144,7 @@ const ViewingPrepareCSRPage = () => {
     return () => {
       clearTimeout(setTimeoutId);
     };
-  }, [myPeer.open]);
+  }, [myPeer.open, fireRerender]);
   useLayoutEffect(() => {
     if (!myPeer) return;
 
