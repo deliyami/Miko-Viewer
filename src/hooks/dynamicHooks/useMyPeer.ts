@@ -11,12 +11,10 @@ export const useMyPeer = () => {
     (window.myPeer as ExtendPeer) ??
       (new Peer(data.uuid, {
         debug: 2,
-        // host: '0.peerjs.com', // default 0.peerjs.com
-        host: 'localhost', // default 0.peerjs.com
-        // port: 443, // default 443
-        port: 9000, // default 443
-        // path: '/', // default '/'
-        path: '/myapp', // default '/'
+        host: process.env.NEXT_PUBLIC_PEER_HOST ?? '0.peerjs.com', // default 0.peerjs.com
+        port: process.env.NEXT_PUBLIC_PEER_PORT ? parseInt(process.env.NEXT_PUBLIC_PEER_PORT, 10) : 443, // default 443
+        path: process.env.NEXT_PUBLIC_PEER_PATH ?? '/', // default '/'
+        // secure: true,
         config: {
           iceServers: [
             {
