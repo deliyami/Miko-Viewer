@@ -38,7 +38,7 @@ type Data = {
 const TicketTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
   const today = new Date();
   const [tabNum, setTabNum] = useState(0);
-
+  const router = useRouter();
   const onClickSale = clickId => {
     setTabNum(clickId);
   };
@@ -56,6 +56,9 @@ const TicketTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
           </Tab>
           <Tab color="gray" onClick={() => onClickSale(1)}>
             販売終了
+          </Tab>
+          <Tab color="gray" onClick={() => router.push(`/concerts/${router.query.id}/products`)}>
+            グッズリスト
           </Tab>
         </TabList>
         <TabPanels>

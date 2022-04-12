@@ -9,7 +9,7 @@ const OrderSummary = ({ data }) => {
   data.map((item, key) => {
     cost += item.products[0].price * item.quantity;
   });
-  console.log(cost);
+  // setTotalCoast(cost);
 
   function goPay() {
     router.push(`/concerts/${router.query.id}/products/purchase`);
