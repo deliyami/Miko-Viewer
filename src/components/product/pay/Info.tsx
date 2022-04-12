@@ -53,7 +53,7 @@ const Info = ({ tabIndex, setTabIndex }) => {
           メールアドレス<span style={{ color: 'red', fontSize: '1px', marginLeft: '10%' }}>必要</span>
         </Text>
         <Flex w={'50%'} mr={'18%'} flexDirection={'column'} justifyContent={'space-around'}>
-          <Input required type={'text'} mb={'2%'} value={user.data.email} />
+          <Input required type={'text'} mb={'2%'} />
           <Input required type={'text'} placeholder="確認のためにもう一度入力してください。" />
         </Flex>
       </Flex>

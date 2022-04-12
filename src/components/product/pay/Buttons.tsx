@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 const Buttons = ({ tabIndex, setTabIndex }) => {
   const router = useRouter();
   return (
-    <Flex justifyContent={'space-between'} h="100px" mt={'10%'}>
+    <Flex justifyContent={'space-between'} h="100px" mt={'7%'}>
       <Button colorScheme={"blue"} w="23%" fontSize={'2xl'} onClick={() => setTabIndex(tabIndex - 1)}>
         ← 戻る
       </Button>
