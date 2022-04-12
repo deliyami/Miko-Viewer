@@ -30,7 +30,7 @@ export const AvatarModel: FC<{
           const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, -1), scene);
 
           // Default intensity is 1. Let's dim the light a small amount
-          light.intensity = 0.2;
+          light.intensity = 0.6;
 
           BABYLON.MeshBuilder.CreateGround('ground', { width: 30, height: 6 }, scene);
           BABYLON.SceneLoader.ImportMesh('', path, '', scene, (...args) => {
