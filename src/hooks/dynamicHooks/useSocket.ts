@@ -8,7 +8,7 @@ export const useSocket = () => {
       io(SOCKET_URL, {
         autoConnect: true,
         // forceNew: true,
-        transports: ['websocket', 'polling'], // websocket 사용후 polling으로 업그레이드
+        transports: ['polling', 'websocket'], // websocket 사용후 polling으로 업그레이드
       })
         .on('connect', () => {
           console.log('socket connect 👌 ', window.socket.connected);
