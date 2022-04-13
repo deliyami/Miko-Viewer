@@ -21,7 +21,6 @@ type DataTypeDict = {
 export const usePageLaravel = <K extends keyof DataTypeDict, T = DataTypeDict[K], PT = Pagination<T>>(url: K, query?: CommonFSW, option?: SWRConfiguration<PT>) => {
   let aUrl = url + '?';
   aUrl += query ? createFSWQueryString(query) : '';
-  // query && (aUrl += createFSWQueryString(query));
 
   return useSWR<PT>(query ? aUrl : null, fetcher, {
     suspense: true,

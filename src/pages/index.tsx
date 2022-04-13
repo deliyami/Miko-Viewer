@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, SimpleGrid, Spacer, Spinner, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, SimpleGrid, Spacer, Text, VStack } from '@chakra-ui/react';
 import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import ConcertList from '@src/components/home/ConcertList';
 import MainRanking from '@src/components/home/MainRanking';
@@ -92,9 +92,7 @@ const TopList: FC<{ data: Concert[] }> = ({ data: concerts }) => {
         <Heading>Top 3</Heading>
       </Flex>
       <Box minW={{ xl: '120vh' }}>
-        <AsyncBoundary pendingFallback={<Spinner thickness="3px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />}>
-          <MainRanking data={concerts} />
-        </AsyncBoundary>
+        <MainRanking data={concerts} />
       </Box>
     </Box>
   );
