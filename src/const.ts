@@ -41,7 +41,7 @@ export const MY_AVATAR_ID = 'myAvatar'; // 이거 변경하면 @src/components/v
 //  NOTE getter로만 접근 해야함.
 export const LARAVEL_URL = process.env.NEXT_PUBLIC_LARAVEL_URL ?? 'http://localhost:8080/api';
 export const NEST_URL = process.env.NEXT_PUBLIC_NEST_URL ?? 'http://localhost:3001/api';
-export const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_SERVER ?? 'http://localhost:3002';
+export const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_SERVER ?? 'http://localhost:3001';
 
 export const NEXT_URL = process.env.NEXT_PUBLIC_NEXT_URL ?? 'http://localhost:3000';
 

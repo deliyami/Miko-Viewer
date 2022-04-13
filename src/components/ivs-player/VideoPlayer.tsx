@@ -8,7 +8,7 @@ import { toastLog } from '@src/helper';
 import { useIvsPlayer } from '@src/hooks/dynamicHooks';
 import { enterTicketDataState, isOnVideoAmbianceState, msgMetaDataState, quizMetaDataState, quizResultMetaDataState } from '@src/state/recoil';
 import { AllMetaData } from '@src/types/share';
-import * as ivs from 'amazon-ivs-player';
+import type * as ivs from 'amazon-ivs-player';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useRef, useState } from 'react';
