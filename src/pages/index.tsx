@@ -1,4 +1,5 @@
 import { Box, Button, Flex, Heading, SimpleGrid, Spacer, Text, VStack } from '@chakra-ui/react';
+import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import ConcertList from '@src/components/home/ConcertList';
 import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
 import BasicLayout from '@src/layout/BasicLayout';
@@ -9,43 +10,6 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { FC, ReactElement } from 'react';
-
-const BackdropFilters = () => {
-  const outerBoxStyles = {
-    boxSize: 'full',
-    h: '350px',
-    p: '10',
-    backgroundImage: '/loco/mainPageImage.jpg',
-    bgPosition: 'center',
-    objectFit: 'cover',
-    bgRepeat: 'no-repeat',
-  };
-
-  const innerBoxStyles = {
-    textAlign: 'center',
-    width: 'full',
-    color: 'white',
-    bg: 'orange',
-    textShadow: '0 0 20px gray',
-    fontWeight: 'bold',
-    fontSize: '18px',
-  };
-  return (
-    <Box as={VStack} sx={outerBoxStyles} mb={7}>
-      <VStack maxW="80vh" spacing={5} my={10} p={5} backdropFilter="auto" backdropBlur="8px">
-        <Heading color="white">Connect on Miko</Heading>
-        <Text color="white"> Discover, stream, and share a constantly expanding mix of concert from emerging and major artists around the world.</Text>
-        <Link href="/login">
-          <a>
-            <Button sx={innerBoxStyles} _hover={{ color: 'black' }} _active={{ bg: 'orange' }}>
-              Sign up for free
-            </Button>
-          </a>
-        </Link>
-      </VStack>
-    </Box>
-  );
-};
 
 const NewList: FC<{ data: Concert[] }> = ({ data }) => {
   return (
@@ -109,9 +73,48 @@ export const getStaticProps: GetStaticProps<{
     revalidate: 60 * 30, // 30분 마다 재생성
   };
 };
-export default function HomePage({ newData, topData }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { data: userData } = useUser();
 
+const LoginLeadBox = () => {
+  const { data: userData } = useUser();
+  const outerBoxStyles = {
+    boxSize: 'full',
+    h: '350px',
+    p: '10',
+    backgroundImage: '/loco/mainPageImage.jpg',
+    bgPosition: 'center',
+    objectFit: 'cover',
+    bgRepeat: 'no-repeat',
+  };
+
+  const innerBoxStyles = {
+    textAlign: 'center',
+    width: 'full',
+    color: 'white',
+    bg: 'orange',
+    textShadow: '0 0 20px gray',
+    fontWeight: 'bold',
+    fontSize: '18px',
+  };
+  if (userData) return <></>;
+
+  return (
+    <Box as={VStack} sx={outerBoxStyles} mb={7}>
+      <VStack maxW="80vh" spacing={5} my={10} p={5} backdropFilter="auto" backdropBlur="8px">
+        <Heading color="white">Connect on Miko</Heading>
+        <Text color="white"> Discover, stream, and share a constantly expanding mix of concert from emerging and major artists around the world.</Text>
+        <Link href="/login">
+          <a>
+            <Button sx={innerBoxStyles} _hover={{ color: 'black' }} _active={{ bg: 'orange' }}>
+              Sign up for free
+            </Button>
+          </a>
+        </Link>
+      </VStack>
+    </Box>
+  );
+};
+
+export default function HomePage({ newData, topData }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
       <Head>
@@ -120,13 +123,11 @@ export default function HomePage({ newData, topData }: InferGetStaticPropsType<t
       </Head>
       <Flex justifyContent="center" align="start">
         <Box>
-          {!userData && <BackdropFilters />}
-          <Box>
-            <NewList data={newData} />
-          </Box>
-          <Box>
-            <TopList data={topData} />
-          </Box>
+          <AsyncBoundary pendingFallback={<></>}>
+            <LoginLeadBox />
+          </AsyncBoundary>
+          <NewList data={newData} />
+          <TopList data={topData} />
         </Box>
       </Flex>
     </>

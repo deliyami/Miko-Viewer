@@ -6,7 +6,6 @@ import { User } from '@src/types/share';
 import { FC, ReactElement } from 'react';
 
 const MyCard: FC<{ data: User }> = ({ data }) => {
-  // console.log(data);
   return (
     <Flex width="full" justifyContent="center" p={4}>
       <Box>

@@ -1,5 +1,6 @@
 import { Box, Center, Flex, Tab, Table, TabList, TabPanel, TabPanels, Tabs, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import PaginationBtn from '@src/components/common/button/PaginationBtn';
+import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import ConcertTicket from '@src/components/ConcertTicket';
 import BasicLayout from '@src/layout/BasicLayout';
 import { useUser } from '@src/state/swr';
@@ -21,7 +22,7 @@ const UserTicketList = () => {
     perPage: PER_PAGE,
     filter: [
       ['user_id', userData.id],
-      ['is_used', isUsedId ? isUsedId : 0],
+      ['is_used', isUsedId || 0],
     ],
     with: ['ticket', 'concert'],
   };
@@ -51,7 +52,7 @@ const UserTicketList = () => {
         </Thead>
         <Tbody>
           {userTickets.data?.map(userTicket => (
-            <ConcertTicket key={userTicket.id} userTicket={userTicket} />
+            <ConcertTicket key={userTicket.id + ''} userTicket={userTicket} />
           ))}
         </Tbody>
       </Table>
@@ -86,14 +87,16 @@ const MyListPage = () => {
             使用したチケット
           </Tab>
         </TabList>
-        <TabPanels>
-          <TabPanel>
-            <UserTicketList />
-          </TabPanel>
-          <TabPanel>
-            <UserTicketList />
-          </TabPanel>
-        </TabPanels>
+        <AsyncBoundary>
+          <TabPanels>
+            <TabPanel>
+              <UserTicketList />
+            </TabPanel>
+            <TabPanel>
+              <UserTicketList />
+            </TabPanel>
+          </TabPanels>
+        </AsyncBoundary>
       </Tabs>
     </Box>
   );

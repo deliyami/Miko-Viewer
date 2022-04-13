@@ -32,6 +32,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactText } from 'react';
 import { LoginBtn, LogoutBtn } from '../common/button/LogoutBtn';
+import AsyncBoundary from '../common/wrapper/AsyncBoundary';
 
 interface LinkItemProps {
   name: string;
@@ -87,12 +88,45 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
   );
 };
 
-interface MobileProps extends FlexProps {
-  onOpen: () => void;
-}
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+const UserInfoBox = () => {
   const { data } = useUser();
 
+  return (
+    <HStack spacing={{ base: '0', md: '6' }}>
+      <Flex alignItems={'center'}>
+        {data ? (
+          <Menu>
+            <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>
+              <HStack>
+                <Avatar size={'md'} src={IMAGE_DOMAIN + data.avatar} />
+                <VStack display={{ base: 'none', md: 'flex' }} alignItems="flex-start" spacing="1px" ml="2">
+                  <Text fontSize="md">{data.name}</Text>
+                  <Text fontSize="xs" color="gray.600">
+                    {data.email}
+                  </Text>
+                </VStack>
+                <Box display={{ base: 'none', md: 'flex' }}>
+                  <FiChevronDown />
+                </Box>
+              </HStack>
+            </MenuButton>
+            <MenuList borderColor="gray.200">
+              <LogoutBtn />
+            </MenuList>
+          </Menu>
+        ) : (
+          <LoginBtn />
+        )}
+      </Flex>
+    </HStack>
+  );
+};
+
+interface TopNavProps extends FlexProps {
+  onOpen: () => void;
+}
+
+const TopNav = ({ onOpen, ...rest }: TopNavProps) => {
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -112,33 +146,9 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
           Miko
         </Text>
       </HStack>
-      <HStack spacing={{ base: '0', md: '6' }}>
-        <Flex alignItems={'center'}>
-          {data ? (
-            <Menu>
-              <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>
-                <HStack>
-                  <Avatar size={'md'} src={IMAGE_DOMAIN + data.avatar} />
-                  <VStack display={{ base: 'none', md: 'flex' }} alignItems="flex-start" spacing="1px" ml="2">
-                    <Text fontSize="md">{data.name}</Text>
-                    <Text fontSize="xs" color="gray.600">
-                      {data.email}
-                    </Text>
-                  </VStack>
-                  <Box display={{ base: 'none', md: 'flex' }}>
-                    <FiChevronDown />
-                  </Box>
-                </HStack>
-              </MenuButton>
-              <MenuList borderColor="gray.200">
-                <LogoutBtn />
-              </MenuList>
-            </Menu>
-          ) : (
-            <LoginBtn />
-          )}
-        </Flex>
-      </HStack>
+      <AsyncBoundary>
+        <UserInfoBox />
+      </AsyncBoundary>
     </Flex>
   );
 };
@@ -147,12 +157,42 @@ interface SidebarProps extends BoxProps {
   onClose: () => void;
 }
 
-const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+const SideBarMyPageMenu = () => {
   const router = useRouter();
   const nowPath = router.pathname as string;
   const { data: user } = useUser();
-  // console.log(router.pathname);
   const { isOpen, onToggle } = useDisclosure();
+
+  return (
+    <>
+      {user && (
+        <NavItem
+          onClick={() => {
+            onToggle();
+          }}
+          icon={FiStar}
+        >
+          My Page
+        </NavItem>
+      )}
+      <Collapse in={isOpen} animateOpacity>
+        {SubLinkItems.map(link => (
+          <Link href={link.url} key={link.name}>
+            <a>
+              <NavItem color={nowPath === link.url && 'cyan.400'} icon={link.icon} pl={12}>
+                {link.name}
+              </NavItem>
+            </a>
+          </Link>
+        ))}
+      </Collapse>
+    </>
+  );
+};
+
+const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+  const router = useRouter();
+  const nowPath = router.pathname as string;
 
   return (
     <Box
@@ -175,7 +215,6 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </HStack>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
-
       {LinkItems.map(link => (
         <Link href={link.url} key={link.name}>
           <a>
@@ -185,22 +224,9 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
           </a>
         </Link>
       ))}
-      {user && (
-        <NavItem onClick={onToggle} icon={FiStar}>
-          My Page
-        </NavItem>
-      )}
-      <Collapse in={isOpen} animateOpacity>
-        {SubLinkItems.map(link => (
-          <Link href={link.url} key={link.name}>
-            <a>
-              <NavItem color={nowPath === link.url && 'cyan.400'} icon={link.icon} pl={12}>
-                {link.name}
-              </NavItem>
-            </a>
-          </Link>
-        ))}
-      </Collapse>
+      <AsyncBoundary>
+        <SideBarMyPageMenu />
+      </AsyncBoundary>
     </Box>
   );
 };
@@ -215,7 +241,7 @@ export default function MenuBar() {
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
-      <MobileNav onOpen={onOpen} />
+      <TopNav onOpen={onOpen} />
     </Box>
   );
 }

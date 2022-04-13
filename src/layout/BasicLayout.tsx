@@ -1,28 +1,22 @@
-import { Box, Center, Text } from '@chakra-ui/react';
-import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
+import { Box } from '@chakra-ui/react';
 import Footer from '@src/components/home/Footer';
 import MenuBar from '@src/components/home/MenuBar';
-
-const Loading = () => {
-  return (
-    <Center>
-      <Text fontSize="6xl">Loading...</Text>
-    </Center>
-  );
-};
+import { FC, ReactElement } from 'react';
 
 //  NOTE <Loading/>이 아닌 Loading으로 경고
-const Layout = ({ children }) => {
+type Props = {
+  children: ReactElement;
+};
+
+const Layout: FC<Props> = ({ children }) => {
   return (
-    <AsyncBoundary pendingFallback={<Loading />}>
-      <Box minH="100vh">
-        <MenuBar />
-        <Box ml={{ base: 0, md: 60 }} mt="10" p="4" paddingBottom="100px">
-          {children}
-        </Box>
+    <Box minH="100vh">
+      <MenuBar />
+      <Box ml={{ base: 0, md: 60 }} mt="10" p="4" paddingBottom="100px">
+        {children}
       </Box>
       <Footer />
-    </AsyncBoundary>
+    </Box>
   );
 };
 

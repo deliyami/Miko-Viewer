@@ -11,7 +11,7 @@ import { Concert } from '@src/types/share';
 import { CommonFSW, Pagination } from '@src/types/share/common';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { KeyboardEventHandler, ReactElement, useEffect, useState } from 'react';
+import { FC, KeyboardEventHandler, ReactElement, useEffect, useState } from 'react';
 
 const PER_PAGE = 12;
 
@@ -92,6 +92,29 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
   };
 };
 
+const ConcertListView: FC<{ query: CommonFSW; iniData: Pagination<Concert> }> = ({ query, iniData }) => {
+  const { data: concertsData } = usePageLaravel('/concerts', query, { fallbackData: iniData });
+
+  if (!concertsData) {
+    return (
+      <Center height="auto" width="full">
+        <Text fontSize="7xl">No Data</Text>
+      </Center>
+    );
+  }
+
+  return (
+    <VStack spacing={10}>
+      <Box minW={{ xl: '120vh' }}>
+        <SimpleGrid columns={[2, null, 3]} spacing="40px">
+          <ConcertList data={concertsData.data} />
+        </SimpleGrid>
+      </Box>
+      <PaginationBtn data={concertsData.meta} options={{ shallow: true }} />
+    </VStack>
+  );
+};
+
 export default function ConcertPage({ iniData, initialParam }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const [isShowCategoryFilter, setIsShowCategoryFilter] = useState(false);
@@ -99,7 +122,6 @@ export default function ConcertPage({ iniData, initialParam }: InferGetServerSid
   const [page, setPage] = useState(initialParam.page);
   const [search, setSearch] = useState(initialParam.search);
   const query: CommonFSW = { page, perPage: PER_PAGE, filter: [['category_id', categoryId]], search: search ? '*' + search + '*' : null };
-  const { data: concertsData } = usePageLaravel('/concerts', query, { fallbackData: iniData });
 
   useEffect(() => {
     const param = parseInt(router.query.page as string, 10);
@@ -123,14 +145,6 @@ export default function ConcertPage({ iniData, initialParam }: InferGetServerSid
     setIsShowCategoryFilter(!isShowCategoryFilter);
   };
 
-  if (!concertsData) {
-    return (
-      <Center height="auto" width="full">
-        <Text fontSize="7xl">No Data</Text>
-      </Center>
-    );
-  }
-
   return (
     <Flex justifyContent="center">
       <Box>
@@ -142,18 +156,7 @@ export default function ConcertPage({ iniData, initialParam }: InferGetServerSid
             <CategoryFilter />
           </Box>
         </HStack>
-        {concertsData ? (
-          <VStack spacing={10}>
-            <Box minW={{ xl: '120vh' }}>
-              <SimpleGrid columns={[2, null, 3]} spacing="40px">
-                <ConcertList data={concertsData.data} />
-              </SimpleGrid>
-            </Box>
-            <PaginationBtn data={concertsData.meta} options={{ shallow: true }} />
-          </VStack>
-        ) : (
-          'no data'
-        )}
+        <ConcertListView iniData={iniData} query={query} />
       </Box>
     </Flex>
   );
