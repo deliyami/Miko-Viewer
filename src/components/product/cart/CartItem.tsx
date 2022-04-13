@@ -27,7 +27,6 @@ const CartItem = ({ data, setData }) => {
   // console.log(data[0].products.data);
   return (
     <Flex w={'100%'} mt={'3%'} overflow={'auto'} h={600} flexDirection={'column'}>
-<<<<<<< HEAD
       {data.map((item, key) => {
         return (
           <Flex h={'25%'} key={key} mb="5%" shadow={'xs'} justifyContent={'space-evenly'} w={'100%'}>
@@ -55,37 +54,6 @@ const CartItem = ({ data, setData }) => {
           </Flex>
         );
       })}
-=======
-      {data.length !== 0
-        ? data.map((item, key) => {
-            return (
-              <Flex h={'25%'} key={key} mb="5%" shadow={'xs'} justifyContent={'space-evenly'} w={'100%'}>
-                <Image w="15%" h="100%" src={`${S3_URL}products/${item.products[0].image}`} rounded={'30%'} alt="productImage"></Image>
-                <Flex m={'2%'} flexDirection={'column'}>
-                  <Text fontSize={'xl'}>{item.products[0].name}</Text>
-                  <Text textAlign={'right'}>カラー : {item.color}</Text>
-                  <Text textAlign={'right'}>サイズ : {item.size}</Text>
-                </Flex>
-                <Flex w={'13%'} ml={'5%'} mr={'5%'} justifyContent={'center'} alignItems="center">
-                  <Select value={item.quantity} onChange={onSelectChange}>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                  </Select>
-                </Flex>
-                <Flex w={'10%'} justifyContent={'center'} alignItems="center">
-                  <Text>¥{item.products[0].price * item.quantity}</Text>
-                </Flex>
-                <Flex ml={'3%'} justifyContent={'center'} alignItems="center">
-                  <CloseButton onClick={() => deleteCart(item.id)}></CloseButton>
-                </Flex>
-              </Flex>
-            );
-          })
-        : null}
->>>>>>> min4
     </Flex>
   );
 };
