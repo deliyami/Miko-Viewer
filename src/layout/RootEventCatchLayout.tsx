@@ -1,6 +1,6 @@
-import { FormEventHandler } from 'react';
+import { FC, FormEventHandler, ReactElement } from 'react';
 
-const RootEventCatchLayout = ({ children }) => {
+const RootEventCatchLayout: FC<{ children: ReactElement }> = ({ children }) => {
   const handleOnChangeBubble: FormEventHandler<HTMLDivElement> = e => {
     e.preventDefault();
     e.stopPropagation();

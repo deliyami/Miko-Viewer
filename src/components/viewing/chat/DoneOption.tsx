@@ -5,7 +5,7 @@ import { ViewingDone } from '@src/components/viewing/chat/ViewingDone';
 import { useColorStore } from '@src/hooks';
 import { Children, cloneElement, FC, memo, ReactElement, useRef } from 'react';
 
-const IconBox: FC<{ icon: IconType }> = ({ children, icon }) => {
+const IconBox: FC<{ icon: IconType; children: ReactElement }> = ({ children, icon }) => {
   const imperativeRef = useRef(null);
   const primary = useColorStore('primary');
 

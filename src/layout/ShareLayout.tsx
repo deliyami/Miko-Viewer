@@ -1,4 +1,6 @@
-const ShareLayout = ({ children }) => {
+import { FC, ReactElement } from 'react';
+
+const ShareLayout: FC<{ children: ReactElement }> = ({ children }) => {
   return <>{children}</>;
 };
 

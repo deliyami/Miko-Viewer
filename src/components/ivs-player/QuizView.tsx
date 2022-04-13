@@ -4,7 +4,7 @@ import { quizMetaDataState } from '@src/state/recoil';
 import { memo, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
-const Timer = memo<{ durationTime: number }>(({ children, durationTime }) => {
+const Timer = memo<{ durationTime: number }>(({ durationTime }) => {
   const [remainTime, setRemainTime] = useState(durationTime);
 
   useEffect(() => {
@@ -17,6 +17,8 @@ const Timer = memo<{ durationTime: number }>(({ children, durationTime }) => {
 
   return <Box h="3%" w="70%" bgColor="white"></Box>;
 });
+
+Timer.displayName = 'Timer';
 
 const QuizView = () => {
   const [quizMetaData, setQuizMetaData] = useRecoilState(quizMetaDataState);

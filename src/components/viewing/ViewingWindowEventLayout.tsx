@@ -1,8 +1,8 @@
 import { isShowChatInputState } from '@src/state/recoil';
-import { FC, useEffect } from 'react';
+import { FC, ReactElement, useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 
-const ViewingWindowEventLayout: FC = ({ children }) => {
+const ViewingWindowEventLayout: FC<{ children: ReactElement }> = ({ children }) => {
   const setIsShowChatInputState = useSetRecoilState(isShowChatInputState);
 
   useEffect(() => {

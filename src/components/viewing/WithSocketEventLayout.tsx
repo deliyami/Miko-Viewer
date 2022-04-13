@@ -7,10 +7,10 @@ import { DataConnectionEvent } from '@src/types/dto/DataConnectionEventType';
 import produce from 'immer';
 import { useRouter } from 'next/router';
 import { DataConnection, MediaConnection } from 'peerjs';
-import { FC, useCallback, useEffect } from 'react';
+import { FC, ReactElement, useCallback, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-const WithSocketEventLayout: FC = ({ children }) => {
+const WithSocketEventLayout: FC<{ children: ReactElement }> = ({ children }) => {
   const socket = useSocket();
   const myPeer = useMyPeer();
 

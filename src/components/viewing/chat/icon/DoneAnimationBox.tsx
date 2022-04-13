@@ -1,7 +1,7 @@
 import { AnimationControls, motion, TargetAndTransition, Transition, VariantLabels } from 'framer-motion';
-import { FC, useEffect } from 'react';
+import { FC, ReactElement, useEffect } from 'react';
 
-type Props = { retry: Function; duration?: number; delay?: number; x: number; y: number };
+type Props = { retry: Function; children: ReactElement; duration?: number; delay?: number; x: number; y: number };
 
 const animate: AnimationControls | TargetAndTransition | VariantLabels | boolean = {
   y: ['20%', '-5%', '0%'],

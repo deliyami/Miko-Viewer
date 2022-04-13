@@ -1,9 +1,8 @@
-import { Center, Code, Divider, Heading, Stack, Text } from '@chakra-ui/react';
+import { Center, Divider, Heading, Stack, Text } from '@chakra-ui/react';
 
 const TextTestPage = () => {
   return (
     <Center flexDir="column">
-      <Code children="console.log(welcome)" />
       <Text fontSize="6xl">(6xl) In love with React & Next</Text>
       <Text fontSize="5xl">(5xl) In love with React & Next</Text>
       <Text fontSize="4xl">(4xl) In love with React & Next</Text>

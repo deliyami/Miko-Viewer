@@ -1,7 +1,7 @@
 import { Center, Spinner, Text, VStack } from '@chakra-ui/react';
-import { FC } from 'react';
+import { FC, ReactElement } from 'react';
 
-const Loading: FC = ({ children }) => {
+const Loading: FC<{ children?: ReactElement }> = ({ children }) => {
   return (
     <Center w="full" h="100vh">
       <VStack>

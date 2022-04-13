@@ -1,6 +1,6 @@
 import { MotionBox } from '@src/components/common/motion/MotionChakra';
 import { Variants } from 'framer-motion';
-import { Children, FC } from 'react';
+import { Children, FC, ReactElement } from 'react';
 
 const boxMotion: Variants = {
   hover: {
@@ -35,7 +35,7 @@ const circleMotion: Variants = {
 };
 const iconMotion: Variants = {};
 
-export const AvatarMenu: FC = ({ children }) => {
+export const AvatarMenu: FC<{ children: ReactElement }> = ({ children }) => {
   return (
     <MotionBox
       whileHover="hover"

@@ -10,7 +10,7 @@ import SideShop from './sideshop/SideShop';
 import ViewingSettingDrawer from './ViewingDrawer';
 import ViewingHelp from './ViewingHelp';
 
-const IconBox: FC<{ text: string; icon: IconType }> = ({ children, text, icon }) => {
+const IconBox: FC<{ text: string; icon: IconType; children: ReactElement }> = ({ children, text, icon }) => {
   const imperativeRef = useRef(null);
 
   return (
@@ -37,7 +37,7 @@ const IconBox: FC<{ text: string; icon: IconType }> = ({ children, text, icon })
   );
 };
 
-const ViewingSideMenuBar: FC<StackProps> = ({ children, ...props }) => {
+const ViewingSideMenuBar: FC<StackProps> = ({ ...props }) => {
   return (
     <VStack width="5rem" bgColor="#202020" minH="100vh" {...props}>
       <IconBox icon={BiCamera} text="カメラ">

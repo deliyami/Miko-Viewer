@@ -3,10 +3,10 @@ import { latestMotionState, model, peerDataListState } from '@src/state/recoil';
 import { roomMemberMotions, sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { useUser } from '@src/state/swr';
 import produce from 'immer';
-import { FC, useEffect } from 'react';
+import { FC, ReactElement, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-export const WithIntervalMotionLayer: FC = ({ children }) => {
+export const WithIntervalMotionLayer: FC<{ children: ReactElement }> = ({ children }) => {
   const { data: user } = useUser();
   const peers = useRecoilValue(peerDataListState);
   const modelState = useRecoilValue(model);

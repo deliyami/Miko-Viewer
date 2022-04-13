@@ -5,10 +5,10 @@ import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForS
 import { roomMemberScores } from '@src/state/shareObject/shareRoomMemberScores';
 import { useUser } from '@src/state/swr';
 import produce from 'immer';
-import { FC, useEffect } from 'react';
+import { FC, ReactElement, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-export const WithIntervalTaskLayer: FC = ({ children }) => {
+export const WithIntervalTaskLayer: FC<{ children: ReactElement }> = ({ children }) => {
   const { data: user } = useUser();
   const socket = useSocket();
   const peers = useRecoilValue(peerDataListState);
