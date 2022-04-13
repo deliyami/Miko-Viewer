@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import { FC } from 'react';
 import { useSetRecoilState } from 'recoil';
 
-const TicketButton: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
+const ButtonStatus: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   const router = useRouter();
 
   // /live/enter으로 이동
@@ -78,19 +78,20 @@ const ImageBadge: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
           </Badge>
         </Box>
       )}
-      {screening && (
+      {screening ? (
         <Box>
           <Badge variant="solid" colorScheme="green" fontSize="13px">
             上映中
           </Badge>
         </Box>
-      )}
-      {archiving && (
-        <Box>
-          <Badge variant="solid" colorScheme="purple" fontSize="13px">
-            アーカイブ期間
-          </Badge>
-        </Box>
+      ) : (
+        archiving && (
+          <Box>
+            <Badge variant="solid" colorScheme="purple" fontSize="13px">
+              アーカイブ期間
+            </Badge>
+          </Box>
+        )
       )}
     </HStack>
   );
@@ -109,11 +110,11 @@ const TicketInfo: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   const compareArchiveDate = dayjs(userTicket.ticket.archiveEndTime);
   const today = dayjs(new Date());
   const screening = today.isBetween(compareStartDate, compareEndDate, 'minute', '[]');
-  const beforeScreening = today.isAfter(compareEndDate, 'minute');
   const archiving = today.isBetween(compareEndDate, compareArchiveDate, 'minute', '[]'); // 다시보기 - 공연 끝나는 날부터 아카이브 끝나는 날까지
+  const archiveAfter = today.isAfter(compareArchiveDate, 'minute'); // 다시보기 끝나는 날 이후
 
   return (
-    <Tr _hover={{ bg: screening ? '#F0FFF4' : (beforeScreening && '#FAF5FF') || '#EBF8FF' }} cursor={(screening || archiving) && 'pointer'}>
+    <Tr _hover={{ bg: screening ? '#F0FFF4' : (archiving && '#FAF5FF') || (archiveAfter && '#F7FAFC') || '#EBF8FF' }} cursor={(screening || archiving) && 'pointer'}>
       <Td>
         <ImageBadge userTicket={userTicket} />
       </Td>
@@ -126,53 +127,7 @@ const TicketInfo: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
       <Td>{archiveEndTime + 'まで'}</Td>
       <Td>{userTicket.ticket.runningTime}分</Td>
       <Td>
-        <TicketButton userTicket={userTicket} />
-      </Td>
-    </Tr>
-  );
-};
-
-const UsedTicket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
-  const router = useRouter();
-
-  // /live/enter으로 이동
-  const setCurUseTicket = useSetRecoilState(curUserTicketState);
-  const useTicketHandler = () => {
-    setCurUseTicket(userTicket);
-    router.push('/live/enter');
-  };
-
-  // 티켓 정보
-  const archiveEndTime = convertDate(userTicket.ticket.archiveEndTime, 'YMD');
-
-  // 날짜 비교
-  const compareArchiveEndDate = dayjs(userTicket.ticket.archiveEndTime);
-  const today = dayjs(new Date());
-  const archiving = today.isSameOrBefore(compareArchiveEndDate);
-
-  const compareStartDate = dayjs(userTicket.ticket.concertStartDate);
-  const compareEndDate = dayjs(userTicket.ticket.concertEndDate);
-  const screening = today.isBetween(compareStartDate, compareEndDate, 'second', '[]');
-
-  console.log(archiving);
-  return (
-    <Tr _hover={{ bg: screening ? '#F0FFF4' : (archiving && '#FAF5FF') || '#FFF5F7' }} cursor={archiving && 'pointer'}>
-      <Td>
-        {screening ? (
-          <Button onClick={useTicketHandler} colorScheme="green" size="sm" fontWeight="800" fontSize="14px" _hover={{ bg: 'green', color: 'white' }}>
-            コンサート入場
-          </Button>
-        ) : (
-          (archiving && (
-            <Button colorScheme="purple" size="sm" fontWeight="800" fontSize="14px" _hover={{ bg: 'purple.500', color: 'white' }}>
-              アーカイブ視聴
-            </Button>
-          )) || (
-            <Button size="sm" color="white" bg="#4A5568" disabled variant="solid" borderRadius={15} _hover={{ bg: '#4A5568' }}>
-              アーカイブ期間満了
-            </Button>
-          )
-        )}
+        <ButtonStatus userTicket={userTicket} />
       </Td>
     </Tr>
   );
