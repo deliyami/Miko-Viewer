@@ -1,4 +1,4 @@
-import { Box, Center, Flex, Tab, Table, TabList, TabPanel, TabPanels, Tabs, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import { Center, Flex, Tab, Table, TabList, TabPanel, TabPanels, Tabs, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import PaginationBtn from '@src/components/common/button/PaginationBtn';
 import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import ConcertTicket from '@src/components/ConcertTicket';
@@ -6,6 +6,7 @@ import BasicLayout from '@src/layout/BasicLayout';
 import { useUser } from '@src/state/swr';
 import { usePageLaravel } from '@src/state/swr/useLaravel';
 import { CommonFSW } from '@src/types/share/common';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { ReactElement } from 'react';
 
@@ -77,11 +78,14 @@ const MyListPage = () => {
   };
 
   return (
-    <Box>
+    <>
+      <Head>
+        <title key="title">Ticket Purchase History | Miko</title>
+      </Head>
       <Tabs variant="enclosed" defaultIndex={isUsedId || 0} isFitted>
         <TabList>
           <Tab color="gray" onClick={() => onClickUsed(0)}>
-            見る前のチケット
+            使用前のチケット
           </Tab>
           <Tab color="gray" onClick={() => onClickUsed(1)}>
             使用したチケット
@@ -98,7 +102,7 @@ const MyListPage = () => {
           </TabPanels>
         </AsyncBoundary>
       </Tabs>
-    </Box>
+    </>
   );
 };
 

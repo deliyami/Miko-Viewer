@@ -10,6 +10,7 @@ import { usePageLaravel } from '@src/state/swr/useLaravel';
 import { Concert } from '@src/types/share';
 import { CommonFSW, Pagination } from '@src/types/share/common';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { FC, KeyboardEventHandler, ReactElement, useEffect, useState } from 'react';
 
@@ -117,6 +118,12 @@ const ConcertListView: FC<{ query: CommonFSW; iniData: Pagination<Concert> }> = 
 
 export default function ConcertPage({ iniData, initialParam }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
+  const handleDenyAccess = () => {
+    setTimeout(() => {
+      router.push('/');
+    }, 1000);
+  };
+
   const [isShowCategoryFilter, setIsShowCategoryFilter] = useState(false);
   const [categoryId, setCategoryId] = useState(initialParam.categoryId);
   const [page, setPage] = useState(initialParam.page);
@@ -146,19 +153,24 @@ export default function ConcertPage({ iniData, initialParam }: InferGetServerSid
   };
 
   return (
-    <Flex justifyContent="center">
-      <Box>
-        <Box id="scroll-into" />
-        <SearchBox />
-        <HStack py={4}>
-          <Icon boxSize={5} onClick={handleShowCategoryFilter} cursor="pointer" as={FiFilter} />
-          <Box visibility={isShowCategoryFilter ? 'visible' : 'hidden'}>
-            <CategoryFilter />
-          </Box>
-        </HStack>
-        <ConcertListView iniData={iniData} query={query} />
-      </Box>
-    </Flex>
+    <>
+      <Head>
+        <title key="title">Miko - ConcertList</title>
+      </Head>
+      <Flex justifyContent="center">
+        <Box>
+          <Box id="scroll-into" />
+          <SearchBox />
+          <HStack py={4}>
+            <Icon boxSize={5} onClick={handleShowCategoryFilter} cursor="pointer" as={FiFilter} />
+            <Box visibility={isShowCategoryFilter ? 'visible' : 'hidden'}>
+              <CategoryFilter />
+            </Box>
+          </HStack>
+          <ConcertListView iniData={iniData} query={query} />
+        </Box>
+      </Flex>
+    </>
   );
 }
 

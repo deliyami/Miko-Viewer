@@ -27,6 +27,7 @@ import BasicLayout from '@src/layout/BasicLayout';
 import { Concert, Ticket } from '@src/types/share';
 import { Pagination } from '@src/types/share/common';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { FC, ReactElement, useMemo, useState } from 'react';
 
@@ -54,15 +55,16 @@ const TicketTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
 
     tickets.forEach(ticket => {
       if (new Date(ticket.saleEndDate) <= today) {
-        aSellingTickets.push(ticket);
-      } else {
         aSellEndTickets.push(ticket);
+      } else {
+        aSellingTickets.push(ticket);
       }
     });
 
     return [aSellingTickets, aSellEndTickets];
   }, [tickets]);
 
+  // console.log(tickets);
   return (
     <>
       <Tabs mt={7} defaultIndex={tabNum || 0} onChange={index => setTabIndex(index)} colorScheme={colorScheme}>
@@ -86,7 +88,7 @@ const TicketTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
                   </Box>
                 ))
               ) : (
-                <Box>NoData</Box>
+                <Center my={10}>販売中のチケットがありません。</Center>
               )}
             </Stack>
           </TabPanel>
@@ -101,7 +103,7 @@ const TicketTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
                   </Box>
                 ))
               ) : (
-                <Box>NoData</Box>
+                <Center my={10}>販売終了のチケットがありません。</Center>
               )}
             </Stack>
           </TabPanel>
@@ -208,14 +210,19 @@ export default function LiveDetailPage({ concert, tickets }: InferGetServerSideP
       </Center>
     );
   }
-  // console.log(concert);
+  console.log(concert);
   return (
-    <Flex justifyContent="center">
-      <Box>
-        <LiveInformation concert={concert.data} />
-        <TicketTab data={tickets.data} />
-      </Box>
-    </Flex>
+    <>
+      <Head>
+        <title key="title">{concert.data.title} | Miko</title>
+      </Head>
+      <Flex justifyContent="center">
+        <Box>
+          <LiveInformation concert={concert.data} />
+          <TicketTab data={tickets.data} />
+        </Box>
+      </Flex>
+    </>
   );
 }
 
