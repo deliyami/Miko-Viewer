@@ -1,5 +1,5 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
-import { S3_URL } from '@src/const';
+import { IMAGE_DOMAIN } from '@src/const';
 import { getDataFromLaravel } from '@src/helper';
 import { useUser } from '@src/state/swr';
 import { Cart } from '@src/types/local';
@@ -31,7 +31,7 @@ const ProductDetail = ({ item }) => {
     <Flex justifyContent={'center'}>
       <Flex>
         <Box w={500} h={500}>
-          <Image boxSize={'full'} src={`${S3_URL}products/${item.image}`}></Image>
+          <Image boxSize={'full'} src={`${IMAGE_DOMAIN}products/${item.image}`}></Image>
         </Box>
       </Flex>
       <Flex mt={'2.5%'} ml={'2%'} flexDirection={'column'} mr={'8%'} alignItems={'end'}>

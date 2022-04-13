@@ -21,7 +21,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import TicketBox from '@src/components/concert/TicketBox';
-import { S3_URL } from '@src/const';
+import { IMAGE_DOMAIN } from '@src/const';
 import { convertDate, getDataFromLaravel } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
 import { Concert, Ticket } from '@src/types/share';
@@ -128,7 +128,7 @@ const LiveInformation = ({ concert }) => {
       justify={{ base: 'center', md: 'space-between' }}
       align={{ base: 'center', md: 'start' }}
     >
-      <Image borderRadius="2%" boxSize="sm" src={S3_URL + concert.coverImage} objectFit="cover" alt="concertImage" fallbackSrc="/defaultImage.png" />
+      <Image borderRadius="2%" boxSize="sm" src={IMAGE_DOMAIN + concert.coverImage} objectFit="cover" alt="concertImage" fallbackSrc="/defaultImage.png" />
       <Box px={4}>
         <Flex pb={3} direction={{ base: 'column', md: 'row' }} minW={{ md: '50vh' }}>
           <Heading fontWeight="700">{concert.title}</Heading>

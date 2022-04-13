@@ -34,11 +34,13 @@ export const chGoodsSoldIdx = 6;
 export const chSuperChatSendedIdx = 7;
 export const chSuperDoneItemSendedIdx = 8;
 
-export const S3_URL = 'https://miko-image.s3.ap-northeast-2.amazonaws.com/';
+// image url은 전부 / 가 붙음.
+export const IMAGE_DOMAIN = 'https://img.mikopj.live/';
 
 export const MY_AVATAR_ID = 'myAvatar'; // 이거 변경하면 @src/components/viewing/GlobalModel.ts에 default value변경해야함
 
-//  NOTE getter로만 접근 해야함.
+//  NOTE  process.env getter로만 접근 해야함.
+// NOTE 백엔드 URL은 전부 /가 붙지 않음.
 export const LARAVEL_URL = process.env.NEXT_PUBLIC_LARAVEL_URL ?? 'http://localhost:8080/api';
 export const NEST_URL = process.env.NEXT_PUBLIC_NEST_URL ?? 'http://localhost:3001/api';
 export const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_SERVER ?? 'http://localhost:3001';

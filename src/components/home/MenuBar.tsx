@@ -18,7 +18,7 @@ import {
   Text,
   useColorModeValue,
   useDisclosure,
-  VStack
+  VStack,
 } from '@chakra-ui/react';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiHome } from '@react-icons/all-files/fi/FiHome';
@@ -26,13 +26,12 @@ import { FiList } from '@react-icons/all-files/fi/FiList';
 import { FiMenu } from '@react-icons/all-files/fi/FiMenu';
 import { FiStar } from '@react-icons/all-files/fi/FiStar';
 import { IconType } from '@react-icons/all-files/lib';
-import { S3_URL } from '@src/const';
+import { IMAGE_DOMAIN } from '@src/const';
 import { useUser } from '@src/state/swr';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactText } from 'react';
 import { LoginBtn, LogoutBtn } from '../common/button/LogoutBtn';
-
 
 interface LinkItemProps {
   name: string;
@@ -119,7 +118,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
             <Menu>
               <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>
                 <HStack>
-                  <Avatar size={'md'} src={S3_URL + data.avatar} />
+                  <Avatar size={'md'} src={IMAGE_DOMAIN + data.avatar} />
                   <VStack display={{ base: 'none', md: 'flex' }} alignItems="flex-start" spacing="1px" ml="2">
                     <Text fontSize="md">{data.name}</Text>
                     <Text fontSize="xs" color="gray.600">

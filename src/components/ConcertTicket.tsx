@@ -1,5 +1,5 @@
 import { Badge, Box, Button, Center, HStack, Image, Td, Text, Tr } from '@chakra-ui/react';
-import { S3_URL } from '@src/const';
+import { IMAGE_DOMAIN } from '@src/const';
 import { convertDate } from '@src/helper';
 import { curUserTicketState } from '@src/state/recoil';
 import { UserTicket } from '@src/types/share';
@@ -70,7 +70,7 @@ const ImageBadge: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
 
   return (
     <HStack align="stretch">
-      <Image w="120px" h="120px" objectFit="cover" alt="concertImage" fallbackSrc="/defaultImage.png" src={S3_URL + userTicket.concert.coverImage} />
+      <Image w="120px" h="120px" objectFit="cover" alt="concertImage" fallbackSrc="/defaultImage.png" src={IMAGE_DOMAIN + userTicket.concert.coverImage} />
       {previewAlarm && (
         <Box>
           <Badge variant="solid" colorScheme="blue" fontSize="13px">

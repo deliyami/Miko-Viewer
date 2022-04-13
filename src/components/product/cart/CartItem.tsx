@@ -1,5 +1,5 @@
-import { CloseButton, Flex, Select, Image, Text } from '@chakra-ui/react';
-import { LARAVEL_URL, S3_URL } from '@src/const';
+import { CloseButton, Flex, Image, Select, Text } from '@chakra-ui/react';
+import { IMAGE_DOMAIN, LARAVEL_URL } from '@src/const';
 import axios from 'axios';
 import { useState } from 'react';
 
@@ -30,7 +30,7 @@ const CartItem = ({ data }) => {
       {data.map((item, key) => {
         return (
           <Flex h={'25%'} key={key} mb="5%" shadow={'xs'} justifyContent={'space-evenly'} w={'100%'}>
-            <Image w="15%" h="100%" src={`${S3_URL}products/${item.products[0].image}`} rounded={'30%'} alt="productImage"></Image>
+            <Image w="15%" h="100%" src={`${IMAGE_DOMAIN}products/${item.products[0].image}`} rounded={'30%'} alt="productImage"></Image>
             <Flex m={'2%'} flexDirection={'column'}>
               <Text fontSize={'xl'}>{item.products[0].name}</Text>
               <Text textAlign={'right'}>カラー : {item.color}</Text>

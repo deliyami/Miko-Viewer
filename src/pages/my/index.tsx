@@ -1,5 +1,5 @@
 import { Avatar, Badge, Box, Button, Center, Flex, Heading, HStack, Image, Input, Link, Stack, Text, useColorModeValue } from '@chakra-ui/react';
-import { S3_URL } from '@src/const';
+import { IMAGE_DOMAIN } from '@src/const';
 import BasicLayout from '@src/layout/BasicLayout';
 import { useUser } from '@src/state/swr';
 import { User } from '@src/types/share';
@@ -14,7 +14,7 @@ const MyCard: FC<{ data: User }> = ({ data }) => {
           My Page
         </Heading>
         <HStack spacing={20} p={12} mt={6} boxShadow="lg">
-          <Image src={S3_URL + data.avatar} fallbackSrc="https://via.placeholder.com/300" />
+          <Image src={IMAGE_DOMAIN + data.avatar} fallbackSrc="https://via.placeholder.com/300" />
           <Box>
             <Heading as="h5" size="sm" my={2}>
               Name

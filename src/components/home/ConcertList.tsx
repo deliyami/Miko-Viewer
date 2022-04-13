@@ -1,5 +1,5 @@
 import { AspectRatio, Box, Image, Spinner, Text } from '@chakra-ui/react';
-import { S3_URL } from '@src/const';
+import { IMAGE_DOMAIN } from '@src/const';
 import { convertDate } from '@src/helper';
 import { Concert } from '@src/types/share';
 import Link from 'next/link';
@@ -15,7 +15,7 @@ const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
         <a>
           <Box maxW="300px">
             <AspectRatio maxW="300px" ratio={1}>
-              <Image src={S3_URL + concert.coverImage} objectFit="cover" alt="concertImage" fallbackSrc="/defaultImage.png" />
+              <Image src={IMAGE_DOMAIN + concert.coverImage} objectFit="cover" alt="concertImage" fallbackSrc="/defaultImage.png" />
             </AspectRatio>
             <Box my={2}>
               <Text color="gray.700" fontSize="sm">

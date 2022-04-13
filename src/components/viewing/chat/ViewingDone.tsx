@@ -15,7 +15,7 @@ import {
   TextProps,
   useDisclosure,
 } from '@chakra-ui/react';
-import { doneItem, S3_URL } from '@src/const';
+import { doneItem, IMAGE_DOMAIN } from '@src/const';
 import { useColorStore } from '@src/hooks';
 import { useSocket } from '@src/hooks/dynamicHooks';
 import { useUser } from '@src/state/swr';
@@ -126,7 +126,7 @@ export const ViewingDone = forwardRef((_, ref) => {
                   // _focus={{ boxShadow: `0 0 3px 3px ${Primary}`, borderRadius: '16px' }}
                 >
                   <Text>{done.name}</Text>
-                  <Image style={{ minWidth: '100px', width: '100px' }} src={`${S3_URL}doneSVG/${done.path}.svg`} alt="doneSVG"></Image>
+                  <Image style={{ minWidth: '100px', width: '100px' }} src={`${IMAGE_DOMAIN}doneSVG/${done.path}.svg`} alt="doneSVG"></Image>
                   <MotionHStack spacing={0} initial="initial" animate="animate" variants={container}>
                     {`${done.price}`.split('').map((str, j) => (
                       <MotionP custom={j} initial="initial" animate="animate" variants={clicked === i ? letterAnimation : null} key={j}>

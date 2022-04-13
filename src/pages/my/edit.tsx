@@ -1,6 +1,6 @@
 import { SmallCloseIcon } from '@chakra-ui/icons';
 import { Avatar, AvatarBadge, Button, Center, Flex, FormControl, FormLabel, Heading, IconButton, Image, Input, Stack } from '@chakra-ui/react';
-import { S3_URL } from '@src/const';
+import { IMAGE_DOMAIN } from '@src/const';
 import BasicLayout from '@src/layout/BasicLayout';
 import { useUser } from '@src/state/swr';
 import { ReactElement } from 'react';
@@ -17,7 +17,7 @@ export default function EditPage(): JSX.Element {
           <FormLabel>User Avatar</FormLabel>
           <Stack direction={['column', 'row']} spacing={6}>
             <Center>
-              <Avatar size="2xl" src={S3_URL + userData.avatar}>
+              <Avatar size="2xl" src={IMAGE_DOMAIN + userData.avatar}>
                 <AvatarBadge as={IconButton} size="sm" rounded="full" top="-10px" colorScheme="red" aria-label="remove Image" icon={<SmallCloseIcon />} />
               </Avatar>
             </Center>
@@ -61,7 +61,7 @@ export default function EditPage(): JSX.Element {
           </Button>
         </Stack>
       </Stack>
-      <Image mb={10} display={{ base: 'none', md: 'center' }} minW="40vh" maxW="55vh" src={S3_URL + 'logo/color=simple.svg'} opacity="30%" alt="miko-loco" />
+      <Image mb={10} display={{ base: 'none', md: 'center' }} minW="40vh" maxW="55vh" src={IMAGE_DOMAIN + 'logo/color=simple.svg'} opacity="30%" alt="miko-loco" />
     </Flex>
   );
 }

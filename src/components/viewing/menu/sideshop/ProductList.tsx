@@ -1,6 +1,6 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import Loading from '@src/components/common/Loading';
-import { S3_URL } from '@src/const';
+import { IMAGE_DOMAIN } from '@src/const';
 import { getDataFromLaravel } from '@src/helper';
 import { enterTicketDataState } from '@src/state/recoil';
 import { Product } from '@src/types/share';
@@ -35,7 +35,7 @@ const ProductList = () => {
             <Flex key={key} mb={'20%'}>
               <Flex flexDir={'column'}>
                 <Box w={'200px'} rounded={'8%'}>
-                  <Image src={`${S3_URL}products/${item.image}`} boxSize={'full'}></Image>
+                  <Image src={`${IMAGE_DOMAIN}products/${item.image}`} boxSize={'full'}></Image>
                 </Box>
                 <Text>{item.name}</Text>
                 <Text textAlign={'right'} fontWeight={'bold'}>

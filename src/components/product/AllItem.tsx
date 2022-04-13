@@ -1,6 +1,6 @@
 /* eslint-disable array-callback-return */
 import { Box, Button, Flex, Image, SimpleGrid, Text } from '@chakra-ui/react';
-import { NEXT_URL, S3_URL } from '@src/const';
+import { IMAGE_DOMAIN, NEXT_URL } from '@src/const';
 import { Product } from '@src/types/share';
 import { Pagination } from '@src/types/share/common';
 import { useRouter } from 'next/router';
@@ -29,7 +29,7 @@ const AllItem: FC<{ allItem: Pagination<Product> }> = ({ allItem }) => {
                 >
                   <Box>
                     <Box>
-                      <Image src={`${S3_URL}products/${item.image}`}></Image>
+                      <Image src={`${IMAGE_DOMAIN}products/${item.image}`}></Image>
                     </Box>
                     <Text textAlign={'right'}>{item.name}</Text>
                     <Text textAlign={'right'} fontWeight={'bold'}>
