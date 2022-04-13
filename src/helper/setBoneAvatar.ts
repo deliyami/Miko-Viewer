@@ -61,18 +61,12 @@ const boneTurn = (transBone: BABYLON.TransformNode[], boneNum: number, kalidoRig
     } else {
       transBone[boneNum - 1].rotate(new BABYLON.Vector3(1, 0, 0), -boneZ[1] * 2, 2);
     }
-    // transBone[boneNum-1].rotate(new BABYLON.Vector3(0,1,0),boneY[1],2)
-    // transBone[boneNum-1].rotate(new BABYLON.Vector3(0,0,1),boneX[1],2)
   }
   if (boneX[2] && boneY[2] && boneZ[2]) {
     if (direction === 0) {
       transBone[boneNum - 2].rotate(new BABYLON.Vector3(1, 0, 0), (boneZ[2] - Math.PI / 4) / 3, 2);
-      // transBone[boneNum - 2].rotate(new BABYLON.Vector3(0, 1, 0), -boneY[2] - (Math.PI - 0.5) / 2, 2);
-      // transBone[boneNum - 2].rotate(new BABYLON.Vector3(0, 0, 1), -boneX[2], 2);
     } else {
       transBone[boneNum - 2].rotate(new BABYLON.Vector3(1, 0, 0), -(boneZ[2] + Math.PI / 4) / 3, 2);
-      // transBone[boneNum - 2].rotate(new BABYLON.Vector3(0, 1, 0), -boneY[2] + (Math.PI - 0.5) / 2, 2);
-      // transBone[boneNum - 2].rotate(new BABYLON.Vector3(0, 0, 1), boneX[2], 2);
     }
   }
 };

@@ -7,7 +7,7 @@ import { FC, forwardRef } from 'react';
 export const DoneIcon: FC<DoneProps> = forwardRef(({ path, loop = true, autoplay = true, width = 100 }, ref) => {
   const options: LottieOptions = {
     renderer: 'canvas',
-    animationData: JSONExporter[doneItem[path].path],
+    animationData: JSONExporter[doneItem[path].name],
     loop,
     autoplay,
     style: {
