@@ -132,7 +132,7 @@ export const getStaticProps: GetStaticProps<Data> = async context => {
       soonData: soonResult ? soonResult.data.data : [],
       kpopData: kpopResult ? kpopResult.data.data : [],
     },
-    revalidate: 60 * 30, // 30분 마다 재생성
+    revalidate: 60 * 10, // 10분 마다 재생성
   };
 };
 

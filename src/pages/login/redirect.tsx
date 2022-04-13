@@ -1,6 +1,6 @@
 import { Box, Center, Text, VStack } from '@chakra-ui/react';
 import BasicLayout from '@src/layout/BasicLayout';
-import { useOAuthLogin } from '@src/state/swr';
+import { tryOAuthLogin } from '@src/state/swr';
 import { useRouter } from 'next/dist/client/router';
 import { ReactElement, useEffect, useState } from 'react';
 
@@ -15,7 +15,7 @@ export default function RedirectPage() {
 
     async function tryLogin() {
       if (token) {
-        const result = await useOAuthLogin(token as string);
+        const result = await tryOAuthLogin(token as string);
         if (result === false) setError(true);
       } else {
         setError(true);

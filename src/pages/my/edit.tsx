@@ -1,3 +1,4 @@
+import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import EditProfile from '@src/components/my/EditProfile';
 import BasicLayout from '@src/layout/BasicLayout';
 import Head from 'next/head';
@@ -15,5 +16,9 @@ export default function EditPage() {
 }
 
 EditPage.getLayout = function getLayout(page: ReactElement) {
-  return <BasicLayout>{page}</BasicLayout>;
+  return (
+    <BasicLayout>
+      <AsyncBoundary>{page}</AsyncBoundary>
+    </BasicLayout>
+  );
 };

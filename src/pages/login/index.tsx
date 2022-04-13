@@ -1,47 +1,54 @@
 import { Box, Button, Center, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link, Stack, Text } from '@chakra-ui/react';
 import { FcGoogle } from '@react-icons/all-files/fc/FcGoogle';
+import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import { LARAVEL_URL } from '@src/const';
 import BasicLayout from '@src/layout/BasicLayout';
-import { useLogin, useUser } from '@src/state/swr';
+import { tryLogin, useUser } from '@src/state/swr';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import React, { ReactElement } from 'react';
+import { FC, ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
+
+const RedirectLogic: FC = () => {
+  const { data: userData, error: userError } = useUser();
+  const router = useRouter();
+
+  if (userData && !userError) {
+    router.push('/'); // 로그인 상태면 홈으로 강제 이동동
+  }
+  return <></>;
+};
 
 const LoginPage = () => {
   const {
     handleSubmit,
-    control,
-    reset,
-    watch,
-    setValue,
+    // control,
+    // reset,
+    // watch,
+    // setValue,
     register,
-    getValues,
+    // getValues,
     formState: { errors, isSubmitting },
   } = useForm<{ email: string; password: string }>({ mode: 'all' });
-  const { data: userData, error: userError } = useUser();
   const router = useRouter();
 
   const onSubmit = async (data: any) => {
-    const result = await useLogin(data);
+    const result = await tryLogin(data);
     if (result) {
       router.push('/');
     }
   };
 
-  if (userData && !userError) {
-    router.push('/'); // 로그인 상태면 홈으로 강제 이동동
-  }
-
-  // console.info(watch());
-  console.log(errors);
   return (
     <>
       <Head>
-        <title>LOGIN | MICO</title>
+        <title>LOGIN | MIKO</title>
         <meta name="description" content="미코 로그인 페이지" />
       </Head>
+      <AsyncBoundary pendingFallback={<></>}>
+        <RedirectLogic />
+      </AsyncBoundary>
       <Flex minH={'80vh'} align={'center'} justify={'center'}>
         <Box rounded={'lg'} border="1px" borderColor="gray.200" borderRadius="15px" p={10} w={'full'} maxW={'md'}>
           <Heading fontSize={'4xl'} my={6}>

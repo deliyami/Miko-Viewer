@@ -1,4 +1,5 @@
 import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link, Stack } from '@chakra-ui/react';
+import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import { useColorStore } from '@src/hooks';
 import BasicLayout from '@src/layout/BasicLayout';
 import { useUser } from '@src/state/swr';
@@ -7,6 +8,17 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
+
+const RedirectLogic = () => {
+  const router = useRouter();
+
+  const { data: userData, error: userError } = useUser();
+
+  if (userData && !userError) {
+    router.push('/'); // 로그인 상태면 홈으로 강제 이동
+  }
+  return <></>;
+};
 
 const SignPage = () => {
   const {
@@ -19,8 +31,6 @@ const SignPage = () => {
     getValues,
     formState: { errors, isSubmitting },
   } = useForm<{ name: string; email: string; password: string; avatar: string }>({ mode: 'all' });
-  const { data: userData, error: userError } = useUser();
-  const router = useRouter();
 
   const onSubmit = async (data: any) => {
     // post로 보내기
@@ -39,18 +49,15 @@ const SignPage = () => {
     // }
   };
 
-  if (userData && !userError) {
-    router.push('/'); // 로그인 상태면 홈으로 강제 이동
-  }
-
-  // console.info(watch());
-  // console.log(errors);
   return (
     <>
       <Head>
         <title>SIGN | MICO</title>
         <meta name="description" content="미코 회원가입 페이지" />
       </Head>
+      <AsyncBoundary pendingFallback={<></>}>
+        <RedirectLogic />
+      </AsyncBoundary>
       <Flex minH={'100vh'} align={'center'} justify={'center'} bg={useColorStore('background')}>
         <Stack spacing={8} mx={'auto'} maxW={'lg'} py={8} px={2}>
           <Stack align={'center'}>

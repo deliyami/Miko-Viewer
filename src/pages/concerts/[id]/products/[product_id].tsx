@@ -1,4 +1,5 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
+import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import AllItem from '@src/components/product/AllItem';
 import Details from '@src/components/product/details/Details';
 import ProductDetail from '@src/components/product/ProductDetail';
@@ -62,5 +63,9 @@ export default function ProductPage({ data, item, concertId }: InferGetServerSid
 }
 
 ProductPage.getLayout = function getLayout(page: ReactElement) {
-  return <BasicLayout>{page}</BasicLayout>;
+  return (
+    <BasicLayout>
+      <AsyncBoundary>{page}</AsyncBoundary>
+    </BasicLayout>
+  );
 };

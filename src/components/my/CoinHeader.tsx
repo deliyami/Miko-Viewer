@@ -3,7 +3,6 @@ import { useUser } from '@src/state/swr';
 
 const CoinHeader = () => {
   const { data: userData } = useUser();
-  // console.log(data);
   return (
     <Flex>
       <Heading pt={3} size="md">

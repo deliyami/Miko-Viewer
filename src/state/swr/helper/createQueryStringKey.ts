@@ -6,7 +6,6 @@ const isNull = (p: any) => {
 
 const createFSWQueryString = (query: CommonFSW): string => {
   const { filter, sort, start, end, with: aWith, perPage, page, search } = query;
-  console.log('query', query);
   const url = new URLSearchParams();
   if (filter) {
     const filterString = filter.reduce((prev, [area, value]) => {

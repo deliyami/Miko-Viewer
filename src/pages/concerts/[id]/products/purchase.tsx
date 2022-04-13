@@ -1,4 +1,5 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import Carts from '@src/components/product/cart/Carts';
 import Check from '@src/components/product/pay/Check';
 import Info from '@src/components/product/pay/Info';
@@ -41,5 +42,9 @@ const purchase = () => {
 export default purchase;
 
 purchase.getLayout = function getLayout(page: ReactElement) {
-  return <BasicLayout>{page}</BasicLayout>;
+  return (
+    <BasicLayout>
+      <AsyncBoundary>{page}</AsyncBoundary>
+    </BasicLayout>
+  );
 };

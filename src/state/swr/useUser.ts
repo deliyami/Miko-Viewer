@@ -10,7 +10,7 @@ const URL_LOGIN = '/login';
 const URL_OAUTH_LOGIN = '/login/google';
 const URL_LOGOUT = '/logout';
 
-const useUser = () => {
+export const useUser = () => {
   const aFetcher = (url: string) => {
     if (typeof window === 'undefined') return Promise.resolve(undefined);
 
@@ -45,7 +45,7 @@ const useUser = () => {
   // return { data, error, mutate, isValidating, isNotLogged };
 };
 
-const useLogin = async (loginData: LoginData) => {
+export const tryLogin = async (loginData: LoginData) => {
   try {
     const { data, status } = await axiosI.post<User>(`${URL_LOGIN}`, loginData);
     mutate(URL_USER, data, false);
@@ -55,7 +55,7 @@ const useLogin = async (loginData: LoginData) => {
   }
 };
 
-const useOAuthLogin = async (token: string) => {
+export const tryOAuthLogin = async (token: string) => {
   try {
     const { data, status } = await axiosI.post<User>(`${URL_OAUTH_LOGIN}`, {
       token,
@@ -67,12 +67,11 @@ const useOAuthLogin = async (token: string) => {
   }
 };
 
-const useLogOut = async () => {
+export const tryLogOut = async () => {
   try {
-    const { data, status } = await axiosI.get(`${URL_LOGOUT}`);
+    await axiosI.get(`${URL_LOGOUT}`);
     return undefined;
   } catch (error) {
     return undefined;
   }
 };
-export { useLogin, useUser, useLogOut, useOAuthLogin };
