@@ -125,6 +125,13 @@ export const getStaticProps: GetStaticProps<Data> = async context => {
     perPage: 4,
   });
 
+  if (newResult.status !== 200)
+    return {
+      redirect: {
+        destination: '/500',
+      },
+    };
+
   return {
     props: {
       newData: newResult ? newResult.data.data : [],
