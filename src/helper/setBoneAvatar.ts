@@ -17,7 +17,7 @@ const boneReset = (bones: BABYLON.TransformNode[], originalBones: BABYLON.Quater
  * @param transBone 모델링
  * @param boneNum 모델링의 처음 시작하는 부분
  * @param kalidoRig 관절 회전 값의 오브젝트, xyz키를 가진 배열...?
- * @param direction 팔 좌우 방향
+ * @param direction 팔 좌우 방향, 0=== 사람기준 왼손
  */
 const boneTurn = (transBone: BABYLON.TransformNode[], boneNum: number, kalidoRig: Kalidokit.TPose, direction: number) => {
   const boneX: number[] = [];
@@ -63,6 +63,17 @@ const boneTurn = (transBone: BABYLON.TransformNode[], boneNum: number, kalidoRig
     }
     // transBone[boneNum-1].rotate(new BABYLON.Vector3(0,1,0),boneY[1],2)
     // transBone[boneNum-1].rotate(new BABYLON.Vector3(0,0,1),boneX[1],2)
+  }
+  if (boneX[2] && boneY[2] && boneZ[2]) {
+    if (direction === 0) {
+      transBone[boneNum - 2].rotate(new BABYLON.Vector3(1, 0, 0), (boneZ[2] - Math.PI / 4) / 3, 2);
+      // transBone[boneNum - 2].rotate(new BABYLON.Vector3(0, 1, 0), -boneY[2] - (Math.PI - 0.5) / 2, 2);
+      // transBone[boneNum - 2].rotate(new BABYLON.Vector3(0, 0, 1), -boneX[2], 2);
+    } else {
+      transBone[boneNum - 2].rotate(new BABYLON.Vector3(1, 0, 0), -(boneZ[2] + Math.PI / 4) / 3, 2);
+      // transBone[boneNum - 2].rotate(new BABYLON.Vector3(0, 1, 0), -boneY[2] + (Math.PI - 0.5) / 2, 2);
+      // transBone[boneNum - 2].rotate(new BABYLON.Vector3(0, 0, 1), boneX[2], 2);
+    }
   }
 };
 

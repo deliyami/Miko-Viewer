@@ -27,7 +27,7 @@ export const AvatarModel: FC<{
           // 카메라 컨트롤러, 모델뜨는 canvas 드래그로 조절 가능
           // camera.attachControl(true);
 
-          const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, -1), scene);
+          const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 1), scene);
 
           // Default intensity is 1. Let's dim the light a small amount
           light.intensity = 0.6;
@@ -36,8 +36,10 @@ export const AvatarModel: FC<{
           BABYLON.SceneLoader.ImportMesh('', path, '', scene, (...args) => {
             args[4][18].rotate(new BABYLON.Vector3(0, 0, 1), (Math.PI * 7) / 36, 2);
             args[4][23].rotate(new BABYLON.Vector3(0, 0, 1), -(Math.PI * 7) / 36, 2);
+
             // args[4][27].rotate(new BABYLON.Vector3(0, 1, 0), Math.PI, 2);
             const bones = args[4];
+            console.log(bones);
             const originalBones: BABYLON.Quaternion[] = [];
             for (let j = 0; j < args[4].length; j++) {
               originalBones[j] = args[4][j].rotationQuaternion?.clone();
@@ -60,15 +62,24 @@ export const AvatarModel: FC<{
               light.specular = new BABYLON.Color3(r / d, g / d, b / d);
             };
 
-            const r = 244;
-            const g = 152;
-            const b = 89;
-            const d = 255;
+            // const r = 244;
+            // const g = 152;
+            // const b = 89;
+            // const d = 255;
 
+            const r = 1;
+            const g = 1;
+            const b = 1;
+            const d = 1;
+
+            for (let j = 1; j < 9; j++) {
+              new BABYLON.StandardMaterial(`${j}_body`, scene);
+            }
             scene.materials[10] = new BABYLON.StandardMaterial('hand_light', scene);
             scene.materials[10].emissiveColor = new BABYLON.Color3(r / d, g / d, b / d);
             scene.meshes[11].material = scene.materials[10];
-
+            scene.materials[10].name = '0';
+            scene.materials[12].name = '0';
             createLights(bones, 15, r, g, b, d, scene);
             createLights(bones, 20, r, g, b, d, scene);
 
