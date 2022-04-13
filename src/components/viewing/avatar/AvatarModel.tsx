@@ -36,8 +36,10 @@ export const AvatarModel: FC<{
           BABYLON.SceneLoader.ImportMesh('', path, '', scene, (...args) => {
             args[4][18].rotate(new BABYLON.Vector3(0, 0, 1), (Math.PI * 7) / 36, 2);
             args[4][23].rotate(new BABYLON.Vector3(0, 0, 1), -(Math.PI * 7) / 36, 2);
+
             // args[4][27].rotate(new BABYLON.Vector3(0, 1, 0), Math.PI, 2);
             const bones = args[4];
+            console.log(bones);
             const originalBones: BABYLON.Quaternion[] = [];
             for (let j = 0; j < args[4].length; j++) {
               originalBones[j] = args[4][j].rotationQuaternion?.clone();
