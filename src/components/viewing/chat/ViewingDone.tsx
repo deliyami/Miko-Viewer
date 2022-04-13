@@ -116,17 +116,9 @@ export const ViewingDone = forwardRef((_, ref) => {
                   doneSelectHandler(i);
                 }}
               >
-                <Flex
-                  direction="column"
-                  align="center"
-                  height="25vh"
-                  minHeight="150px"
-                  justifyContent="space-between"
-                  // _hover={{ boxShadow: `0 0 3px 3px ${weakPrimary}`, borderRadius: '16px' }}
-                  // _focus={{ boxShadow: `0 0 3px 3px ${Primary}`, borderRadius: '16px' }}
-                >
+                <Flex direction="column" align="center" height="25vh" minHeight="150px" justifyContent="space-between">
                   <Text>{done.name}</Text>
-                  <Image style={{ minWidth: '100px', width: '100px' }} src={`${IMAGE_DOMAIN}doneSVG/${done.path}.svg`} alt="doneSVG"></Image>
+                  <Image style={{ minWidth: '100px', width: '100px' }} src={`${IMAGE_DOMAIN}doneSVG/${done.name}.svg`} alt="doneSVG"></Image>
                   <MotionHStack spacing={0} initial="initial" animate="animate" variants={container}>
                     {`${done.price}`.split('').map((str, j) => (
                       <MotionP custom={j} initial="initial" animate="animate" variants={clicked === i ? letterAnimation : null} key={j}>
