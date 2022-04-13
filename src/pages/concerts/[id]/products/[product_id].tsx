@@ -8,7 +8,6 @@ import BasicLayout from '@src/layout/BasicLayout';
 import { Product } from '@src/types/share';
 import { Pagination } from '@src/types/share/common';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { useRouter } from 'next/router';
 import { ReactElement } from 'react';
 
 type Data = {
@@ -19,7 +18,7 @@ type Data = {
 
 export const getServerSideProps: GetServerSideProps<Data> = async context => {
   const URL_PRODUCTS = '/products';
-  const concertId = parseInt((context.query.id as string) ?? '1');
+  const concertId = parseInt((context.query.id as string) ?? '1', 10);
   // let categoryId = parseInt((context.query.category_id as string) ?? "1");
   // const page = context.query.page as string;
   // const search = context.query.search as string;
@@ -42,8 +41,8 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
   };
 };
 
-export default function ProductPage({ data, item, concertId }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const router = useRouter();
+export default function ProductPage({ data, item }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  // const router = useRouter();
   console.log(item);
   return (
     <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>

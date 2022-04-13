@@ -17,14 +17,15 @@ import {
 import { NEXT_URL } from '@src/const';
 import { useRouter } from 'next/router';
 
-const Paydone = () => {
+const Paydone = ({ data }) => {
   const router = useRouter();
+  console.log(data);
   return (
     <Flex flexDir={'column'}>
       <Text fontSize={'3xl'} textAlign={'center'} my={'5%'}>
         ありがとうございます。ご注文手続きが完了しました。
       </Text>
-      <TableContainer alignSelf={'center'} w={'50%'}>
+      <TableContainer alignSelf={'center'} w={'70%'}>
         <Table mb={'15%'}>
           <TableCaption textAlign={'left'}>
             会員様は、会員メニュー内の
@@ -44,7 +45,7 @@ const Paydone = () => {
                 <Flex justifyContent={'center'}>
                   <AccordionItem>
                     <AccordionButton color={'blue.500'}>
-                      orderId
+                      {/* {data.id} */}
                       <AccordionIcon />
                     </AccordionButton>
                     <AccordionPanel>data</AccordionPanel>
@@ -65,7 +66,7 @@ const Paydone = () => {
           <Tbody>
             <Td>ご注文履歴</Td>
             <Td textAlign={'center'}>
-              <Link color="blue.500" href="#">
+              <Link color="blue.500" href="/my/order">
                 ご注文履歴
               </Link>
             </Td>

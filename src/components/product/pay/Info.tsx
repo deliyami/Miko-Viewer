@@ -1,15 +1,10 @@
 import { Flex, Input, Text } from '@chakra-ui/react';
 import CommonDivider from '@src/components/common/divider/CommonDivider';
-import { useUser } from '@src/state/swr';
-import { useState } from 'react';
 import Address from './Address';
 import Buttons from './Buttons';
 import NotifyCheck from './NotifyCheck';
 
-const Info = ({ tabIndex, setTabIndex }) => {
-  const [address, setAddress] = useState('');
-  //   const router = useRouter();
-  const user = useUser();
+const Info = ({ setAddress, tabIndex, setTabIndex }) => {
   return (
     <Flex flexDirection={'column'} w={'50%'} h="100%" p={'2%'} ml={'25%'}>
       <Flex mt={'14%'} justifyContent={'space-between'} alignItems={'center'}>
@@ -53,7 +48,7 @@ const Info = ({ tabIndex, setTabIndex }) => {
           メールアドレス<span style={{ color: 'red', fontSize: '1px', marginLeft: '10%' }}>必要</span>
         </Text>
         <Flex w={'50%'} mr={'18%'} flexDirection={'column'} justifyContent={'space-around'}>
-          <Input required type={'text'} mb={'2%'} value={user.data.email} />
+          <Input required type={'text'} mb={'2%'} />
           <Input required type={'text'} placeholder="確認のためにもう一度入力してください。" />
         </Flex>
       </Flex>

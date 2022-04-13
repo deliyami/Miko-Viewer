@@ -1,11 +1,10 @@
-import { Select, Text, Flex } from '@chakra-ui/react';
-import { useState } from 'react';
+import { Flex, Select } from '@chakra-ui/react';
 import PopOver from './PopOver';
 
 const OptionSelect = ({ color, size, count, setCartCount, cartCount, setColor, setSize, setCount }) => {
   const countArr = [1, 2, 3, 4, 5];
-  const colorArr = ['red', 'blue', 'black', 'white', 'yellow'];
-  const sizeArr = ['xs', 's', 'm', 'l', 'xl'];
+  const colorArr = ['Red', 'Blue', 'Black', 'White', 'Yellow'];
+  const sizeArr = ['XS', 'S', 'M', 'L', 'XL'];
   function onCountChange(event) {
     console.log(event.target.value);
     setCount(event.target.value);
