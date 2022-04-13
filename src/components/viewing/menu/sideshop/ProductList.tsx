@@ -30,7 +30,7 @@ const ProductList = () => {
       <Search></Search>
       <SortSelectForm data={data}></SortSelectForm>
       {data.data !== undefined ? (
-        data.data.map((item, key) => {
+        data.data?.map((item, key) => {
           return (
             <Flex key={key} mb={'20%'}>
               <Flex flexDir={'column'}>

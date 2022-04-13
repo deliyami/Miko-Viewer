@@ -54,6 +54,8 @@ export interface CommonFindId {
 }
 
 export interface Pagination<T> {
+  length: ReactNode;
+  map: any;
   data: T[];
   links: Links;
   meta: Meta;

@@ -9,11 +9,14 @@ const Ranking = ({ users }) => {
   const router = useRouter();
 
   function getRank() {
-    axios.get(`${NEST_URL}/${router.query.id}/getRank`).then(res => {
-      console.log(res.data);
-      setRank(res.data);
-      console.log('겟 랭크!!!', res.data);
-    });
+    axios
+      .get(`${NEST_URL}/${router.query.id}/getRank`)
+      .then(res => {
+        console.log(res.data);
+        setRank(res.data);
+        console.log('겟 랭크!!!', res.data);
+      })
+      .catch(err => console.log(err));
   }
   useEffect(() => {
     if (!router.isReady) return;

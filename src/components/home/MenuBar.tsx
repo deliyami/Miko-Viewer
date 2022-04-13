@@ -50,6 +50,8 @@ const SubLinkItems: Array<LinkItemProps> = [
   { name: '情報修正', icon: undefined, url: '/my/edit' },
   { name: 'チケットリスト', icon: undefined, url: '/my/lists/ticket' },
   { name: 'コイン', icon: undefined, url: '/my/coin' },
+  { name: 'カート', icon: undefined, url: '/my/cart' },
+  { name: 'ご注文履歴', icon: undefined, url: '/my/order' },
 ];
 
 interface NavItemProps extends FlexProps {

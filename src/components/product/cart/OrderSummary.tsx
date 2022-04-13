@@ -6,10 +6,11 @@ const OrderSummary = ({ data }) => {
   const router = useRouter();
   // const item = JSON.parse(rawItem);
   let cost = 0;
-  data.map((item, key) => {
+  data.map(item => {
     cost += item.products[0].price * item.quantity;
+    return 1;
   });
-  console.log(cost);
+  // setTotalCoast(cost);
 
   function goPay() {
     router.push(`/concerts/${router.query.id}/products/purchase`);

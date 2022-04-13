@@ -5,7 +5,6 @@ import { KeyboardEventHandler, useState } from 'react';
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
   //   const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState('');
 
   const onChangeSearch = e => {
     setSearchQuery(e.target.value);
