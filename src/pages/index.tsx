@@ -86,8 +86,6 @@ const KpopList: FC<{ data: Concert[] }> = ({ data }) => {
   );
 };
 const TopList: FC<{ data: Concert[] }> = ({ data: concerts }) => {
-  console.log(concerts);
-
   return (
     <Box>
       <Flex py={3} mt={3}>
@@ -103,34 +101,36 @@ const TopList: FC<{ data: Concert[] }> = ({ data: concerts }) => {
 };
 
 // TIP 무조건 서버에서 실행됨, Dev모드에서는 매번 실행
-export const getStaticProps: GetStaticProps<Data> = async context => {
+export const getStaticProps: GetStaticProps<Data> = async () => {
   // NOTE  undefined를 구조부해 할당할려고 해서 에러 났었음.
   //  getStaticProps에 대해서는 서버 에러일때를 생각하고 에러 핸들링
-  const newResult = await getDataFromLaravel<Pagination<Concert>>('/concerts', {
+  const newResultPromise = getDataFromLaravel<Pagination<Concert>>('/concerts', {
     perPage: 4,
   });
 
-  const topResult = await getDataFromLaravel<Pagination<Concert>>('/concerts', {
+  const topResultPromise = getDataFromLaravel<Pagination<Concert>>('/concerts', {
     sort: ['-sales_volume'],
     perPage: 3,
   });
 
-  const soonResult = await getDataFromLaravel<Pagination<Concert>>('/concerts', {
+  const soonResultPromise = getDataFromLaravel<Pagination<Concert>>('/concerts', {
     sort: ['-all_concert_start_date'],
     perPage: 4,
   });
 
-  const kpopResult = await getDataFromLaravel<Pagination<Concert>>('/concerts', {
+  const kpopResultPromise = getDataFromLaravel<Pagination<Concert>>('/concerts', {
     filter: [['category_id', 2]],
     perPage: 4,
   });
 
+  const [newResult, topResult, soonResult, kpopResult] = await Promise.allSettled([newResultPromise, topResultPromise, soonResultPromise, kpopResultPromise]);
+
   return {
     props: {
-      newData: newResult ? newResult.data.data : [],
-      topData: topResult ? topResult.data.data : [],
-      soonData: soonResult ? soonResult.data.data : [],
-      kpopData: kpopResult ? kpopResult.data.data : [],
+      newData: newResult.status === 'fulfilled' ? newResult.value.data.data : [],
+      topData: topResult.status === 'fulfilled' ? topResult.value.data.data : [],
+      soonData: soonResult.status === 'fulfilled' ? soonResult.value.data.data : [],
+      kpopData: kpopResult.status === 'fulfilled' ? kpopResult.value.data.data : [],
     },
     revalidate: 60 * 10, // 10분 마다 재생성
   };
