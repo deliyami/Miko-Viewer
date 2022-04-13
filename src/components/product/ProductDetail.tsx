@@ -17,7 +17,7 @@ const ProductDetail = ({ item }) => {
   const URL_PRODUCTS = `/cart_products/${user.data.id}`;
   useEffect(() => {
     if (user.data) {
-      getDataFromLaravel<Pagination<Cart>>(URL_PRODUCTS).then(response => setCartCount(response.data.length));
+      getDataFromLaravel<Cart>(URL_PRODUCTS).then(response => setCartCount(response.data.length));
     }
     console.log(cart);
   }, [cartCount]);

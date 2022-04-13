@@ -1,18 +1,23 @@
 import { CheckCircleIcon } from '@chakra-ui/icons';
-import { Button, Divider, Flex, Image, List, ListIcon, ListItem, Table, TableContainer, Tbody, Td, Text, Tr } from '@chakra-ui/react';
+import { Button, Divider, Flex, Image, List, ListIcon, ListItem, Table, TableContainer, Tbody, Td, Text, Tr, useDisclosure } from '@chakra-ui/react';
 import CommonDivider from '@src/components/common/divider/CommonDivider';
 import { S3_URL } from '@src/const';
 import { useUser } from '@src/state/swr/useUser';
-import Buttons from './Buttons';
+import PaymentModal from './PaymentModal';
 
-const Check = ({ address, tabIndex, setTabIndex, data }) => {
-  console.log(address);
+const Check = ({ address, data }) => {
+  console.log(data);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const user = useUser();
   let totalCoast = null;
-  data.map((item, key) => {
+  const productIds = [];
+  data.map(item => {
     totalCoast += item.products[0].price * item.quantity;
+    if (!productIds.includes(item.product_id)) productIds.push(item.product_id);
+    return 1;
   });
-  console.log(totalCoast);
+  console.log(typeof productIds);
+
   return (
     <Flex w={'50%'} p={'2%'} ml={'25%'} justifyContent="center" flexDir={'column'}>
       <TableContainer w={'100%'} alignSelf={'center'}>
@@ -25,9 +30,9 @@ const Check = ({ address, tabIndex, setTabIndex, data }) => {
             <Tr borderBottom={'1px'} borderColor="blackAlpha.200">
               <Td background={'blackAlpha.100'}>お届け先</Td>
               <Td>
-                お名前　：　{user.data.name} 様<br />
+                お名前&nbsp;：&nbsp;{user.data.name} 様<br />
                 <CommonDivider />
-                ご住所　：　{address}
+                ご住所&nbsp;：&nbsp;{address}
               </Td>
             </Tr>
             <Tr borderBottom={'1px'} borderColor="blackAlpha.200">
@@ -68,7 +73,7 @@ const Check = ({ address, tabIndex, setTabIndex, data }) => {
               </Flex>
               <Divider mb={'2%'} height={'6%'} borderColor={'blackAlpha.300'}></Divider>
               <Text fontSize={'lg'} textAlign={'right'}>
-                小計　<span style={{ color: '#EB2721', fontWeight: 'bold' }}>￥{item.products[0].price * item.quantity}</span>
+                小計&nbsp;<span style={{ color: '#EB2721', fontWeight: 'bold' }}>￥{item.products[0].price * item.quantity}</span>
               </Text>
             </Flex>
           </Flex>
@@ -95,7 +100,7 @@ const Check = ({ address, tabIndex, setTabIndex, data }) => {
         <Text fontSize={'xl'} textAlign={'center'}>
           お支払い総額<span style={{ color: '#EB2721', fontWeight: 'bold' }}> ￥{totalCoast + 300}</span>
         </Text>
-        <Button mt={'6%'} colorScheme={'green'}>
+        <Button onClick={onOpen} mt={'6%'} colorScheme={'green'}>
           ご注文を確定する
         </Button>
       </Flex>
@@ -120,7 +125,7 @@ const Check = ({ address, tabIndex, setTabIndex, data }) => {
           </ListItem>
         </List>
       </Flex>
-      <Buttons tabIndex={tabIndex} setTabIndex={setTabIndex}></Buttons>
+      <PaymentModal quantity={data.length} user_id={user.data.id} product_id={productIds} total_price={totalCoast} address={address} isOpen={isOpen} onClose={onClose} />
     </Flex>
   );
 };

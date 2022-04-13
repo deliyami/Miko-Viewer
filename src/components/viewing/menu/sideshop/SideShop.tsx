@@ -1,4 +1,4 @@
-import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, useDisclosure } from '@chakra-ui/react';
+import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, useDisclosure, Text } from '@chakra-ui/react';
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import Cart from './Cart';
 import ProductList from './ProductList';
@@ -48,7 +48,7 @@ const SideShop = forwardRef((_, ref) => {
           </Button>
           {cartOpen === false ? (
             <Button onClick={() => setCartOpen(prev => !prev)} colorScheme="blue">
-              カート{cartCount !== 0 ? { cartCount } : null}
+              {cartCount !== 0 ? <Text>カート({cartCount})</Text> : <Text>カート</Text>}
             </Button>
           ) : (
             <Button onClick={() => setCartOpen(prev => !prev)} colorScheme="blue">

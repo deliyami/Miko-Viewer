@@ -18,7 +18,7 @@ import {
   Text,
   useColorModeValue,
   useDisclosure,
-  VStack
+  VStack,
 } from '@chakra-ui/react';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiHome } from '@react-icons/all-files/fi/FiHome';
@@ -32,7 +32,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactText } from 'react';
 import { LoginBtn, LogoutBtn } from '../common/button/LogoutBtn';
-
 
 interface LinkItemProps {
   name: string;
@@ -50,6 +49,8 @@ const SubLinkItems: Array<LinkItemProps> = [
   { name: '情報修正', icon: undefined, url: '/my/edit' },
   { name: 'チケットリスト', icon: undefined, url: '/my/lists/ticket' },
   { name: 'コイン', icon: undefined, url: '/my/coin' },
+  { name: 'カート', icon: undefined, url: '/my/cart' },
+  { name: 'ご注文履歴', icon: undefined, url: '/my/order' },
 ];
 
 interface NavItemProps extends FlexProps {

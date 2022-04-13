@@ -1,10 +1,5 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
-import { getDataFromLaravel } from '@src/helper';
-import { useUser } from '@src/state/swr';
-import { Cart } from '@src/types/local';
-import { Pagination } from '@src/types/share/common';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import CartItem from './CartItem';
 import OrderSummary from './OrderSummary';
 
@@ -17,7 +12,7 @@ const Carts = ({ data, setData }) => {
   const router = useRouter();
   return (
     <Flex justifyContent={'space-between'} flexDirection={'column'} h={'80vh'}>
-      {data===undefined ? (
+      {data === undefined ? (
         <Flex flexDirection={'column'}>
           <Flex mt="3%" justifyContent={'center'}>
             <Text fontSize={'4xl'}>ショッピングカート</Text>

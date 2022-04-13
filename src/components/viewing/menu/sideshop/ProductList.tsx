@@ -30,12 +30,12 @@ const ProductList = () => {
       <Search></Search>
       <SortSelectForm data={data}></SortSelectForm>
       {data.data !== undefined ? (
-        data.data.map((item, key) => {
+        data.data?.map((item, key) => {
           return (
             <Flex key={key} mb={'20%'}>
               <Flex flexDir={'column'}>
                 <Box w={'200px'} rounded={'8%'}>
-                  <Image src={`${S3_URL}products/${item.image}`} boxSize={'full'}></Image>
+                  <Image src={`${S3_URL}products/${item.image}`} boxSize={'full'} alt="productImage"></Image>
                 </Box>
                 <Text>{item.name}</Text>
                 <Text textAlign={'right'} fontWeight={'bold'}>

@@ -5,7 +5,6 @@ import { KeyboardEventHandler, useState } from 'react';
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
   //   const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState('');
 
   const onChangeSearch = e => {
     setSearchQuery(e.target.value);
@@ -22,7 +21,9 @@ const Search = () => {
   };
   return (
     <InputGroup mb={'5%'}>
-      <InputRightElement cursor={'pointer'} background={'blue.300'} children={<Search2Icon color={'white'} />}></InputRightElement>
+      <InputRightElement cursor={'pointer'} background={'blue.300'}>
+        <Search2Icon color={'white'} />
+      </InputRightElement>
       <Input value={searchQuery} placeholder="Search" onKeyUp={enterKey} variant="flushed" onChange={onChangeSearch} type={'search'}></Input>
     </InputGroup>
   );
