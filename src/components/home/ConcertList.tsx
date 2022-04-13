@@ -1,7 +1,8 @@
-import { AspectRatio, Box, Image, Text } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import { IMAGE_DOMAIN } from '@src/const';
 import { convertDate } from '@src/helper';
 import { Concert } from '@src/types/share';
+import Image from 'next/image';
 import Link from 'next/link';
 import { FC } from 'react';
 
@@ -13,9 +14,18 @@ const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
       <Link href={`/concerts/${concert.id}`}>
         <a>
           <Box maxW="300px">
-            <AspectRatio maxW="300px" ratio={1}>
-              <Image src={IMAGE_DOMAIN + concert.coverImage} objectFit="cover" alt="concertImage" fallbackSrc="/defaultImage.png" />
-            </AspectRatio>
+            <Image
+              src={IMAGE_DOMAIN + concert.coverImage}
+              placeholder="blur"
+              blurDataURL="/image/defaultImage.png"
+              quality={100}
+              objectFit="cover"
+              width={300}
+              layout="responsive"
+              height={300}
+              alt="concertImage"
+              className="concertImg"
+            />
             <Box my={2}>
               <Text color="gray.700" fontSize="sm">
                 {concertStartDate}
@@ -30,13 +40,15 @@ const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
 
       <style>
         {`
-          .movie img {
+          .concertImg {
             border-radius: 12px;
             transition: transform 0.2s ease-in-out;
             box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
           }
-          .movie:hover img {
+          .concertImg:hover {
             transform: scale(1.05);
+            border-radius: 12px;
+            transition: transform 0.2s ease-in-out;
           }
        `}
       </style>

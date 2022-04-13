@@ -25,7 +25,7 @@ const ContentSecurityPolicy = `
  */
 const nextConfig = {
   images: {
-    domains: ['miko-image.s3.ap-northeast-2.amazonaws.com'],
+    domains: ['img.mikopj.live'],
   },
   typescript: {
     ignoreBuildErrors: true, // dangerous
