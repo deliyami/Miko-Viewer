@@ -5,6 +5,12 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 const withPWA = require('next-pwa');
+const withInterceptStdout = require('next-intercept-stdout')(
+  {
+    reactStrictMode: true,
+  },
+  text => (text.includes('Duplicate atom key') ? '' : text),
+);
 
 const ContentSecurityPolicy = `
   media-src blob:;
@@ -33,9 +39,9 @@ const nextConfig = {
     modularizeImports: {},
   },
   compiler: {
-    // removeConsole: {
-    //   exclude: ['error', 'info'],
-    // },
+    removeConsole: {
+      exclude: ['error', 'info'],
+    },
   },
   productionBrowserSourceMaps: false, // default false
   swcMinify: true,
@@ -82,5 +88,6 @@ module.exports = withPlugins([
       },
     },
   ],
+  [withInterceptStdout],
   nextConfig,
 ]);
