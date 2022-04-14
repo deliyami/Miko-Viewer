@@ -1,6 +1,7 @@
 import * as cam from '@mediapipe/camera_utils';
 import { Results } from '@mediapipe/pose';
-import { setBone, toastLog } from '@src/helper';
+import { toastLog } from '@src/helper';
+import { setBone } from '@src/helper/dynamic/setBoneAvatar';
 import { isOnMediaPipeState, latestMotionState, model, myStreamState, peerDataListState } from '@src/state/recoil';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
 import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';

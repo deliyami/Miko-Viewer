@@ -3,7 +3,7 @@ import { colors } from './colorTheme';
 import { components } from './componentTheme/componentTheme';
 import { global } from './globalTheme';
 import { layerStyles } from './layerTheme';
-import { breakpoints, sizes, spacing } from './respnsiveTheme';
+import { breakpoints, sizes, spacing } from './responsiveTheme';
 import { fonts, fontSizes, fontWeights, letterSpacings, lineHeights, textStyles } from './textTheme';
 import { zIndices } from './zIndexTheme';
 

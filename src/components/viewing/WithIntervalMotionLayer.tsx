@@ -1,4 +1,5 @@
-import { sendToAllPeers, setBone } from '@src/helper';
+import { sendToAllPeers } from '@src/helper';
+import { setBone } from '@src/helper/dynamic/setBoneAvatar';
 import { latestMotionState, model, peerDataListState } from '@src/state/recoil';
 import { roomMemberMotions, sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { useUser } from '@src/state/swr';
