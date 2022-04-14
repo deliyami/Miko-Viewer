@@ -24,20 +24,20 @@ import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiHome } from '@react-icons/all-files/fi/FiHome';
 import { FiList } from '@react-icons/all-files/fi/FiList';
 import { FiMenu } from '@react-icons/all-files/fi/FiMenu';
-import { FiStar } from '@react-icons/all-files/fi/FiStar';
 import { IconType } from '@react-icons/all-files/lib';
 import { IMAGE_DOMAIN } from '@src/const';
 import { useUser } from '@src/state/swr';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { ReactText } from 'react';
+import React, { useRef } from 'react';
+import { useHover } from 'usehooks-ts';
 import { LoginBtn, LogoutBtn } from '../common/button/LogoutBtn';
 import AsyncBoundary from '../common/wrapper/AsyncBoundary';
 
 interface LinkItemProps {
   name: string;
-  icon: IconType;
-  url: string;
+  icon?: IconType;
+  url?: string;
 }
 
 const LinkItems: Array<LinkItemProps> = [
@@ -55,12 +55,15 @@ const SubLinkItems: Array<LinkItemProps> = [
 ];
 
 interface NavItemProps extends FlexProps {
-  icon: IconType;
-  children: ReactText;
+  link: LinkItemProps;
 }
 
-const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
-  return (
+const NavItem = ({ link, ...rest }: NavItemProps) => {
+  const router = useRouter();
+  const { icon, name, url } = link;
+  const nowPath = router.pathname as string;
+
+  const Content = () => (
     <Flex
       align="center"
       p="4"
@@ -69,10 +72,11 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
       role="group"
       cursor="pointer"
       _hover={{
-        bg: 'cyan.400',
-        color: 'white',
+        color: '#39c5bb',
       }}
       userSelect="none"
+      position="relative"
+      onHover
       {...rest}
     >
       {icon && (
@@ -80,14 +84,26 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
           mr="4"
           fontSize="16"
           _groupHover={{
-            color: 'white',
+            color: '#39c5bb',
           }}
           as={icon}
         />
       )}
-      {children}
+      {link.name}
+      {nowPath === url && <Box position="absolute" w="2" h="10" backgroundColor="#39c5bb" borderRadius="full" left="-18px" />}
     </Flex>
   );
+
+  if (url)
+    return (
+      <Link href={url}>
+        <a>
+          <Content />
+        </a>
+      </Link>
+    );
+
+  return <Content />;
 };
 
 const UserInfoBox = () => {
@@ -160,71 +176,46 @@ interface SidebarProps extends BoxProps {
 }
 
 const SideBarMyPageMenu = () => {
-  const router = useRouter();
-  const nowPath = router.pathname as string;
   const { data: user } = useUser();
   const { isOpen, onToggle } = useDisclosure();
+  const hoverRef = useRef<any>(null);
+  const isHover = useHover(hoverRef);
+
+  const isActive = isHover || isOpen;
 
   return (
-    <>
+    <Box ref={hoverRef}>
       {user && (
         <NavItem
           onClick={() => {
             onToggle();
           }}
-          icon={FiStar}
-        >
-          My Page
-        </NavItem>
+          link={{ name: 'My Page' }}
+        />
       )}
-      <Collapse in={isOpen} animateOpacity>
+      <Collapse in={isActive} animateOpacity>
         {SubLinkItems.map(link => (
-          <Link href={link.url} key={link.name}>
-            <a>
-              <NavItem color={nowPath === link.url && 'cyan.400'} icon={link.icon} pl={12}>
-                {link.name}
-              </NavItem>
-            </a>
-          </Link>
+          <NavItem link={link} key={link.url} pl={12} />
         ))}
       </Collapse>
-    </>
+    </Box>
   );
 };
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
-  const router = useRouter();
-  const nowPath = router.pathname as string;
-
   return (
-    <Box
-      zIndex={100}
-      transition="3s ease"
-      bg={useColorModeValue('white', 'gray.900')}
-      borderRight="1px"
-      borderRightColor={useColorModeValue('gray.200', 'gray.700')}
-      w={{ base: 'full', md: 60 }}
-      pos="fixed"
-      h="full"
-      {...rest}
-    >
+    <Box zIndex={100} transition="3s ease" borderRight="1px" borderRightColor="gray.200" w={{ base: 'full', md: 60 }} pos="fixed" h="full" fontWeight="700" {...rest}>
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <HStack>
           <Image boxSize="60px" src="/logo/logo3.png" alt="miko-logo" />
-          <Text fontSize="2xl" fontWeight="bold">
-            Miko
+          <Text fontSize="3xl" fontWeight="bold">
+            ミコ
           </Text>
         </HStack>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map(link => (
-        <Link href={link.url} key={link.name}>
-          <a>
-            <NavItem color={nowPath === link.url && 'cyan.400'} icon={link.icon}>
-              {link.name}
-            </NavItem>
-          </a>
-        </Link>
+        <NavItem link={link} key={link.url} />
       ))}
       <AsyncBoundary>
         <SideBarMyPageMenu />

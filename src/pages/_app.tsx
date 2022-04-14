@@ -4,6 +4,7 @@ import { LARAVEL_URL, NEST_URL } from '@src/const';
 import { toastLog } from '@src/helper';
 import RootEventCatchLayout from '@src/layout/RootEventCatchLayout';
 import '@src/style/css/fonts.css';
+import '@src/style/css/global.css';
 import theme from '@src/style/theme';
 import type * as ivs from 'amazon-ivs-player';
 import axios from 'axios';

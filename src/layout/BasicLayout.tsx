@@ -10,9 +10,9 @@ type Props = {
 
 const Layout: FC<Props> = ({ children }) => {
   return (
-    <Box minH="100vh">
+    <Box minH="100vh" display="flex" flexDir="column">
       <MenuBar />
-      <Box ml={{ base: 0, md: 60 }} mt="10" p="4" paddingBottom="100px">
+      <Box ml={{ base: 0, md: 60 }} mt="10" p="4" paddingBottom="100px" flexGrow={1}>
         {children}
       </Box>
       <Footer />
