@@ -18,30 +18,28 @@ const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
   return (
     <Box className="movie">
       <Link href={`/concerts/${concert.id}`}>
-        <a>
-          <Box maxW="300px">
-            <Image
-              src={IMAGE_DOMAIN + concert.coverImage}
-              placeholder="blur"
-              blurDataURL="/image/defaultImage.png"
-              quality={70}
-              objectFit="cover"
-              width={300}
-              layout="responsive"
-              height={300}
-              alt={`${concert.title} image`}
-              className="concertImg"
-            />
-            <Box my={2}>
-              <Text color="gray.700" fontSize="sm">
-                {concertStartDate}
-              </Text>
-              <Text fontSize="xl" fontWeight="bold">
-                {concert.title}
-              </Text>
-            </Box>
+        <Box maxW="300px">
+          <Image
+            src={IMAGE_DOMAIN + concert.coverImage}
+            placeholder="blur"
+            blurDataURL="/image/defaultImage.png"
+            quality={70}
+            objectFit="cover"
+            width={300}
+            layout="responsive"
+            height={300}
+            alt={`${concert.title} image`}
+            className="concertImg"
+          />
+          <Box my={2}>
+            <Text color="gray.700" fontSize="sm">
+              {concertStartDate}
+            </Text>
+            <Text fontSize="xl" fontWeight="bold">
+              {concert.title}
+            </Text>
           </Box>
-        </a>
+        </Box>
       </Link>
 
       <style>

@@ -63,7 +63,7 @@ const ImageBadge: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   const compareEndDate = dayjs(userTicket.ticket.concertEndDate);
   const compareArchiveDate = dayjs(userTicket.ticket.archiveEndTime);
   const today = dayjs(new Date());
-  const diff = compareStartDate.diff(today, 'm') as number; // 시작일로부터 남은 시간(초)
+  const diff = compareStartDate.diff(today, 'm'); // 시작일로부터 남은 시간(초)
   const previewAlarm = diff <= 60 && diff > 0; // 1시간 전.
   const screening = today.isBetween(compareStartDate, compareEndDate, 'minute', '[]');
   const archiving = today.isBetween(compareEndDate, compareArchiveDate, 'minute', '[]'); // 다시보기 - 공연 끝나는 날부터 아카이브 끝나는 날까지

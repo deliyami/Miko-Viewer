@@ -5,6 +5,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 const withPWA = require('next-pwa');
+const runtimeCaching = require('next-pwa/cache');
 const withInterceptStdout = require('next-intercept-stdout')(
   {
     reactStrictMode: true,
@@ -95,6 +96,8 @@ module.exports = withPlugins([
         register: true,
         skipWaiting: true,
         disable: process.env.NODE_ENV === 'development',
+        runtimeCaching,
+        buildExcludes: [/middleware-manifest\.json$/],
       },
     },
   ],

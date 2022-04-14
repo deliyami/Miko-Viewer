@@ -180,6 +180,7 @@ export default function HomePage({ newData, topData, soonData, kpopData }: Infer
       <Head>
         <title key="title">Miko - Homepage</title>
         <meta property="og:title" content="Miko" key="og:title" />
+        <meta name="description" content="miko homepage, concert list" />
       </Head>
       <Flex justifyContent="center" align="start" p={3}>
         <Box>

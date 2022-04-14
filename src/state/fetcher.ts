@@ -8,7 +8,7 @@ const config: AxiosRequestConfig<any> = {
   timeout: 5000,
 };
 
-const axiosI = axios.create(config);
+export const axiosI = axios.create(config);
 const toast = createStandaloneToast();
 // 요청 인터셉터 추가
 const requestInterceptor = axiosI.interceptors.request.use(
@@ -51,7 +51,7 @@ const responseInterceptor = axiosI.interceptors.response.use(
   },
 );
 
-const fetcher = (url: string) =>
+export const fetcher = (url: string) =>
   axiosI
     .get(url)
     .then(res => {
@@ -63,7 +63,7 @@ const fetcher = (url: string) =>
       return null;
     });
 
-const fetcherForInfinite = (url: string) =>
+export const fetcherForInfinite = (url: string) =>
   axiosI
     .get(url)
     .then(res => {
@@ -73,7 +73,7 @@ const fetcherForInfinite = (url: string) =>
       throw new Error('An error occurred while fetching the data.');
     });
 
-const nodeFetcher = (url: string) =>
+export const nodeFetcher = (url: string) =>
   axiosI
     .get(url, { baseURL: NEST_URL })
     .then(res => {
@@ -82,5 +82,3 @@ const nodeFetcher = (url: string) =>
     .catch(err => {
       throw new Error('An error occurred while fetching the data.');
     });
-
-export { fetcher, axiosI, nodeFetcher };

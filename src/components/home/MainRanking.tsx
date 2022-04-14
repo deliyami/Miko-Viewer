@@ -1,7 +1,8 @@
-import { Box, Center, Flex, Heading, Image, Stack, Text, useColorModeValue } from '@chakra-ui/react';
+import { Box, Center, Flex, Heading, Stack, Text, useColorModeValue } from '@chakra-ui/react';
 import { IMAGE_DOMAIN } from '@src/const';
 import { convertDate } from '@src/helper';
 import { Concert } from '@src/types/share';
+import Image from 'next/image';
 import Link from 'next/link';
 import React, { FC } from 'react';
 
@@ -35,7 +36,19 @@ const ProductSimple: FC<{ data: Concert; rankingNum: number }> = ({ data: concer
                 },
               }}
             >
-              <Image rounded={'lg'} height={250} width={360} objectFit={'cover'} src={IMAGE_DOMAIN + concert.coverImage} />
+              <Image
+                src={IMAGE_DOMAIN + concert.coverImage}
+                placeholder="blur"
+                blurDataURL="/image/defaultImage.png"
+                quality={70}
+                objectFit="cover"
+                width={360}
+                layout="responsive"
+                height={250}
+                alt={`${concert.title} image`}
+                className="concertImg"
+                priority
+              />
             </Box>
           </a>
         </Link>
