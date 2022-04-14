@@ -18,7 +18,7 @@ type DataTypeDict = {
   '/coin_histories': Coin;
 };
 
-export const usePageLaravel = <K extends keyof DataTypeDict, T = DataTypeDict[K], PT = Pagination<T>>(url: K, query?: CommonFSW, option?: SWRConfiguration<PT>) => {
+export const usePageLaravel = <K extends keyof DataTypeDict, T = DataTypeDict[K], PT = Pagination<T>>(url: K, query: CommonFSW | null, option?: SWRConfiguration<PT>) => {
   let aUrl = url + '?';
   aUrl += query ? createFSWQueryString(query) : '';
 
@@ -32,10 +32,10 @@ export const usePageLaravel = <K extends keyof DataTypeDict, T = DataTypeDict[K]
 export const useSingleLaravel = <K extends keyof DataTypeDict, T = DataTypeDict[K], CT = CommonDataResponse<T>>(
   url: K,
   id: number,
-  query?: CommonFindId,
+  query: CommonFindId | null,
   option?: SWRConfiguration<CT>,
 ) => {
-  let aUrl = `${url}/${id}`;
+  let aUrl = `${url}/${id}?`;
   aUrl += query ? createFSWQueryString(query) : '';
 
   return useSWR<CT>(query ? aUrl : null, fetcher, {
