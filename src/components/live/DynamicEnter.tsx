@@ -1,11 +1,12 @@
-import { AspectRatio, Box, Center, Divider, Flex, Grid, GridItem, Heading, Image } from '@chakra-ui/react';
-import { IMAGE_DOMAIN } from '@src/const';
-import { convertDate } from '@src/helper';
-import { curUserTicketState } from '@src/state/recoil';
+import { AspectRatio, Box, Button, Center, Divider, Flex, Grid, GridItem, Heading, HStack, Image, Input, Radio, RadioGroup, Stack } from '@chakra-ui/react';
+import { IMAGE_DOMAIN, USER_TICKET_COOKIE } from '@src/const';
+import { convertDate, setCookie } from '@src/helper';
+import { curUserTicketState, enterRoomIdState } from '@src/state/recoil';
 import { useUser } from '@src/state/swr';
+import { nanoid } from 'nanoid';
 import { useRouter } from 'next/router';
-import React, { FC, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import React, { FC, useEffect, useMemo, useState } from 'react';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 const EnterRoomBtn = () => {
   const router = useRouter();
@@ -94,7 +95,7 @@ const CurEnterInfo: FC = () => {
     return () => {};
   }, [router.isReady]);
 
-  if (curUserTicket) return <Box>no ticket</Box>;
+  if (!curUserTicket) return <Box>no ticket</Box>;
 
   const { ticket, concert } = curUserTicket;
 
@@ -141,7 +142,7 @@ const CurEnterInfo: FC = () => {
   );
 };
 
-const EnterPage = () => {
+const DynamicEnterPage = () => {
   return (
     <>
       <Box width="400px">
@@ -159,4 +160,4 @@ const EnterPage = () => {
   );
 };
 
-export default EnterPage;
+export default DynamicEnterPage;
