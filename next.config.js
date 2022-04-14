@@ -20,12 +20,22 @@ const ContentSecurityPolicy = `
   script-src  'self' *.mikopj.live 'wasm-unsafe-eval';
 `;
 
+//  Image
+// /cache/images 에 저장됨.
+//  Cache-Control  > s-maxage > max-age
+
 /**
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
   images: {
-    domains: ['img.mikopj.live'],
+    domains: ['img.mikopj.live'], // 악의적 유저의 공격을 막기 위함.
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840], // default , layout = fill or responsive
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384], // sizes가 제공 될 떄에만, deviceSizes와 크기가 일치하며 , 각 값은 작아야함.
+    formats: ['image/avif', 'image/webp'], // avif는 인코딩 20퍼 but 크기 20퍼 다운 , accept 일치 우선순위,  비 일치시 원본 이미지
+    minimumCacheTTL: 120, // seconds , default 60
+    // contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",  // for svg
+    // layoutRaw:true
   },
   typescript: {
     ignoreBuildErrors: true, // dangerous
