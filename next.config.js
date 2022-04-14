@@ -54,7 +54,7 @@ const nextConfig = {
       exclude: ['error', 'info'],
     },
   },
-  productionBrowserSourceMaps: false, // default false
+  productionBrowserSourceMaps: true, // default false , true로하면 빌드시간이 매우 상승하지만 디버깅에 조워짐 + 권장사항 점수 상승
   swcMinify: true,
   reactStrictMode: false, // 이거 하니깐 Socket 에러남
   compress: true, // default nginx에서 압축할 경우 false
@@ -79,6 +79,10 @@ const nextConfig = {
           {
             key: 'Content-Security-Policy',
             value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim(),
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, must-revalidate',
           },
         ],
       },

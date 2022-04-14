@@ -126,6 +126,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
 export default MyApp;
 
-export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric) {
+export function reportWebVitals(_: NextWebVitalsMetric) {
   // console.log({ id, name, label, value });
 }

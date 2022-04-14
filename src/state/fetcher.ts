@@ -11,11 +11,11 @@ const config: AxiosRequestConfig<any> = {
 export const axiosI = axios.create(config);
 const toast = createStandaloneToast();
 // 요청 인터셉터 추가
-const requestInterceptor = axiosI.interceptors.request.use(
-  function (config) {
+export const requestInterceptor = axiosI.interceptors.request.use(
+  function (aConfig) {
     // 요청을 보내기 전에 수행할 일
 
-    return config;
+    return aConfig;
   },
   function (error) {
     // 오류 요청을 보내기전 수행할 일
@@ -32,7 +32,7 @@ const requestInterceptor = axiosI.interceptors.request.use(
 );
 
 // 응답 인터셉터 추가
-const responseInterceptor = axiosI.interceptors.response.use(
+export const responseInterceptor = axiosI.interceptors.response.use(
   function (response) {
     // 응답 데이터를 가공
     return response;
@@ -70,6 +70,7 @@ export const fetcherForInfinite = (url: string) =>
       return res.data;
     })
     .catch(err => {
+      console.error('error in fetcher infinite ', err);
       throw new Error('An error occurred while fetching the data.');
     });
 
@@ -80,5 +81,6 @@ export const nodeFetcher = (url: string) =>
       return res.data;
     })
     .catch(err => {
+      console.error('error in ndeFetcher', err);
       throw new Error('An error occurred while fetching the data.');
     });

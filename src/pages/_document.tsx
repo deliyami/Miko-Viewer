@@ -13,7 +13,7 @@ export default class Document extends NextDocument {
           {/* capable 주소줄 없애기 */}
           <meta key="googlebot" name="googlebot" content="index,follow" />
           <meta name="google" content="notranslate" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=10" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=10.0" />
           <meta name="mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="keywords" content="concert, streaming, コンサート,ストリーミング" />
@@ -44,7 +44,7 @@ export default class Document extends NextDocument {
           {/* <link rel="icon" type="image/png" sizes="96x96" href="/images/icon/favicon-96x96.png" /> */}
           <link rel="manifest" href="/manifest.json" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+          {/* <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" /> */}
           <link rel="preconnect" href="https://cdn.jsdelivr.net" />
           <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=optional" rel="stylesheet" />
         </Head>
