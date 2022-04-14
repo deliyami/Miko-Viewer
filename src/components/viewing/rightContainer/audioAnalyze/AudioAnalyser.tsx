@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 import AudioVisualizer from '@src/components/viewing/rightContainer/audioAnalyze/AudioVisualizer';
-import Teachablemachine from '@src/pages/test/teachablemachine';
+// import Teachablemachine from '@src/pages/test/teachablemachine';
 import { isOnAudioAnalyzerState, myStreamState } from '@src/state/recoil';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
 import { useEffect, useState } from 'react';
@@ -52,7 +52,7 @@ const AudioAnalyser = () => {
   return (
     <Flex width="full" flexBasis="30px" backgroundColor="#202020" border="2px" borderColor="#262626" textColor="white" py="1" px="0.5">
       <AudioVisualizer normalizedVolume={volume}></AudioVisualizer>
-      <Teachablemachine />
+      {/* <Teachablemachine /> */}
     </Flex>
   );
 };

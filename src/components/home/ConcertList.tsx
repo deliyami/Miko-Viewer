@@ -23,7 +23,7 @@ const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
               width={300}
               layout="responsive"
               height={300}
-              alt="concertImage"
+              alt={`${concert.title} image`}
               className="concertImg"
             />
             <Box my={2}>
