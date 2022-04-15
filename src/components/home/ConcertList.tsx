@@ -4,7 +4,7 @@ import { convertDate } from '@src/helper';
 import { Concert } from '@src/types/share';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FC } from 'react';
+import React, { FC } from 'react';
 
 //  width와 height를 지정함으로서 레이아웃 시프트를 최소화
 //  외부 파일일 경우 반드시 줘야함. 자동으로 크기 계산을 못 하므로. 그리고 blurDataUrl를 준다.
@@ -15,10 +15,22 @@ import { FC } from 'react';
 
 const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
   const concertStartDate = convertDate(concert.allConcertStartDate, 'YMDHM');
+
+  // console.log(concert);
   return (
-    <Box className="movie">
-      <Link href={`/concerts/${concert.id}`}>
-        <Box maxW="300px">
+    <Link href={`/concerts/${concert.id}`}>
+      <a>
+        <Box
+          className="concert"
+          borderRadius="12px"
+          transition="all 0.2s linear"
+          transitionDuration="0.2s"
+          boxShadow="rgba(0, 0, 0, 0.1) 0px 4px 12px"
+          _hover={{
+            transform: 'scale(1.05)',
+            transitionDuration: '0.2s',
+          }}
+        >
           <Image
             src={IMAGE_DOMAIN + concert.coverImage}
             placeholder="blur"
@@ -29,34 +41,19 @@ const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
             layout="responsive"
             height={300}
             alt={`${concert.title} image`}
-            className="concertImg"
+            style={{ borderRadius: '12px' }}
           />
-          <Box my={2}>
-            <Text color="gray.700" fontSize="sm">
-              {concertStartDate}
-            </Text>
-            <Text fontSize="xl" fontWeight="bold">
-              {concert.title}
-            </Text>
-          </Box>
         </Box>
-      </Link>
-
-      <style>
-        {`
-          .concertImg {
-            border-radius: 12px;
-            transition: transform 0.2s ease-in-out;
-            box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-          }
-          .concertImg:hover {
-            transform: scale(1.05);
-            border-radius: 12px;
-            transition: transform 0.2s ease-in-out;
-          }
-       `}
-      </style>
-    </Box>
+        <Box my={2}>
+          <Text color="gray.700" fontSize="sm">
+            {concertStartDate}
+          </Text>
+          <Text fontSize="xl" fontWeight="bold">
+            {concert.title}
+          </Text>
+        </Box>
+      </a>
+    </Link>
   );
 };
 
@@ -65,7 +62,7 @@ const ConcertList: FC<{ data: Concert[] }> = ({ data }) => {
   return (
     <>
       {concerts?.map((concert, index) => (
-        <Box key={index}>
+        <Box key={index} maxW={300}>
           <ConcertCard concert={concert} />
         </Box>
       ))}

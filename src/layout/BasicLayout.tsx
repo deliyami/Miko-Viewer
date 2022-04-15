@@ -12,7 +12,7 @@ const Layout: FC<Props> = ({ children }) => {
   return (
     <Box minH="100vh" display="flex" flexDir="column">
       <MenuBar />
-      <Box ml={{ base: 0, md: 60 }} mt="10" p="4" paddingBottom="100px" flexGrow={1}>
+      <Box ml={{ base: 0, md: 60 }} mt="10" p="4" flexGrow={1} paddingBottom="100px">
         {children}
       </Box>
       <Footer />

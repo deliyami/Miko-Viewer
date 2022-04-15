@@ -29,7 +29,7 @@ const ButtonStatus: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   const archiving = today.isBetween(compareEndDate, compareArchiveDate, 'minute', '[]'); // 다시보기 - 공연 끝나는 날부터 아카이브 끝나는 날까지
 
   return (
-    <>
+    <Center>
       {screening ? (
         <Button onClick={useTicketHandler} colorScheme="green" size="sm" fontWeight="800" fontSize="14px" _hover={{ bg: 'green', color: 'white' }}>
           コンサート入場
@@ -42,18 +42,16 @@ const ButtonStatus: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
         )
       )}
       {screeningBefore && (
-        <Center>
-          <Text pr={3} color="#3182CE" fontWeight="550" fontSize="16px">
-            上映前
-          </Text>
-        </Center>
+        <Text color="#3182CE" fontWeight="550" fontSize="16px">
+          上映前
+        </Text>
       )}
       {archiveAfter && (
         <Button size="sm" color="white" bg="#4A5568" disabled variant="solid" borderRadius={15} _hover={{ bg: '#4A5568' }}>
           アーカイブ期間満了
         </Button>
       )}
-    </>
+    </Center>
   );
 };
 
