@@ -33,7 +33,7 @@ const nextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840], // default , layout = fill or responsive
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384], // sizes가 제공 될 떄에만, deviceSizes와 크기가 일치하며 , 각 값은 작아야함.
     formats: ['image/avif', 'image/webp'], // avif는 인코딩 20퍼 but 크기 20퍼 다운 , accept 일치 우선순위,  비 일치시 원본 이미지
-    minimumCacheTTL: 120, // seconds , default 60
+    minimumCacheTTL: 60 * 3, // seconds , default 60
     // contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",  // for svg
     // layoutRaw:true
   },
@@ -78,7 +78,7 @@ const nextConfig = {
 
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, must-revalidate',
+            value: 'public, max-age=31536000, immutable',
           },
           process.env.NODE_ENV === 'development'
             ? { key: 'Content-Security-Policy', value: '' }
