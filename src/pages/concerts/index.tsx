@@ -106,8 +106,8 @@ const ConcertListView: FC<{ query: CommonFSW; iniData: Pagination<Concert> }> = 
 
   return (
     <VStack spacing={10}>
-      <Box minW={{ xl: '120vh' }}>
-        <SimpleGrid columns={[2, null, 3]} spacing="40px">
+      <Box>
+        <SimpleGrid columns={[2, null, 3]} spacing="35px">
           <ConcertList data={concertsData.data} />
         </SimpleGrid>
       </Box>

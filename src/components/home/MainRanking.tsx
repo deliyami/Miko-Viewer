@@ -1,121 +1,98 @@
-import { Box, Center, Flex, Heading, Image, Stack, Text, useColorModeValue } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import { IMAGE_DOMAIN } from '@src/const';
 import { convertDate } from '@src/helper';
 import { Concert } from '@src/types/share';
+import Image from 'next/image';
 import Link from 'next/link';
 import React, { FC } from 'react';
 
-const ProductSimple: FC<{ data: Concert; rankingNum: number }> = ({ data: concert, rankingNum }) => {
+const RankingCard: FC<{ data: Concert }> = ({ data: concert }) => {
   const concertStartDate = convertDate(concert.allConcertStartDate, 'YMDHM');
-  return (
-    <Center py={2}>
-      <Box role={'group'} p={6} maxW={'400px'} w={'full'} pos={'relative'} zIndex={1}>
-        <Heading mb={2}>{rankingNum}</Heading>
-        <Link href={`/concerts/${concert.id}`}>
-          <a>
-            <Box
-              rounded={'lg'}
-              pos={'relative'}
-              height={'240px'}
-              _after={{
-                transition: 'all .1s ease',
-                content: '""',
-                w: 'full',
-                h: 'full',
-                pos: 'absolute',
-                top: 5,
-                left: 0,
-                backgroundImage: `url(${IMAGE_DOMAIN + concert.coverImage})`,
-                filter: 'blur(15px)',
-                zIndex: -1,
-              }}
-              _groupHover={{
-                _after: {
-                  filter: 'blur(20px)',
-                },
-              }}
-            >
-              <Image rounded={'lg'} height={250} width={360} objectFit={'cover'} src={IMAGE_DOMAIN + concert.coverImage} />
-            </Box>
-          </a>
-        </Link>
-        <Stack pt={10} align={'center'}>
-          <Text color={'gray.500'} fontSize={'sm'} textTransform={'uppercase'}>
-            {concertStartDate}
-          </Text>
-          <Heading fontSize={'2xl'} fontWeight={600}>
-            {concert.title}
-          </Heading>
-          <Text>{concert.artist}</Text>
-        </Stack>
-      </Box>
-    </Center>
-  );
-};
 
-const RankingCard: FC<{ data: Concert[] }> = ({ data: concerts }) => {
   return (
     <>
-      <Flex
-        _hover={{ zIndex: 40 }}
-        order={{ base: 2, md: 1 }}
-        flex={{ sm: 1, lg: 'initial' }}
-        w={{ lg: 2.3 / 7 }}
-        rounded="lg"
-        borderTopRightRadius={0}
-        borderBottomLeftRadius="lg"
-        bg={useColorModeValue('white', 'gray.700')}
-        my={6}
-        direction="column"
-        boxShadow={'2xl'}
-      >
-        <ProductSimple data={concerts[1]} rankingNum={2} />
-      </Flex>
-
-      <Flex
-        _hover={{ zIndex: 40 }}
-        order={{ base: 1, md: 2 }}
-        flex={{ base: 1, lg: 'initial' }}
-        w={{ lg: 2.4 / 7 }}
-        rounded="lg"
-        bg={useColorModeValue('white', 'gray.700')}
-        mt={{ base: 4, sm: -4 }}
-        shadow="xl"
-        zIndex={30}
-        direction="column"
-        boxShadow={'2xl'}
-      >
-        <ProductSimple data={concerts[0]} rankingNum={1} />
-      </Flex>
-
-      <Flex
-        _hover={{ zIndex: 40 }}
-        order={{ base: 3, md: 3 }}
-        flex={{ sm: 1, lg: 'initial' }}
-        w={{ lg: 2.3 / 7 }}
-        roundedTop="lg"
-        borderBottomRightRadius="lg"
-        borderTopLeftRadius={0}
-        bg={useColorModeValue('white', 'gray.700')}
-        my={6}
-        direction="column"
-        boxShadow={'2xl'}
-      >
-        <ProductSimple data={concerts[2]} rankingNum={3} />
-      </Flex>
+      <Link href={`/concerts/${concert.id}`}>
+        <a>
+          <Box className="concert">
+            <Image
+              src={IMAGE_DOMAIN + concert.coverImage}
+              placeholder="blur"
+              blurDataURL="/image/defaultImage.png"
+              quality={100}
+              objectFit="cover"
+              width={300}
+              height={300}
+              alt="concertImage"
+              style={{ borderRadius: '12px' }}
+            />
+          </Box>
+          <Box pt={2}>
+            <Text color="gray.700" fontSize="sm">
+              {concertStartDate}
+            </Text>
+            <Text fontSize="xl" fontWeight="bold">
+              {concert.title}
+            </Text>
+          </Box>
+          <style>
+            {`
+              .concert {
+                boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 12px' 
+                transition: all 0.2s linear;
+                transition-duration: 0.2s;
+              }
+              .concert:hover {
+                transform: scale(1.05);
+                transition-duration: 0.2s;
+              }
+            `}
+          </style>
+        </a>
+      </Link>
     </>
   );
 };
 
 const MainRanking: FC<{ data: Concert[] }> = ({ data: concerts }) => {
+  const settings = { dots: true, infinite: true, speed: 500, slidesToShow: 3, slidesToScroll: 1, autoplay: true, autoplaySpeed: 2000 };
+
   return (
-    <Flex bg={useColorModeValue('#F9FAFB', 'gray.600')} p={10} w="full" justifyContent="center" alignItems="center">
-      <Box w="full" pt={8}>
-        <Flex direction={{ base: 'column', md: 'row' }} justifyContent="center" mb={{ base: 6, sm: 0 }}>
-          <RankingCard data={concerts} />
-        </Flex>
-      </Box>
-    </Flex>
+    <>
+      {/* {concerts?.map((concert, index) => (
+          <Box key={index} maxW="300px">
+            <RankingCard data={concert} />
+          </Box>
+        ))} */}
+      <div className="post-slider">
+        <div className="post-wrapper">
+          <div className="post">1</div>
+          <div className="post">2</div>
+          <div className="post">3</div>
+          <div className="post">4</div>
+          <div className="post">5</div>
+        </div>
+      </div>
+      <style>
+        {`
+              .post-slider{
+                border:1px solid red;
+              }
+              .post-slider .post-wrapper{
+                width:84%;
+                height:350px;
+                margin:0px auto;
+                border:1px dashed red;
+              }
+              .post-slider .post-wrapper .post{
+                width:300px;
+                height:350px;
+                display:inline-block;
+                background:gray;
+              }
+              
+           `}
+      </style>
+    </>
   );
 };
 export default MainRanking;

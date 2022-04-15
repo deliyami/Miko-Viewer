@@ -12,7 +12,7 @@ const Layout: FC<Props> = ({ children }) => {
   return (
     <Box minH="100vh">
       <MenuBar />
-      <Box ml={{ base: 0, md: 60 }} mt="10" p="4" paddingBottom="100px">
+      <Box ml={{ base: 0, md: 60 }} mt="10" p="4" minH="70vh" paddingBottom="100px">
         {children}
       </Box>
       <Footer />

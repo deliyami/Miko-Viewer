@@ -15,17 +15,28 @@ import { FC, ReactElement } from 'react';
 type Data = {
   newData: Concert[];
   topData: Concert[];
-  soonData: Concert[];
+  jpopData: Concert[];
   kpopData: Concert[];
 };
 
-const NewList: FC<{ data: Concert[] }> = ({ data }) => {
+interface SortItemProps {
+  name: string;
+  url: string;
+}
+
+const SortItems: Array<SortItemProps> = [
+  { name: 'New', url: '/concerts' },
+  { name: 'J-POP', url: '/concerts?category_id=1&page=1' },
+  { name: 'K-POP', url: '/concerts?category_id=2&page=1' },
+];
+
+const SortList: FC<{ data: Concert[]; sortData: SortItemProps }> = ({ data, sortData }) => {
   return (
     <Box>
-      <Flex py={3} mt={3}>
-        <Heading>NEW</Heading>
+      <Flex py={3}>
+        <Heading>{sortData.name}</Heading>
         <Spacer />
-        <Link href={`/concerts`}>
+        <Link href={sortData.url}>
           <a>
             <Button mr={4} mt={4}>
               더보기
@@ -34,61 +45,18 @@ const NewList: FC<{ data: Concert[] }> = ({ data }) => {
         </Link>
       </Flex>
       <Box minW={{ xl: '120vh' }}>
-        <SimpleGrid columns={[2, null, 4]} spacing="40px">
+        <SimpleGrid columns={[2, null, 4]} spacing="20px">
           <ConcertList data={data} />
         </SimpleGrid>
       </Box>
     </Box>
   );
 };
-const SoonStartList: FC<{ data: Concert[] }> = ({ data }) => {
-  return (
-    <Box>
-      <Flex py={3} mt={3}>
-        <Heading>Concert Begins</Heading>
-        <Spacer />
-        <Link href={`/concerts`}>
-          <a>
-            <Button mr={4} mt={4}>
-              더보기
-            </Button>
-          </a>
-        </Link>
-      </Flex>
-      <Box minW={{ xl: '120vh' }}>
-        <SimpleGrid columns={[2, null, 4]} spacing="40px">
-          <ConcertList data={data} />
-        </SimpleGrid>
-      </Box>
-    </Box>
-  );
-};
-const KpopList: FC<{ data: Concert[] }> = ({ data }) => {
-  return (
-    <Box>
-      <Flex py={3} mt={3}>
-        <Heading>K-POP</Heading>
-        <Spacer />
-        <Link href={`/concerts?category_id=2&page=1`}>
-          <a>
-            <Button mr={4} mt={4}>
-              더보기
-            </Button>
-          </a>
-        </Link>
-      </Flex>
-      <Box minW={{ xl: '120vh' }}>
-        <SimpleGrid columns={[2, null, 4]} spacing="40px">
-          <ConcertList data={data} />
-        </SimpleGrid>
-      </Box>
-    </Box>
-  );
-};
+
 const TopList: FC<{ data: Concert[] }> = ({ data: concerts }) => {
   return (
     <Box>
-      <Flex py={3} mt={3}>
+      <Flex py={3}>
         <Heading>Top 3</Heading>
       </Flex>
       <Box minW={{ xl: '120vh' }}>
@@ -102,17 +70,18 @@ const TopList: FC<{ data: Concert[] }> = ({ data: concerts }) => {
 export const getStaticProps: GetStaticProps<Data> = async () => {
   // NOTE  undefined를 구조부해 할당할려고 해서 에러 났었음.
   //  getStaticProps에 대해서는 서버 에러일때를 생각하고 에러 핸들링
-  const newResultPromise = getDataFromLaravel<Pagination<Concert>>('/concerts', {
-    perPage: 4,
-  });
 
   const topResultPromise = getDataFromLaravel<Pagination<Concert>>('/concerts', {
     sort: ['-sales_volume'],
     perPage: 3,
   });
 
-  const soonResultPromise = getDataFromLaravel<Pagination<Concert>>('/concerts', {
-    sort: ['-all_concert_start_date'],
+  const newResultPromise = getDataFromLaravel<Pagination<Concert>>('/concerts', {
+    perPage: 4,
+  });
+
+  const jpopResultPromise = getDataFromLaravel<Pagination<Concert>>('/concerts', {
+    filter: [['category_id', 1]],
     perPage: 4,
   });
 
@@ -121,13 +90,13 @@ export const getStaticProps: GetStaticProps<Data> = async () => {
     perPage: 4,
   });
 
-  const [newResult, topResult, soonResult, kpopResult] = await Promise.allSettled([newResultPromise, topResultPromise, soonResultPromise, kpopResultPromise]);
+  const [newResult, topResult, jpopResult, kpopResult] = await Promise.allSettled([newResultPromise, topResultPromise, jpopResultPromise, kpopResultPromise]);
 
   return {
     props: {
       newData: newResult.status === 'fulfilled' ? newResult.value.data.data : [],
       topData: topResult.status === 'fulfilled' ? topResult.value.data.data : [],
-      soonData: soonResult.status === 'fulfilled' ? soonResult.value.data.data : [],
+      jpopData: jpopResult.status === 'fulfilled' ? jpopResult.value.data.data : [],
       kpopData: kpopResult.status === 'fulfilled' ? kpopResult.value.data.data : [],
     },
     revalidate: 60 * 10, // 10분 마다 재생성
@@ -174,7 +143,7 @@ const LoginLeadBox = () => {
   );
 };
 
-export default function HomePage({ newData, topData, soonData, kpopData }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function HomePage({ newData, topData, jpopData, kpopData }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
       <Head>
@@ -186,10 +155,10 @@ export default function HomePage({ newData, topData, soonData, kpopData }: Infer
           <AsyncBoundary pendingFallback={<></>}>
             <LoginLeadBox />
           </AsyncBoundary>
-          <TopList data={topData} />
-          <NewList data={newData} />
-          <SoonStartList data={soonData} />
-          <KpopList data={kpopData} />
+          {/* <TopList data={topData} /> */}
+          <SortList data={newData} sortData={SortItems[0]} />
+          <SortList data={jpopData} sortData={SortItems[1]} />
+          <SortList data={kpopData} sortData={SortItems[2]} />
         </Box>
       </Flex>
     </>
