@@ -20,7 +20,7 @@ const RedirectLogic: FC = () => {
   return <></>;
 };
 
-const LoginPage = () => {
+export default function LoginPage() {
   const {
     handleSubmit,
     // control,
@@ -133,10 +133,8 @@ const LoginPage = () => {
       </Flex>
     </>
   );
-};
+}
 
 LoginPage.getLayout = function getLayout(page: ReactElement) {
   return <BasicLayout>{page}</BasicLayout>;
 };
-
-export default LoginPage;

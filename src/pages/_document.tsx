@@ -1,12 +1,27 @@
 import { ColorModeScript } from '@chakra-ui/react';
+// import crypto from 'crypto';
 import NextDocument, { Head, Html, Main, NextScript } from 'next/document';
+
+// const cspHashOf = (text: string) => {
+//   const hash = crypto.createHash('sha256');
+//   hash.update(text);
+//   return `'sha256-${hash.digest('base64')}'`;
+// };
 
 //  NOTE 오로지 SSR에서만 작동함.
 export default class Document extends NextDocument {
   render() {
+    // let csp = `default-src 'self'; script-src 'self' 'unsafe-inline' ${cspHashOf(NextScript.getInlineScriptSource(this.props))}`;
+    // if (process.env.NODE_ENV !== 'production') {
+    //   csp = `style-src 'self' 'unsafe-inline'; font-src 'self' data:; default-src 'self'; script-src 'unsafe-eval' 'self' 'unsafe-inline' ${cspHashOf(
+    //     NextScript.getInlineScriptSource(this.props),
+    //   )}`;
+    // }
+
     return (
       <Html lang="ja">
         <Head>
+          {/* <meta httpEquiv="Content-Security-Policy" content={csp} /> */}
           <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
           <meta name="robots" content="index, follow" />

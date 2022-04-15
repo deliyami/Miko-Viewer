@@ -17,8 +17,7 @@ const ContentSecurityPolicy = `
   media-src blob:;
   worker-src blob:;
   connect-src 'self' *.mikopj.live *.live-video.net;
-  script-src  'self' *.mikopj.live ;
-  script-src  'self' *.mikopj.live 'wasm-unsafe-eval';
+  script-src  'self' *.mikopj.live 'wasm-unsafe-eval'   ;
 `;
 
 //  Image
@@ -76,14 +75,17 @@ const nextConfig = {
             key: 'Strict-Transport-Security',
             value: 'max-age=63072000; includeSubDomains; preload',
           },
-          {
-            key: 'Content-Security-Policy',
-            value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim(),
-          },
+
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, must-revalidate',
           },
+          process.env.NODE_ENV === 'development'
+            ? { key: 'Content-Security-Policy', value: '' }
+            : {
+                key: 'Content-Security-Policy',
+                value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim(),
+              },
         ],
       },
     ];
