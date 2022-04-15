@@ -13,6 +13,7 @@ import { AppProps, NextWebVitalsMetric } from 'next/app';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 import Peer from 'peerjs';
 import { ReactElement, ReactNode, useEffect } from 'react';
 import { RecoilRoot } from 'recoil';

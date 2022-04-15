@@ -28,6 +28,7 @@
     "@mediapipe/pose": "^0.5.1635988162",
     "@react-icons/all-files": "^4.1.0",
     "@tensorflow-models/speech-commands": "^0.5.4",
+    "@types/nprogress": "^0.2.0",
     "@types/offscreencanvas": "^2019.6.4",
     "@types/react-virtualized": "^9.21.20",
     "@types/video.js": "^7.3.31",
