@@ -1,6 +1,6 @@
 import { axiosI, fetcher } from '@src/state/fetcher';
 import { LoginData, User } from '@src/types/share';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { mutate } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 import laggy from './middleware/laggy';
@@ -74,4 +74,15 @@ export const tryLogOut = async () => {
   } catch (error) {
     return undefined;
   }
+};
+
+export const useCheckLogin = () => {
+  const [isLogin, setIsLogin] = useState(false);
+
+  useEffect(() => {
+    const isTokenExist = document.cookie.match(/^(.*;)?\s*isLogin\s*=\s*[^;]+(.*)?$/);
+    if (isTokenExist) setIsLogin(true);
+  }, []);
+
+  return isLogin;
 };

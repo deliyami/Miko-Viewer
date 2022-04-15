@@ -1,10 +1,9 @@
 import { Box, Button, Flex, Heading, SimpleGrid, Spacer, Text, VStack } from '@chakra-ui/react';
-import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import ConcertList from '@src/components/home/ConcertList';
 import MainRanking from '@src/components/home/MainRanking';
 import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
 import BasicLayout from '@src/layout/BasicLayout';
-import { useUser } from '@src/state/swr/useUser';
+import { useCheckLogin } from '@src/state/swr';
 import { Concert } from '@src/types/share';
 import { Pagination } from '@src/types/share/common';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
@@ -104,7 +103,7 @@ export const getStaticProps: GetStaticProps<Data> = async () => {
 };
 
 const LoginLeadBox = () => {
-  const { data: userData } = useUser();
+  const isLogin = useCheckLogin();
   const outerBoxStyles = {
     boxSize: 'full',
     h: '400px',
@@ -124,7 +123,7 @@ const LoginLeadBox = () => {
     fontWeight: 'bold',
     fontSize: '18px',
   };
-  if (userData) return <></>;
+  if (isLogin) return <></>;
 
   return (
     <Box as={VStack} sx={outerBoxStyles} mb={7}>
@@ -153,10 +152,7 @@ export default function HomePage({ newData, topData, jpopData, kpopData }: Infer
       </Head>
       <Flex justifyContent="center" align="start" p={3}>
         <Box>
-          <AsyncBoundary pendingFallback={<></>}>
-            <LoginLeadBox />
-          </AsyncBoundary>
-          {/* <TopList data={topData} /> */}
+          <LoginLeadBox />
           <SortList data={newData} sortData={SortItems[0]} />
           <SortList data={jpopData} sortData={SortItems[1]} />
           <SortList data={kpopData} sortData={SortItems[2]} />

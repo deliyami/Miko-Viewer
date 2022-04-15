@@ -26,7 +26,7 @@ import { FiList } from '@react-icons/all-files/fi/FiList';
 import { FiMenu } from '@react-icons/all-files/fi/FiMenu';
 import { IconType } from '@react-icons/all-files/lib';
 import { IMAGE_DOMAIN } from '@src/const';
-import { useUser } from '@src/state/swr';
+import { useCheckLogin, useUser } from '@src/state/swr';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useRef } from 'react';
@@ -108,33 +108,37 @@ const NavItem = ({ link, ...rest }: NavItemProps) => {
 
 const UserInfoBox = () => {
   const { data } = useUser();
+  const isLogin = useCheckLogin();
+
+  if (!data || !isLogin)
+    return (
+      <Box>
+        <LoginBtn key="login key csr" />
+      </Box>
+    );
 
   return (
     <HStack spacing={{ base: '0', md: '6' }}>
       <Flex alignItems={'center'}>
-        {data ? (
-          <Menu>
-            <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>
-              <HStack>
-                <Avatar size={'md'} src={IMAGE_DOMAIN + data.avatar} />
-                <VStack display={{ base: 'none', md: 'flex' }} alignItems="flex-start" spacing="1px" ml="2">
-                  <Text fontSize="md">{data.name}</Text>
-                  <Text fontSize="xs" color="gray.600">
-                    {data.email}
-                  </Text>
-                </VStack>
-                <Box display={{ base: 'none', md: 'flex' }}>
-                  <FiChevronDown />
-                </Box>
-              </HStack>
-            </MenuButton>
-            <MenuList borderColor="gray.200">
-              <LogoutBtn />
-            </MenuList>
-          </Menu>
-        ) : (
-          <LoginBtn />
-        )}
+        <Menu>
+          <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>
+            <HStack>
+              <Avatar size={'md'} src={IMAGE_DOMAIN + data.avatar} />
+              <VStack display={{ base: 'none', md: 'flex' }} alignItems="flex-start" spacing="1px" ml="2">
+                <Text fontSize="md">{data.name}</Text>
+                <Text fontSize="xs" color="gray.600">
+                  {data.email}
+                </Text>
+              </VStack>
+              <Box display={{ base: 'none', md: 'flex' }}>
+                <FiChevronDown />
+              </Box>
+            </HStack>
+          </MenuButton>
+          <MenuList borderColor="gray.200">
+            <LogoutBtn />
+          </MenuList>
+        </Menu>
       </Flex>
     </HStack>
   );
@@ -164,19 +168,20 @@ const TopNav = ({ onOpen, ...rest }: TopNavProps) => {
           Miko
         </Text>
       </HStack>
-      <AsyncBoundary>
+      <AsyncBoundary pendingFallback={<></>}>
         <UserInfoBox />
       </AsyncBoundary>
     </Flex>
   );
 };
+// NOTE pendingFallback하고 결과가 같으면 hydration 에러가 왜 날까
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
 }
 
 const SideBarMyPageMenu = () => {
-  const { data: user } = useUser();
+  const isLogin = useCheckLogin();
   const { isOpen, onToggle } = useDisclosure();
   const hoverRef = useRef<any>(null);
   const isHover = useHover(hoverRef);
@@ -185,7 +190,7 @@ const SideBarMyPageMenu = () => {
 
   return (
     <Box ref={hoverRef}>
-      {user && (
+      {isLogin && (
         <NavItem
           onClick={() => {
             onToggle();
@@ -217,9 +222,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       {LinkItems.map(link => (
         <NavItem link={link} key={link.url} />
       ))}
-      <AsyncBoundary>
-        <SideBarMyPageMenu />
-      </AsyncBoundary>
+      <SideBarMyPageMenu />
     </Box>
   );
 };
