@@ -1,22 +1,24 @@
 import { CheckCircleIcon } from '@chakra-ui/icons';
 import { Button, Divider, Flex, Image, List, ListIcon, ListItem, Table, TableContainer, Tbody, Td, Text, Tr, useDisclosure } from '@chakra-ui/react';
 import CommonDivider from '@src/components/common/divider/CommonDivider';
-import { S3_URL } from '@src/const';
+import { IMAGE_DOMAIN } from '@src/const';
 import { useUser } from '@src/state/swr/useUser';
 import PaymentModal from './PaymentModal';
 
-const Check = ({ address, data }) => {
-  console.log(data);
+const Check = ({ address, data, setTabIndex }) => {
+  // console.log(data);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const user = useUser();
   let totalCoast = null;
   const productIds = [];
+  const quantity = [];
   data.map(item => {
     totalCoast += item.products[0].price * item.quantity;
+    quantity.push(item.quantity);
     if (!productIds.includes(item.product_id)) productIds.push(item.product_id);
     return 1;
   });
-  console.log(typeof productIds);
+  // console.log(typeof productIds);
 
   return (
     <Flex w={'50%'} p={'2%'} ml={'25%'} justifyContent="center" flexDir={'column'}>
@@ -47,8 +49,8 @@ const Check = ({ address, data }) => {
       </Text>
       <Flex rounded={'xl'} w="100%" h={'40%'} alignSelf="center" border="solid" p={'3%'} borderColor={'blackAlpha.200'} overflowX="scroll">
         {data.map((item, key) => (
-          <Flex key={key} justifyContent="space-around" mr={'10%'} w={'100%'} flexShrink="0">
-            <Image w={'25%'} src={`${S3_URL}products/${item.products[0].image}`} alt="productImage"></Image>
+          <Flex key={key} justifyContent="space-around" mr={'10%'} w={'100%'} flexShrink={0}>
+            <Image w={'25%'} src={`${IMAGE_DOMAIN}products/${item.products[0].image}`} alt="productImage"></Image>
             <Flex w={'65%'} flexDir={'column'}>
               <Text fontSize={'lg'}>{item.products[0].name}</Text>
               <Text mb={'4%'} fontWeight={'bold'}>
@@ -125,7 +127,16 @@ const Check = ({ address, data }) => {
           </ListItem>
         </List>
       </Flex>
-      <PaymentModal quantity={data.length} user_id={user.data.id} product_id={productIds} total_price={totalCoast} address={address} isOpen={isOpen} onClose={onClose} />
+      <PaymentModal
+        setTabIndex={setTabIndex}
+        quantity={quantity}
+        user_id={user.data.id}
+        product_id={productIds}
+        total_price={totalCoast}
+        address={address}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </Flex>
   );
 };

@@ -1,45 +1,34 @@
 import { Flex, Text } from '@chakra-ui/react';
+import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import OrderHistory from '@src/components/product/pay/OrderHistory';
 import { getDataFromLaravel } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
 import { useUser } from '@src/state/swr';
 import { Order } from '@src/types/local';
 import { Pagination } from '@src/types/share/common';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
-// const order = () => {
-//   return <Orders></Orders>;
-// };
-// export default order;
-type Data = {
-  data?: Pagination<Order>;
-};
-
-export const getServerSideProps: GetServerSideProps<Data> = async () => {
+export default function Orders() {
   const user = useUser();
+  const [data, setData] = useState({});
   const ORDER_URL = `/orders/${user.data.id}`;
-  const result = await getDataFromLaravel<Pagination<Order>>(ORDER_URL);
-  return {
-    props: {
-      data: result?.data ?? null,
-    },
-  };
-};
-
-export default function Orders({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  // console.log(data);
+  useEffect(() => {
+    getDataFromLaravel<Pagination<Order>>(ORDER_URL).then(response => console.log(response));
+  }, []);
   return (
-    <Flex>
-      <Text>order</Text>
-      {/* {data.map((item, key) => {
-        return <Text key={key}>{item.id}</Text>;
-      })} */}
-      <OrderHistory data={data}></OrderHistory>
+    <Flex flexDir={'column'} h="70vh">
+      <Text ml={'15%'} fontSize={'3xl'}>
+        ご注文履歴
+      </Text>
+      {data.length === undefined ? <Text>ご注文履歴がおりません。</Text> : <OrderHistory data={data}></OrderHistory>}
     </Flex>
   );
 }
 
 Orders.getLayout = function getLayout(page: ReactElement) {
-  return <BasicLayout>{page}</BasicLayout>;
+  return (
+    <BasicLayout>
+      <AsyncBoundary>{page}</AsyncBoundary>
+    </BasicLayout>
+  );
 };

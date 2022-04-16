@@ -3,8 +3,9 @@ import { LARAVEL_URL } from '@src/const';
 import axios from 'axios';
 import { useRef } from 'react';
 
-const PaymentModal = ({ isOpen, onClose, quantity, address, total_price, user_id, product_id }) => {
+const PaymentModal = ({ isOpen, onClose, quantity, address, total_price, user_id, product_id, setTabIndex }) => {
   const cancelRef = useRef();
+  // console.log(quantity);
   function goPayment() {
     axios
       .post(`${LARAVEL_URL}/orders`, {
@@ -12,10 +13,10 @@ const PaymentModal = ({ isOpen, onClose, quantity, address, total_price, user_id
         quantity,
         address,
         state: false,
-        total_price,
+        total_price: total_price + 300,
         product_id,
       })
-      .then(res => console.log(res))
+      .then(() => setTabIndex(3))
       .catch(err => console.log(err));
   }
   return (
@@ -26,7 +27,9 @@ const PaymentModal = ({ isOpen, onClose, quantity, address, total_price, user_id
             レージ
           </AlertDialogHeader>
 
-          <AlertDialogBody>コイン{total_price}を使ってご注文しますか？</AlertDialogBody>
+          <AlertDialogBody>
+            コイン<span style={{ color: '#E74A45' }}>「{total_price + 300}」</span>を使ってご注文しますか？
+          </AlertDialogBody>
 
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>

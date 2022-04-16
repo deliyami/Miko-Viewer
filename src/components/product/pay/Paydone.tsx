@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 
 const Paydone = ({ data }) => {
   const router = useRouter();
-  console.log(data);
+  // console.log(data);
   return (
     <Flex flexDir={'column'}>
       <Text fontSize={'3xl'} textAlign={'center'} my={'5%'}>

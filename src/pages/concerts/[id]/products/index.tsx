@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
-import { Flex, Select, Spinner, Text } from '@chakra-ui/react';
+import { Button, Flex, Select, Spinner, Text } from '@chakra-ui/react';
+import { FaArrowRight } from '@react-icons/all-files/fa/FaArrowRight';
 import { getDataFromLaravel } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
 import { Product } from '@src/types/share';
@@ -37,18 +38,6 @@ export default function ProductsPage({ data }) {
       console.log(isLoading);
     } else console.log(isLoading);
   }, [data, isLoading]);
-  function onSelectedChanged(event) {
-    setSelected(event.target.value);
-    if (event.target.value == '최신순') {
-      sortForLatest();
-    } else if (event.target.value == '판매순') {
-      sortForSold();
-    } else if (event.target.value == '낮은가격순') {
-      sortForLowPrice();
-    } else if (event.target.value == '높은가격순') {
-      sortForHighPrice();
-    }
-  }
 
   function sortForLatest() {
     data.sort(function (a, b) {
@@ -67,6 +56,18 @@ export default function ProductsPage({ data }) {
       return b.price - a.price;
     });
   }
+  function onSelectedChanged(event) {
+    setSelected(event.target.value);
+    if (event.target.value === '최신순') {
+      sortForLatest();
+    } else if (event.target.value === '판매순') {
+      sortForSold();
+    } else if (event.target.value === '낮은가격순') {
+      sortForLowPrice();
+    } else if (event.target.value === '높은가격순') {
+      sortForHighPrice();
+    }
+  }
 
   return (
     <Flex flexDirection={'column'} alignItems={'center'} h="full" w={'full'} justifyContent={'center'} p={'2%'}>
@@ -76,9 +77,15 @@ export default function ProductsPage({ data }) {
         </Flex>
       )}
       {!isLoading && data.data.length === 0 ? (
-        <Text color={'gray.300'} fontSize={'4xl'} cursor="default">
-          このコンサートの賞品は用意しておりません。
-        </Text>
+        <Flex h={'52vh'} justifyContent="center" flexDir={'column'}>
+          <Text color={'gray.300'} fontSize={'5xl'} cursor="default">
+            このコンサートの賞品は用意しておりません。
+          </Text>
+          <Button onClick={() => router.push('/concerts')} size={'lg'} w="50%" alignSelf={'center'} colorScheme={'blue'} mt="6%">
+            コンサートリストに戻る&nbsp; &nbsp;
+            <FaArrowRight></FaArrowRight>
+          </Button>
+        </Flex>
       ) : (
         <Flex flexDirection={'column'}>
           <Text mb={'3%'} fontSize={'5xl'}>
