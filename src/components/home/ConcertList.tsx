@@ -21,7 +21,6 @@ const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
     <Link href={`/concerts/${concert.id}`}>
       <a>
         <Box
-          className="concert"
           borderRadius="12px"
           transition="all 0.2s linear"
           transitionDuration="0.2s"
@@ -38,8 +37,8 @@ const ConcertCard: FC<{ concert: Concert }> = ({ concert }) => {
             quality={70}
             objectFit="cover"
             width={300}
-            layout="responsive"
             height={300}
+            layout="responsive"
             alt={`${concert.title} image`}
             style={{ borderRadius: '12px' }}
           />

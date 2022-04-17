@@ -1,26 +1,6 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
-import {
-  Box,
-  Button,
-  Center,
-  Collapse,
-  Container,
-  Flex,
-  Grid,
-  GridItem,
-  Heading,
-  Image,
-  Stack,
-  StackDivider,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Text,
-  useColorModeValue,
-} from '@chakra-ui/react';
-import TicketBox from '@src/components/concert/TicketBox';
+import { Box, Button, Center, Collapse, Container, Flex, Grid, GridItem, Heading, Stack, Text } from '@chakra-ui/react';
+import ConcertTab from '@src/components/concert/ConcertTab';
 import { IMAGE_DOMAIN } from '@src/const';
 import { convertDate, getDataFromLaravel } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
@@ -28,95 +8,17 @@ import { Concert, Ticket } from '@src/types/share';
 import { Pagination } from '@src/types/share/common';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { FC, ReactElement, useMemo, useState } from 'react';
+import React, { FC, ReactElement } from 'react';
 
 type Data = {
   concert?: Pagination<Concert>;
   tickets?: Pagination<Ticket>;
 };
 
-const TicketTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
-  const [tabNum, setTabNum] = useState(0);
+const LiveInformation: FC<{ data: Concert }> = ({ data: concert }) => {
   const router = useRouter();
-  const onClickSale = clickId => {
-    setTabNum(clickId);
-  };
-
-  const colors = useColorModeValue(['blue', 'red'], []);
-  const [tabIndex, setTabIndex] = useState(tabNum);
-  const colorScheme = colors[tabIndex];
-
-  const [sellingTickets, sellEndTickets] = useMemo(() => {
-    const aSellingTickets = [];
-    const aSellEndTickets = [];
-
-    const today = new Date();
-
-    tickets.forEach(ticket => {
-      if (new Date(ticket.saleEndDate) <= today) {
-        aSellEndTickets.push(ticket);
-      } else {
-        aSellingTickets.push(ticket);
-      }
-    });
-
-    return [aSellingTickets, aSellEndTickets];
-  }, [tickets]);
-
-  // console.log(tickets);
-  return (
-    <>
-      <Tabs mt={7} defaultIndex={tabNum || 0} onChange={index => setTabIndex(index)} colorScheme={colorScheme}>
-        <TabList>
-          <Tab color="gray" onClick={() => onClickSale(0)}>
-            販売中
-          </Tab>
-          <Tab color="gray" onClick={() => onClickSale(1)}>
-            販売終了
-          </Tab>
-          <Tab color="gray" onClick={() => router.push(`/concerts/${router.query.id}/products`)}>
-            グッズリスト
-          </Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            <Stack divider={<StackDivider borderColor={useColorModeValue('gray.100', 'gray.700')} />}>
-              {sellingTickets.length ? (
-                sellingTickets.map(ticket => (
-                  <Box key={ticket.id}>
-                    <Box _hover={{ bg: '#EBF8FF' }}>
-                      <TicketBox data={ticket} />
-                    </Box>
-                  </Box>
-                ))
-              ) : (
-                <Center my={10}>販売中のチケットがありません。</Center>
-              )}
-            </Stack>
-          </TabPanel>
-          <TabPanel>
-            <Stack divider={<StackDivider borderColor={useColorModeValue('gray.100', 'gray.700')} />}>
-              {sellEndTickets.length ? (
-                sellEndTickets.map(ticket => (
-                  <Box key={ticket.id}>
-                    <Box _hover={{ bg: '#EBF8FF' }}>
-                      <TicketBox data={ticket} />
-                    </Box>
-                  </Box>
-                ))
-              ) : (
-                <Center my={10}>販売終了のチケットがありません。</Center>
-              )}
-            </Stack>
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-    </>
-  );
-};
-
-const LiveInformation = ({ concert }) => {
   const [show, setShow] = React.useState(false);
   const handleToggle = () => setShow(!show);
 
@@ -125,7 +27,6 @@ const LiveInformation = ({ concert }) => {
 
   return (
     <Container
-      className="concert"
       as={Stack}
       maxW={'6xl'}
       direction={{ base: 'column', md: 'row' }}
@@ -133,20 +34,34 @@ const LiveInformation = ({ concert }) => {
       justify={{ base: 'center', md: 'space-between' }}
       align={{ base: 'center', md: 'start' }}
     >
-      <Image borderRadius="2%" boxSize="sm" src={IMAGE_DOMAIN + concert.coverImage} objectFit="cover" alt="concertImage" fallbackSrc="/defaultImage.png" />
+      <Box position="relative" w={350} h={350} borderRadius="12px" boxShadow="rgba(0, 0, 0, 0.1) 0px 4px 12px">
+        <Image
+          src={IMAGE_DOMAIN + concert.coverImage}
+          placeholder="blur"
+          blurDataURL="/image/defaultImage.png"
+          quality={70}
+          layout="fill"
+          objectFit="cover"
+          alt={`${concert.title} image`}
+          style={{ borderRadius: '12px' }}
+        />
+      </Box>
       <Box px={4}>
         <Flex pb={3} direction={{ base: 'column', md: 'row' }} minW={{ md: '50vh' }}>
           <Heading fontWeight="700">{concert.title}</Heading>
           <Text pt={{ base: '0', md: '4' }} pl={{ base: '0', md: '5' }}>
             {concert.artist}
           </Text>
+          <Button colorScheme="purple" ml={3} onClick={() => router.push(`/concerts/${router.query.id}/products`)}>
+            グッズ
+          </Button>
         </Flex>
         <Grid templateRows="repeat(2, 1fr)" templateColumns="repeat(5, 1fr)">
           <GridItem rowSpan={2} colSpan={1}>
             <Text fontWeight="500">公演期間</Text>
             <Text fontWeight="500">公演内容</Text>
           </GridItem>
-          <GridItem rowSpan={2} colSpan={4}>
+          <GridItem rowSpan={2} colSpan={4} maxW={{ md: '70vh' }}>
             <Text fontWeight="440">
               {startDate} ~ {endDate}
             </Text>
@@ -164,15 +79,6 @@ const LiveInformation = ({ concert }) => {
           </GridItem>
         </Grid>
       </Box>
-      <style>
-        {`
-          .concert img {
-            border-radius: 12px;
-            transition: transform 0.2s ease-in-out;
-            box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-          }
-       `}
-      </style>
     </Container>
   );
 };
@@ -219,10 +125,10 @@ export default function LiveDetailPage({ concert, tickets }: InferGetServerSideP
       <Head>
         <title key="title">{concert.data.title} | Miko</title>
       </Head>
-      <Flex justifyContent="center">
+      <Flex direction="column" alignItems="center" p={3}>
         <Box>
-          <LiveInformation concert={concert.data} />
-          <TicketTab data={tickets.data} />
+          <LiveInformation data={concert.data} />
+          <ConcertTab data={tickets.data} />
         </Box>
       </Flex>
     </>

@@ -1,5 +1,5 @@
 import { SearchIcon } from '@chakra-ui/icons';
-import { Box, Button, Center, Flex, HStack, Icon, Input, InputGroup, InputLeftElement, InputRightElement, SimpleGrid, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, HStack, Icon, Input, InputGroup, InputLeftElement, InputRightElement, SimpleGrid, Text } from '@chakra-ui/react';
 import { FiFilter } from '@react-icons/all-files/fi/FiFilter';
 import PaginationBtn from '@src/components/common/button/PaginationBtn';
 import CategoryFilter from '@src/components/concert/CategoryFilter';
@@ -44,19 +44,17 @@ const SearchBox = () => {
     }
   };
   return (
-    <HStack>
-      <InputGroup size="md">
-        <InputLeftElement>
-          <SearchIcon pointerEvents="none" color="gray.300" />
-        </InputLeftElement>
-        <Input w="full" pr="4.5rem" type="text" placeholder="Enter title" value={searchQuery} onKeyUp={enterKey} required onChange={onChangeSearch} />
-        <InputRightElement width="4.5rem">
-          <Button h="1.75rem" size="sm" onClick={onClickSearch} type="submit" mr={2}>
-            Search
-          </Button>
-        </InputRightElement>
-      </InputGroup>
-    </HStack>
+    <InputGroup size="md">
+      <InputLeftElement>
+        <SearchIcon pointerEvents="none" color="gray.300" />
+      </InputLeftElement>
+      <Input pr="4.5rem" type="text" placeholder="Enter title" value={searchQuery} onKeyUp={enterKey} required onChange={onChangeSearch} />
+      <InputRightElement width="4.5rem" mr={2}>
+        <Button h="1.75rem" size="sm" onClick={onClickSearch} type="submit">
+          Search
+        </Button>
+      </InputRightElement>
+    </InputGroup>
   );
 };
 
@@ -96,23 +94,21 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
 const ConcertListView: FC<{ query: CommonFSW; iniData: Pagination<Concert> }> = ({ query, iniData }) => {
   const { data: concertsData } = usePageLaravel('/concerts', query, { fallbackData: iniData });
 
-  if (!concertsData) {
+  if (!concertsData?.data[0]) {
     return (
-      <Center height="auto" width="full">
-        <Text fontSize="7xl">No Data</Text>
+      <Center height="auto" width="full" minH={'30vh'} minW={{ xl: '120vh' }}>
+        <Text fontSize="4xl">コンサートがありません。</Text>
       </Center>
     );
   }
 
   return (
-    <VStack spacing={10}>
-      <Box>
-        <SimpleGrid columns={[2, null, 3]} spacing="35px">
-          <ConcertList data={concertsData.data} />
-        </SimpleGrid>
-      </Box>
+    <Box>
+      <SimpleGrid columns={[2, null, 3]} spacing="35px" pt={4} pb={20}>
+        <ConcertList data={concertsData.data} />
+      </SimpleGrid>
       <PaginationBtn data={concertsData.meta} options={{ shallow: true }} />
-    </VStack>
+    </Box>
   );
 };
 
@@ -157,9 +153,8 @@ export default function ConcertPage({ iniData, initialParam }: InferGetServerSid
       <Head>
         <title key="title">Miko - ConcertList</title>
       </Head>
-      <Flex justifyContent="center">
-        <Box>
-          <Box id="scroll-into" />
+      <Flex justifyContent="center" p={3}>
+        <Box w="full" maxW={{ xl: '120vh' }}>
           <SearchBox />
           <HStack py={4}>
             <Icon boxSize={5} onClick={handleShowCategoryFilter} cursor="pointer" as={FiFilter} />

@@ -14,7 +14,6 @@ import {
   Heading,
   HStack,
   Icon,
-  Image,
   Spacer,
   Text,
   Tooltip,
@@ -27,6 +26,7 @@ import { axiosI } from '@src/state/fetcher';
 import { useUser } from '@src/state/swr';
 import { Ticket } from '@src/types/share';
 import { AxiosError } from 'axios';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { FC, useState } from 'react';
 
@@ -154,23 +154,24 @@ const TicketPay: FC<{ data: Ticket }> = ({ data: ticket }) => {
     </>
   );
 };
+
 const TicketPayment: FC<{ data: Ticket }> = ({ data: ticket }) => {
   const startDate = convertDate(ticket.concertStartDate, 'YMDHM'); // 티켓 시작날
   const EndDate = convertDate(ticket.concertEndDate, 'YMDHM');
 
   return (
     <Flex justifyContent="center">
-      <Box className="payment" mr={2}>
-        <Image borderRadius="2%" boxSize="330px" src={IMAGE_DOMAIN + ticket.concert.coverImage} objectFit="cover" alt="concertImage" fallbackSrc="/defaultImage.png" />
-        <style>
-          {`
-              .payment img {
-                border-radius: 12px;
-                transition: transform 0.2s ease-in-out;
-                box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-              }
-           `}
-        </style>
+      <Box mr={2} position="relative" w={350} h={350} borderRadius="12px" boxShadow="rgba(0, 0, 0, 0.1) 0px 4px 12px">
+        <Image
+          src={IMAGE_DOMAIN + ticket.concert.coverImage}
+          placeholder="blur"
+          blurDataURL="/image/defaultImage.png"
+          quality={70}
+          layout="fill"
+          objectFit="cover"
+          alt={`${ticket.concert.title} image`}
+          style={{ borderRadius: '12px' }}
+        />
       </Box>
       <Box p={2} ml={2}>
         <Heading as="h3" size="lg" mb={3}>

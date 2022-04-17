@@ -63,35 +63,6 @@ const MainRanking: FC<{ data: Concert[] }> = ({ data: concerts }) => {
             <RankingCard data={concert} />
           </Box>
         ))} */}
-      <div className="post-slider">
-        <div className="post-wrapper">
-          <div className="post">1</div>
-          <div className="post">2</div>
-          <div className="post">3</div>
-          <div className="post">4</div>
-          <div className="post">5</div>
-        </div>
-      </div>
-      <style>
-        {`
-              .post-slider{
-                border:1px solid red;
-              }
-              .post-slider .post-wrapper{
-                width:84%;
-                height:350px;
-                margin:0px auto;
-                border:1px dashed red;
-              }
-              .post-slider .post-wrapper .post{
-                width:300px;
-                height:350px;
-                display:inline-block;
-                background:gray;
-              }
-              
-           `}
-      </style>
     </>
   );
 };
