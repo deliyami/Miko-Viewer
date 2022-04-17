@@ -8,7 +8,6 @@ import { FC } from 'react';
 
 const AllItem: FC<{ allItem: Pagination<Product> }> = ({ allItem }) => {
   const router = useRouter();
-  console.log(allItem.data);
   return (
     <Flex flexDir={'column'} w={'82%'}>
       <Text fontSize={'3xl'} fontWeight={'bold'}>

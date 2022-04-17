@@ -1,9 +1,8 @@
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import AllItem from '@src/components/product/AllItem';
-import Details from '@src/components/product/details/Details';
 import ProductDetail from '@src/components/product/ProductDetail';
-import { getPageLaravelData } from '@src/helper';
+import { getPageLaravelData, getSingleLaravelData } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
 import { Product } from '@src/types/share';
 import { Pagination } from '@src/types/share/common';
@@ -11,52 +10,46 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { ReactElement } from 'react';
 
 type Data = {
-  data?: Pagination<Product>;
-  item?: Pagination<Product>;
-  concertId: number;
+  anotherProducts: Pagination<Product>;
+  curProduct: Product;
 };
 
 export const getServerSideProps: GetServerSideProps<Data> = async context => {
-  const URL_PRODUCTS = '/products';
-  const concertId = parseInt((context.query.id as string) ?? '1', 10);
-  // let categoryId = parseInt((context.query.category_id as string) ?? "1");
-  // const page = context.query.page as string;
-  // const search = context.query.search as string;
+  const concertId = parseInt(context.query.id as string, 10);
+  const productId = parseInt(context.query.product_id as string, 10);
 
-  const result = await getPageLaravelData<Pagination<Product>>(URL_PRODUCTS, {
-    filter: [['concert_id', concertId]],
-    // page: parseInt(page),
-    // per_page: 3,
-    // search,
-  });
+  try {
+    const productsResult = await getPageLaravelData('/products', {
+      filter: [['concert_id', concertId]],
+      perPage: 100,
+    });
 
-  const item = await getPageLaravelData<Pagination<Product>>(`${URL_PRODUCTS}/${context.query.product_id}`);
+    const curProductResult = await getSingleLaravelData('/products', productId);
 
-  return {
-    props: {
-      data: result?.data ?? null,
-      concertId,
-      item: item?.data ?? null,
-    },
-  };
+    return {
+      props: {
+        anotherProducts: productsResult,
+        curProduct: curProductResult.data,
+      },
+    };
+  } catch (error) {
+    return {
+      redirect: {
+        destination: '/500',
+        permanent: false,
+      },
+    };
+  }
 };
 
-export default function ProductPage({ data, item }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  // const router = useRouter();
-  console.log(item);
+export default function ProductPage({ anotherProducts, curProduct }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
       <Box mb={'3%'} w="full">
-        {item.data ? (
-          <ProductDetail item={item.data}></ProductDetail>
-        ) : (
-          <Text color={'gray.300'} fontSize={'5xl'} cursor="default">
-            このコンサートの賞品は用意しておりません。
-          </Text>
-        )}
+        <ProductDetail item={curProduct}></ProductDetail>
       </Box>
-      {data.data.length <= 1 ? null : <AllItem allItem={data}></AllItem>}
-      <Details item={item.data}></Details>
+      <AllItem allItem={anotherProducts}></AllItem>
+      {/* <Details item={item.data}></Details> */}
     </Flex>
   );
 }

@@ -3,12 +3,12 @@ import { IMAGE_DOMAIN } from '@src/const';
 import { getPageLaravelData } from '@src/helper';
 import { useUser } from '@src/state/swr';
 import { Cart } from '@src/types/local';
-import { useEffect, useState } from 'react';
+import { Product } from '@src/types/share';
+import { FC, useEffect, useState } from 'react';
 import CartButton from './cart/CartButton';
 import OptionSelect from './OptionSelect';
 
-const ProductDetail = ({ item }) => {
-  console.log(item);
+const ProductDetail: FC<{ item: Product }> = ({ item }) => {
   const user = useUser();
   const [cart, setCart] = useState();
   const [cartCount, setCartCount] = useState(cart);
