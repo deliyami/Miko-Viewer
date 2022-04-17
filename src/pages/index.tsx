@@ -101,27 +101,28 @@ export const getStaticProps: GetStaticProps<Data> = async () => {
   };
 };
 
+const outerBoxStyles = {
+  boxSize: 'full',
+  h: '400px',
+  p: '10',
+  backgroundImage: '/logo/mainPageImage.jpg',
+  bgPosition: 'bottom',
+  objectFit: 'cover',
+  bgRepeat: 'no-repeat',
+};
+
+const innerBoxStyles = {
+  textAlign: 'center',
+  width: 'full',
+  color: 'white',
+  bg: 'orange',
+  textShadow: '0 0 20px gray',
+  fontWeight: 'bold',
+  fontSize: '18px',
+};
+
 const LoginLeadBox = () => {
   const isLogin = useCheckLogin();
-  const outerBoxStyles = {
-    boxSize: 'full',
-    h: '400px',
-    p: '10',
-    backgroundImage: '/logo/mainPageImage.jpg',
-    bgPosition: 'bottom',
-    objectFit: 'cover',
-    bgRepeat: 'no-repeat',
-  };
-
-  const innerBoxStyles = {
-    textAlign: 'center',
-    width: 'full',
-    color: 'white',
-    bg: 'orange',
-    textShadow: '0 0 20px gray',
-    fontWeight: 'bold',
-    fontSize: '18px',
-  };
   if (isLogin) return <></>;
 
   return (

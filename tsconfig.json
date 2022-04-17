@@ -20,7 +20,8 @@
       "@public/*": ["public/*"]
     },
     "typeRoots": ["./src/types"],
-    "incremental": true
+    "incremental": true,
+    "types": ["offscreencanvas"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
