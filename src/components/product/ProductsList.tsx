@@ -5,12 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
 
-const ProductsList: FC<{ data: Product[] }> = ({ data }) => {
+const ProductsList: FC<{ products: Product[] }> = ({ products }) => {
   const router = useRouter();
   const [isLargerThan960] = useMediaQuery('(min-width: 960px)');
   return (
     <SimpleGrid columns={isLargerThan960 ? 4 : 2} spacing={70}>
-      {data.map((item, id) => (
+      {products.map((item, id) => (
         <Link key={id} href={`/concerts/${router.query.id}/products/${item.id}`}>
           <a>
             <Flex justifyItems={'center'}>

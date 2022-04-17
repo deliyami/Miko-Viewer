@@ -1,15 +1,15 @@
 /* eslint-disable no-nested-ternary */
 import { Flex, Select, Text } from '@chakra-ui/react';
+import ProductsList from '@src/components/product/ProductsList';
 import { getPageLaravelData } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
 import { Product } from '@src/types/share';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { ChangeEventHandler, ReactElement, useMemo, useState } from 'react';
-import ProductsList from '../../../../components/product/ProductsList';
 
 type Data = {
-  data: Product[];
+  products: Product[];
 };
 
 export const getServerSideProps: GetServerSideProps<Data> = async context => {
@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
     });
     return {
       props: {
-        data: result.data,
+        products: result.data,
       },
     };
   } catch (error) {
@@ -34,7 +34,7 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
   }
 };
 
-export default function ProductsPage({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function ProductsPage({ products }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const [selected, setSelected] = useState<'新着順' | '売れている順' | '価格が安い順' | '価格が高い順'>('新着順');
 
@@ -43,7 +43,7 @@ export default function ProductsPage({ data }: InferGetServerSidePropsType<typeo
   };
 
   const sortedProduct = useMemo(() => {
-    return data.sort((a, b) => {
+    return products.sort((a, b) => {
       switch (selected) {
         case '新着順':
           return a.id - b.id;
@@ -58,21 +58,21 @@ export default function ProductsPage({ data }: InferGetServerSidePropsType<typeo
           return 1;
       }
     });
-  }, [selected, data]);
+  }, [selected, products]);
 
   return (
-    <Flex flexDirection={'column'} alignItems={'center'} h="full" w={'full'} justifyContent={'center'} p={'2%'}>
-      {data.length === 0 ? (
-        <Text color={'gray.300'} fontSize={'4xl'} cursor="default">
+    <Flex flexDirection="column" alignItems="center" h="full" w="full" justifyContent="center" p="2%">
+      {products.length === 0 ? (
+        <Text color="gray.300" fontSize="4xl" cursor="default">
           このコンサートの賞品は用意しておりません。
         </Text>
       ) : (
-        <Flex flexDirection={'column'}>
-          <Text mb={'3%'} fontSize={'5xl'}>
+        <Flex flexDirection="column">
+          <Text mb="3%" fontSize="5xl">
             {router.query.id}번 콘서트의 상품
           </Text>
-          <label htmlFor="sort">
-            <Select id="sort" mb={'3%'} alignSelf={'end'} textAlign={'center'} w={'15%'} size={'md'} value={selected} onChange={onSelectedChanged}>
+          <label htmlFor="product_sort">
+            <Select id="sort" mb="3%" alignSelf="end" textAlign="center" w="15%" size="md" value={selected} onChange={onSelectedChanged}>
               <option>新着順</option>
               <option>売れている順</option>
               <option>価格が安い順</option>
@@ -80,7 +80,7 @@ export default function ProductsPage({ data }: InferGetServerSidePropsType<typeo
             </Select>
           </label>
           <Flex>
-            <ProductsList data={sortedProduct}></ProductsList>
+            <ProductsList products={sortedProduct}></ProductsList>
           </Flex>
         </Flex>
       )}
