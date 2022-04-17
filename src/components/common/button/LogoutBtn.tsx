@@ -1,9 +1,10 @@
-import { Box, Flex, Icon, Link, Text } from '@chakra-ui/react';
+import { Box, Flex, Icon, Text } from '@chakra-ui/react';
 import { FiLogIn } from '@react-icons/all-files/fi/FiLogIn';
 import { FiLogOut } from '@react-icons/all-files/fi/FiLogOut';
 import { axiosI } from '@src/state/fetcher';
 import { loginState } from '@src/state/recoil';
 import { useUser } from '@src/state/swr';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSetRecoilState } from 'recoil';
 
@@ -47,13 +48,15 @@ const LogoutBtn = () => {
 const LoginBtn = () => {
   return (
     <Box listStyleType="none" fontSize="lg" fontWeight="bold">
-      <Link href="/login" style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+      <Link href="/login" passHref aria-label="login-btn">
         <a>
           <Flex
             w="full"
             align="center"
             p="2"
             mx="2"
+            textDecoration="none"
+            _focus={{ boxShadow: 'none' }}
             borderRadius="lg"
             cursor="pointer"
             _hover={{

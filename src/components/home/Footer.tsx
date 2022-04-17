@@ -40,7 +40,7 @@ export default function SmallWithLogoLeft() {
         </Stack>
       </Container>
       <Container as={Stack} maxW={'6xl'} align="start">
-        <Text fontSize="sm" color="grey">
+        <Text fontSize="sm" color="#525252">
           {nowYear} © MIKO Group
         </Text>
       </Container>

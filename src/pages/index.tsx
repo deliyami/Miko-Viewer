@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, SimpleGrid, Spacer, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, CSSObject, Flex, Heading, SimpleGrid, Spacer, Text, VStack } from '@chakra-ui/react';
 import ConcertList from '@src/components/home/ConcertList';
 import MainRanking from '@src/components/home/MainRanking';
 import { getPageLaravelData } from '@src/helper/getDataFromLaravel';
@@ -101,21 +101,23 @@ export const getStaticProps: GetStaticProps<Data> = async () => {
   };
 };
 
-const outerBoxStyles = {
+const outerBoxStyles: CSSObject = {
   boxSize: 'full',
   h: '400px',
   p: '10',
   backgroundImage: '/logo/mainPageImage.jpg',
+  backgroundColor: 'black',
   bgPosition: 'bottom',
   objectFit: 'cover',
   bgRepeat: 'no-repeat',
 };
 
-const innerBoxStyles = {
+const innerBoxStyles: CSSObject = {
   textAlign: 'center',
   width: 'full',
   color: 'white',
-  bg: 'orange',
+  bg: '#00000000',
+  borderColor: '#FFA500',
   textShadow: '0 0 20px gray',
   fontWeight: 'bold',
   fontSize: '18px',
@@ -132,7 +134,7 @@ const LoginLeadBox = () => {
         <Text color="white"> Discover, stream, and share a constantly expanding mix of concert from emerging and major artists around the world.</Text>
         <Link href="/login">
           <a>
-            <Button sx={innerBoxStyles} _hover={{ color: 'black' }} _active={{ bg: 'orange' }}>
+            <Button sx={innerBoxStyles} _hover={{ color: '#FFA500' }}>
               Sign up for free
             </Button>
           </a>
