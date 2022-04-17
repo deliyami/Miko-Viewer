@@ -1,9 +1,9 @@
-import { Accordion, Box, Button, Flex, Image, Menu, MenuItem, MenuList, Text, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Flex, Image, Menu, MenuItem, MenuList, Text, useDisclosure } from '@chakra-ui/react';
 import { FaCoins } from '@react-icons/all-files/fa/FaCoins';
 import { FaShoppingCart } from '@react-icons/all-files/fa/FaShoppingCart';
 import Loading from '@src/components/common/Loading';
 import { IMAGE_DOMAIN } from '@src/const';
-import { getDataFromLaravel } from '@src/helper';
+import { getPageLaravelData } from '@src/helper';
 import { enterTicketDataState } from '@src/state/recoil';
 import { Product } from '@src/types/share';
 import { Pagination } from '@src/types/share/common';
@@ -25,7 +25,7 @@ const ProductList = () => {
   //   }).then(response => response.data);
   // }
   useEffect(() => {
-    getDataFromLaravel<Pagination<Product>>(URL_PRODUCTS, {
+    getPageLaravelData(URL_PRODUCTS, {
       filter: [['concert_id', enterTicketData.concertId]],
     }).then(response => setData(response.data));
   }, []);

@@ -1,20 +1,18 @@
 import { Box, Flex, SimpleGrid, Text, useMediaQuery } from '@chakra-ui/react';
 import { IMAGE_DOMAIN } from '@src/const';
 import { Product } from '@src/types/share';
-import { Pagination } from '@src/types/share/common';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
 
-const ProductsList: FC<{ data: Pagination<Product> }> = ({ data }) => {
+const ProductsList: FC<{ products: Product[] }> = ({ products }) => {
   const router = useRouter();
   console.log('product list');
-  console.log(data);
   const [isLargerThan960] = useMediaQuery('(min-width: 960px)');
   return (
     // data[0].id
     <SimpleGrid columns={isLargerThan960 ? 4 : 2} spacing={70}>
-      {data.data.map((item, id) => (
+      {products.map((item, id) => (
         <Link key={id} href={`/concerts/${router.query.id}/products/${item.id}`}>
           <a>
             <Flex justifyItems={'center'}>

@@ -1,31 +1,30 @@
-import { Progress, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { Progress, Tab, TabList, Box, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import Carts from '@src/components/product/cart/Carts';
 import Check from '@src/components/product/pay/Check';
 import Info from '@src/components/product/pay/Info';
 import Paydone from '@src/components/product/pay/Paydone';
-import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
 import BasicLayout from '@src/layout/BasicLayout';
+import { useSingleLaravel } from '@src/state/swr/useLaravel';
 import { useUser } from '@src/state/swr/useUser';
-import { Cart } from '@src/types/local';
-import { ReactElement, useEffect, useState } from 'react';
+// import { Cart } from '@src/types/local';
+import { ReactElement, SetStateAction, useState } from 'react';
 
 const Purchase = () => {
   const [address, setAddress] = useState('');
   const [tabIndex, setTabIndex] = useState(1);
-  const [data, setData] = useState({});
+  // const [data, setData] = useState({});
 
-  function handleTabsChange(index) {
+  function handleTabsChange(index: SetStateAction<number>) {
     setTabIndex(index);
   }
 
   console.log(tabIndex);
-  const user = useUser();
+  const { data: userData } = useUser();
 
-  const URL_PRODUCTS = `/cart_products/${user.data.id}`;
-  useEffect(() => {
-    getDataFromLaravel<Cart>(URL_PRODUCTS).then(response => setData(response.data));
-  }, []);
+  const { data } = useSingleLaravel('/cart_products', userData?.id, {});
+
+  if (!data) return <Box>no Data</Box>;
 
   return (
     <>
@@ -55,7 +54,7 @@ const Purchase = () => {
             </>
           )}
         </TabList>
-        {data.length === undefined ? null : (
+        {data && (
           <TabPanels>
             <TabPanel>
               <Carts setTabIndex={setTabIndex} />

@@ -1,8 +1,7 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { IMAGE_DOMAIN } from '@src/const';
-import { getDataFromLaravel } from '@src/helper';
+import { getSingleLaravelData } from '@src/helper';
 import { useUser } from '@src/state/swr';
-import { Cart } from '@src/types/local';
 import { useEffect, useState } from 'react';
 import CartButton from './cart/CartButton';
 import OptionSelect from './OptionSelect';
@@ -13,10 +12,10 @@ const ProductDetail = ({ item }) => {
   const [cart, setCart] = useState();
   const [cartCount, setCartCount] = useState(cart);
   // console.log(user);
-  const URL_PRODUCTS = `/cart_products/${user.data.id}`;
+  const URL_PRODUCTS = `/cart_products`;
   useEffect(() => {
     if (user.data) {
-      getDataFromLaravel<Cart>(URL_PRODUCTS).then(response => setCartCount(response.data.length));
+      getSingleLaravelData(URL_PRODUCTS).then(response => setCartCount(response.data.length));
     }
     // console.log(cart);
   }, [cartCount]);
