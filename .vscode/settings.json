@@ -31,6 +31,7 @@
     "avif",
     "babylonjs",
     "chakra",
+    "chartjs",
     "googlebot",
     "jpop",
     "Kakao",
@@ -48,6 +49,7 @@
     "openrelayproject",
     "peerjs",
     "REBUFFERING",
+    "usehooks",
     "wasmworker",
     "YMDHM"
   ]
