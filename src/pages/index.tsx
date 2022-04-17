@@ -30,23 +30,19 @@ const SortItems: Array<SortItemProps> = [
 
 const SortList: FC<{ data: Concert[]; sortData: SortItemProps }> = ({ data, sortData }) => {
   return (
-    <Box>
+    <Box w="full" maxW="120vh">
       <Flex py={3}>
         <Heading>{sortData.name}</Heading>
         <Spacer />
         <Link href={sortData.url}>
           <a>
-            <Button mr={4} mt={4}>
-              더보기
-            </Button>
+            <Button mt={4}>더보기</Button>
           </a>
         </Link>
       </Flex>
-      <Box minW={{ xl: '120vh' }}>
-        <SimpleGrid columns={[2, null, 4]} spacing="20px">
-          <ConcertList data={data} />
-        </SimpleGrid>
-      </Box>
+      <SimpleGrid columns={[2, null, 4]} spacing="20px">
+        <ConcertList data={data} />
+      </SimpleGrid>
     </Box>
   );
 };
@@ -105,10 +101,12 @@ const outerBoxStyles: CSSObject = {
   boxSize: 'full',
   h: '400px',
   p: '10',
+  alignItems: 'center',
+  justifyContent: 'center',
   backgroundImage: '/logo/mainPageImage.jpg',
   backgroundColor: 'black',
   bgPosition: 'bottom',
-  objectFit: 'cover',
+  objectFit: 'fill',
   bgRepeat: 'no-repeat',
 };
 
@@ -128,19 +126,17 @@ const LoginLeadBox = () => {
   if (isLogin) return <></>;
 
   return (
-    <Box as={VStack} sx={outerBoxStyles} mb={7}>
-      <VStack maxW="80vh" spacing={5} my={10} p={5} backdropFilter="auto" backdropBlur="8px">
-        <Heading color="white">Connect on Miko</Heading>
-        <Text color="white"> Discover, stream, and share a constantly expanding mix of concert from emerging and major artists around the world.</Text>
-        <Link href="/login">
-          <a>
-            <Button sx={innerBoxStyles} _hover={{ color: '#FFA500' }}>
-              Sign up for free
-            </Button>
-          </a>
-        </Link>
-      </VStack>
-    </Box>
+    <VStack sx={outerBoxStyles} mb={10} spacing={5} backdropFilter="auto" backdropBlur="8px">
+      <Heading color="white">Connect on Miko</Heading>
+      <Text color="white"> Discover, stream, and share a constantly expanding mix of concert from emerging and major artists around the world.</Text>
+      <Link href="/login">
+        <a>
+          <Button sx={innerBoxStyles} _hover={{ color: 'black', borderColor: 'orange' }} _active={{ bg: 'orange' }}>
+            Sign up for free
+          </Button>
+        </a>
+      </Link>
+    </VStack>
   );
 };
 
@@ -152,7 +148,7 @@ export default function HomePage({ newData, topData, jpopData, kpopData }: Infer
         <meta property="og:title" content="Miko" key="og:title" />
         <meta name="description" content="miko homepage, concert list" />
       </Head>
-      <Flex justifyContent="center" align="start" p={3}>
+      <Flex direction="column" alignItems="center" p={3}>
         <Box>
           <LoginLeadBox />
           <SortList data={newData} sortData={SortItems[0]} />

@@ -1,9 +1,10 @@
-import { AspectRatio, Box, Button, Center, Divider, Flex, Grid, GridItem, Heading, HStack, Image, Input, Radio, RadioGroup, Stack } from '@chakra-ui/react';
+import { Box, Button, Center, Divider, Flex, Grid, GridItem, Heading, HStack, Input, Radio, RadioGroup, Stack } from '@chakra-ui/react';
 import { IMAGE_DOMAIN, USER_TICKET_COOKIE } from '@src/const';
 import { convertDate, setCookie } from '@src/helper';
-import { curUserTicketState, enterRoomIdState } from '@src/state/recoil';
+import { curUserTicketState, enterRoomIdState, enterTicketDataState } from '@src/state/recoil';
 import { useUser } from '@src/state/swr';
 import { nanoid } from 'nanoid';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -84,29 +85,39 @@ const RoomSelect = () => {
 const CurEnterInfo: FC = () => {
   const router = useRouter();
   useUser();
-  const curUserTicket = useRecoilValue(curUserTicketState);
+  const { concert } = useRecoilValue(curUserTicketState);
+  const curTicket = useRecoilValue(enterTicketDataState);
 
   useEffect(() => {
     if (router.isReady) {
-      if (!curUserTicket) {
+      if (!curTicket) {
         router.push('/my/lists/1');
       }
     }
     return () => {};
   }, [router.isReady]);
 
-  if (!curUserTicket) return <Box>no ticket</Box>;
+  if (!curTicket) return <Box>no ticket</Box>;
 
-  const { ticket, concert } = curUserTicket;
+  // const { ticket, concert } = curUserTicket;
 
-  const startDate = convertDate(ticket.concertStartDate, 'YMDHM'); // 티켓 시작날
+  const startDate = convertDate(curTicket.concertStartDate, 'YMDHM'); // 티켓 시작날
 
   return (
     <Flex justifyContent="center">
       <Box>
-        <AspectRatio maxW="400px" ratio={1}>
-          <Image src={IMAGE_DOMAIN + concert.coverImage} objectFit="cover" fallbackSrc="https://via.placeholder.com/300" />
-        </AspectRatio>
+        <Box position="relative" w={400} h={400} borderRadius="12px" boxShadow="rgba(0, 0, 0, 0.1) 0px 4px 12px">
+          <Image
+            src={IMAGE_DOMAIN + concert.coverImage}
+            placeholder="blur"
+            blurDataURL="/image/defaultImage.png"
+            quality={70}
+            layout="fill"
+            objectFit="cover"
+            alt={`${concert.title} image`}
+            style={{ borderRadius: '12px' }}
+          />
+        </Box>
         <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(6, 1fr)">
           <GridItem rowSpan={1} colSpan={2}>
             <Heading as="h5" size="sm" my={2}>
@@ -133,7 +144,7 @@ const CurEnterInfo: FC = () => {
               {startDate}時
             </Heading>
             <Heading as="h5" size="sm" my={2}>
-              {ticket.runningTime}分
+              {curTicket.runningTime}分
             </Heading>
           </GridItem>
         </Grid>

@@ -32,7 +32,7 @@ const CoinHistory: FC<{ data: Coin }> = ({ data }) => {
         <Box>
           <HStack>
             <Text fontSize="lg" fontWeight="500">
-              {data.type === 0 ? '+' : '-'} {data.variation}C
+              {data.type === 0 && '+'} {data.variation}C
             </Text>
           </HStack>
         </Box>
