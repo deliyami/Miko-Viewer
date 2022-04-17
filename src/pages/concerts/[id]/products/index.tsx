@@ -72,7 +72,7 @@ export default function ProductsPage({ products }: InferGetServerSidePropsType<t
             {router.query.id}번 콘서트의 상품
           </Text>
           <label htmlFor="product_sort">
-            <Select id="product_sort" mb="3%" alignSelf="end" textAlign="center" w="15%" size="md" value={selected} onChange={onSelectedChanged}>
+            <Select id="sort" mb="3%" alignSelf="end" textAlign="center" w="15%" size="md" value={selected} onChange={onSelectedChanged}>
               <option>新着順</option>
               <option>売れている順</option>
               <option>価格が安い順</option>

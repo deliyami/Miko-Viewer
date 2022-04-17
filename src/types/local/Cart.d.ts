@@ -1,6 +1,7 @@
 import { CommonProps } from '../share/common';
 
 export interface Cart extends CommonProps {
+  length: SetStateAction<undefined>;
   userId: number;
   productId: number;
   size: string;

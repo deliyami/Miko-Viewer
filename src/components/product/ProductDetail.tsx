@@ -1,36 +1,33 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { IMAGE_DOMAIN } from '@src/const';
-import { getPageLaravelData } from '@src/helper';
+import { getSingleLaravelData } from '@src/helper';
 import { useUser } from '@src/state/swr';
-import { Cart } from '@src/types/local';
-import { Product } from '@src/types/share';
-import { FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import CartButton from './cart/CartButton';
 import OptionSelect from './OptionSelect';
 
-const ProductDetail: FC<{ item: Product }> = ({ item }) => {
+const ProductDetail = ({ item }) => {
+  // console.log(item);
   const user = useUser();
   const [cart, setCart] = useState();
   const [cartCount, setCartCount] = useState(cart);
-  console.log(user);
-  const URL_PRODUCTS = `/cart_products/${user.data.id}`;
+  // console.log(user);
+  const URL_PRODUCTS = `/cart_products`;
   useEffect(() => {
     if (user.data) {
-      getPageLaravelData<Cart>(URL_PRODUCTS).then(response => setCartCount(response.data.length));
+      getSingleLaravelData(URL_PRODUCTS).then(response => setCartCount(response.data.length));
     }
-    console.log(cart);
+    // console.log(cart);
   }, [cartCount]);
-  const [count, setCount] = useState(0);
-  const [color, setColor] = useState('');
-  const [size, setSize] = useState('');
-  // const [options, setOptions] = useState({""});.ㅋ
+
+  // const [options, setOptions] = useState({""});
   // const [child, setChild] = useState(0);
 
   return (
     <Flex justifyContent={'center'}>
       <Flex>
         <Box w={500} h={500}>
-          <Image boxSize={'full'} src={`${IMAGE_DOMAIN}products/${item.image}`}></Image>
+          <Image boxSize={'full'} alt="productImage" src={`${IMAGE_DOMAIN}products/${item.image}`}></Image>
         </Box>
       </Flex>
       <Flex mt={'2.5%'} ml={'2%'} flexDirection={'column'} mr={'8%'} alignItems={'end'}>
@@ -42,12 +39,12 @@ const ProductDetail: FC<{ item: Product }> = ({ item }) => {
         </Flex>
         <Flex mt={'3%'} w={'100%'} h={'50%'} justifyContent={'center'}>
           <OptionSelect
-            color={color}
-            size={size}
-            count={count}
-            setColor={setColor}
-            setSize={setSize}
-            setCount={setCount}
+            color={item.color}
+            size={item.size}
+            stock={item.stock}
+            // setColor={setColor}
+            // setSize={setSize}
+            // setStock={setStock}
             cartCount={cartCount}
             setCartCount={setCartCount}
           ></OptionSelect>

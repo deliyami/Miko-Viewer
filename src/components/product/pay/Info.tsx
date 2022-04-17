@@ -1,10 +1,18 @@
-import { Flex, Input, Text } from '@chakra-ui/react';
+import { Button, Flex, Input, Text } from '@chakra-ui/react';
+import { FaArrowRight } from '@react-icons/all-files/fa/FaArrowRight';
 import CommonDivider from '@src/components/common/divider/CommonDivider';
 import Address from './Address';
-import Buttons from './Buttons';
 import NotifyCheck from './NotifyCheck';
 
-const Info = ({ setAddress, tabIndex, setTabIndex }) => {
+const Info = ({ address, setAddress, tabIndex, setTabIndex }) => {
+  // console.log(address);
+  function goNext() {
+    if (address === '   -') {
+      alert('ご住所を入力してください。');
+    } else {
+      setTabIndex(tabIndex + 1);
+    }
+  }
   return (
     <Flex flexDirection={'column'} w={'50%'} h="100%" p={'2%'} ml={'25%'}>
       <Flex mt={'14%'} justifyContent={'space-between'} alignItems={'center'}>
@@ -54,7 +62,10 @@ const Info = ({ setAddress, tabIndex, setTabIndex }) => {
       </Flex>
       <CommonDivider></CommonDivider>
       <NotifyCheck></NotifyCheck>
-      <Buttons tabIndex={tabIndex} setTabIndex={setTabIndex}></Buttons>
+      <Button size={'lg'} w="30%" alignSelf={'center'} mt="10%" colorScheme={'green'} onClick={goNext}>
+        次へ&nbsp;
+        <FaArrowRight></FaArrowRight>
+      </Button>
     </Flex>
   );
 };

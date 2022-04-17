@@ -30,12 +30,14 @@ export const getServerSideProps: GetServerSideProps<Data> = async () => {
 export default function Orders({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   // console.log(data);
   return (
-    <Flex>
-      <Text>order</Text>
+    <Flex flexDir={'column'} h="70vh">
+      <Text ml={'15%'} fontSize={'3xl'}>
+        ご注文履歴
+      </Text>
       {/* {data.map((item, key) => {
         return <Text key={key}>{item.id}</Text>;
       })} */}
-      <OrderHistory data={data}></OrderHistory>
+      {data ? <OrderHistory data={data}></OrderHistory> : <Text>ご注文履歴がおりません。</Text>}
     </Flex>
   );
 }

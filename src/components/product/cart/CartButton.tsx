@@ -9,7 +9,7 @@ const CartButton = ({ cartCount }) => {
     // eslint-disable-next-line @next/next/link-passhref
     <Link
       href={{
-        pathname: `/concerts/${router.query.id}/products/cart`,
+        pathname: `/my/cart`,
       }}
     >
       <Flex flexDirection={'column'}>

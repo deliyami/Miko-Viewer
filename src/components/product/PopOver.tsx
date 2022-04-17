@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-const PopOver = ({ count, color, size, setCount, setColor, setSize, cartCount, setCartCount }) => {
+const PopOver = ({ count, color, size, setStock, setColor, setSize, cartCount, setCartCount }) => {
   const [isOpen, setIsOpen] = useState(false);
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
@@ -15,6 +15,7 @@ const PopOver = ({ count, color, size, setCount, setColor, setSize, cartCount, s
   const cartClose = () => setCartIsOpen(false);
   const router = useRouter();
   const user = useUser();
+  console.log(color);
   // axios.defaults.withCredentials = true;
   function onCart() {
     console.log('onCart');
@@ -38,14 +39,14 @@ const PopOver = ({ count, color, size, setCount, setColor, setSize, cartCount, s
           console.log(response);
           setSize('');
           setColor('');
-          setCount(0);
+          setStock(0);
         })
         .catch(error => console.log(error));
     }
   }
   function onBuy() {
     console.log('onBuy');
-    if (count == 0 || color == '' || size == '') {
+    if (count === 0 || color === '' || size === '') {
       alert('オプションを全部選択して下さい。');
     } else if (count !== 0 && color !== '' && size !== '') {
       router.push(`/concerts/${router.query.id}/products/purchase`);
