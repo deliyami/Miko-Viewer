@@ -40,12 +40,22 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   useEffect(() => {
     // health-check
-    axios.get('/health-check', { baseURL: LARAVEL_URL }).then(value => {
-      if (value.status !== 200) return toastLog('error', 'Laravel Server Error');
-    });
-    axios.get('/health-check', { baseURL: NEST_URL }).then(value => {
-      if (value.status !== 200) return toastLog('error', 'Nest Server Error');
-    });
+    axios
+      .get('/health-check', { baseURL: LARAVEL_URL })
+      .then(value => {
+        if (value.status !== 200) return toastLog('error', 'Laravel Server Error');
+      })
+      .catch(err => {
+        toastLog('error', 'Laravel Server Error');
+      });
+    axios
+      .get('/health-check', { baseURL: NEST_URL })
+      .then(value => {
+        if (value.status !== 200) return toastLog('error', 'Nest Server Error');
+      })
+      .catch(err => {
+        toastLog('error', 'Nest Server Error');
+      });
     console.log('env', process.env);
   }, []);
 

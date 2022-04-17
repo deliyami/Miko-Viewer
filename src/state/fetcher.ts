@@ -33,11 +33,11 @@ export const requestInterceptor = axiosI.interceptors.request.use(
 
 // 응답 인터셉터 추가
 export const responseInterceptor = axiosI.interceptors.response.use(
-  function (response) {
+  response => {
     // 응답 데이터를 가공
     return response;
   },
-  function (error: AxiosError) {
+  (error: AxiosError) => {
     // 오류 응답을 처리
     console.error('❌ response error', error.toJSON());
     toast({

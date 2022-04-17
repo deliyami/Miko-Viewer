@@ -5,7 +5,6 @@ import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
 import BasicLayout from '@src/layout/BasicLayout';
 import { useCheckLogin } from '@src/state/swr';
 import { Concert } from '@src/types/share';
-import { Pagination } from '@src/types/share/common';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -70,21 +69,21 @@ export const getStaticProps: GetStaticProps<Data> = async () => {
   // NOTE  undefined를 구조부해 할당할려고 해서 에러 났었음.
   //  getStaticProps에 대해서는 서버 에러일때를 생각하고 에러 핸들링
 
-  const topResultPromise = getDataFromLaravel<Pagination<Concert>>('/concerts', {
+  const topResultPromise = getDataFromLaravel('/concerts', {
     sort: ['-sales_volume'],
     perPage: 3,
   });
 
-  const newResultPromise = getDataFromLaravel<Pagination<Concert>>('/concerts', {
+  const newResultPromise = getDataFromLaravel('/concerts', {
     perPage: 4,
   });
 
-  const jpopResultPromise = getDataFromLaravel<Pagination<Concert>>('/concerts', {
+  const jpopResultPromise = getDataFromLaravel('/concerts', {
     filter: [['category_id', 1]],
     perPage: 4,
   });
 
-  const kpopResultPromise = getDataFromLaravel<Pagination<Concert>>('/concerts', {
+  const kpopResultPromise = getDataFromLaravel('/concerts', {
     filter: [['category_id', 2]],
     perPage: 4,
   });
@@ -93,10 +92,10 @@ export const getStaticProps: GetStaticProps<Data> = async () => {
 
   return {
     props: {
-      newData: newResult.status === 'fulfilled' ? newResult.value.data.data : [],
-      topData: topResult.status === 'fulfilled' ? topResult.value.data.data : [],
-      jpopData: jpopResult.status === 'fulfilled' ? jpopResult.value.data.data : [],
-      kpopData: kpopResult.status === 'fulfilled' ? kpopResult.value.data.data : [],
+      newData: newResult.status === 'fulfilled' ? newResult.value.data : [],
+      topData: topResult.status === 'fulfilled' ? topResult.value.data : [],
+      jpopData: jpopResult.status === 'fulfilled' ? jpopResult.value.data : [],
+      kpopData: kpopResult.status === 'fulfilled' ? kpopResult.value.data : [],
     },
     revalidate: 60 * 10, // 10분 마다 재생성
   };

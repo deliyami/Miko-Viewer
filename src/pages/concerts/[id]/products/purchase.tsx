@@ -1,34 +1,27 @@
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import Carts from '@src/components/product/cart/Carts';
-import Info from '@src/components/product/pay/Info';
 import Check from '@src/components/product/pay/Check';
+import Info from '@src/components/product/pay/Info';
 import Paydone from '@src/components/product/pay/Paydone';
-import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
 import BasicLayout from '@src/layout/BasicLayout';
+import { useSingleLaravel } from '@src/state/swr/useLaravel';
 import { useUser } from '@src/state/swr/useUser';
-import { Cart } from '@src/types/local';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useState } from 'react';
 
-const purchase = () => {
+//
+export default function Purchase() {
   const [address, setAddress] = useState('');
   const [tabIndex, setTabIndex] = useState(1);
-  // const [totalCost, setTotalCoast] = useState(0);
-  const [data, setData] = useState({});
   function handleTabsChange(index) {
     setTabIndex(index);
   }
-  const user = useUser();
+  const { data: userData } = useUser();
 
-  // const URL_PRODUCTS = '/cart_products';
-  const URL_PRODUCTS = `/cart_products/${user.data.id}`;
-  // console.log("ue");
-  useEffect(() => {
-    getDataFromLaravel<Cart>(URL_PRODUCTS).then(response => setData(response.data));
-  }, []);
+  const { data } = useSingleLaravel('/cart_products', userData?.id, {});
 
-  if (data.length !== undefined) console.log(data);
-  // console.log(data.length);
+  if (!data) return <Box>no Data</Box>;
+
   return (
     <Tabs index={tabIndex} onChange={handleTabsChange} variant="soft-rounded" colorScheme="green" isFitted>
       <TabList>
@@ -37,7 +30,7 @@ const purchase = () => {
         <Tab>ご注文内容確認</Tab>
         <Tab>完了</Tab>
       </TabList>
-      {data.length === undefined ? null : (
+      {data && (
         <TabPanels>
           <TabPanel>
             <Carts data={data} setData={setData} />
@@ -55,11 +48,9 @@ const purchase = () => {
       )}
     </Tabs>
   );
-};
+}
 
-export default purchase;
-
-purchase.getLayout = function getLayout(page: ReactElement) {
+Purchase.getLayout = function getLayout(page: ReactElement) {
   return (
     <BasicLayout>
       <AsyncBoundary>{page}</AsyncBoundary>
