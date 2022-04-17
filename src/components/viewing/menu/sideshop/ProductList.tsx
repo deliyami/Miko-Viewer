@@ -1,7 +1,7 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import Loading from '@src/components/common/Loading';
 import { IMAGE_DOMAIN } from '@src/const';
-import { getDataFromLaravel } from '@src/helper';
+import { getPageLaravelData } from '@src/helper';
 import { enterTicketDataState } from '@src/state/recoil';
 import { Product } from '@src/types/share';
 import { Pagination } from '@src/types/share/common';
@@ -21,7 +21,7 @@ const ProductList = () => {
   //   }).then(response => response.data);
   // }
   useEffect(() => {
-    getDataFromLaravel<Pagination<Product>>(URL_PRODUCTS, {
+    getPageLaravelData<Pagination<Product>>(URL_PRODUCTS, {
       filter: [['concert_id', enterTicketData.concertId]],
     }).then(response => setData(response.data));
   }, []);

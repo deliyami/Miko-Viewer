@@ -4,7 +4,7 @@ import { FiFilter } from '@react-icons/all-files/fi/FiFilter';
 import PaginationBtn from '@src/components/common/button/PaginationBtn';
 import CategoryFilter from '@src/components/concert/CategoryFilter';
 import ConcertList from '@src/components/home/ConcertList';
-import { getDataFromLaravel } from '@src/helper';
+import { getPageLaravelData } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
 import { usePageLaravel } from '@src/state/swr/useLaravel';
 import { Concert } from '@src/types/share';
@@ -17,7 +17,7 @@ import { FC, KeyboardEventHandler, ReactElement, useEffect, useState } from 'rea
 const PER_PAGE = 12;
 
 type Data = {
-  iniData?: Pagination<Concert>;
+  iniData: Pagination<Concert>;
   initialParam: {
     categoryId?: number;
     page?: number;
@@ -61,29 +61,31 @@ const SearchBox = () => {
 };
 
 export const getServerSideProps: GetServerSideProps<Data> = async context => {
-  const URL_CONCERTS = '/concerts';
-
   const categoryId = parseInt(context.query.category_id as string, 10);
   const page = parseInt(context.query.page as string, 10);
   const search = context.query.search as string;
 
-  const result = await getDataFromLaravel<Pagination<Concert>>(URL_CONCERTS, {
-    filter: categoryId ? [['category_id', categoryId]] : null,
+  const concerts = await getPageLaravelData('/concerts', {
+    filter: categoryId ? [['category_id', categoryId]] : [],
     perPage: PER_PAGE,
     page,
     search,
+  }).catch(err => {
+    console.error(err);
+    return null;
   });
 
-  if (result.status !== 200)
+  if (!concerts)
     return {
       redirect: {
         destination: '/500',
+        permanent: false,
       },
     };
 
   return {
     props: {
-      iniData: result?.data ?? null,
+      iniData: concerts,
       initialParam: {
         ...(categoryId ? { categoryId } : {}),
         ...(page ? { page } : {}),
@@ -118,33 +120,28 @@ const ConcertListView: FC<{ query: CommonFSW; iniData: Pagination<Concert> }> = 
 
 export default function ConcertPage({ iniData, initialParam }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
-  const handleDenyAccess = () => {
-    setTimeout(() => {
-      router.push('/');
-    }, 1000);
-  };
 
   const [isShowCategoryFilter, setIsShowCategoryFilter] = useState(false);
   const [categoryId, setCategoryId] = useState(initialParam.categoryId);
   const [page, setPage] = useState(initialParam.page);
   const [search, setSearch] = useState(initialParam.search);
-  const query: CommonFSW = { page, perPage: PER_PAGE, filter: [['category_id', categoryId]], search: search ? '*' + search + '*' : null };
+  const query: CommonFSW = { page, perPage: PER_PAGE, filter: [['category_id', categoryId]], search: search ? '*' + search + '*' : undefined };
 
   useEffect(() => {
     const param = parseInt(router.query.page as string, 10);
-    if (Number.isNaN(param)) return setPage(null);
+    if (Number.isNaN(param)) return setPage(undefined);
     setPage(param);
   }, [router.query.page]);
 
   useEffect(() => {
     const param = parseInt(router.query.category_id as string, 10);
-    if (Number.isNaN(param)) return setCategoryId(null);
+    if (Number.isNaN(param)) return setCategoryId(undefined);
     setCategoryId(param);
   }, [router.query.category_id]);
 
   useEffect(() => {
     const param = router.query.search as string;
-    if (!param) return setSearch(null);
+    if (!param) return setSearch(undefined);
     setSearch(param);
   }, [router.query.search]);
 

@@ -1,6 +1,6 @@
 import { Flex, Text } from '@chakra-ui/react';
 import OrderHistory from '@src/components/product/pay/OrderHistory';
-import { getDataFromLaravel } from '@src/helper';
+import { getPageLaravelData } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
 import { useUser } from '@src/state/swr';
 import { Order } from '@src/types/local';
@@ -19,7 +19,7 @@ type Data = {
 export const getServerSideProps: GetServerSideProps<Data> = async () => {
   const user = useUser();
   const ORDER_URL = `/orders/${user.data.id}`;
-  const result = await getDataFromLaravel<Pagination<Order>>(ORDER_URL);
+  const result = await getPageLaravelData<Pagination<Order>>(ORDER_URL);
   return {
     props: {
       data: result?.data ?? null,

@@ -11,7 +11,7 @@ export interface CommonFSW {
   /**
    * @example: [[user_id:1],[concert_id:12]]
    */
-  filter?: [string, string | number][];
+  filter?: [string, string | number | undefined][];
   /**
    * @example: ["score","-title"]
    * -를 붙이면 역순

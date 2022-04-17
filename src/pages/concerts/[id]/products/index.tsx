@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import { Flex, Select, Spinner, Text } from '@chakra-ui/react';
-import { getDataFromLaravel } from '@src/helper';
+import { getPageLaravelData } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
 import { Product } from '@src/types/share';
 import { Pagination } from '@src/types/share/common';
@@ -16,7 +16,7 @@ type Data = {
 export const getServerSideProps: GetServerSideProps<Data> = async context => {
   const URL_PRODUCTS = '/products';
   const concertId = parseInt((context.query.id as string) ?? '1', 10);
-  const result = await getDataFromLaravel<Pagination<Product>>(URL_PRODUCTS, {
+  const result = await getPageLaravelData<Pagination<Product>>(URL_PRODUCTS, {
     filter: [['concert_id', concertId]],
   });
   return {

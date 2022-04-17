@@ -22,7 +22,7 @@ import {
 } from '@chakra-ui/react';
 import TicketBox from '@src/components/concert/TicketBox';
 import { IMAGE_DOMAIN } from '@src/const';
-import { convertDate, getDataFromLaravel } from '@src/helper';
+import { convertDate, getPageLaravelData, getSingleLaravelData } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
 import { Concert, Ticket } from '@src/types/share';
 import { Pagination } from '@src/types/share/common';
@@ -32,14 +32,14 @@ import { useRouter } from 'next/router';
 import React, { FC, ReactElement, useMemo, useState } from 'react';
 
 type Data = {
-  concert?: Pagination<Concert>;
-  tickets?: Pagination<Ticket>;
+  concert: Concert;
+  tickets: Pagination<Ticket>;
 };
 
 const TicketTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
   const [tabNum, setTabNum] = useState(0);
   const router = useRouter();
-  const onClickSale = clickId => {
+  const onClickSale = (clickId: number) => {
     setTabNum(clickId);
   };
 
@@ -48,8 +48,8 @@ const TicketTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
   const colorScheme = colors[tabIndex];
 
   const [sellingTickets, sellEndTickets] = useMemo(() => {
-    const aSellingTickets = [];
-    const aSellEndTickets = [];
+    const aSellingTickets: Ticket[] = [];
+    const aSellEndTickets: Ticket[] = [];
 
     const today = new Date();
 
@@ -64,7 +64,6 @@ const TicketTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
     return [aSellingTickets, aSellEndTickets];
   }, [tickets]);
 
-  // console.log(tickets);
   return (
     <>
       <Tabs mt={7} defaultIndex={tabNum || 0} onChange={index => setTabIndex(index)} colorScheme={colorScheme}>
@@ -116,7 +115,7 @@ const TicketTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
   );
 };
 
-const LiveInformation = ({ concert }) => {
+const LiveInformation: FC<{ concert: Concert }> = ({ concert }) => {
   const [show, setShow] = React.useState(false);
   const handleToggle = () => setShow(!show);
 
@@ -178,50 +177,42 @@ const LiveInformation = ({ concert }) => {
 };
 
 export const getServerSideProps: GetServerSideProps<Data> = async context => {
-  const concertId = context.query.id as string;
-  const CONCERT_URL_CONCERT = `/concerts/${concertId}`;
-  const TICKET_URL_CONCERTS = `/tickets`;
+  const concertId = parseInt(context.query.id as string, 10);
 
-  const concertData = await getDataFromLaravel<Pagination<Concert>>(CONCERT_URL_CONCERT);
-  const ticketsData = await getDataFromLaravel<Pagination<Ticket>>(TICKET_URL_CONCERTS, {
+  const concertPromise = getSingleLaravelData('/concerts', concertId, {});
+  const ticketsPromise = getPageLaravelData('/tickets', {
     with: ['concert'],
     filter: [['concert_id', concertId]],
   });
 
+  const [concertsResult, ticketsResult] = await Promise.allSettled([concertPromise, ticketsPromise]);
+
+  if (concertsResult.status === 'rejected' || ticketsResult.status === 'rejected') {
+    return {
+      redirect: {
+        destination: '/500',
+        permanent: false,
+      },
+    };
+  }
+
   return {
     props: {
-      concert: concertData?.data,
-      tickets: ticketsData?.data,
+      concert: concertsResult.value.data,
+      tickets: ticketsResult.value,
     },
   };
 };
 
 export default function LiveDetailPage({ concert, tickets }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const router = useRouter();
-
-  const handleDenyAccess = () => {
-    setTimeout(() => {
-      router.push('/concerts');
-    }, 1000);
-  };
-
-  if (!concert) handleDenyAccess();
-  if (!concert) {
-    return (
-      <Center height="auto" width="full">
-        <Text fontSize="7xl">비정상 접근</Text>
-      </Center>
-    );
-  }
-  console.log(concert);
   return (
     <>
       <Head>
-        <title key="title">{concert.data.title} | Miko</title>
+        <title key="title">{concert.title} | Miko</title>
       </Head>
       <Flex justifyContent="center">
         <Box>
-          <LiveInformation concert={concert.data} />
+          <LiveInformation concert={concert} />
           <TicketTab data={tickets.data} />
         </Box>
       </Flex>

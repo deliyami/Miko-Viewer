@@ -3,7 +3,7 @@ import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import AllItem from '@src/components/product/AllItem';
 import Details from '@src/components/product/details/Details';
 import ProductDetail from '@src/components/product/ProductDetail';
-import { getDataFromLaravel } from '@src/helper';
+import { getPageLaravelData } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
 import { Product } from '@src/types/share';
 import { Pagination } from '@src/types/share/common';
@@ -23,14 +23,14 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
   // const page = context.query.page as string;
   // const search = context.query.search as string;
 
-  const result = await getDataFromLaravel<Pagination<Product>>(URL_PRODUCTS, {
+  const result = await getPageLaravelData<Pagination<Product>>(URL_PRODUCTS, {
     filter: [['concert_id', concertId]],
     // page: parseInt(page),
     // per_page: 3,
     // search,
   });
 
-  const item = await getDataFromLaravel<Pagination<Product>>(`${URL_PRODUCTS}/${context.query.product_id}`);
+  const item = await getPageLaravelData<Pagination<Product>>(`${URL_PRODUCTS}/${context.query.product_id}`);
 
   return {
     props: {

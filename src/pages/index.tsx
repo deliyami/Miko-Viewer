@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Heading, SimpleGrid, Spacer, Text, VStack } from '@chakra-ui/react';
 import ConcertList from '@src/components/home/ConcertList';
 import MainRanking from '@src/components/home/MainRanking';
-import { getDataFromLaravel } from '@src/helper/getDataFromLaravel';
+import { getPageLaravelData } from '@src/helper/getDataFromLaravel';
 import BasicLayout from '@src/layout/BasicLayout';
 import { useCheckLogin } from '@src/state/swr';
 import { Concert } from '@src/types/share';
@@ -69,21 +69,21 @@ export const getStaticProps: GetStaticProps<Data> = async () => {
   // NOTE  undefined를 구조부해 할당할려고 해서 에러 났었음.
   //  getStaticProps에 대해서는 서버 에러일때를 생각하고 에러 핸들링
 
-  const topResultPromise = getDataFromLaravel('/concerts', {
+  const topResultPromise = getPageLaravelData('/concerts', {
     sort: ['-sales_volume'],
     perPage: 3,
   });
 
-  const newResultPromise = getDataFromLaravel('/concerts', {
+  const newResultPromise = getPageLaravelData('/concerts', {
     perPage: 4,
   });
 
-  const jpopResultPromise = getDataFromLaravel('/concerts', {
+  const jpopResultPromise = getPageLaravelData('/concerts', {
     filter: [['category_id', 1]],
     perPage: 4,
   });
 
-  const kpopResultPromise = getDataFromLaravel('/concerts', {
+  const kpopResultPromise = getPageLaravelData('/concerts', {
     filter: [['category_id', 2]],
     perPage: 4,
   });
