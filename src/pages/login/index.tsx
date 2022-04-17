@@ -3,12 +3,14 @@ import { FcGoogle } from '@react-icons/all-files/fc/FcGoogle';
 import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import { LARAVEL_URL } from '@src/const';
 import BasicLayout from '@src/layout/BasicLayout';
+import { loginState } from '@src/state/recoil';
 import { tryLogin, useUser } from '@src/state/swr';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
+import { useSetRecoilState } from 'recoil';
 
 const RedirectLogic: FC = () => {
   const { data: userData, error: userError } = useUser();
@@ -32,11 +34,15 @@ export default function LoginPage() {
     formState: { errors, isSubmitting },
   } = useForm<{ email: string; password: string }>({ mode: 'all' });
   const router = useRouter();
+  const setLoginState = useSetRecoilState(loginState);
 
   const onSubmit = async (data: any) => {
     const result = await tryLogin(data);
     if (result) {
-      router.push('/');
+      setLoginState(true);
+      setTimeout(() => {
+        router.push('/');
+      }, 0);
     }
   };
 

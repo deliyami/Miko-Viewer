@@ -1,11 +1,13 @@
 import { axiosI, fetcher } from '@src/state/fetcher';
 import { LoginData, User } from '@src/types/share';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 import { mutate } from 'swr';
 import useSWRImmutable from 'swr/immutable';
+import { loginState } from '../recoil';
 import laggy from './middleware/laggy';
 
-const URL_USER = '/users';
+export const URL_USER = '/users';
 const URL_LOGIN = '/login';
 const URL_OAUTH_LOGIN = '/login/google';
 const URL_LOGOUT = '/logout';
@@ -47,8 +49,8 @@ export const useUser = () => {
 
 export const tryLogin = async (loginData: LoginData) => {
   try {
-    const { data, status } = await axiosI.post<User>(`${URL_LOGIN}`, loginData);
-    mutate(URL_USER, data, false);
+    const { data } = await axiosI.post<User>(`${URL_LOGIN}`, loginData);
+    mutate(URL_USER, data, true);
     return true;
   } catch (error) {
     return false;
@@ -77,7 +79,7 @@ export const tryLogOut = async () => {
 };
 
 export const useCheckLogin = () => {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useRecoilState(loginState);
 
   useEffect(() => {
     const isTokenExist = document.cookie.match(/^(.*;)?\s*isLogin\s*=\s*[^;]+(.*)?$/);
