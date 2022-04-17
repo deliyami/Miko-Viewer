@@ -1,81 +1,68 @@
 /* eslint-disable no-nested-ternary */
-import { Flex, Select, Spinner, Text } from '@chakra-ui/react';
+import { Flex, Select, Text } from '@chakra-ui/react';
 import { getPageLaravelData } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
 import { Product } from '@src/types/share';
-import { Pagination } from '@src/types/share/common';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { ReactElement, useEffect, useState } from 'react';
+import { ChangeEventHandler, ReactElement, useMemo, useState } from 'react';
 import ProductsList from '../../../../components/product/ProductsList';
 
 type Data = {
-  data?: Pagination<Product>;
+  data: Product[];
 };
 
 export const getServerSideProps: GetServerSideProps<Data> = async context => {
-  const URL_PRODUCTS = '/products';
   const concertId = parseInt((context.query.id as string) ?? '1', 10);
-  const result = await getPageLaravelData<Pagination<Product>>(URL_PRODUCTS, {
-    filter: [['concert_id', concertId]],
-  });
-  return {
-    props: {
-      data: result?.data ?? null,
-    },
-  };
+
+  try {
+    const result = await getPageLaravelData('/products', {
+      filter: [['concert_id', concertId]],
+    });
+    return {
+      props: {
+        data: result.data,
+      },
+    };
+  } catch (error) {
+    return {
+      redirect: {
+        destination: '/500',
+        permanent: false,
+      },
+    };
+  }
 };
 
-export default function ProductsPage({ data }) {
-  console.log(data.length);
+export default function ProductsPage({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-  const [selected, setSelected] = useState('新着順');
-  useEffect(() => {
-    if (data) {
-      setIsLoading(false);
-      console.log(isLoading);
-    } else console.log(isLoading);
-  }, [data, isLoading]);
-  function onSelectedChanged(event) {
-    setSelected(event.target.value);
-    if (event.target.value == '최신순') {
-      sortForLatest();
-    } else if (event.target.value == '판매순') {
-      sortForSold();
-    } else if (event.target.value == '낮은가격순') {
-      sortForLowPrice();
-    } else if (event.target.value == '높은가격순') {
-      sortForHighPrice();
-    }
-  }
+  const [selected, setSelected] = useState<'新着順' | '売れている順' | '価格が安い順' | '価格が高い順'>('新着順');
 
-  function sortForLatest() {
-    data.sort(function (a, b) {
-      return a.id - b.id;
+  const onSelectedChanged: ChangeEventHandler<HTMLSelectElement> = e => {
+    setSelected(e.target.value as typeof selected);
+  };
+
+  const sortedProduct = useMemo(() => {
+    return data.sort((a, b) => {
+      switch (selected) {
+        case '新着順':
+          return a.id - b.id;
+        case '価格が安い順':
+          return a.price - b.price;
+        case '価格が高い順':
+          return b.price - a.price;
+        // TODO 판매순
+        case '売れている順':
+          return b.price - a.price;
+        default:
+          return 1;
+      }
     });
-    console.log('sortForLatest');
-  }
-  function sortForSold() {}
-  function sortForLowPrice() {
-    data.sort(function (a, b) {
-      return a.price - b.price;
-    });
-  }
-  function sortForHighPrice() {
-    data.sort(function (a, b) {
-      return b.price - a.price;
-    });
-  }
+  }, [selected, data]);
 
   return (
     <Flex flexDirection={'column'} alignItems={'center'} h="full" w={'full'} justifyContent={'center'} p={'2%'}>
-      {isLoading && (
-        <Flex alignItems={'center'} justifyContent="center">
-          <Spinner size={'xl'}></Spinner>
-        </Flex>
-      )}
-      {!isLoading && data.data.length === 0 ? (
+      {data.length === 0 ? (
         <Text color={'gray.300'} fontSize={'4xl'} cursor="default">
           このコンサートの賞品は用意しておりません。
         </Text>
@@ -93,7 +80,7 @@ export default function ProductsPage({ data }) {
             </Select>
           </label>
           <Flex>
-            <ProductsList data={data}></ProductsList>
+            <ProductsList data={sortedProduct}></ProductsList>
           </Flex>
         </Flex>
       )}
