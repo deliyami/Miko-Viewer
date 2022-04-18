@@ -18,7 +18,7 @@ const ContentSecurityPolicy = `
   worker-src blob:;
   font-src 'self' fonts.gstatic.com fonts.googleapis.com;
   style-src 'self' 'unsafe-inline' fonts.googleapis.com;
-  connect-src 'self' *.mikopj.live *.live-video.net cdn.jsdelivr.net;
+  connect-src 'self' *.mikopj.live *.live-video.net cdn.jsdelivr.net fonts.googleapis.com;
   script-src  'self' *.mikopj.live 'wasm-unsafe-eval' 'unsafe-eval' cdn.jsdelivr.net;
 `;
 
