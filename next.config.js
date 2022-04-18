@@ -16,8 +16,8 @@ const withInterceptStdout = require('next-intercept-stdout')(
 const ContentSecurityPolicy = `
   media-src blob:;
   worker-src blob:;
-  connect-src 'self' *.mikopj.live *.live-video.net;
-  script-src  'self' *.mikopj.live 'wasm-unsafe-eval'   ;
+  connect-src 'self' *.mikopj.live *.live-video.net cdn.jsdelivr.net;
+  script-src  'self' *.mikopj.live 'wasm-unsafe-eval' cdn.jsdelivr.net;
 `;
 
 //  Image
