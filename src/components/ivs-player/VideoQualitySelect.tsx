@@ -2,20 +2,19 @@ import { Box, Flex, Popover, PopoverBody, PopoverContent, PopoverHeader, Popover
 import { IoCheckmarkSharp } from '@react-icons/all-files/io5/IoCheckmarkSharp';
 import { IoSettingsSharp } from '@react-icons/all-files/io5/IoSettingsSharp';
 import * as ivs from 'amazon-ivs-player';
-import { FC, MouseEventHandler, MutableRefObject } from 'react';
+import { FC, MouseEventHandler } from 'react';
 
 const VideoQualitySelect: FC<{
-  player: MutableRefObject<ivs.MediaPlayer>;
+  player: ivs.MediaPlayer;
   selectableQuality: ivs.Quality[];
-}> = ({ player, selectableQuality }) => {
+}> = ({ selectableQuality, player }) => {
   const setQuality: MouseEventHandler<HTMLDivElement> = event => {
     if (event.target instanceof HTMLDivElement) {
-      const idx = parseInt(event.target.dataset.idx);
-      player.current.setQuality(selectableQuality[idx]);
+      const idx = parseInt(event.target.dataset.idx as string, 10);
+      player.setQuality(selectableQuality[idx]);
     }
   };
-
-  const curQuality = player.current?.getQuality();
+  const curQuality = player.getQuality();
   return (
     <Popover placement="top-end">
       {({ isOpen, onClose }) => (
@@ -45,5 +44,7 @@ const VideoQualitySelect: FC<{
     </Popover>
   );
 };
+
+VideoQualitySelect.displayName = 'VideoQualitySelect';
 
 export default VideoQualitySelect;

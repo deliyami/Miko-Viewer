@@ -50,6 +50,7 @@
     "openrelay",
     "openrelayproject",
     "peerjs",
+    "Rebuffer",
     "REBUFFERING",
     "usehooks",
     "wasmworker",

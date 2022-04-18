@@ -31,7 +31,7 @@ declare global {
   interface Window {
     socket?: Socket;
     myPeer?: Peer;
-    IVSPlayer?: typeof ivs;
+    IVSPlayer: typeof ivs;
   }
 }
 

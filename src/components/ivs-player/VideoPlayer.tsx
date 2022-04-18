@@ -41,7 +41,7 @@ const VideoPlayer: FC = () => {
   const [loading, setLoading] = useState(true);
   const [muted, setMuted] = useState(false);
 
-  const player = useRef<ivs.MediaPlayer>(null);
+  const player = useRef<ivs.MediaPlayer>();
   const videoEl = useRef(null);
 
   const enterTicketData = useRecoilValue(enterTicketDataState);
@@ -54,11 +54,14 @@ const VideoPlayer: FC = () => {
 
   // 브라우저 설정으로 인해서 소리와 함께 자동재생이 허용되지 않았을 경우 state 변경
   useEffect(() => {
-    if (!player.current) return;
+    // if (!player.current) return;
     // setMuted(player.current.isMuted());
   }, [loading]);
 
+  // @ts-ignore
   useEffect(() => {
+    if (!videoEl.current) return;
+
     toastLog('info', 'USE EFFECT Video Player');
     const { ENDED, PLAYING, READY, BUFFERING, IDLE } = IVSPlayer.PlayerState;
     const { REBUFFERING, QUALITY_CHANGED, PLAYBACK_BLOCKED, ERROR, BUFFER_UPDATE, AUDIO_BLOCKED } = IVSPlayer.PlayerEventType;
@@ -72,6 +75,7 @@ const VideoPlayer: FC = () => {
     }
 
     const onStateChange = () => {
+      if (!player.current) return;
       const playerState = player.current.getState();
       // player.current.setLiveLowLatencyEnabled(true);
       console.log('-------------------');
@@ -86,6 +90,7 @@ const VideoPlayer: FC = () => {
 
       switch (playerState) {
         case READY:
+          // eslint-disable-next-line no-case-declarations
           const qualities = player.current.getQualities();
           setSelectableQuality(qualities);
           player.current.setQuality(qualities[0], true); // 왜 이거 안해주면 버퍼링 오래 걸리지
@@ -110,19 +115,32 @@ const VideoPlayer: FC = () => {
       }
     };
 
-    const onError = err => {
-      toastLog('error', 'IVS Player ERROR', '', err);
-      if (err.type === 'ErrorNoSource') {
-        player.current.load(enterTicketData.playbackUrl + '?token=' + jwt);
-        player.current.play();
+    const onError = (err: any) => {
+      if (!player.current) return;
+      const errorType = err.type as ivs.ErrorType;
+      switch (errorType) {
+        case 'ErrorNoSource': // url 자체가 잘못됨.
+          toastLog('error', '스트리밍 url이 잘못됨');
+          break;
+        case 'ErrorNotAvailable': // IVS에서 스트리밍 주이지 않음. , 429명 인원초과, 404면 미방송
+          toastLog('info', '스트리밍중이 아님.');
+          break;
+        case 'ErrorNetwork':
+        case 'ErrorNetworkIO':
+          toastLog('error', '네트워크 에러', '', err);
+          break;
+        case 'ErrorTimeout':
+          toastLog('error', 'ive timeout', '', err);
+          break;
+        default:
+          toastLog('error', 'IVS Player ERROR', '', err);
+          player.current.load(enterTicketData.playbackUrl + '?token=' + jwt);
+          player.current.play();
+          break;
       }
-      // if (err.type === 'ErrorNotAvailable') {
-      //   player.current.load(enterTicketData.playbackUrl + '?token=' + jwt);
-      //   player.current.play();
-      // }
     };
 
-    const onTimeMetaData = cue => {
+    const onTimeMetaData = (cue: any) => {
       const result = JSON.parse(cue.text) as AllMetaData;
       if (result.type === 'q') {
         setQuizMetaDataState(result);
@@ -137,6 +155,7 @@ const VideoPlayer: FC = () => {
     // @ts-ignore
     const aPlayer = IVSPlayer.create(); // web 버전이어서 wasm 넣어줄 필요는 없음.
     player.current = aPlayer;
+    player.current.setLogLevel('debug' as ivs.LogLevel.DEBUG);
     player.current.setLiveLowLatencyEnabled(true);
     player.current.setRebufferToLive(true); // NOTE
     console.log('is low?', player.current.isLiveLowLatency());
@@ -209,6 +228,7 @@ const VideoPlayer: FC = () => {
     }, 1000);
 
     return () => {
+      if (!player.current) return;
       player.current.removeEventListener(IDLE, onStateChange);
       player.current.removeEventListener(READY, onStateChange);
       player.current.removeEventListener(PLAYING, onStateChange);
@@ -223,7 +243,7 @@ const VideoPlayer: FC = () => {
 
   useEffect(() => {
     const canvas = document.getElementById('ambiance') as HTMLCanvasElement;
-    let requestAnimationId;
+    let requestAnimationId: number;
     if (canvas && isOnVideoAmbiance) {
       const ctx = canvas.getContext('2d');
       const drawAmbiance = () => {
@@ -243,6 +263,7 @@ const VideoPlayer: FC = () => {
   }, [isOnVideoAmbiance]);
 
   const pause = () => {
+    if (!player.current) return;
     const isPaused = player.current.isPaused();
     if (isPaused) {
       player.current.play();
@@ -253,6 +274,7 @@ const VideoPlayer: FC = () => {
   };
 
   const toggleMute = () => {
+    if (!player.current) return;
     const shouldMute = !player.current.isMuted();
     player.current.setMuted(shouldMute);
     setMuted(shouldMute);
@@ -281,7 +303,7 @@ const VideoPlayer: FC = () => {
             visibility: 'visible',
           }}
         >
-          <Text color="white">{enterTicketData.playbackUrl}</Text>
+          <Text color="white">{enterTicketData?.playbackUrl}</Text>
 
           <HStack aria-label="video-controller" id="control-bottom" position="absolute" width="full" bottom="0" p="2rem" color="white">
             <Box fontSize="4xl" cursor="pointer" onClick={toggleMute}>
@@ -290,8 +312,8 @@ const VideoPlayer: FC = () => {
             <Box fontSize="4xl" cursor="pointer" onClick={pause}>
               {isPlaying ? <IoPlay /> : <IoPause />}
             </Box>
-            <Box flexGrow="1"></Box>
-            <VideoQualitySelect player={player} selectableQuality={selectableQuality}></VideoQualitySelect>
+            <Box flexGrow={1}></Box>
+            {player.current && <VideoQualitySelect player={player.current} selectableQuality={selectableQuality}></VideoQualitySelect>}
           </HStack>
         </Box>
         <Video ref={videoEl} playsInline></Video>
