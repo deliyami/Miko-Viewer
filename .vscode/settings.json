@@ -53,6 +53,7 @@
     "REBUFFERING",
     "usehooks",
     "wasmworker",
+    "webrtc",
     "YMDHM"
   ]
 }

@@ -76,6 +76,7 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
   useEffect(() => {
     let camera: cam.Camera;
     let latestPoseEnded = true;
+    let latestUpdate = 0;
     const setupMediapipe = () => {
       if (videoRef.current) {
         let isMediaPipeSetup = false;
@@ -94,13 +95,15 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
                   setMediaPipeError(err);
                 });
             }
-            if (latestPoseEnded && isOnMediaPipe && videoRef.current) {
+            //  TODO 적당한 시간 조절, 프레임  제한 로직 조절
+            if (latestPoseEnded && isOnMediaPipe && videoRef.current && latestUpdate + 40 < Date.now()) {
               latestPoseEnded = false;
               //  TODO  send 2번쨰 인자 at 의미
               aPose
                 .send({ image: videoRef.current })
                 .then(() => {
                   latestPoseEnded = true;
+                  latestUpdate = Date.now();
                 })
                 .catch(err => {
                   console.error('media pipe error', err);

@@ -10,12 +10,18 @@ import { DataConnection, MediaConnection } from 'peerjs';
 import { FC, ReactElement, useCallback, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
+type PeerFatalErrorType = 'browser-incompatible' | 'invalid-id' | 'invalid-key' | 'ssl-unavailable' | 'server-error' | 'socket-error' | 'socket-closed';
+
+type PeerNotFatalType = 'disconnected' | 'network' | 'peer-unavailable' | 'unavailable-id' | 'webrtc';
+
+type PeerErrorType = PeerFatalErrorType | PeerNotFatalType;
+
 const WithSocketEventLayout: FC<{ children: ReactElement }> = ({ children }) => {
   const socket = useSocket();
   const myPeer = useMyPeer();
 
-  const user = useUser();
-  const myPeerUniqueID = user.data?.uuid;
+  const { data: userData } = useUser();
+  const myPeerUniqueID = userData?.uuid;
 
   const myStream = useRecoilValue(myStreamState);
   const roomId = useRecoilValue(enterRoomIdAsyncState);
@@ -46,7 +52,7 @@ const WithSocketEventLayout: FC<{ children: ReactElement }> = ({ children }) => 
     );
   }, []);
 
-  const addMediaStreamToPeersDataList = useCallback((mediaStream: MediaStream, id) => {
+  const addMediaStreamToPeersDataList = useCallback((mediaStream: MediaStream, id: string) => {
     setPeerDataList(
       produce(draft => {
         const idx = draft.findIndex(peer => peer.id === id);
@@ -55,7 +61,7 @@ const WithSocketEventLayout: FC<{ children: ReactElement }> = ({ children }) => 
     );
   }, []);
 
-  const addMediaConnectionToPeersDataList = useCallback((mediaConnection: MediaConnection, id) => {
+  const addMediaConnectionToPeersDataList = useCallback((mediaConnection: MediaConnection, id: string) => {
     setPeerDataList(
       produce(draft => {
         const idx = draft.findIndex(peer => peer.id === id);
@@ -64,7 +70,7 @@ const WithSocketEventLayout: FC<{ children: ReactElement }> = ({ children }) => 
     );
   }, []);
 
-  const removePeerById = useCallback(id => {
+  const removePeerById = useCallback((id: string) => {
     setPeerDataList(
       produce(draft => {
         const idx = draft.findIndex(peer => peer.id === id);
@@ -77,32 +83,19 @@ const WithSocketEventLayout: FC<{ children: ReactElement }> = ({ children }) => 
   }, []);
 
   useEffect(() => {
-    if (!socket || !user.data || !myPeer) {
-      toastLog('error', 'socket, user.data, myPeer 중 하나가 없습니다');
-      console.log('socket || user 없음', socket, myPeer, user.data);
+    if (!socket || !userData || !myPeer) {
+      toastLog('error', 'socket, userData, myPeer 중 하나가 없습니다');
+      console.log('socket || user 없음', socket, myPeer, userData);
       return;
     }
     console.log('WithSocketPeerLayer  UseEffect');
-    socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
+    socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, userData, concertId, ticketId, userTicketId);
     socket.on('connect', () => {
       // NOTE 서버 재실행시에 다시 소켓 데이터를 전송, 처음 랜더링 될떄에는 이미 connect 이벤트 이후여서 동작하지 않음.
       if (socket.connected) {
-        socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, user.data, concertId, ticketId, userTicketId);
+        socket.emit('fe-new-user-request-join', myPeerUniqueID, roomId, userData, concertId, ticketId, userTicketId);
       }
     });
-
-    const peerOnDataConnection = (dataConnection: DataConnection): void => {
-      addDataConnectionToPeersDataList(dataConnection);
-      addEventToDataConnection(dataConnection);
-    };
-    myPeer.on('connection', peerOnDataConnection);
-
-    const peerOnCall = (mediaConnection: MediaConnection): void => {
-      addMediaConnectionToPeersDataList(mediaConnection, mediaConnection.peer);
-      addEventToMediaConnection(mediaConnection);
-      mediaConnection.answer(myStream);
-    };
-    myPeer.on('call', peerOnCall);
 
     const addEventToDataConnection = (dataConnection: DataConnection) => {
       const id = dataConnection.peer;
@@ -123,13 +116,23 @@ const WithSocketEventLayout: FC<{ children: ReactElement }> = ({ children }) => 
       });
       // Firefox와 호환 안됨.
       dataConnection.on('close', () => {
-        // mediaConnection.close() 상대가 할 경우
+        // mediaConnection.close() 나 or 상대가 할 경우 ,
         toastLog('info', `${(dataConnection.metadata as PickUserData).name}とデータコネクションが切断されました。`, 'dataConnection on close');
         removePeerById(id);
       });
+
       dataConnection.on('error', err => {
-        toastLog('error', `${(dataConnection.metadata as PickUserData).name}とデータコネクションが切断されました。`, 'dataConnection on error', err);
-        removePeerById(id);
+        console.error('dataConnection error', err);
+        // switch (err.type) {
+        //   case '':
+        //     break;
+
+        //   default:
+        //     break;
+        // }
+
+        // toastLog('error', `${(dataConnection.metadata as PickUserData).name}とデータコネクションが切断されました。`, 'dataConnection on error', err);
+        // removePeerById(id);
       });
     };
 
@@ -139,7 +142,33 @@ const WithSocketEventLayout: FC<{ children: ReactElement }> = ({ children }) => 
       });
     };
 
-    const newUserCome = (otherPeerId: string, roomID: string, otherUserData: PeerDataInterface['data'], otherSocketId) => {
+    const peerOnDataConnection = (dataConnection: DataConnection): void => {
+      addDataConnectionToPeersDataList(dataConnection);
+      addEventToDataConnection(dataConnection);
+    };
+    myPeer.on('connection', peerOnDataConnection);
+
+    const peerOnCall = (mediaConnection: MediaConnection): void => {
+      addMediaConnectionToPeersDataList(mediaConnection, mediaConnection.peer);
+      addEventToMediaConnection(mediaConnection);
+      mediaConnection.answer(myStream);
+
+      mediaConnection.on('close', () => {
+        // 나나 상대가 close 했을때
+        console.log('mediaConnection close');
+      });
+
+      mediaConnection.on('error', err => {
+        console.error('mediaConnection error', err);
+      });
+    };
+    myPeer.on('call', peerOnCall);
+
+    myPeer.on('error', err => {
+      console.log('myPeer error', err);
+    });
+
+    const newUserCome = (otherPeerId: string, roomID: string, otherUserData: PeerDataInterface['data'], otherSocketId: string) => {
       toastLog('info', `${otherUserData.name}がルームに入場しました。`);
       const peerIdDuplicateWithMe = otherPeerId === myPeerUniqueID;
       if (peerIdDuplicateWithMe) {
@@ -191,10 +220,10 @@ const WithSocketEventLayout: FC<{ children: ReactElement }> = ({ children }) => 
       removePeerById(peerId);
     };
 
-    const getMyScore = score => {
+    const getMyScore = (score: number) => {
       setLatestScoreState(
         produce(draft => {
-          draft[user.data.uuid] = score;
+          draft[userData.uuid] = score;
         }),
       );
     };
@@ -215,7 +244,7 @@ const WithSocketEventLayout: FC<{ children: ReactElement }> = ({ children }) => 
 
     return () => {
       console.log('withSocketPeerLayer - useEffect 작동함');
-      if (user.data) {
+      if (userData) {
         socket.off('be-new-user-come', newUserCome);
         socket.off('be-broadcast-peer-id', getAnswerFromRoomBroadcast);
         socket.off('be-user-left', userLeft);
@@ -227,7 +256,7 @@ const WithSocketEventLayout: FC<{ children: ReactElement }> = ({ children }) => 
         handleLeavePage();
       }
     };
-    //  무조건 처음 접속 user.data만 사용함. user.data가 변경되는 경우가 있다면 재접속 해야만 하는 경우
+    //  무조건 처음 접속 userData만 사용함. userData가 변경되는 경우가 있다면 재접속 해야만 하는 경우
   }, [socket, myPeer]);
 
   return <> {children}</>;
