@@ -28,7 +28,6 @@ export default class Document extends NextDocument {
           {/* capable 주소줄 없애기 */}
           <meta key="googlebot" name="googlebot" content="index,follow" />
           <meta name="google" content="notranslate" />
-          <meta name="viewport" content="width=device-width, maximum-scale=7.0, user-scalable=yes" />
           <meta name="mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="keywords" content="concert, streaming, コンサート,ストリーミング" />
