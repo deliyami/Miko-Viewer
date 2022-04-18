@@ -59,6 +59,7 @@ const nextConfig = {
   reactStrictMode: false, // 이거 하니깐 Socket 에러남
   compress: true, // default nginx에서 압축할 경우 false
   distDir: '.next', // default
+  optimizeFonts: false, // default true
   generateBuildId: async () => {
     return Date.now().toString(); // 다중 서버를 할 경우 같은 값이 되어야함.
   },
