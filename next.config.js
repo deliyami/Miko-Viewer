@@ -16,7 +16,8 @@ const withInterceptStdout = require('next-intercept-stdout')(
 const ContentSecurityPolicy = `
   media-src blob:;
   worker-src blob:;
-  fonts-src 'self' fonts.gstatic.com;
+  font-src 'self' fonts.gstatic.com;
+  style-src 'self' 'unsafe-inline' fonts.googleapis.com;
   connect-src 'self' *.mikopj.live *.live-video.net cdn.jsdelivr.net;
   script-src  'self' *.mikopj.live 'wasm-unsafe-eval' 'unsafe-eval' cdn.jsdelivr.net;
 `;
@@ -59,7 +60,7 @@ const nextConfig = {
   reactStrictMode: false, // 이거 하니깐 Socket 에러남
   compress: true, // default nginx에서 압축할 경우 false
   distDir: '.next', // default
-  optimizeFonts: false, // default true
+  optimizeFonts: true, // default true
   generateBuildId: async () => {
     return Date.now().toString(); // 다중 서버를 할 경우 같은 값이 되어야함.
   },
