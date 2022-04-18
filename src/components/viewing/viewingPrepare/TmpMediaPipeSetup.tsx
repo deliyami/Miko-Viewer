@@ -3,7 +3,7 @@ import { Results } from '@mediapipe/pose';
 import { toastLog } from '@src/helper';
 import { setBone } from '@src/helper/dynamic/setBoneAvatar';
 import { isOnMediaPipeState, latestMotionState, model, myStreamState, peerDataListState } from '@src/state/recoil';
-import { addedScoreForSeconds } from '@src/state/shareObject';
+import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
 import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { aPose } from '@src/state/shareObject/sharePose';
 import { useUser } from '@src/state/swr';
@@ -26,20 +26,6 @@ const checkResultsY = (results: Results, point: number[], firstIndex: number) =>
   } else if (results.poseLandmarks[firstIndex + 4].y < (results.poseLandmarks[firstIndex].y + results.poseLandmarks[firstIndex + 2].y) / 2 && point.length !== 0) {
     point.pop();
     addedScoreForSeconds.addScore(Math.floor(Math.random() * 101) + 30);
-    console.log('팔들기', firstIndex);
-  }
-};
-
-const clapResultsX = (results: Results, point: number[]) => {
-  const maxValue = Math.max(results.poseLandmarks[15].x, results.poseLandmarks[16].x);
-  const minValue = Math.max(results.poseLandmarks[15].x, results.poseLandmarks[16].x);
-  if (!maxValue || !minValue) return;
-  if (maxValue - minValue < 0 && point.length === 0) {
-    point.push(0);
-  } else if (point.length !== 0) {
-    point.pop();
-    addedScoreForSeconds.addScore(Math.floor(Math.random() * 101) + 30);
-    console.log('박수 테스트');
   }
 };
 
@@ -95,7 +81,6 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
         // }
         checkResultsY(results, pointRef.current[0], 12);
         checkResultsY(results, pointRef.current[1], 11);
-        clapResultsX(results, pointRef.current[2]);
       }
     },
     [motionState, modelState, peers, user.data],

@@ -16,7 +16,7 @@ import {
   Switch,
   useDisclosure,
 } from '@chakra-ui/react';
-import { setAvatarColor, setLightColor } from '@src/helper';
+import { setAvatarColor, setLightColor } from '@src/helper/dynamic/setAvatarColor';
 import { enterRoomIdAsyncState, isOnAvatarState, isOnVideoAmbianceState, model } from '@src/state/recoil';
 import { useUser } from '@src/state/swr';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
