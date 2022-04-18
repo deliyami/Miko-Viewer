@@ -114,7 +114,7 @@ const ViewingPrepareCSRPage = () => {
   useLayoutEffect(() => {
     if (!socket) return;
 
-    let timeoutId;
+    let timeoutId: NodeJS.Timeout;
     if (socket.connected) {
       setIsReadySocket(true);
     } else {
@@ -134,7 +134,7 @@ const ViewingPrepareCSRPage = () => {
 
   useLayoutEffect(() => {
     //  on("open")에서 하면 useEffect에서 등록하기 전에 이미 open 되어버림.
-    let setTimeoutId;
+    let setTimeoutId: NodeJS.Timeout;
     if (myPeer.open) {
       setIsReadyPeer(true);
     } else {
@@ -250,8 +250,8 @@ const ViewingPrepareCSRPage = () => {
             </VStack>
           </MotionBox>
         )}
-        <MediaPipeSetup setIsMediaPipeSetup={setIsMediapipeSetup} setMediaPipeError={setMediapipeError} />
       </AnimatePresence>
+      <MediaPipeSetup setIsMediaPipeSetup={setIsMediapipeSetup} setMediaPipeError={setMediapipeError} />
     </>
   );
 };

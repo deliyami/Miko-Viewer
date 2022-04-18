@@ -17,7 +17,7 @@ const ContentSecurityPolicy = `
   media-src blob:;
   worker-src blob:;
   connect-src 'self' *.mikopj.live *.live-video.net cdn.jsdelivr.net;
-  script-src  'self' *.mikopj.live 'wasm-unsafe-eval' cdn.jsdelivr.net;
+  script-src  'self' *.mikopj.live 'wasm-unsafe-eval' 'unsafe-eval' cdn.jsdelivr.net;
 `;
 
 //  Image
