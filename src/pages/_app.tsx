@@ -45,7 +45,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       .then(value => {
         if (value.status !== 200) return toastLog('error', 'Laravel Server Error');
       })
-      .catch(err => {
+      .catch((err: any) => {
         toastLog('error', 'Laravel Server Error');
       });
     axios
@@ -53,10 +53,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       .then(value => {
         if (value.status !== 200) return toastLog('error', 'Nest Server Error');
       })
-      .catch(err => {
+      .catch((err: any) => {
         toastLog('error', 'Nest Server Error');
       });
-    console.log('env', process.env);
   }, []);
 
   useEffect(() => {
@@ -91,7 +90,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       return true;
     });
 
-    const handleStart = url => {
+    const handleStart = (url: string) => {
       console.log(`Loading: ${url}`);
       NProgress.start();
     };
@@ -99,7 +98,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       NProgress.done();
     };
 
-    const handleRouterChangeError = (err, url) => {
+    const handleRouterChangeError = (err: any, url: string) => {
       handleStop();
       if (err.cancelled) {
         console.log(`Route to ${url} was cancelled!`);

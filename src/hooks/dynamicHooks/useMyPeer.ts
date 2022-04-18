@@ -15,26 +15,27 @@ export const useMyPeer = () => {
         port: process.env.NEXT_PUBLIC_PEER_PORT ? parseInt(process.env.NEXT_PUBLIC_PEER_PORT, 10) : 443, // default 443
         path: process.env.NEXT_PUBLIC_PEER_PATH ?? '/', // default '/'
         // secure: true,
+
         config: {
           iceServers: [
             {
               urls: 'stun:openrelay.metered.ca:80',
             },
-            {
-              urls: 'turn:openrelay.metered.ca:80',
-              username: 'openrelayproject',
-              credential: 'openrelayproject',
-            },
+            // {
+            //   urls: 'turn:openrelay.metered.ca:80',
+            //   username: 'openrelayproject',
+            //   credential: 'openrelayproject',
+            // },
             {
               urls: 'turn:openrelay.metered.ca:443',
               username: 'openrelayproject',
               credential: 'openrelayproject',
             },
-            {
-              urls: 'turn:openrelay.metered.ca:443?transport=tcp',
-              username: 'openrelayproject',
-              credential: 'openrelayproject',
-            },
+            // {
+            //   urls: 'turn:openrelay.metered.ca:443?transport=tcp',
+            //   username: 'openrelayproject',
+            //   credential: 'openrelayproject',
+            // },
           ],
         },
       }) as ExtendPeer),

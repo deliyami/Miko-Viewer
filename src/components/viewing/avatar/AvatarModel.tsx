@@ -38,7 +38,7 @@ export const AvatarModel: FC<{
             args[4][23].rotate(new BABYLON.Vector3(0, 0, 1), -(Math.PI * 7) / 36, 2);
 
             const bones = args[4];
-            console.log(bones);
+            // console.log(bones);
             const originalBones: BABYLON.Quaternion[] = [];
             for (let j = 0; j < args[4].length; j++) {
               originalBones[j] = args[4][j].rotationQuaternion?.clone();

@@ -17,7 +17,6 @@ export const useUser = () => {
     if (typeof window === 'undefined') return Promise.resolve(undefined);
 
     const isTokenExist = document.cookie.match(/^(.*;)?\s*isLogin\s*=\s*[^;]+(.*)?$/);
-    console.log('여기는 useUser 로그인 토큰', isTokenExist ? ' 존재 ✅' : ' 없음. ❌');
     if (!isTokenExist) {
       // NOTE  useSWR는 undefined일 경우 suspense가 안 끝남.
       return Promise.resolve(null);
