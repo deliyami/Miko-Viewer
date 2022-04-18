@@ -36,6 +36,7 @@ export const Peer3DAvatar = memo<Props>(({ peer }) => {
     }
     return () => {};
   }, [mediaStream]);
+  // useEffect interval/ worker interval return에서 죽이기
 
   useEffect(() => {
     if (audioRef.current) {
@@ -70,7 +71,14 @@ export const Peer3DAvatar = memo<Props>(({ peer }) => {
         </AvatarMenu>
         {isOnModel && (
           <Box overflow="hidden" position="relative" pointerEvents="none">
-            <AvatarModel width={AVATAR_SIZE} height={AVATAR_SIZE} path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka_tmp.glb`} peerId={uuid} antialias></AvatarModel>
+            <AvatarModel
+              width={AVATAR_SIZE}
+              height={AVATAR_SIZE}
+              isMyAvatar={false}
+              peerId={uuid}
+              onAntialias
+              path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka_tmp.glb`}
+            />
           </Box>
         )}
         <Box width="full" position="absolute" top="0" h="2rem" color="white">

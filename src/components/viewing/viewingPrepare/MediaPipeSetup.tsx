@@ -1,11 +1,12 @@
 import * as cam from '@mediapipe/camera_utils';
 import { Results } from '@mediapipe/pose';
-import { setBone } from '@src/helper/dynamic/setBoneAvatar';
-import { isOnMediaPipeState, latestMotionState, model, myStreamState, peerDataListState } from '@src/state/recoil';
-import { addedScoreForSeconds } from '@src/state/shareObject';
+import { sendToAllPeers } from '@src/helper';
+import { isOnMediaPipeState, latestMotionState, myStreamState, peerDataListState } from '@src/state/recoil';
+import { addedScoreForSeconds, roomMemberMotions } from '@src/state/shareObject';
 import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { aPose } from '@src/state/shareObject/sharePose';
 import { useUser } from '@src/state/swr';
+import { MotionInterface } from '@src/types/avatar/ChatMotionType';
 import * as Kalidokit from 'kalidokit';
 import React, { Dispatch, memo, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
@@ -48,26 +49,26 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
   const peers = useRecoilValue(peerDataListState);
   const isOnMediaPipe = useRecoilValue(isOnMediaPipeState);
   const motionState = useRecoilValue(latestMotionState);
-  const modelState = useRecoilValue(model);
   const user = useUser();
   const pointRef = useRef<number[][]>([[], [], []]); //[[오른손],[왼손],[박수]]
   const myPeerId = user.data.uuid;
   const [peerChange, setPeerChange] = useState(false);
 
+  useEffect(() => {
+    const sendInterval = setInterval(() => {
+      const setMotion = sendMotionForFrames.getMotionObject();
+      // NOTE 모션 값이 있을 때만 발송
+      if (setMotion && setMotion.motion) sendToAllPeers(peers, { type: 'motion', data: setMotion });
+    }, 100);
+    return () => {
+      clearInterval(sendInterval);
+    };
+  }, [peers]);
+
   // mediapipe 데이터가 적절하게 나오는 곳
   const onResults = useCallback(
     (results: Results) => {
-      if (
-        modelState &&
-        modelState[myPeerId] &&
-        modelState[myPeerId].bones &&
-        modelState[myPeerId].originalBones &&
-        modelState[myPeerId].scene &&
-        results &&
-        results.poseLandmarks &&
-        results.poseWorldLandmarks &&
-        results.segmentationMask
-      ) {
+      if (results && results.poseLandmarks && results.poseWorldLandmarks && results.segmentationMask) {
         const poseRig = Kalidokit.Pose.solve(results.poseWorldLandmarks, results.poseLandmarks, {
           runtime: 'mediapipe',
           video: videoRef?.current,
@@ -79,24 +80,19 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
           right: results.poseLandmarks[8].x,
         };
         // 적절하게 render 호출하는 메소드 setBone
-        setBone(modelState[myPeerId], myPeerId, poseRig, faceRig);
+        // setBone(modelListObject[myPeerId], myPeerId, poseRig, faceRig);
         if (peers && sendMotionForFrames) {
-          const myMotion = { pose: poseRig, face: faceRig };
+          const myMotion = { pose: poseRig, face: faceRig } as MotionInterface;
+          roomMemberMotions[myPeerId] = myMotion;
           sendMotionForFrames.setMotionStatus(myMotion);
         }
 
-        // if (results.poseLandmarks[12].y < results.poseLandmarks[16].y && pointRef.current[0].length === 0) {
-        //   pointRef.current[0].push(0);
-        // } else if (results.poseLandmarks[16].y < (results.poseLandmarks[12].y + results.poseLandmarks[14].y) / 2 && pointRef.current[0].length !== 0) {
-        //   pointRef.current[0].pop();
-        //   addedScoreForSeconds.addScore(Math.floor(Math.random() * 101) + 30);
-        // }
         checkResultsY(results, pointRef.current[0], 12);
         checkResultsY(results, pointRef.current[1], 11);
         clapResultsX(results, pointRef.current[2]);
       }
     },
-    [motionState, modelState, peers, user.data],
+    [motionState, peers, user.data],
   );
 
   useEffect(() => {

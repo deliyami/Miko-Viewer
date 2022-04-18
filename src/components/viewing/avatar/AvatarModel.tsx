@@ -1,116 +1,52 @@
-import { model } from '@src/state/recoil';
-import * as BABYLON from 'babylonjs';
+// import { model } from '@src/state/recoil';
+import { toastLog } from '@src/helper';
+import { roomMemberMotions } from '@src/state/shareObject';
 import 'babylonjs-loaders';
-import produce from 'immer';
-import { FC, useEffect, useRef } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { FC, useEffect } from 'react';
 
 export const AvatarModel: FC<{
   width: number;
   height: number;
   path: string;
-  peerId?: string | undefined;
-  antialias?: boolean | undefined;
-}> = ({ ...props }) => {
-  const { width, height, path, peerId, ...rest } = props;
-  const reactCanvas = useRef(null);
-  const setModel = useSetRecoilState(model);
+  peerId: string;
+  onAntialias?: boolean | undefined;
+  isMyAvatar?: boolean | undefined;
+}> = ({ height, path, peerId, width, onAntialias, isMyAvatar }) => {
+  const tagId = 'avatar' + peerId;
+
   useEffect(() => {
-    if (reactCanvas.current) {
-      const onSceneReady = (scene: BABYLON.Scene) => {
-        if (BABYLON && BABYLON.SceneLoader) {
-          const camera = new BABYLON.ArcRotateCamera('camera', Math.PI / 2, Math.PI / 2.5, 10, new BABYLON.Vector3(0, 0, 0), scene);
+    const worker = new Worker(new URL('@src/worker/AvatarModel.worker.ts', import.meta.url), { type: 'module' });
 
-          camera.setTarget(new BABYLON.Vector3(0, 2.5, 0));
-          camera.setPosition(new BABYLON.Vector3(0, 1.8, 4.7));
+    worker.onerror = e => {
+      toastLog('error', 'avatar worker error', '', e.error);
+    };
+    worker.onmessageerror = e => {
+      toastLog('error', 'avatar worker mesage error', '');
+      console.log('worker message error', e);
+    };
 
-          // 카메라 컨트롤러, 모델뜨는 canvas 드래그로 조절 가능
-          // camera.attachControl(true);
+    if ('OffscreenCanvas' in window) {
+      const aCanvas = document.getElementById(tagId) as HTMLCanvasElement;
+      if (!aCanvas.className) {
+        aCanvas.className = 'used-canvas-one-more-time';
+        const offCanvas = aCanvas.transferControlToOffscreen();
 
-          const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 1), scene);
-
-          // Default intensity is 1. Let's dim the light a small amount
-          light.intensity = 0.6;
-
-          BABYLON.MeshBuilder.CreateGround('ground', { width: 30, height: 6 }, scene);
-          BABYLON.SceneLoader.ImportMesh('', path, '', scene, (...args) => {
-            args[4][18].rotate(new BABYLON.Vector3(0, 0, 1), (Math.PI * 7) / 36, 2);
-            args[4][23].rotate(new BABYLON.Vector3(0, 0, 1), -(Math.PI * 7) / 36, 2);
-
-            const bones = args[4];
-            // console.log(bones);
-            const originalBones: BABYLON.Quaternion[] = [];
-            for (let j = 0; j < args[4].length; j++) {
-              originalBones[j] = args[4][j].rotationQuaternion?.clone();
-            }
-            const animations = scene.animationGroups;
-            for (let j = 0; j < animations.length; j++) {
-              animations[j].stop();
-            }
-
-            const createLights = (bones: BABYLON.TransformNode[], index: number, r: number, g: number, b: number, d: number, scene: BABYLON.Scene) => {
-              const bone = bones[index]; // 15
-
-              const light = new BABYLON.PointLight(`${index}_point_light`, new BABYLON.Vector3(0, 0, 0.5), scene);
-              light.parent = bone;
-              light.intensity = 0.3;
-              light.range = 5;
-              light.shadowMinZ = 0.2;
-              light.shadowMaxZ = 5;
-              light.diffuse = new BABYLON.Color3(r / d, g / d, b / d);
-              light.specular = new BABYLON.Color3(r / d, g / d, b / d);
-            };
-
-            const r = 1;
-            const g = 1;
-            const b = 1;
-            const d = 1;
-
-            for (let j = 1; j < 9; j++) {
-              new BABYLON.StandardMaterial(`${j}_body`, scene);
-            }
-            scene.materials[10] = new BABYLON.StandardMaterial('hand_light', scene);
-            scene.materials[10].emissiveColor = new BABYLON.Color3(r / d, g / d, b / d);
-            scene.meshes[11].material = scene.materials[10];
-            scene.materials[10].name = '0';
-            scene.materials[12].name = '0';
-            createLights(bones, 15, r, g, b, d, scene);
-            createLights(bones, 20, r, g, b, d, scene);
-
-            setModel(
-              produce(draft => {
-                draft[peerId] = {
-                  bones,
-                  originalBones,
-                  scene,
-                };
-              }),
-            );
-            scene.render();
-          });
-        }
-      };
-      const engine = new BABYLON.Engine(reactCanvas.current);
-      const scene = new BABYLON.Scene(engine);
-      scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
-      if (scene.isReady()) {
-        scene.getEngine().setSize(width, height);
-        onSceneReady(scene);
-      } else {
-        scene.onReadyObservable.addOnce(newScene => onSceneReady(newScene));
+        worker.postMessage({ type: 'init', canvas: offCanvas, path, width, height, newPeerId: peerId }, [offCanvas]);
       }
-
-      if (engine) {
-        engine.runRenderLoop(() => {
-          scene.render();
-        });
-      }
-
-      return () => {
-        scene.getEngine().dispose();
-      };
+    } else {
+      toastLog('info', 'OffScreen Canvas 미지원 브라우저');
     }
-    return () => {};
-  }, [reactCanvas]);
-  return <canvas ref={reactCanvas} {...rest}></canvas>;
+
+    const avatarSettingInterval = setInterval(() => {
+      const newMotionData = roomMemberMotions[peerId];
+      if (newMotionData) worker?.postMessage({ type: 'motionChange', thisUserMotion: newMotionData });
+    }, 60);
+
+    return () => {
+      worker.terminate();
+      clearInterval(avatarSettingInterval);
+    };
+  }, []);
+
+  return <canvas id={tagId} />;
 };
