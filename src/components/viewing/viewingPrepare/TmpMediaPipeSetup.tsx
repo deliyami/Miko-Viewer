@@ -2,7 +2,8 @@ import * as cam from '@mediapipe/camera_utils';
 import { Results } from '@mediapipe/pose';
 import { toastLog } from '@src/helper';
 import { setBone } from '@src/helper/dynamic/setBoneAvatar';
-import { isOnMediaPipeState, latestMotionState, modelListState, myStreamState, peerDataListState } from '@src/state/recoil';
+import { isOnMediaPipeState, latestMotionState, myStreamState, peerDataListState } from '@src/state/recoil';
+import { modelListObject } from '@src/state/shareObject';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
 import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { aPose } from '@src/state/shareObject/sharePose';
@@ -36,7 +37,6 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
   const peers = useRecoilValue(peerDataListState);
   const isOnMediaPipe = useRecoilValue(isOnMediaPipeState);
   const motionState = useRecoilValue(latestMotionState);
-  const modelState = useRecoilValue(modelListState);
   const user = useUser();
   const pointRef = useRef<number[][]>([[], [], []]); //[[오른손],[왼손],[박수]]
   const myPeerId = user.data.uuid;
@@ -46,11 +46,11 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
   const onResults = useCallback(
     (results: Results) => {
       if (
-        modelState &&
-        modelState[myPeerId] &&
-        modelState[myPeerId].bones &&
-        modelState[myPeerId].originalBones &&
-        modelState[myPeerId].scene &&
+        modelListObject &&
+        modelListObject[myPeerId] &&
+        modelListObject[myPeerId].bones &&
+        modelListObject[myPeerId].originalBones &&
+        modelListObject[myPeerId].scene &&
         results &&
         results.poseLandmarks &&
         results.poseWorldLandmarks &&
@@ -67,7 +67,7 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
           right: results.poseLandmarks[8].x,
         };
         // 적절하게 render 호출하는 메소드 setBone
-        setBone(modelState[myPeerId], myPeerId, poseRig, faceRig);
+        setBone(modelListObject[myPeerId], myPeerId, poseRig, faceRig);
         if (peers && sendMotionForFrames) {
           const myMotion = { pose: poseRig, face: faceRig };
           sendMotionForFrames.setMotionStatus(myMotion);
@@ -83,7 +83,7 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
         checkResultsY(results, pointRef.current[1], 11);
       }
     },
-    [motionState, modelState, peers, user.data],
+    [motionState, modelListObject, peers, user.data],
   );
 
   useEffect(() => {

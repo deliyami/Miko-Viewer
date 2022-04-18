@@ -76,7 +76,7 @@ const faceTurn = (transBone: BABYLON.TransformNode[], faceFront: number, faceLef
   transBone[12].rotate(new BABYLON.Vector3(0, 1, 0), -(Math.atan2(avg, faceFront) - Math.PI / 4) * 10, 2);
 };
 
-export const setBone = (userBones: Model, peerId: string, poseRig: Kalidokit.TPose, faceRig: FaceDirection<'left' | 'center' | 'right', number>) => {
+export const setBone = (userBones: Model, poseRig: Kalidokit.TPose, faceRig: FaceDirection<'left' | 'center' | 'right', number>) => {
   // const userBones = model[peerId];
   // AVATAR 적절하게 가공하는 곳
   boneReset(userBones.bones, userBones.originalBones);

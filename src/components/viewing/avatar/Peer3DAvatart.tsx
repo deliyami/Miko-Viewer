@@ -36,6 +36,7 @@ export const Peer3DAvatar = memo<Props>(({ peer }) => {
     console.log('abacdf');
     return () => {};
   }, [mediaStream]);
+  // useEffect interval/ worker interval return에서 죽이기
 
   const handleMute = () => {
     setMuted(prev => !prev);
