@@ -1,8 +1,9 @@
 import * as cam from '@mediapipe/camera_utils';
 import { Results } from '@mediapipe/pose';
+import { toastLog } from '@src/helper';
 import { setBone } from '@src/helper/dynamic/setBoneAvatar';
 import { isOnMediaPipeState, latestMotionState, model, myStreamState, peerDataListState } from '@src/state/recoil';
-import { addedScoreForSeconds } from '@src/state/shareObject';
+import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
 import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { aPose } from '@src/state/shareObject/sharePose';
 import { useUser } from '@src/state/swr';
@@ -11,8 +12,9 @@ import React, { Dispatch, memo, SetStateAction, useCallback, useEffect, useRef, 
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
 
 type Props = {
+  //   isMediaPipeSetup: boolean;
   setIsMediaPipeSetup: Dispatch<SetStateAction<boolean>>;
-  setMediaPipeError: SetterOrUpdater<string | undefined>;
+  setMediaPipeError: SetterOrUpdater<string>;
 };
 
 const VIDEO_WIDTH = 320;
@@ -24,20 +26,6 @@ const checkResultsY = (results: Results, point: number[], firstIndex: number) =>
   } else if (results.poseLandmarks[firstIndex + 4].y < (results.poseLandmarks[firstIndex].y + results.poseLandmarks[firstIndex + 2].y) / 2 && point.length !== 0) {
     point.pop();
     addedScoreForSeconds.addScore(Math.floor(Math.random() * 101) + 30);
-    console.log('팔들기', firstIndex);
-  }
-};
-
-const clapResultsX = (results: Results, point: number[]) => {
-  const maxValue = Math.max(results.poseLandmarks[15].x, results.poseLandmarks[16].x);
-  const minValue = Math.max(results.poseLandmarks[15].x, results.poseLandmarks[16].x);
-  if (!maxValue || !minValue) return;
-  if (maxValue - minValue < 0 && point.length === 0) {
-    point.push(0);
-  } else if (point.length !== 0) {
-    point.pop();
-    addedScoreForSeconds.addScore(Math.floor(Math.random() * 101) + 30);
-    console.log('박수 테스트');
   }
 };
 
@@ -93,7 +81,6 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
         // }
         checkResultsY(results, pointRef.current[0], 12);
         checkResultsY(results, pointRef.current[1], 11);
-        clapResultsX(results, pointRef.current[2]);
       }
     },
     [motionState, modelState, peers, user.data],
@@ -102,39 +89,34 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
   useEffect(() => {
     let camera: cam.Camera;
     let latestPoseEnded = true;
-    let latestUpdate = 0;
     const setupMediapipe = () => {
       if (videoRef.current) {
         let isMediaPipeSetup = false;
         camera = new cam.Camera(videoRef?.current, {
           onFrame: async () => {
-            if (!isMediaPipeSetup) {
-              await aPose
-                .initialize()
-                .then(() => {
-                  isMediaPipeSetup = true;
-                  setIsMediaPipeSetup(true);
-                })
-                .catch(err => {
-                  console.error(err);
-                  // toastLog('error', 'mediaPipe error');
-                  setMediaPipeError(err);
-                });
-            }
-            //  TODO 적당한 시간 조절, 프레임  제한 로직 조절
-            if (latestPoseEnded && isOnMediaPipe && videoRef.current && latestUpdate + 40 < Date.now()) {
-              latestPoseEnded = false;
-              //  TODO  send 2번쨰 인자 at 의미
-              aPose
-                .send({ image: videoRef.current })
-                .then(() => {
-                  latestPoseEnded = true;
-                  latestUpdate = Date.now();
-                })
-                .catch(err => {
-                  console.error('media pipe error', err);
-                });
-            } else {
+            try {
+              await aPose.initialize();
+              if (latestPoseEnded && isOnMediaPipe) {
+                latestPoseEnded = false;
+                //  TODO  send 2번쨰 인자 at 의미
+                aPose
+                  .send({ image: videoRef.current })
+                  .then(() => {
+                    latestPoseEnded = true;
+                  })
+                  .catch(err => {
+                    console.error('media pipe error', err);
+                  });
+              } else {
+              }
+              if (!isMediaPipeSetup) {
+                isMediaPipeSetup = true;
+                setIsMediaPipeSetup(true);
+              }
+            } catch (err) {
+              toastLog('error', 'mediaPipe error');
+              console.error(err);
+              setMediaPipeError(err);
             }
           },
           width: VIDEO_WIDTH,
@@ -147,7 +129,7 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
         setPeerChange(true);
       }
     };
-    if (myStream && videoRef.current) {
+    if (myStream) {
       const videoElement = videoRef.current;
       videoElement.srcObject = myStream;
       videoElement.volume = 0;
@@ -181,7 +163,5 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
     </>
   );
 });
-
-MediaPipeSetup.displayName = 'MediaPipeSetup';
 
 export default MediaPipeSetup;
