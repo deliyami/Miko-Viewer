@@ -21,6 +21,7 @@ import {
   isOnChatState,
   isOnMediaPipeState,
   isOnMyRankingState,
+  isOnPeerSoundState,
   isOnRankingState,
   isOnVideoAmbianceState,
   prepareAnimationDurationState,
@@ -41,8 +42,9 @@ export const DevDrawer: FC = () => {
   const [isOnMyRanking, setIsOnMyRanking] = useRecoilState(isOnMyRankingState);
   const [isOnAudioAnalyzer, setIsOnAudioAnalyzer] = useRecoilState(isOnAudioAnalyzerState);
   const [isOnChat, setIsOnChat] = useRecoilState(isOnChatState);
+  const [isOnPeerSound, setIsOnPeerSound] = useRecoilState(isOnPeerSoundState);
   const [prepareAnimationDuration, setPrepareAnimationDuration] = useRecoilState(prepareAnimationDurationState);
-  const btnRef = useRef();
+  const btnRef = useRef<HTMLElement>();
 
   useWindowEvent('keyup', e => {
     if (['d', 'D'].includes(e.key)) {
@@ -58,6 +60,7 @@ export const DevDrawer: FC = () => {
     setIsOnMyRanking(localStorage.getItem('isOnMyRankingState') === 'true');
     setIsOnAudioAnalyzer(localStorage.getItem('isOnAudioAnalyzerState') === 'true');
     setIsOnChat(localStorage.getItem('isOnChatState') === 'true');
+    setIsOnPeerSound(localStorage.getItem('isOnPeerSoundState') === 'true');
   }, []);
 
   const handleSetAll = (aBoolean: boolean) => {
@@ -68,6 +71,7 @@ export const DevDrawer: FC = () => {
     setIsOnMyRanking(aBoolean);
     setIsOnAudioAnalyzer(aBoolean);
     setIsOnChat(aBoolean);
+    setIsOnPeerSound(aBoolean);
   };
 
   const handleUpdatePrepareAnimationDuration: ChangeEventHandler<HTMLInputElement> = e => {
@@ -102,6 +106,7 @@ export const DevDrawer: FC = () => {
               <CustomSwitch label="turn on my ranking update" isOn={isOnMyRanking} set={setIsOnMyRanking} />
               <CustomSwitch label="turn on my audio analyzer" isOn={isOnAudioAnalyzer} set={setIsOnAudioAnalyzer} />
               <CustomSwitch label="turn on my chat" isOn={isOnChat} set={setIsOnChat} />
+              <CustomSwitch label="turn on peer sound" isOn={isOnPeerSound} set={setIsOnPeerSound} />
               <HStack>
                 <Text>Prepare Ani Duration(s)</Text>
                 <Input value={prepareAnimationDuration} onChange={handleUpdatePrepareAnimationDuration} />

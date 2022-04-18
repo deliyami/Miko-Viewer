@@ -44,6 +44,12 @@ export const isOnChatState = atom<boolean>({
   effects: [localStorageBooleanEffect('isOnChatState')],
 });
 
+export const isOnPeerSoundState = atom<boolean>({
+  key: 'isOnPeerSoundState',
+  default: true,
+  effects: [localStorageBooleanEffect('isOnPeerSoundState')],
+});
+
 export const prepareAnimationDurationState = atom<number>({
   key: 'prepareAnimationDurationState',
   default: 2,

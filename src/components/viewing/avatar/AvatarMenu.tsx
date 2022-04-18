@@ -35,7 +35,7 @@ const circleMotion: Variants = {
 };
 const iconMotion: Variants = {};
 
-export const AvatarMenu: FC<{ children: ReactElement }> = ({ children }) => {
+export const AvatarMenu: FC<{ children: ReactElement[] }> = ({ children }) => {
   return (
     <MotionBox
       whileHover="hover"

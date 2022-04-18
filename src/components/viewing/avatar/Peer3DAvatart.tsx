@@ -5,7 +5,7 @@ import { BiVolumeMute } from '@react-icons/all-files/bi/BiVolumeMute';
 import { FiMoreHorizontal } from '@react-icons/all-files/fi/FiMoreHorizontal';
 import { AvatarModel } from '@src/components/viewing/avatar/AvatarModel';
 import { NEXT_URL } from '@src/const';
-import { isOnAvatarState, PeerDataInterface } from '@src/state/recoil';
+import { isOnAvatarState, isOnPeerSoundState, PeerDataInterface } from '@src/state/recoil';
 import { createRef, memo, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AvatarConnectionStatus } from './AvatarConnectionStatus';
@@ -23,6 +23,7 @@ export const Peer3DAvatar = memo<Props>(({ peer }) => {
   const { id: uuid, data, dataConnection, mediaStream, mediaConnection } = peer;
 
   const audioRef = createRef<HTMLAudioElement>();
+  const isOnPeerSound = useRecoilValue(isOnPeerSoundState);
 
   const [muted, setMuted] = useState(false);
   const isOnModel = useRecoilValue(isOnAvatarState);
@@ -33,9 +34,14 @@ export const Peer3DAvatar = memo<Props>(({ peer }) => {
       mediaStream.getAudioTracks()[0].enabled = true;
       audio.srcObject = mediaStream;
     }
-    console.log('abacdf');
     return () => {};
   }, [mediaStream]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.muted = !isOnPeerSound;
+    }
+  }, [isOnPeerSound]);
 
   const handleMute = () => {
     setMuted(prev => !prev);
@@ -47,7 +53,7 @@ export const Peer3DAvatar = memo<Props>(({ peer }) => {
         position="relative"
         width={AVATAR_SIZE}
         height={AVATAR_SIZE}
-        backgroundImage={!isOnModel && "url('/image/temp/avatar.png')"}
+        {...(isOnModel ? {} : { backgroundImage: "url('/image/temp/avatar.png')" })}
         backgroundRepeat="no-repeat"
         backgroundSize="cover"
       >
