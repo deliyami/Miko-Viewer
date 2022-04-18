@@ -1,7 +1,6 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
-import { getDataFromLaravel } from '@src/helper';
+import { getPageLaravelData } from '@src/helper';
 import { useUser } from '@src/state/swr';
-import { Cart } from '@src/types/local';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import CartItem from './CartItem';
@@ -14,7 +13,7 @@ const Carts = ({ setTabIndex }) => {
   const URL_PRODUCTS = `/cart_products/${user.data.id}`;
   // console.log("ue");
   useEffect(() => {
-    getDataFromLaravel<Cart>(URL_PRODUCTS).then(response => setData(response.data));
+    getPageLaravelData(URL_PRODUCTS).then(response => setData(response.data));
   }, [URL_PRODUCTS]);
   // if (data) console.log(data);
   // console.log(data.length);
