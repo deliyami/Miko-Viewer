@@ -1,10 +1,9 @@
 import { Button, Flex, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { Order } from '@src/types/local';
-import { Pagination } from '@src/types/share/common';
 import { FC } from 'react';
 
-const OrderHistory: FC<{ data: Pagination<Order> }> = ({ data }) => {
-  console.log(data);
+const OrderHistory: FC<{ orders: Order }> = ({ orders }) => {
+  console.log(orders);
   return (
     <Flex mt={'3%'} background={'blue.50'} alignSelf={'center'} w="70%" justifyContent="center" p={'3%'} h="100%">
       <TableContainer w={'100%'}>
@@ -20,7 +19,7 @@ const OrderHistory: FC<{ data: Pagination<Order> }> = ({ data }) => {
             </Tr>
           </Thead>
           <Tbody background={'white'}>
-            {data.map((item, key) => {
+            {orders.map((item, key: number) => {
               return (
                 <Tr border={'1px'} borderColor={'blackAlpha.200'} key={key}>
                   <Td textAlign={'center'} borderRight={'1px'} borderColor={'blackAlpha.200'}>

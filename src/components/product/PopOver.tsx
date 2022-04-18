@@ -6,7 +6,18 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-const PopOver = ({ count, color, size, setStock, setColor, setSize, cartCount, setCartCount }) => {
+type PopOverProps = {
+  color: string;
+  size: string;
+  setCartCount: Function;
+  cartCount: number;
+  count: number;
+  setStock: Function;
+  setSize: Function;
+  setColor: Function;
+};
+
+const PopOver = ({ count, color, size, setStock, setColor, setSize, cartCount, setCartCount }: PopOverProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
@@ -14,12 +25,12 @@ const PopOver = ({ count, color, size, setStock, setColor, setSize, cartCount, s
   const cartOpen = () => setCartIsOpen(true);
   const cartClose = () => setCartIsOpen(false);
   const router = useRouter();
-  const user = useUser();
+  const { data: userData } = useUser();
   console.log(color);
   // axios.defaults.withCredentials = true;
   function onCart() {
     console.log('onCart');
-    if (count == 0 || color == '' || size == '') {
+    if (count === 0 || color === '' || size === '') {
       alert('オプションを全部選択して下さい。');
     } else if (count !== 0 && color !== '' && size !== '') {
       setCartCount(cartCount + 1);
@@ -27,7 +38,7 @@ const PopOver = ({ count, color, size, setStock, setColor, setSize, cartCount, s
         .post(
           `${LARAVEL_URL}/cart_products`,
           {
-            user_id: user.data.id,
+            user_id: userData?.id,
             size,
             color,
             product_id: router.query.product_id,

@@ -15,7 +15,7 @@ const ProductsList: FC<{ products: Product[] }> = ({ products }) => {
           <a>
             <Flex justifyItems={'center'}>
               <Box _hover={{ boxShadow: '2xl' }} rounded="md" p={'3%'}>
-                <img src={`${IMAGE_DOMAIN}products/${item.image}`} alt={item.name} />
+                <img src={`${IMAGE_DOMAIN}product_image/${item.image}`} alt={item.name} />
                 <Text>{item.name}</Text>
                 <Flex justifyContent={'flex-end'}>
                   <Text fontWeight={'bold'}>¥{item.price}</Text>

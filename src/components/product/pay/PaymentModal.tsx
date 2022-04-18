@@ -3,7 +3,18 @@ import { LARAVEL_URL } from '@src/const';
 import axios from 'axios';
 import { useRef } from 'react';
 
-const PaymentModal = ({ isOpen, onClose, quantity, address, total_price, user_id, product_id, setTabIndex }) => {
+type PaymentModalType = {
+  isOpen: boolean;
+  onClose: Function;
+  quantity: number;
+  address: string;
+  total_price: number;
+  user_id: number;
+  product_id: number;
+  setTabIndex: Function;
+};
+
+const PaymentModal = ({ isOpen, onClose, quantity, address, total_price, user_id, product_id, setTabIndex }: PaymentModalType) => {
   const cancelRef = useRef();
   // console.log(quantity);
   function goPayment() {

@@ -1,7 +1,11 @@
 import { Button, Flex, Input, Select, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 
-const Address = ({ setAddress }) => {
+type Type = {
+  setAddress: Function;
+};
+
+const Address = ({ setAddress }: Type) => {
   //   const [address, setAddress] = useState();
   const [selected, setSelected] = useState('');
   const [zipCode, setZipCode] = useState('');
@@ -9,19 +13,19 @@ const Address = ({ setAddress }) => {
   const [city, setCity] = useState('');
   const [detail, setDetail] = useState('');
 
-  function onChangeSelected(e) {
+  function onChangeSelected(e: React.ChangeEvent<HTMLInputElement>) {
     setSelected(e.target.value);
   }
-  function onChangeCity(e) {
+  function onChangeCity(e: React.ChangeEvent<HTMLInputElement>) {
     setCity(e.target.value);
   }
-  function onChangeDetail(e) {
+  function onChangeDetail(e: React.ChangeEvent<HTMLInputElement>) {
     setDetail(e.target.value);
   }
-  function onChangeZipCode(e) {
+  function onChangeZipCode(e: React.ChangeEvent<HTMLInputElement>) {
     setZipCode(e.target.value);
   }
-  function onChangeZipCode2(e) {
+  function onChangeZipCode2(e: React.ChangeEvent<HTMLInputElement>) {
     setZipCode2(e.target.value);
   }
   setAddress(selected + ' ' + city + ' ' + detail + ' ' + zipCode + '-' + zipCode2);
@@ -38,7 +42,7 @@ const Address = ({ setAddress }) => {
         </Flex>
       </Flex>
       <Flex py={'2%'} ml={'32%'} w={'50%'} flexDirection={'column'}>
-        <Select pb={'2%'} w={'45%'} required value={selected} onChange={onChangeSelected}>
+        <Select pb={'2%'} w={'45%'} required value={selected} onChange={() => onChangeSelected}>
           <option>都道府県を選択</option>
           <option>北海道</option>
           <option>青森県</option>

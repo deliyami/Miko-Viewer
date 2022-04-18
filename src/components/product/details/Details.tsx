@@ -6,7 +6,7 @@ import Delivery from './Delivery';
 import Detail from './Detail';
 import QnA from './QnA';
 
-const Details: FC<{ item: Product[] }> = ({ item }) => {
+const Details: FC<{ item: Product }> = ({ item }) => {
   const [ch, setCh] = useState(1);
   console.log(ch);
   return (

@@ -1,34 +1,33 @@
 import { Flex, Text } from '@chakra-ui/react';
 import OrderHistory from '@src/components/product/pay/OrderHistory';
-import { getPageLaravelData } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
 import { useUser } from '@src/state/swr';
-import { Order } from '@src/types/local';
-import { Pagination } from '@src/types/share/common';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { useSingleLaravel } from '@src/state/swr/useLaravel';
 import { ReactElement } from 'react';
 
 // const order = () => {
 //   return <Orders></Orders>;
 // };
 // export default order;
-type Data = {
-  data?: Pagination<Order>;
-};
+// type Data = {
+//   data?: Pagination<Order>;
+// };
 
-export const getServerSideProps: GetServerSideProps<Data> = async () => {
-  const user = useUser();
-  const ORDER_URL = `/orders/${user.data.id}`;
-  const result = await getPageLaravelData<Pagination<Order>>(ORDER_URL);
-  return {
-    props: {
-      data: result?.data ?? null,
-    },
-  };
-};
+// export const getServerSideProps: GetServerSideProps<Data> = async () => {
+//   // const user = useUser();
+//   // const ORDER_URL = `/orders/${user.data.id}`;
+//   const result = await getSingleLaravelData<Pagination<Order>>(ORDER_URL);
+//   return {
+//     props: {
+//       data: result?.data ?? null,
+//     },
+//   };
+// };
 
-export default function Orders({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Orders() {
   // console.log(data);
+  const { data: userData } = useUser();
+  const orders = useSingleLaravel('/orders', userData?.id, {});
   return (
     <Flex flexDir={'column'} h="70vh">
       <Text ml={'15%'} fontSize={'3xl'}>
@@ -37,7 +36,7 @@ export default function Orders({ data }: InferGetServerSidePropsType<typeof getS
       {/* {data.map((item, key) => {
         return <Text key={key}>{item.id}</Text>;
       })} */}
-      {data ? <OrderHistory data={data}></OrderHistory> : <Text>ご注文履歴がおりません。</Text>}
+      {orders ? <OrderHistory orders={orders}></OrderHistory> : <Text>ご注文履歴がおりません。</Text>}
     </Flex>
   );
 }

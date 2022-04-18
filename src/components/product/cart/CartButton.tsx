@@ -1,17 +1,13 @@
 import { Button, Flex, Image, Text } from '@chakra-ui/react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
-const CartButton = ({ cartCount }) => {
-  const router = useRouter();
-  // console.log(props);
+type CartCountType = {
+  cartCount: number;
+};
+
+const CartButton = ({ cartCount }: CartCountType) => {
   return (
-    // eslint-disable-next-line @next/next/link-passhref
-    <Link
-      href={{
-        pathname: `/my/cart`,
-      }}
-    >
+    <Link href={`/my/cart`} passHref={true}>
       <Flex flexDirection={'column'}>
         {cartCount === 0 ? null : (
           <Flex justifyContent={'end'}>

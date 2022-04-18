@@ -1,8 +1,16 @@
 import { Flex, Select } from '@chakra-ui/react';
-import { useState } from 'react';
+import { ChangeEventHandler, useState } from 'react';
 import PopOver from './PopOver';
 
-const OptionSelect = ({ color, size, stock, setCartCount, cartCount }) => {
+type OptionProps = {
+  color: string;
+  size: string;
+  stock: number;
+  setCartCount: Function;
+  cartCount: number;
+};
+
+const OptionSelect = ({ color, size, stock, setCartCount, cartCount }: OptionProps) => {
   // const countArr = [1, 2, 3, 4, 5];
   // const colorArr = ['Red', 'Blue', 'Black', 'White', 'Yellow'];
   // const sizeArr = ['XS', 'S', 'M', 'L', 'XL'];
@@ -10,17 +18,17 @@ const OptionSelect = ({ color, size, stock, setCartCount, cartCount }) => {
   const [colorValue, setColor] = useState('');
   const [sizeValue, setSize] = useState('');
 
-  function onCountChange(event) {
-    console.log(event.target.value);
-    setStock(event.target.value);
-  }
+  const onCountChange: ChangeEventHandler<HTMLSelectElement> = event => {
+    console.log(event.target?.value);
+    setStock(parseInt(event.target?.value, 10));
+  };
 
-  function onColorChange(event) {
+  const onColorChange: ChangeEventHandler<HTMLSelectElement> = event => {
     setColor(event.target.value);
-  }
-  function onSizeChange(event) {
+  };
+  const onSizeChange: ChangeEventHandler<HTMLSelectElement> = event => {
     setSize(event.target.value);
-  }
+  };
 
   return (
     <Flex w="100%" flexDirection={'column'}>

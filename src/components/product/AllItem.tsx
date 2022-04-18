@@ -28,7 +28,7 @@ const AllItem: FC<{ allItem: Pagination<Product> }> = ({ allItem }) => {
                 >
                   <Box>
                     <Box>
-                      <Image src={`${IMAGE_DOMAIN}products/${item.image}`}></Image>
+                      <Image src={`${IMAGE_DOMAIN}product_image/${item.image}`}></Image>
                     </Box>
                     <Text textAlign={'right'}>{item.name}</Text>
                     <Text textAlign={'right'} fontWeight={'bold'}>

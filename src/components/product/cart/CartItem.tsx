@@ -1,8 +1,10 @@
 import { CloseButton, Flex, Image, Tag, TagLabel, Text } from '@chakra-ui/react';
 import { IMAGE_DOMAIN, LARAVEL_URL } from '@src/const';
+import { Cart } from '@src/types/local';
 import axios from 'axios';
+import { FC } from 'react';
 
-const CartItem = ({ data, setData }) => {
+const CartItem: FC<{ carts: Cart[] }> = ({ carts }) => {
   // console.log(Array(data)[0][0]);
   // console.log(typeof data);
   // console.log([...Array(data)]);
@@ -16,10 +18,10 @@ const CartItem = ({ data, setData }) => {
   // function onSelectChange(e) {
   //   setQuantity(e.target.value);
   // }
-  function deleteCart(cartId) {
+  function deleteCart(cartId: number) {
     axios
       .delete(`${LARAVEL_URL}/cart_products/${cartId}`)
-      .then(response => setData(response.data))
+      // .then(response => setData(response.data))
       .catch(error => console.log(error));
   }
   // let item = null;
@@ -29,11 +31,11 @@ const CartItem = ({ data, setData }) => {
   // console.log(data[0].products.data);
   return (
     <Flex background={'whiteAlpha.600'} rounded="2xl" p={'1%'} flexDir={'column'} mt="8%" alignSelf="center" w="100%" h="100%" overflow={'auto'}>
-      {data
-        ? data.map((item, key) => {
+      {carts
+        ? carts.map((item, key) => {
             return (
               <Flex h={'35%'} key={key} mb="7%" justifyContent={'space-evenly'} w={'100%'}>
-                <Image w="20%" h="100%" src={`${IMAGE_DOMAIN}products/${item.products[0].image}`} rounded={'30%'} alt="productImage"></Image>
+                <Image w="20%" h="100%" src={`${IMAGE_DOMAIN}product_image/${item.products[0].image}`} rounded={'30%'} alt="productImage"></Image>
                 <Flex m={'2%'} flexDirection={'column'}>
                   <Text fontSize={'xl'}>{item.products[0].name}</Text>
                   <Tag

@@ -3,16 +3,23 @@ import { Button, Divider, Flex, Image, List, ListIcon, ListItem, Table, TableCon
 import CommonDivider from '@src/components/common/divider/CommonDivider';
 import { IMAGE_DOMAIN } from '@src/const';
 import { useUser } from '@src/state/swr/useUser';
+import { Cart } from '@src/types/local';
 import PaymentModal from './PaymentModal';
 
-const Check = ({ address, data, setTabIndex }) => {
+type CheckType = {
+  address: string;
+  carts: Cart;
+  setTabIndex: Function;
+};
+
+const Check = ({ address, carts, setTabIndex }: CheckType) => {
   // console.log(data);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const user = useUser();
-  let totalCoast = null;
-  const productIds = [];
-  const quantity = [];
-  data.map(item => {
+  const { data: userData } = useUser();
+  let totalCoast: number = 0;
+  const productIds: Array<number> = [];
+  const quantity: Array<number> = [];
+  carts.map(item => {
     totalCoast += item.products[0].price * item.quantity;
     quantity.push(item.quantity);
     if (!productIds.includes(item.product_id)) productIds.push(item.product_id);
@@ -32,7 +39,7 @@ const Check = ({ address, data, setTabIndex }) => {
             <Tr borderBottom={'1px'} borderColor="blackAlpha.200">
               <Td background={'blackAlpha.100'}>お届け先</Td>
               <Td>
-                お名前&nbsp;：&nbsp;{user.data.name} 様<br />
+                お名前&nbsp;：&nbsp;{userData.data.name} 様<br />
                 <CommonDivider />
                 ご住所&nbsp;：&nbsp;{address}
               </Td>
@@ -48,9 +55,9 @@ const Check = ({ address, data, setTabIndex }) => {
         商品情報
       </Text>
       <Flex rounded={'xl'} w="100%" h={'40%'} alignSelf="center" border="solid" p={'3%'} borderColor={'blackAlpha.200'} overflowX="scroll">
-        {data.map((item, key) => (
+        {carts.map((item, key) => (
           <Flex key={key} justifyContent="space-around" mr={'10%'} w={'100%'} flexShrink={0}>
-            <Image w={'25%'} src={`${IMAGE_DOMAIN}products/${item.products[0].image}`} alt="productImage"></Image>
+            <Image w={'25%'} src={`${IMAGE_DOMAIN}product_image/${item.products[0].image}`} alt="productImage"></Image>
             <Flex w={'65%'} flexDir={'column'}>
               <Text fontSize={'lg'}>{item.products[0].name}</Text>
               <Text mb={'4%'} fontWeight={'bold'}>
@@ -130,7 +137,7 @@ const Check = ({ address, data, setTabIndex }) => {
       <PaymentModal
         setTabIndex={setTabIndex}
         quantity={quantity}
-        user_id={user.data.id}
+        user_id={userData.data.id}
         product_id={productIds}
         total_price={totalCoast}
         address={address}

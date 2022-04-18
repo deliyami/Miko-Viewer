@@ -62,6 +62,8 @@ export interface Pagination<T> {
 }
 
 export interface CommonDataResponse<T> {
+  map: any;
+  length: SetStateAction<number>;
   data: T;
 }
 
