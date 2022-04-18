@@ -10,6 +10,16 @@ const Layout = ({ children }) => {
   return (
     <AsyncBoundary pendingFallback={<CustomLoading />}>
       <main>{children}</main>
+      <style>
+        {`
+        body {
+          -ms-overflow-style: none;
+        }
+        body::-webkit-scrollbar {
+          display: none;
+        }
+        `}
+      </style>
     </AsyncBoundary>
   );
 };

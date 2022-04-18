@@ -97,7 +97,7 @@ const CurEnterInfo: FC = () => {
     return () => {};
   }, [router.isReady]);
 
-  if (!curTicket) return <Box>no ticket</Box>;
+  if (!curTicket || !concert) return <Box>no ticket</Box>;
 
   // const { ticket, concert } = curUserTicket;
 
