@@ -1,5 +1,5 @@
 import * as cam from '@mediapipe/camera_utils';
-import { Results } from '@mediapipe/pose';
+import { NormalizedLandmark, Results } from '@mediapipe/pose';
 import { sendToAllPeers } from '@src/helper';
 import { isOnMediaPipeState, latestMotionState, myStreamState, peerDataListState } from '@src/state/recoil';
 import { addedScoreForSeconds, roomMemberMotions } from '@src/state/shareObject';
@@ -19,30 +19,8 @@ type Props = {
 const VIDEO_WIDTH = 320;
 const VIDEO_HEIGHT = 240;
 
-const checkResultsY = (results: Results, point: number[], firstIndex: number) => {
-  if (results.poseLandmarks[firstIndex].y < results.poseLandmarks[firstIndex + 4].y && point.length === 0) {
-    point.push(0);
-  } else if (results.poseLandmarks[firstIndex + 4].y < (results.poseLandmarks[firstIndex].y + results.poseLandmarks[firstIndex + 2].y) / 2 && point.length !== 0) {
-    point.pop();
-    addedScoreForSeconds.addScore(Math.floor(Math.random() * 101) + 30);
-    console.log('팔들기', firstIndex);
-  }
-};
-
-const clapResultsX = (results: Results, point: number[]) => {
-  const maxValue = Math.max(results.poseLandmarks[15].x, results.poseLandmarks[16].x);
-  const minValue = Math.max(results.poseLandmarks[15].x, results.poseLandmarks[16].x);
-  if (!maxValue || !minValue) return;
-  if (maxValue - minValue < 0 && point.length === 0) {
-    point.push(0);
-  } else if (point.length !== 0) {
-    point.pop();
-    addedScoreForSeconds.addScore(Math.floor(Math.random() * 101) + 30);
-    console.log('박수 테스트');
-  }
-};
-
 /* eslint-disable */
+
 const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const myStream = useRecoilValue(myStreamState);
@@ -50,9 +28,26 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
   const isOnMediaPipe = useRecoilValue(isOnMediaPipeState);
   const motionState = useRecoilValue(latestMotionState);
   const user = useUser();
-  const pointRef = useRef<number[][]>([[], [], []]); //[[오른손],[왼손],[박수]]
+  const handRef = useRef<number[][]>([
+    [0, 0, 0],
+    [0, 0, 0],
+  ]); //[[오른손x,y,z],[왼손x,y,z]]
+  const scoreRef = useRef<number>(0);
   const myPeerId = user.data.uuid;
   const [peerChange, setPeerChange] = useState(false);
+
+  const userMotionScore = (before: number[], after: NormalizedLandmark) => {
+    if (after.visibility && after.visibility > 0.5) {
+      const newScore = Math.sqrt((after.x - before[0]) ** 2 + (after.y - before[1]) ** 2 + (after.z - before[2]) ** 2);
+      scoreRef.current += newScore;
+      const updateScore = Math.floor(scoreRef.current); // 1
+      scoreRef.current -= updateScore;
+      addedScoreForSeconds.addScore(updateScore);
+      before[0] = after.x;
+      before[1] = after.y;
+      before[2] = after.z;
+    }
+  };
 
   useEffect(() => {
     const sendInterval = setInterval(() => {
@@ -86,10 +81,9 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
           roomMemberMotions[myPeerId] = myMotion;
           sendMotionForFrames.setMotionStatus(myMotion);
         }
-
-        checkResultsY(results, pointRef.current[0], 12);
-        checkResultsY(results, pointRef.current[1], 11);
-        clapResultsX(results, pointRef.current[2]);
+        // 15 20
+        userMotionScore(handRef.current[0], results.poseLandmarks[15]);
+        userMotionScore(handRef.current[1], results.poseLandmarks[16]);
       }
     },
     [motionState, peers, user.data],
