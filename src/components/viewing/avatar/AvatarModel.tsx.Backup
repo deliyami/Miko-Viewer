@@ -1,5 +1,4 @@
-// import { model } from '@src/state/recoil';
-import { model } from '@src/state/shareObject';
+import { model } from '@src/state/recoil';
 import * as BABYLON from 'babylonjs';
 import 'babylonjs-loaders';
 import produce from 'immer';
@@ -84,10 +83,6 @@ export const AvatarModel: FC<{
                   bones,
                   originalBones,
                   scene,
-                  color: {
-                    body: 0,
-                    light: 0,
-                  },
                 };
               }),
             );
