@@ -1,10 +1,16 @@
-import { Box, Center, Stack, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, useColorModeValue } from '@chakra-ui/react';
+import { Box, Center, Stack, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useColorModeValue } from '@chakra-ui/react';
 import TicketBox from '@src/components/concert/TicketBox';
-import { Ticket } from '@src/types/share';
+import { Product, Ticket } from '@src/types/share';
 import React, { FC, useMemo, useState } from 'react';
+import ProductsTab from '../product/ProductsTab';
 
-const ConcertTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
-  const colors = useColorModeValue(['blue', 'red'], []);
+type Data = {
+  tickets: Ticket[];
+  products: Product[];
+};
+
+const ConcertTab: FC<Data> = ({ tickets, products }) => {
+  const colors = useColorModeValue(['blue', 'red', 'purple'], []);
   const [tabIndex, setTabIndex] = useState(0);
   const colorScheme = colors[tabIndex];
 
@@ -32,6 +38,7 @@ const ConcertTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
         <TabList>
           <Tab color="gray">販売中</Tab>
           <Tab color="gray">販売終了</Tab>
+          <Tab color="gray">グッズ</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -43,7 +50,11 @@ const ConcertTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
                   </Box>
                 ))
               ) : (
-                <Center my={10}>販売中のチケットがありません。</Center>
+                <Center my={10}>
+                  <Text color="gray.300" fontSize="3xl" cursor="default">
+                    販売中のチケットがありません。
+                  </Text>
+                </Center>
               )}
             </Stack>
           </TabPanel>
@@ -56,9 +67,16 @@ const ConcertTab: FC<{ data: Ticket[] }> = ({ data: tickets }) => {
                   </Box>
                 ))
               ) : (
-                <Center my={10}>販売終了のチケットがありません。</Center>
+                <Center my={10}>
+                  <Text color="gray.300" fontSize="3xl" cursor="default">
+                    販売終了のチケットがありません。
+                  </Text>
+                </Center>
               )}
             </Stack>
+          </TabPanel>
+          <TabPanel>
+            <ProductsTab products={products} />
           </TabPanel>
         </TabPanels>
       </Tabs>

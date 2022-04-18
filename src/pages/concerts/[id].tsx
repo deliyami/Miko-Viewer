@@ -4,8 +4,7 @@ import ConcertTab from '@src/components/concert/ConcertTab';
 import { IMAGE_DOMAIN } from '@src/const';
 import { convertDate, getPageLaravelData, getSingleLaravelData } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
-import { Concert, Ticket } from '@src/types/share';
-import { Pagination } from '@src/types/share/common';
+import { Concert, Product, Ticket } from '@src/types/share';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -14,7 +13,8 @@ import React, { FC, ReactElement } from 'react';
 
 type Data = {
   concert: Concert;
-  pageTicket: Pagination<Ticket>;
+  tickets: Ticket[];
+  products: Product[];
 };
 
 const LiveInformation: FC<{ data: Concert }> = ({ data: concert }) => {
@@ -52,9 +52,6 @@ const LiveInformation: FC<{ data: Concert }> = ({ data: concert }) => {
           <Text pt={{ base: '0', md: '4' }} pl={{ base: '0', md: '5' }}>
             {concert.artist}
           </Text>
-          <Button colorScheme="purple" ml={3} onClick={() => router.push(`/concerts/${router.query.id}/products`)}>
-            グッズ
-          </Button>
         </Flex>
         <Grid templateRows="repeat(2, 1fr)" templateColumns="repeat(5, 1fr)">
           <GridItem rowSpan={2} colSpan={1}>
@@ -86,15 +83,35 @@ const LiveInformation: FC<{ data: Concert }> = ({ data: concert }) => {
 export const getServerSideProps: GetServerSideProps<Data> = async context => {
   const concertId = parseInt(context.query.id as string, 10);
 
-  const concertPromise = getSingleLaravelData('/concerts', concertId, {});
-  const ticketsPromise = getPageLaravelData('/tickets', {
-    with: ['concert'],
-    filter: [['concert_id', concertId]],
-  });
+  try {
+    const concertPromise = getSingleLaravelData('/concerts', concertId, {});
+    const ticketsPromise = getPageLaravelData('/tickets', {
+      with: ['concert'],
+      filter: [['concert_id', concertId]],
+    });
+    const productsPromise = await getPageLaravelData('/products', {
+      filter: [['concert_id', concertId]],
+    });
 
-  const [concertsResult, ticketsResult] = await Promise.allSettled([concertPromise, ticketsPromise]);
+    const [concertsResult, ticketsResult, productsResult] = await Promise.allSettled([concertPromise, ticketsPromise, productsPromise]);
 
-  if (concertsResult.status === 'rejected' || ticketsResult.status === 'rejected') {
+    if (concertsResult.status === 'rejected' || ticketsResult.status === 'rejected' || productsResult.status === 'rejected') {
+      return {
+        redirect: {
+          destination: '/500',
+          permanent: false,
+        },
+      };
+    }
+
+    return {
+      props: {
+        concert: concertsResult.value.data,
+        tickets: ticketsResult.value.data,
+        products: productsResult.value.data,
+      },
+    };
+  } catch (error) {
     return {
       redirect: {
         destination: '/500',
@@ -102,16 +119,9 @@ export const getServerSideProps: GetServerSideProps<Data> = async context => {
       },
     };
   }
-
-  return {
-    props: {
-      concert: concertsResult.value.data,
-      pageTicket: ticketsResult.value,
-    },
-  };
 };
 
-export default function LiveDetailPage({ concert, pageTicket }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function LiveDetailPage({ concert, tickets, products }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
       <Head>
@@ -120,7 +130,7 @@ export default function LiveDetailPage({ concert, pageTicket }: InferGetServerSi
       <Flex direction="column" alignItems="center" p={3}>
         <Box>
           <LiveInformation data={concert} />
-          <ConcertTab data={pageTicket.data} />
+          <ConcertTab tickets={tickets} products={products} />
         </Box>
       </Flex>
     </>
