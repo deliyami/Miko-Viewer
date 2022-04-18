@@ -21,9 +21,11 @@ const CoinHistoryListView = () => {
   const query: CommonFSW = {
     page,
     perPage: PER_PAGE,
-    filter: [['user_id', userData.id]],
+    filter: [['user_id', userData?.id]],
   };
   const { data: coinData } = usePageLaravel('/coin_histories', query);
+
+  if (!coinData) return <Box>no ticket</Box>;
 
   return (
     <>

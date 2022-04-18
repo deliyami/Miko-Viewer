@@ -10,7 +10,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { ReactElement } from 'react';
 
-const PER_PAGE = 3;
+const PER_PAGE = 6;
 
 const UserTicketList = () => {
   const router = useRouter();

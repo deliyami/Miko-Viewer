@@ -1,4 +1,4 @@
-import { Box, Button, CSSObject, Flex, Heading, SimpleGrid, Spacer, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, CSSObject, Flex, Heading, HStack, SimpleGrid, Spacer, Text, VStack } from '@chakra-ui/react';
 import ConcertList from '@src/components/home/ConcertList';
 import MainRanking from '@src/components/home/MainRanking';
 import { getPageLaravelData } from '@src/helper/getDataFromLaravel';
@@ -18,28 +18,34 @@ type Data = {
 };
 
 interface SortItemProps {
-  name: string;
+  title: string;
+  subtitle: string;
   url: string;
 }
 
 const SortItems: Array<SortItemProps> = [
-  { name: 'New', url: '/concerts' },
-  { name: 'J-POP', url: '/concerts?category_id=1&page=1' },
-  { name: 'K-POP', url: '/concerts?category_id=2&page=1' },
+  { title: 'New', subtitle: '新着', url: '/concerts' },
+  { title: 'J-POP', subtitle: '', url: '/concerts?category_id=1&page=1' },
+  { title: 'K-POP', subtitle: '', url: '/concerts?category_id=2&page=1' },
 ];
 
 const SortList: FC<{ data: Concert[]; sortData: SortItemProps }> = ({ data, sortData }) => {
   return (
     <Box w="full" maxW="120vh">
-      <Flex py={3}>
-        <Heading>{sortData.name}</Heading>
+      <HStack py={6} mt={3}>
+        <Heading as="h2" size="2xl">
+          {sortData.title}
+        </Heading>
+        <Text pl={3} pt={5} fontSize="xl" fontWeight="bold">
+          {sortData.subtitle}
+        </Text>
         <Spacer />
         <Link href={sortData.url}>
           <a>
-            <Button mt={4}>더보기</Button>
+            <Button mt={3}>더보기</Button>
           </a>
         </Link>
-      </Flex>
+      </HStack>
       <SimpleGrid columns={[2, null, 4]} spacing="20px">
         <ConcertList data={data} />
       </SimpleGrid>
@@ -49,13 +55,16 @@ const SortList: FC<{ data: Concert[]; sortData: SortItemProps }> = ({ data, sort
 
 const TopList: FC<{ data: Concert[] }> = ({ data: concerts }) => {
   return (
-    <Box>
-      <Flex py={3}>
-        <Heading>Top 3</Heading>
-      </Flex>
-      <Box minW={{ xl: '120vh' }}>
-        <MainRanking data={concerts} />
-      </Box>
+    <Box w="full" maxW={{ xl: '170vh' }}>
+      <HStack pl={20}>
+        <Heading as="h2" size="2xl" mb={3} pl={20} ml={20}>
+          PICK UP
+        </Heading>
+        <Text pl={3} pt={5} fontSize="xl" fontWeight="bold">
+          おすすめ
+        </Text>
+      </HStack>
+      <MainRanking data={concerts} />
     </Box>
   );
 };
@@ -67,7 +76,7 @@ export const getStaticProps: GetStaticProps<Data> = async () => {
 
   const topResultPromise = getPageLaravelData('/concerts', {
     sort: ['-sales_volume'],
-    perPage: 3,
+    perPage: 12,
   });
 
   const newResultPromise = getPageLaravelData('/concerts', {
@@ -148,12 +157,15 @@ export default function HomePage({ newData, topData, jpopData, kpopData }: Infer
         <meta property="og:title" content="Miko" key="og:title" />
         <meta name="description" content="miko homepage, concert list" />
       </Head>
-      <Flex direction="column" alignItems="center" p={3}>
+      <Flex direction="column" alignItems="center">
         <Box>
           <LoginLeadBox />
-          <SortList data={newData} sortData={SortItems[0]} />
-          <SortList data={jpopData} sortData={SortItems[1]} />
-          <SortList data={kpopData} sortData={SortItems[2]} />
+          {/* <TopList data={topData} /> */}
+          <VStack>
+            <SortList data={newData} sortData={SortItems[0]} />
+            <SortList data={jpopData} sortData={SortItems[1]} />
+            <SortList data={kpopData} sortData={SortItems[2]} />
+          </VStack>
         </Box>
       </Flex>
     </>
