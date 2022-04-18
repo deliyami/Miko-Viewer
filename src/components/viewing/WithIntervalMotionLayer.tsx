@@ -1,6 +1,7 @@
 import { sendToAllPeers } from '@src/helper';
 import { setBone } from '@src/helper/dynamic/setBoneAvatar';
-import { latestMotionState, model, peerDataListState } from '@src/state/recoil';
+import { latestMotionState, peerDataListState } from '@src/state/recoil';
+import { modelListObject } from '@src/state/shareObject';
 import { roomMemberMotions, sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { useUser } from '@src/state/swr';
 import produce from 'immer';
@@ -10,7 +11,6 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 export const WithIntervalMotionLayer: FC<{ children: ReactElement }> = ({ children }) => {
   const { data: user } = useUser();
   const peers = useRecoilValue(peerDataListState);
-  const modelState = useRecoilValue(model);
   sendMotionForFrames.setPeerId(user.uuid);
 
   const setLatestMotionState = useSetRecoilState(latestMotionState);
@@ -41,7 +41,7 @@ export const WithIntervalMotionLayer: FC<{ children: ReactElement }> = ({ childr
           /* eslint-disable */
           for (const key in roomMemberMotions) {
             const newMotion = roomMemberMotions[key];
-            const userModel = modelState[key];
+            const userModel = modelListObject[key];
             if (newMotion && userModel && key !== user.uuid) {
               setBone(userModel, key, newMotion.pose, newMotion.face);
               draft[key] = newMotion;

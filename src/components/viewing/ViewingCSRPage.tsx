@@ -11,7 +11,6 @@ import ViewingSideMenuBar from './menu/ViewingSideMenuBar';
 import AudioAnalyser from './rightContainer/audioAnalyze/AudioAnalyser';
 import RankingView from './rightContainer/ranking/RankingView';
 import ViewingWindowEventLayout from './ViewingWindowEventLayout';
-import { WithIntervalMotionLayer } from './WithIntervalMotionLayer';
 import { WithIntervalTaskLayer } from './WithIntervalTaskLayer';
 import WithSocketEventLayout from './WithSocketEventLayout';
 
@@ -39,35 +38,33 @@ const ViewingCSRPage = () => {
   return (
     <ViewingWindowEventLayout>
       <WithSocketEventLayout>
-        <WithIntervalMotionLayer>
-          <WithIntervalTaskLayer>
-            <HStack width="100vw" h="full" position="relative" color="white" overflow="clip" backgroundColor="#181818">
-              <Center h="full" w="full" zIndex="0" position="absolute">
-                <canvas className={styles.ambiance} id="ambiance" />
-              </Center>
-              <VStack width="full" h="full" position="relative">
-                {IVSPlayer ? (
-                  <VideoPlayer />
-                ) : (
-                  <Center>
-                    <Text fontSize="7xl" color="whatsapp.100">
-                      Loading Player
-                    </Text>
-                  </Center>
-                )}
-                <ChatMessageInput />
-                <RoomAvatarView />
-              </VStack>
-              <DoneBallon width={150} x={200} y={-100} duration={2} delay={1}></DoneBallon>
-              <VStack width="25vw" h="100vh" maxH="100vh" overflow="hidden" zIndex="0">
-                <RankingView />
-                <ChatBox />
-                <AudioAnalyser />
-              </VStack>
-              <ViewingSideMenuBar zIndex="2" />
-            </HStack>
-          </WithIntervalTaskLayer>
-        </WithIntervalMotionLayer>
+        <WithIntervalTaskLayer>
+          <HStack width="100vw" h="full" position="relative" color="white" overflow="clip" backgroundColor="#181818">
+            <Center h="full" w="full" zIndex="0" position="absolute">
+              <canvas className={styles.ambiance} id="ambiance" />
+            </Center>
+            <VStack width="full" h="full" position="relative">
+              {IVSPlayer ? (
+                <VideoPlayer />
+              ) : (
+                <Center>
+                  <Text fontSize="7xl" color="whatsapp.100">
+                    Loading Player
+                  </Text>
+                </Center>
+              )}
+              <ChatMessageInput />
+              <RoomAvatarView />
+            </VStack>
+            <DoneBallon width={150} x={200} y={-100} duration={2} delay={1}></DoneBallon>
+            <VStack width="25vw" h="100vh" maxH="100vh" overflow="hidden" zIndex="0">
+              <RankingView />
+              <ChatBox />
+              <AudioAnalyser />
+            </VStack>
+            <ViewingSideMenuBar zIndex="2" />
+          </HStack>
+        </WithIntervalTaskLayer>
       </WithSocketEventLayout>
     </ViewingWindowEventLayout>
   );

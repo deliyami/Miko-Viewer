@@ -1,10 +1,7 @@
 // import { model } from '@src/state/recoil';
-import { model } from '@src/state/shareObject';
 import * as BABYLON from 'babylonjs';
 import 'babylonjs-loaders';
-import produce from 'immer';
 import { FC, useEffect, useRef } from 'react';
-import { useSetRecoilState } from 'recoil';
 
 export const AvatarModel: FC<{
   width: number;
@@ -15,7 +12,6 @@ export const AvatarModel: FC<{
 }> = ({ ...props }) => {
   const { width, height, path, peerId, ...rest } = props;
   const reactCanvas = useRef(null);
-  const setModel = useSetRecoilState(model);
   useEffect(() => {
     if (reactCanvas.current) {
       const onSceneReady = (scene: BABYLON.Scene) => {
@@ -77,20 +73,6 @@ export const AvatarModel: FC<{
             scene.materials[12].name = '0';
             createLights(bones, 15, r, g, b, d, scene);
             createLights(bones, 20, r, g, b, d, scene);
-
-            setModel(
-              produce(draft => {
-                draft[peerId] = {
-                  bones,
-                  originalBones,
-                  scene,
-                  color: {
-                    body: 0,
-                    light: 0,
-                  },
-                };
-              }),
-            );
             scene.render();
           });
         }
