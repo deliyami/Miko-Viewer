@@ -42,11 +42,11 @@ export const My3DAvatar = memo(() => {
             <AvatarModel
               width={AVATAR_SIZE}
               height={AVATAR_SIZE}
-              path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka_tmp.glb`}
-              myAvatar={true}
+              isMyAvatar={true}
               peerId={uuid}
-              antialias
-            ></AvatarModel>
+              onAntialias
+              path={`${NEXT_URL}/resources/babylonjs/models/proseka/proseka_tmp.glb`}
+            />
           </Box>
         )}
         <AvatarScore uuid={uuid} />

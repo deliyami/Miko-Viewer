@@ -1,8 +1,8 @@
 import * as cam from '@mediapipe/camera_utils';
 import { Results } from '@mediapipe/pose';
-import { toastLog } from '@src/helper';
+import { sendToAllPeers, toastLog } from '@src/helper';
 import { isOnMediaPipeState, latestMotionState, myStreamState, peerDataListState } from '@src/state/recoil';
-import { addedScoreForSeconds } from '@src/state/shareObject';
+import { addedScoreForSeconds, roomMemberMotions } from '@src/state/shareObject';
 import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { aPose } from '@src/state/shareObject/sharePose';
 import { useUser } from '@src/state/swr';
@@ -10,12 +10,6 @@ import { MotionInterface } from '@src/types/avatar/ChatMotionType';
 import * as Kalidokit from 'kalidokit';
 import React, { Dispatch, memo, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
-<<<<<<< HEAD
-=======
-import { sendToAllPeers, toastLog } from '@src/helper';
-import { isOnMediaPipeState, latestMotionState, myStreamState, peerDataListState } from '@src/state/recoil';
-import { addedScoreForSeconds, roomMemberMotions } from '@src/state/shareObject';
->>>>>>> tmp2
 
 type Props = {
   //   isMediaPipeSetup: boolean;
