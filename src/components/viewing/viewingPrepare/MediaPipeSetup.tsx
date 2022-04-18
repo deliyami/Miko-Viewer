@@ -1,6 +1,5 @@
 import * as cam from '@mediapipe/camera_utils';
 import { Results } from '@mediapipe/pose';
-import { toastLog } from '@src/helper';
 import { setBone } from '@src/helper/dynamic/setBoneAvatar';
 import { isOnMediaPipeState, latestMotionState, model, myStreamState, peerDataListState } from '@src/state/recoil';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
@@ -12,9 +11,8 @@ import React, { Dispatch, memo, SetStateAction, useCallback, useEffect, useRef, 
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
 
 type Props = {
-  //   isMediaPipeSetup: boolean;
   setIsMediaPipeSetup: Dispatch<SetStateAction<boolean>>;
-  setMediaPipeError: SetterOrUpdater<string>;
+  setMediaPipeError: SetterOrUpdater<string | undefined>;
 };
 
 const VIDEO_WIDTH = 320;
@@ -78,34 +76,39 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
   useEffect(() => {
     let camera: cam.Camera;
     let latestPoseEnded = true;
+    let latestUpdate = 0;
     const setupMediapipe = () => {
       if (videoRef.current) {
         let isMediaPipeSetup = false;
         camera = new cam.Camera(videoRef?.current, {
           onFrame: async () => {
-            try {
-              await aPose.initialize();
-              if (latestPoseEnded && isOnMediaPipe) {
-                latestPoseEnded = false;
-                //  TODO  send 2번쨰 인자 at 의미
-                aPose
-                  .send({ image: videoRef.current })
-                  .then(() => {
-                    latestPoseEnded = true;
-                  })
-                  .catch(err => {
-                    console.error('media pipe error', err);
-                  });
-              } else {
-              }
-              if (!isMediaPipeSetup) {
-                isMediaPipeSetup = true;
-                setIsMediaPipeSetup(true);
-              }
-            } catch (err) {
-              toastLog('error', 'mediaPipe error');
-              console.error(err);
-              setMediaPipeError(err);
+            if (!isMediaPipeSetup) {
+              await aPose
+                .initialize()
+                .then(() => {
+                  isMediaPipeSetup = true;
+                  setIsMediaPipeSetup(true);
+                })
+                .catch(err => {
+                  console.error(err);
+                  // toastLog('error', 'mediaPipe error');
+                  setMediaPipeError(err);
+                });
+            }
+            //  TODO 적당한 시간 조절, 프레임  제한 로직 조절
+            if (latestPoseEnded && isOnMediaPipe && videoRef.current && latestUpdate + 40 < Date.now()) {
+              latestPoseEnded = false;
+              //  TODO  send 2번쨰 인자 at 의미
+              aPose
+                .send({ image: videoRef.current })
+                .then(() => {
+                  latestPoseEnded = true;
+                  latestUpdate = Date.now();
+                })
+                .catch(err => {
+                  console.error('media pipe error', err);
+                });
+            } else {
             }
           },
           width: VIDEO_WIDTH,
@@ -118,7 +121,7 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
         setPeerChange(true);
       }
     };
-    if (myStream) {
+    if (myStream && videoRef.current) {
       const videoElement = videoRef.current;
       videoElement.srcObject = myStream;
       videoElement.volume = 0;
@@ -152,5 +155,7 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
     </>
   );
 });
+
+MediaPipeSetup.displayName = 'MediaPipeSetup';
 
 export default MediaPipeSetup;

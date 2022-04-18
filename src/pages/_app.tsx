@@ -29,9 +29,9 @@ type AppPropsWithLayout = AppProps & {
 
 declare global {
   interface Window {
-    socket: Socket;
-    myPeer: Peer;
-    IVSPlayer: typeof ivs;
+    socket?: Socket;
+    myPeer?: Peer;
+    IVSPlayer?: typeof ivs;
   }
 }
 

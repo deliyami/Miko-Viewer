@@ -10,7 +10,7 @@ export const useMyPeer = () => {
   const myPeer = useRef<ExtendPeer>(
     (window.myPeer as ExtendPeer) ??
       (new Peer(data.uuid, {
-        debug: 2,
+        debug: 3,
         host: process.env.NEXT_PUBLIC_PEER_HOST ?? '0.peerjs.com', // default 0.peerjs.com
         port: process.env.NEXT_PUBLIC_PEER_PORT ? parseInt(process.env.NEXT_PUBLIC_PEER_PORT, 10) : 443, // default 443
         path: process.env.NEXT_PUBLIC_PEER_PATH ?? '/', // default '/'

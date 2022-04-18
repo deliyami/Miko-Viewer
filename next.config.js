@@ -15,9 +15,11 @@ const withInterceptStdout = require('next-intercept-stdout')(
 
 const ContentSecurityPolicy = `
   media-src blob:;
-  worker-src blob:;
-  connect-src 'self' *.mikopj.live *.live-video.net;
-  script-src  'self' *.mikopj.live 'wasm-unsafe-eval'   ;
+  worker-src 'self' blob:;
+  font-src 'self' fonts.gstatic.com fonts.googleapis.com;
+  style-src 'self' 'unsafe-inline' fonts.googleapis.com;
+  connect-src 'self' *.mikopj.live *.live-video.net cdn.jsdelivr.net fonts.gstatic.com fonts.googleapis.com vitals.vercel-insights.com;
+  script-src  'self' *.mikopj.live 'wasm-unsafe-eval' 'unsafe-eval' cdn.jsdelivr.net;
 `;
 
 //  Image
@@ -49,15 +51,16 @@ const nextConfig = {
     modularizeImports: {},
   },
   compiler: {
-    removeConsole: {
-      exclude: ['error', 'info'],
-    },
+    // removeConsole: {
+    //   exclude: ['error', 'info'],
+    // },
   },
   productionBrowserSourceMaps: true, // default false , true로하면 빌드시간이 매우 상승하지만 디버깅에 조워짐 + 권장사항 점수 상승
   swcMinify: true,
   reactStrictMode: false, // 이거 하니깐 Socket 에러남
   compress: true, // default nginx에서 압축할 경우 false
   distDir: '.next', // default
+  optimizeFonts: true, // default true
   generateBuildId: async () => {
     return Date.now().toString(); // 다중 서버를 할 경우 같은 값이 되어야함.
   },

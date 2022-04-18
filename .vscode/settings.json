@@ -33,7 +33,9 @@
     "chakra",
     "chartjs",
     "googlebot",
+    "gstatic",
     "jpop",
+    "jsdelivr",
     "Kakao",
     "kalidokit",
     "Kpop",
@@ -51,6 +53,7 @@
     "REBUFFERING",
     "usehooks",
     "wasmworker",
+    "webrtc",
     "YMDHM"
   ]
 }

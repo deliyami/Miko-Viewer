@@ -68,7 +68,7 @@ const ImageBadge: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
 
   return (
     <HStack align="stretch">
-      <Image w="120px" h="120px" objectFit="cover" alt="concertImage" fallbackSrc="/defaultImage.png" src={IMAGE_DOMAIN + userTicket.concert.coverImage} />
+      <Image w="120px" h="120px" objectFit="cover" alt="concertImage" fallbackSrc="/image/defaultImage.png" src={IMAGE_DOMAIN + userTicket.concert.coverImage} />
       {previewAlarm && (
         <Box>
           <Badge variant="solid" colorScheme="blue" fontSize="13px">

@@ -123,7 +123,7 @@ const UserInfoBox = () => {
         <Menu>
           <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>
             <HStack>
-              <Avatar size={'md'} src={IMAGE_DOMAIN + data.avatar} />
+              <Avatar size={'md'} {...(data.avatar ? { src: IMAGE_DOMAIN + data.avatar } : {})} />
               <VStack display={{ base: 'none', md: 'flex' }} alignItems="flex-start" spacing="1px" ml="2">
                 <Text fontSize="md">{data.name}</Text>
                 <Text fontSize="xs" color="gray.600">
