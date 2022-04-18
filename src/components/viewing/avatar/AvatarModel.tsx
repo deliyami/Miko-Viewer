@@ -1,7 +1,8 @@
 // import { model } from '@src/state/recoil';
+import { toastLog } from '@src/helper';
 import { roomMemberMotions } from '@src/state/shareObject';
 import 'babylonjs-loaders';
-import { FC, useEffect, useRef } from 'react';
+import { FC, useEffect } from 'react';
 
 export const AvatarModel: FC<{
   width: number;
@@ -11,15 +12,29 @@ export const AvatarModel: FC<{
   onAntialias?: boolean | undefined;
   isMyAvatar?: boolean | undefined;
 }> = ({ height, path, peerId, width, onAntialias, isMyAvatar }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    if (!canvasRef.current) return;
+  const tagId = 'avatar' + peerId;
 
+  useEffect(() => {
     const worker = new Worker(new URL('@src/worker/AvatarModel.worker.ts', import.meta.url), { type: 'module' });
 
+    worker.onerror = e => {
+      toastLog('error', 'avatar worker error', '', e.error);
+    };
+    worker.onmessageerror = e => {
+      toastLog('error', 'avatar worker mesage error', '');
+      console.log('worker message error', e);
+    };
+
     if ('OffscreenCanvas' in window) {
-      const offCanvas = canvasRef.current.transferControlToOffscreen();
-      worker.postMessage({ type: 'init', canvas: offCanvas, path, width, height, newPeerId: peerId }, [offCanvas]);
+      const aCanvas = document.getElementById(tagId) as HTMLCanvasElement;
+      if (!aCanvas.className) {
+        aCanvas.className = 'used-canvas-one-more-time';
+        const offCanvas = aCanvas.transferControlToOffscreen();
+
+        worker.postMessage({ type: 'init', canvas: offCanvas, path, width, height, newPeerId: peerId }, [offCanvas]);
+      }
+    } else {
+      toastLog('info', 'OffScreen Canvas 미지원 브라우저');
     }
 
     const avatarSettingInterval = setInterval(() => {
@@ -31,7 +46,7 @@ export const AvatarModel: FC<{
       worker.terminate();
       clearInterval(avatarSettingInterval);
     };
-  }, [canvasRef]);
+  }, []);
 
-  return <canvas ref={canvasRef} />;
+  return <canvas id={tagId} />;
 };
