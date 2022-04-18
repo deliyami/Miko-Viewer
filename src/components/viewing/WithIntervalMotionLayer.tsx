@@ -1,3 +1,5 @@
+// 안씀 지워야 함
+
 import { sendToAllPeers } from '@src/helper';
 import { setBone } from '@src/helper/dynamic/setBoneAvatar';
 import { latestMotionState, peerDataListState } from '@src/state/recoil';
@@ -50,7 +52,7 @@ export const WithIntervalMotionLayer: FC<{ children: ReactElement }> = ({ childr
           }
         }),
       );
-    }, 50);
+    }, 60);
 
     return () => {
       clearInterval(updateLatestMyMotionInterval);
