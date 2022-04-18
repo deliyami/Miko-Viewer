@@ -4,7 +4,7 @@ import { BiVolumeFull } from '@react-icons/all-files/bi/BiVolumeFull';
 import { BiVolumeMute } from '@react-icons/all-files/bi/BiVolumeMute';
 import { IoPause } from '@react-icons/all-files/io5/IoPause';
 import { IoPlay } from '@react-icons/all-files/io5/IoPlay';
-import { toastLog } from '@src/helper';
+import { dayIsBetween, toastLog } from '@src/helper';
 import { useIvsPlayer } from '@src/hooks/dynamicHooks';
 import { enterTicketDataState, isOnVideoAmbianceState, msgMetaDataState, quizMetaDataState, quizResultMetaDataState } from '@src/state/recoil';
 import { AllMetaData } from '@src/types/share';
@@ -115,15 +115,28 @@ const VideoPlayer: FC = () => {
       }
     };
 
+    const tryLoadAndPlay = () => {
+      player.current?.load(enterTicketData.playbackUrl + '?token=' + jwt);
+      player.current?.play();
+    };
+
     const onError = (err: any) => {
       if (!player.current) return;
       const errorType = err.type as ivs.ErrorType;
       switch (errorType) {
         case 'ErrorNoSource': // url 자체가 잘못됨.
-          toastLog('error', '스트리밍 url이 잘못됨');
+          toastLog('error', '스트리밍 url이 잘못됨', '시딩을 확인해주세요.');
           break;
         case 'ErrorNotAvailable': // IVS에서 스트리밍 주이지 않음. , 429명 인원초과, 404면 미방송
-          toastLog('info', '스트리밍중이 아님.');
+          if (dayIsBetween(enterTicketData.concertStartDate, enterTicketData.concertEndDate)) {
+            toastLog('info', '스트리밍 시작을 기달려주세요.', '10초 간격으로 확인합니다.');
+            setTimeout(() => {
+              tryLoadAndPlay();
+            }, 10000);
+          } else {
+            toastLog('error', '콘서트 시간이 아닙니다. 뒤로가집니다.。');
+            router.push('/');
+          }
           break;
         case 'ErrorNetwork':
         case 'ErrorNetworkIO':
@@ -133,9 +146,10 @@ const VideoPlayer: FC = () => {
           toastLog('error', 'ive timeout', '', err);
           break;
         default:
-          toastLog('error', 'IVS Player ERROR', '', err);
-          player.current.load(enterTicketData.playbackUrl + '?token=' + jwt);
-          player.current.play();
+          toastLog('error', 'IVS Player ERROR', '5초후 재시도', err);
+          setTimeout(() => {
+            tryLoadAndPlay();
+          }, 5000);
           break;
       }
     };

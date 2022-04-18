@@ -26,3 +26,5 @@ export const convertDate = (data: dayjs.ConfigType, format: keyof typeof FORMAT 
 export const convertDateUTC = (data: dayjs.ConfigType, format: keyof typeof FORMAT = 'YMD') => {
   return dayjs.utc(data).format(FORMAT[format]);
 };
+
+export const dayIsBetween = (day1: dayjs.ConfigType, day2: dayjs.ConfigType) => dayjs().isBetween(day1, day2);
