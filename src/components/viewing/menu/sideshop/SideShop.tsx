@@ -16,11 +16,24 @@ import {
 import { BiArrowFromLeft } from '@react-icons/all-files/bi/BiArrowFromLeft';
 import { BiArrowFromRight } from '@react-icons/all-files/bi/BiArrowFromRight';
 import { FaGift } from '@react-icons/all-files/fa/FaGift';
+import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import { useUser } from '@src/state/swr';
 import { useSingleLaravel } from '@src/state/swr/useLaravel';
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import React, { FC, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import Cart from './Carts';
 import Product from './Product';
+
+const CartView: FC<{ cartIsOpen: boolean; setCartCount: (value: React.SetStateAction<number>) => void }> = ({ cartIsOpen, setCartCount }) => {
+  const { data: userData } = useUser();
+  const cart = useSingleLaravel('/cart_products', userData?.id, {});
+  useEffect(() => {
+    setCartCount(cart.data?.length);
+  }, [cart.data?.length]);
+
+  if (cartIsOpen && cart.data) return <Cart cart={cart.data.data}></Cart>;
+
+  return <Product />;
+};
 
 const SideShop = forwardRef((_, ref) => {
   const [cartCount, setCartCount] = useState(0);
@@ -28,11 +41,7 @@ const SideShop = forwardRef((_, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = useState(true);
   const [opacity, setOpacity] = useState(100);
-  const { data: userData } = useUser();
-  const cart = useSingleLaravel('/cart_products', userData?.id, {});
-  useEffect(() => {
-    setCartCount(cart.data?.length);
-  }, [cart.data?.length, cartCount]);
+
   useImperativeHandle(ref, () => ({
     open: () => {
       onOpen();
@@ -74,7 +83,9 @@ const SideShop = forwardRef((_, ref) => {
           <SliderThumb />
         </Slider>
         <DrawerBody bg={'white'} mt={'10px'}>
-          {cartOpen === false ? <Product></Product> : <Cart cart={cart}></Cart>}
+          <AsyncBoundary>
+            <CartView cartIsOpen={cartOpen} setCartCount={setCartCount} />
+          </AsyncBoundary>
         </DrawerBody>
         <DrawerFooter>
           <Button
