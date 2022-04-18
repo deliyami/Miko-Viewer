@@ -2,7 +2,7 @@ import * as cam from '@mediapipe/camera_utils';
 import { Results } from '@mediapipe/pose';
 import { toastLog } from '@src/helper';
 import { setBone } from '@src/helper/dynamic/setBoneAvatar';
-import { isOnMediaPipeState, latestMotionState, model, myStreamState, peerDataListState } from '@src/state/recoil';
+import { isOnMediaPipeState, latestMotionState, modelListState, myStreamState, peerDataListState } from '@src/state/recoil';
 import { addedScoreForSeconds } from '@src/state/shareObject/shareAddedScoreForSeconds';
 import { sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { aPose } from '@src/state/shareObject/sharePose';
@@ -36,7 +36,7 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
   const peers = useRecoilValue(peerDataListState);
   const isOnMediaPipe = useRecoilValue(isOnMediaPipeState);
   const motionState = useRecoilValue(latestMotionState);
-  const modelState = useRecoilValue(model);
+  const modelState = useRecoilValue(modelListState);
   const user = useUser();
   const pointRef = useRef<number[][]>([[], [], []]); //[[오른손],[왼손],[박수]]
   const myPeerId = user.data.uuid;

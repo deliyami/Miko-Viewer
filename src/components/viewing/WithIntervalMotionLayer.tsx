@@ -1,6 +1,6 @@
 import { sendToAllPeers } from '@src/helper';
 import { setBone } from '@src/helper/dynamic/setBoneAvatar';
-import { latestMotionState, model, peerDataListState } from '@src/state/recoil';
+import { latestMotionState, modelListState, peerDataListState } from '@src/state/recoil';
 import { roomMemberMotions, sendMotionForFrames } from '@src/state/shareObject/shareMotionObject';
 import { useUser } from '@src/state/swr';
 import produce from 'immer';
@@ -10,7 +10,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 export const WithIntervalMotionLayer: FC<{ children: ReactElement }> = ({ children }) => {
   const { data: user } = useUser();
   const peers = useRecoilValue(peerDataListState);
-  const modelState = useRecoilValue(model);
+  const modelState = useRecoilValue(modelListState);
   sendMotionForFrames.setPeerId(user.uuid);
 
   const setLatestMotionState = useSetRecoilState(latestMotionState);

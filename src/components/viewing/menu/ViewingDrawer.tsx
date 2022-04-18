@@ -17,7 +17,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { setAvatarColor, setLightColor } from '@src/helper/dynamic/setAvatarColor';
-import { enterRoomIdAsyncState, isOnAvatarState, isOnVideoAmbianceState, model } from '@src/state/recoil';
+import { enterRoomIdAsyncState, isOnAvatarState, isOnVideoAmbianceState, modelListState } from '@src/state/recoil';
 import { useUser } from '@src/state/swr';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -31,7 +31,7 @@ const ViewingSettingDrawer = forwardRef((_, ref) => {
   const avatarColorRef = useRef(null);
   const lightColorRef = useRef(null);
   const { data: user } = useUser();
-  const models = useRecoilValue(model);
+  const models = useRecoilValue(modelListState);
   // models[user.uuid].scene.materials[10].name
   useImperativeHandle(ref, () => ({
     open: () => {

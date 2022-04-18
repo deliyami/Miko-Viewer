@@ -1,5 +1,5 @@
 import { Center } from '@chakra-ui/react';
-import { model } from '@src/state/recoil';
+import { modelListState } from '@src/state/recoil';
 import { FC, useEffect, useRef } from 'react';
 import { useSetRecoilState } from 'recoil';
 
@@ -12,7 +12,7 @@ const AvatarModel: FC<{
 }> = ({ ...props }) => {
   const { width, height, path, peerId, ...rest } = props;
   const canvasRef = useRef(null);
-  const setModel = useSetRecoilState(model);
+  const setModel = useSetRecoilState(modelListState);
   useEffect(() => {
     console.log('start');
     const worker = new Worker(new URL('@src/worker/AvatarModel.worker.ts', import.meta.url), { type: 'module' });
