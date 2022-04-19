@@ -28,8 +28,8 @@ const Search = () => {
         value={searchQuery}
         placeholder="Search"
         onKeyUp={enterKey}
-        focusBorderColor="#1CE0D7"
         variant="flushed"
+        focusBorderColor="#1CE0D7"
         _hover={{ borderBottomColor: '#1CE0D7' }}
         onChange={onChangeSearch}
         type={'search'}

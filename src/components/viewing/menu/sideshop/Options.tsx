@@ -1,17 +1,19 @@
 import { Flex, Select } from '@chakra-ui/react';
-import { ChangeEventHandler, useState } from 'react';
+import { ChangeEventHandler } from 'react';
 
 type OptionType = {
   stock: number;
   color: string;
   size: string;
+  setStock: Function;
+  setColor: Function;
+  setSize: Function;
+  sizeValue: string;
+  colorValue: string;
+  stockValue: number;
 };
 
-export default function Options({ stock, color, size }: OptionType) {
-  const [stockValue, setStock] = useState(0);
-  const [colorValue, setColor] = useState('');
-  const [sizeValue, setSize] = useState('');
-
+export default function Options({ setStock, setColor, setSize, sizeValue, colorValue, stockValue, stock, color, size }: OptionType) {
   const onCountChange: ChangeEventHandler<HTMLSelectElement> = event => {
     console.log(event.target?.value);
     setStock(parseInt(event.target?.value, 10));

@@ -6,13 +6,13 @@ type CartType = {
 };
 
 const Carts = ({ cart }: CartType) => {
-  // alert(JSON.stringify(cart.data.map()));
+  // alert(JSON.stringify(cart));
   // cart.data.map((item, key) => {
   //   alert(item.id);
   // });
   return (
     <Flex>
-      {cart.data?.map((item, key) => {
+      {cart?.map((item: Cart, key: number) => {
         return (
           <Flex key={key} flexDir={'column'}>
             <Text>{item.color}</Text>

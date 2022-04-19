@@ -29,10 +29,10 @@ const CartView: FC<{ cartIsOpen: boolean; setCartCount: (value: React.SetStateAc
   useEffect(() => {
     setCartCount(cart.data?.length);
   }, [cart.data?.length]);
+  // alert(JSON.stringify(cart));
+  if (cartIsOpen && cart.data) return <Cart cart={cart.data}></Cart>;
 
-  if (cartIsOpen && cart.data) return <Cart cart={cart.data.data}></Cart>;
-
-  return <Product />;
+  return <Product setCartCount={setCartCount} />;
 };
 
 const SideShop = forwardRef((_, ref) => {
@@ -54,11 +54,20 @@ const SideShop = forwardRef((_, ref) => {
   } else {
     sizeValue = 'md';
   }
+
+  // const [bg, setBg] = useState('100');
+
   const onOpacity = (event: number) => {
     if (event > 31) {
       setOpacity(event);
     }
-    // alert(ov);
+    // if (event === 100) {
+    //   setBg(`rgba(255,255,255, 1)`);
+    //   // bg = `rgba(255,255,255)`;/
+    // } else {
+    //   setBg(`rgba(255,255,255, .${event / 10})`);
+    // }
+    // // alert(ov);
   };
 
   return (
@@ -67,9 +76,6 @@ const SideShop = forwardRef((_, ref) => {
         <Button position={'absolute'} _focus={{ border: 'none' }} top="7px" right="1px" w={'40px'} onClick={() => setSize(!size)} variant="unstyled">
           {!size ? <BiArrowFromLeft fontSize={'25px'} /> : <BiArrowFromRight fontSize={'25px'} />}
         </Button>
-        {/* <DrawerCloseButton border={'solid'}>
-          <FaRegWindowMaximize />
-        </DrawerCloseButton> */}
         <DrawerHeader>
           <Flex cursor={'default'} border={'1px'} p="8px" w={'180px'} color="white" justifyContent="center" borderRadius={'2xl'} alignItems="center" background="#1CE0D7">
             <Text>グッズリスト</Text>
@@ -82,7 +88,7 @@ const SideShop = forwardRef((_, ref) => {
           </SliderTrack>
           <SliderThumb />
         </Slider>
-        <DrawerBody bg={'white'} mt={'10px'}>
+        <DrawerBody mt={'10px'}>
           <AsyncBoundary>
             <CartView cartIsOpen={cartOpen} setCartCount={setCartCount} />
           </AsyncBoundary>

@@ -7,7 +7,11 @@ import { useRecoilValue } from 'recoil';
 import ProductList from './ProductList';
 import Search from './Search';
 
-export default function Product() {
+type Type = {
+  setCartCount: Function;
+};
+
+export default function Product({ setCartCount }: Type) {
   const enterTicketData = useRecoilValue(enterTicketDataState);
   const { data: products } = usePageLaravel('/products', { filter: [['concert_id', enterTicketData?.id]] });
   const [selected, setSelected] = useState<'新着順' | '売れている順' | '価格が安い順' | '価格が高い順'>('新着順');
@@ -48,9 +52,9 @@ export default function Product() {
         </Flex>
       </label>
       {products ? (
-        <Flex flexDir={'column'} overflow="auto">
+        <Flex flexWrap={'wrap'} alignItems="center" p={'4%'} justifyContent="space-between" overflow="auto">
           {sortedProduct?.map((product, key) => {
-            return <ProductList key={key} product={product}></ProductList>;
+            return <ProductList setCartCount={setCartCount} key={key} product={product}></ProductList>;
           })}
         </Flex>
       ) : (
