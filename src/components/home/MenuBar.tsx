@@ -20,6 +20,7 @@ import {
   useDisclosure,
   VStack,
 } from '@chakra-ui/react';
+import { CgProfile } from '@react-icons/all-files/cg/CgProfile';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiHome } from '@react-icons/all-files/fi/FiHome';
 import { FiList } from '@react-icons/all-files/fi/FiList';
@@ -195,7 +196,7 @@ const SideBarMyPageMenu = () => {
           onClick={() => {
             onToggle();
           }}
-          link={{ name: 'My Page' }}
+          link={{ name: 'My Page', icon: CgProfile }}
         />
       )}
       <Collapse in={isActive} animateOpacity>

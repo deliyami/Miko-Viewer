@@ -141,7 +141,7 @@ const CurEnterInfo: FC = () => {
   const [transHover, setTransHover] = useState(false);
   return (
     <Container maxW={'7xl'}>
-      <Stack align={'center'} spacing={{ base: 8, md: 10 }} py={{ base: 20, md: 28 }} direction={{ base: 'column', md: 'row' }}>
+      <Stack align={'center'} spacing={{ base: 8, md: 10 }} py={{ base: 4, md: 6 }} direction={{ base: 'column', md: 'row' }}>
         <Stack flex={1} spacing={{ base: 5, md: 5 }}>
           <Box>
             <Heading fontWeight={600} fontSize={{ base: '3xl', sm: '4xl', lg: '6xl' }}>

@@ -106,7 +106,7 @@ const ConcertListView: FC<{ query: CommonFSW; iniData: Pagination<Concert> }> = 
 
   return (
     <Box>
-      <SimpleGrid columns={[2, null, 3]} spacing="35px" pt={4} pb={20}>
+      <SimpleGrid columns={[2, null, 4]} spacing="35px" pt={4} pb={20}>
         <ConcertList data={pageConcert.data} />
       </SimpleGrid>
       <PaginationBtn data={pageConcert.meta} options={{ shallow: true }} />
