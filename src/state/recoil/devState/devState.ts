@@ -10,7 +10,7 @@ export const isOnAvatarState = atom<boolean>({
 
 export const isOnVideoAmbianceState = atom<boolean>({
   key: 'isOnVideoAmbianceState',
-  default: true,
+  default: false,
   effects: [localStorageBooleanEffect('isOnVideoAmbianceState')],
 });
 
@@ -34,7 +34,7 @@ export const isOnMyRankingState = atom<boolean>({
 
 export const isOnAudioAnalyzerState = atom<boolean>({
   key: 'isOnAudioAnalyzerState',
-  default: true,
+  default: false,
   effects: [localStorageBooleanEffect('isOnAudioAnalyzerState')],
 });
 
@@ -46,13 +46,13 @@ export const isOnChatState = atom<boolean>({
 
 export const isOnPeerSoundState = atom<boolean>({
   key: 'isOnPeerSoundState',
-  default: true,
+  default: false,
   effects: [localStorageBooleanEffect('isOnPeerSoundState')],
 });
 
 export const prepareAnimationDurationState = atom<number>({
   key: 'prepareAnimationDurationState',
-  default: 2,
+  default: 1,
   effects: [localStorageNumberEffect('prepareAnimationDurationState')],
 });
 
