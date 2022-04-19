@@ -1,6 +1,7 @@
 import { CommonProps } from './common';
 
 export interface Product extends CommonProps {
+  sort: any;
   concertId: number;
   price: number;
   name: string;

@@ -1,10 +1,18 @@
 import { Button, Flex, Input, Text } from '@chakra-ui/react';
 import { FaArrowRight } from '@react-icons/all-files/fa/FaArrowRight';
 import CommonDivider from '@src/components/common/divider/CommonDivider';
+import { useSingleLaravel } from '@src/state/swr/useLaravel';
 import Address from './Address';
 import NotifyCheck from './NotifyCheck';
 
-const Info = ({ address, setAddress, tabIndex, setTabIndex }) => {
+type InfoType = {
+  address: String;
+  setAddress: Function;
+  tabIndex: number;
+  setTabIndex: Function;
+};
+
+const Info = ({ address, setAddress, tabIndex, setTabIndex }: InfoType) => {
   // console.log(address);
   function goNext() {
     if (address === '   -') {
@@ -13,6 +21,8 @@ const Info = ({ address, setAddress, tabIndex, setTabIndex }) => {
       setTabIndex(tabIndex + 1);
     }
   }
+  const products = useSingleLaravel('/products', 1, {});
+  console.log(products);
   return (
     <Flex flexDirection={'column'} w={'50%'} h="100%" p={'2%'} ml={'25%'}>
       <Flex mt={'14%'} justifyContent={'space-between'} alignItems={'center'}>

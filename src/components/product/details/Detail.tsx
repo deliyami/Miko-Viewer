@@ -12,7 +12,7 @@ const Detail = item => {
       <Text w={'50%'} border={'1px'} p="2%">
         {item.item.detail}
       </Text>
-      <Image src={`${IMAGE_DOMAIN}products/${item.item.image}`}></Image>
+      <Image src={`${IMAGE_DOMAIN}product_image/${item.item.image}`} alt="product_image"></Image>
     </Flex>
   );
 };

@@ -1,6 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react';
 import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import AllItem from '@src/components/product/AllItem';
+import Details from '@src/components/product/details/Details';
 import ProductDetail from '@src/components/product/ProductDetail';
 import { getPageLaravelData, getSingleLaravelData } from '@src/helper';
 import BasicLayout from '@src/layout/BasicLayout';
@@ -49,7 +50,7 @@ export default function ProductPage({ anotherProducts, curProduct }: InferGetSer
         <ProductDetail item={curProduct}></ProductDetail>
       </Box>
       <AllItem allItem={anotherProducts}></AllItem>
-      {/* <Details item={item.data}></Details> */}
+      <Details item={curProduct}></Details>
     </Flex>
   );
 }
