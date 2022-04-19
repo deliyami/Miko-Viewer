@@ -16,6 +16,7 @@ export const DoneBallon: FC<Props> = props => {
   const socket = useSocket();
 
   const getBroadcastedNewDone = (data: DoneSendInterface) => {
+    console.log('도네 받았다', waitingDone.length, waitingDone);
     waitingDone[waitingDone.length] = data;
     setDoneApt(e => {
       if (!e) {
@@ -32,6 +33,7 @@ export const DoneBallon: FC<Props> = props => {
   }, [socket]);
 
   const doneHandler = () => {
+    console.log('2실행');
     const thisDone = waitingDone[0];
     if (typeof thisDone === 'undefined') {
       setDoneApt(false);
@@ -41,12 +43,14 @@ export const DoneBallon: FC<Props> = props => {
     setIsRunning(true);
   };
   useEffect(() => {
+    console.log('1실행');
     if (!doneApt) {
       return;
     }
     doneHandler();
   }, [doneApt]);
   const retry = () => {
+    console.log('first');
     setIsRunning(false);
     setNowDone(undefined);
     waitingDone.shift();
@@ -57,8 +61,8 @@ export const DoneBallon: FC<Props> = props => {
   return (
     <>
       {isRunning ? (
-        <DoneAnimationBox retry={retry} {...props}>
-          <DoneIcon width={props.width} path={nowDone}></DoneIcon>
+        <DoneAnimationBox retry={retry} x={200} y={-100} duration={1} delay={1}>
+          <DoneIcon width={300} path={nowDone}></DoneIcon>
         </DoneAnimationBox>
       ) : (
         <></>

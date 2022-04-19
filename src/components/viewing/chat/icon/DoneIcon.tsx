@@ -1,5 +1,4 @@
 import { JSONExporter } from '@src/components/viewing/chat/icon/JSONExporter';
-import { doneItem } from '@src/const';
 import { DoneProps } from '@src/types/share';
 import { LottieOptions, useLottie } from 'lottie-react';
 import { FC, forwardRef } from 'react';
@@ -7,7 +6,7 @@ import { FC, forwardRef } from 'react';
 export const DoneIcon: FC<DoneProps> = forwardRef(({ path, loop = true, autoplay = true, width = 100 }, ref) => {
   const options: LottieOptions = {
     renderer: 'canvas',
-    animationData: JSONExporter[doneItem[path].name],
+    animationData: JSONExporter[path],
     loop,
     autoplay,
     style: {

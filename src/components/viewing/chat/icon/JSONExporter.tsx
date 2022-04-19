@@ -17,23 +17,23 @@ import Night from '@src/components/viewing/chat/icon/json/Night.json';
 import StarBurst from '@src/components/viewing/chat/icon/json/StarBurst.json';
 import UFO from '@src/components/viewing/chat/icon/json/UFO.json';
 
-export const JSONExporter = {
+export const JSONExporter = [
   GreenHeart,
+  Confetti,
+  FourStar,
+  Gift,
+  Night,
+  StarBurst,
   AvatarIcon,
   CircularAudio,
-  Confetti,
   Controller,
   Crown,
   Battery,
-  FourStar,
-  Gift,
   HelloWorld,
   Heart,
   UFO,
   Melting,
   Mental,
-  Night,
   Chart,
-  StarBurst,
   MoneyRain,
-};
+];
