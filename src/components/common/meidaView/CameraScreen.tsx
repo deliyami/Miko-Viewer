@@ -7,6 +7,7 @@ const CameraScreen: FC<{ stream: MediaStream }> = ({ stream }) => {
     if (videoRef.current) {
       videoRef.current.srcObject = stream ?? null;
       videoRef.current.autoplay = true;
+      videoRef.current.muted = true;
     }
     return () => {};
   }, [stream]);
