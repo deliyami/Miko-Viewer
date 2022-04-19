@@ -178,7 +178,7 @@ const VideoPlayer: FC = () => {
     player.current.attachHTMLVideoElement(videoEl.current);
 
     player.current.setAutoplay(true);
-    player.current.setVolume(0.2);
+    player.current.setVolume(1);
     player.current.play();
 
     player.current.addEventListener(IDLE, onStateChange);

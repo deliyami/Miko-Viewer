@@ -15,7 +15,7 @@ const Layout = ({ children }) => {
         body {
           -ms-overflow-style: none;
         }
-        body::-webkit-scrollbar {
+        ::-webkit-scrollbar {
           display: none;
         }
         `}

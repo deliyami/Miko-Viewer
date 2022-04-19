@@ -7,9 +7,9 @@ export interface UserTicket {
   updatedAt: string;
   userId: number;
   ticketId: number;
-  ticket?: Ticket;
+  ticket: Ticket;
   concertId: number;
-  concert?: Concert;
+  concert: Concert;
   isUsed: number;
   pRanking: null;
   gRanking: null;
