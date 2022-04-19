@@ -91,6 +91,17 @@ addEventListener('message', async ({ data }) => {
 
       scene.render();
 
+      let count = 0;
+      const firstRenderIntervalId = setInterval(() => {
+        console.log('aaaaaaaaa');
+        if (count <= 20) {
+          scene.render();
+          count += 1;
+        } else {
+          clearInterval(firstRenderIntervalId);
+        }
+      }, 16);
+
       break;
     case 'motionChange':
       const { thisUserMotion } = data;

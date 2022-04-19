@@ -21,7 +21,7 @@ export const toastLog: ToastLogType = (type, title, desc, err) => {
     position: 'top-left',
     description: desc,
     status: type,
-    duration: 5000,
+    duration: 2500,
     isClosable: true,
   });
 };

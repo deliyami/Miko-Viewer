@@ -129,10 +129,10 @@ const VideoPlayer: FC = () => {
           break;
         case 'ErrorNotAvailable': // IVS에서 스트리밍 주이지 않음. , 429명 인원초과, 404면 미방송
           if (dayIsBetween(enterTicketData.concertStartDate, enterTicketData.concertEndDate)) {
-            toastLog('info', '스트리밍 시작을 기달려주세요.', '10초 간격으로 확인합니다.');
+            toastLog('info', '스트리밍 시작을 기다려주세요.', '3초 간격으로 확인합니다.');
             setTimeout(() => {
               tryLoadAndPlay();
-            }, 10000);
+            }, 3000);
           } else {
             toastLog('error', '콘서트 시간이 아닙니다. 뒤로가집니다.。');
             router.push('/');
