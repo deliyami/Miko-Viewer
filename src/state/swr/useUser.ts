@@ -1,7 +1,8 @@
-import { axiosI, fetcher } from '@src/state/fetcher';
+import { setCookie } from '@src/helper';
+import { axiosI } from '@src/state/fetcher';
 import { LoginData, User } from '@src/types/share';
 import { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { mutate } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 import { loginState } from '../recoil';
@@ -13,6 +14,8 @@ const URL_OAUTH_LOGIN = '/login/google';
 const URL_LOGOUT = '/logout';
 
 export const useUser = () => {
+  const setIsLogin = useSetRecoilState(loginState);
+
   const aFetcher = (url: string) => {
     if (typeof window === 'undefined') return Promise.resolve(undefined);
 
@@ -21,7 +24,16 @@ export const useUser = () => {
       // NOTE  useSWR는 undefined일 경우 suspense가 안 끝남.
       return Promise.resolve(null);
     }
-    return fetcher(url);
+    //  TODO 쿠키 로직 문제
+    return axiosI
+      .get(url)
+      .then(res => res.data)
+      .catch(err => {
+        setCookie('isLogin', '', 0);
+        setIsLogin(false);
+        console.error(err);
+        return null;
+      });
   };
 
   const userResult = useSWRImmutable<User>(URL_USER, aFetcher, {
@@ -34,16 +46,13 @@ export const useUser = () => {
   useEffect(() => {
     if (userResult.data?.uuid) {
       window.localStorage.setItem('uuid', userResult.data.uuid);
-      // console.log(userResult.data);
     } else {
       window.localStorage.removeItem('uuid');
     }
   }, [userResult.data]);
 
+  // NOTE   shallow 비교 항상 머리속에 염두
   return userResult;
-
-  // const isNotLogged = !isValidating && !data; // 확인중이 아니며, 데이터가 undefined
-  // return { data, error, mutate, isValidating, isNotLogged };
 };
 
 export const tryLogin = async (loginData: LoginData) => {
@@ -58,7 +67,7 @@ export const tryLogin = async (loginData: LoginData) => {
 
 export const tryOAuthLogin = async (token: string) => {
   try {
-    const { data, status } = await axiosI.post<User>(`${URL_OAUTH_LOGIN}`, {
+    const { data } = await axiosI.post<User>(`${URL_OAUTH_LOGIN}`, {
       token,
     });
     mutate(URL_USER, data, false);
@@ -82,7 +91,7 @@ export const useCheckLogin = () => {
 
   useEffect(() => {
     const isTokenExist = document.cookie.match(/^(.*;)?\s*isLogin\s*=\s*[^;]+(.*)?$/);
-    if (isTokenExist) setIsLogin(true);
+    if (isTokenExist?.[0] === 'isLogin=1') setIsLogin(true);
   }, []);
 
   return isLogin;
