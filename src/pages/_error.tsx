@@ -1,7 +1,13 @@
 import { Center, Text } from '@chakra-ui/react';
+import { NextPageContext } from 'next';
 
 //   is only used in production
-function Error({ statusCode }) {
+//  500 error page
+interface ErrorComponentProps {
+  statusCode?: number;
+}
+
+function Error({ statusCode }: ErrorComponentProps) {
   return (
     <Center w="full" h="100vh">
       <Text>404 - not found page</Text>
@@ -10,9 +16,10 @@ function Error({ statusCode }) {
   );
 }
 
-Error.getInitialProps = ({ res, err }) => {
-  const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
-  return { statusCode };
+Error.getInitialProps = ({ res, err }: NextPageContext) => {
+  if (res && res.statusCode) return { statusCode: res.statusCode };
+  if (err && err.statusCode) return { statusCode: err.statusCode };
+  return { statusCode: 404 };
 };
 
 export default Error;

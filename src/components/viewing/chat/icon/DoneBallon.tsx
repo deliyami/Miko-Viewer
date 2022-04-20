@@ -9,7 +9,7 @@ import { useRecoilState } from 'recoil';
 
 type Props = { width?: number; duration?: number; delay?: number; x: number; y: number };
 
-export const DoneBallon: FC<Props> = props => {
+export const DoneBallon: FC<Props> = () => {
   const [doneApt, setDoneApt] = useRecoilState(doneAccept);
   const [isRunning, setIsRunning] = useState(false);
   const [nowDone, setNowDone] = useState<number>();

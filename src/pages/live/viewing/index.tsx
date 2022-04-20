@@ -20,7 +20,7 @@ type Data = {};
 
 export const getServerSideProps: GetServerSideProps<Data> = async context => {
   const userTicketId = context.req.cookies.userTickId;
-
+  console.log(userTicketId);
   // const { data: data2 } = await axiosI.get('test');
   // console.log('laravel', data2);
 
@@ -61,7 +61,7 @@ export default function ViewingPage(): InferGetServerSidePropsType<typeof getSer
   };
 
   useEffect(() => {
-    if (userTicket) return;
+    if (!userTicket) return;
 
     const endTimeMs = dayjs().diff(userTicket.ticket.concertEndDate);
 

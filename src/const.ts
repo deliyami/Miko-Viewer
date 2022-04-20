@@ -49,3 +49,6 @@ export const NEXT_URL = process.env.NEXT_PUBLIC_NEXT_URL ?? 'http://localhost:30
 
 // URL
 export const URL_USER_TICKET = '/user_tickets';
+
+// Interval
+export const UPDATE_USERS_SCORE_TIME = 1000;

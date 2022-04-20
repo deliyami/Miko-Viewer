@@ -14,10 +14,10 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import Peer from 'peerjs';
+import type Peer from 'peerjs';
 import { ReactElement, ReactNode, useEffect } from 'react';
 import { RecoilRoot } from 'recoil';
-import { Socket } from 'socket.io-client';
+import type { Socket } from 'socket.io-client';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -46,7 +46,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         if (value.status !== 200) return toastLog('error', 'Laravel Server Error');
       })
       .catch((err: any) => {
-        toastLog('error', 'Laravel Server Error');
+        toastLog('error', 'Laravel Server Error', '', err);
       });
     axios
       .get('/health-check', { baseURL: NEST_URL })
@@ -54,7 +54,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         if (value.status !== 200) return toastLog('error', 'Nest Server Error');
       })
       .catch((err: any) => {
-        toastLog('error', 'Nest Server Error');
+        toastLog('error', 'Nest Server Error', '', err);
       });
   }, []);
 
@@ -137,6 +137,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
 export default MyApp;
 
-export function reportWebVitals(_: NextWebVitalsMetric) {
+export function reportWebVitals(metric: NextWebVitalsMetric) {
   // console.log({ id, name, label, value });
+  console.log(metric);
 }

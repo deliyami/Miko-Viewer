@@ -19,7 +19,7 @@ const ViewingCSRPage = () => {
   const [scriptLoaded, setScriptLoaded] = useState(!!IVSPlayer);
 
   useEffect(() => {
-    let intervalId = null;
+    let intervalId: NodeJS.Timeout;
     if (!scriptLoaded) {
       intervalId = setInterval(() => {
         console.log('ivs player Loaded?', IVSPlayer ? 'Yes' : 'NO');
@@ -56,7 +56,7 @@ const ViewingCSRPage = () => {
               <ChatMessageInput />
               <RoomAvatarView />
             </VStack>
-            <DoneBallon></DoneBallon>
+            <DoneBallon x={10} y={10}></DoneBallon>
             <VStack width="25vw" h="100vh" maxH="100vh" overflow="hidden" zIndex="0">
               <RankingView />
               <ChatBox />

@@ -6,7 +6,7 @@ import { ivsErrorState, mediapipeErrorState, myStreamState, peerErrorState, prep
 import { AnimatePresence, motion } from 'framer-motion';
 import Script from 'next/script';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import LottieVideoPlay from '../lottie/LottieVideoPlay';
 import ViewingCSRPage from './ViewingCSRPage';
 import MediaPipeSetup from './viewingPrepare/MediaPipeSetup';
@@ -14,7 +14,7 @@ import MediaPipeSetup from './viewingPrepare/MediaPipeSetup';
 // NOTE video를 true로 할경우 여러 브라우저에서 카메로 리소스 접근할때 보안상의 이유로 에러가 나올 확률이 높음
 // getUserMedia의 callback이 실행되지 않아서 먼저 들어온 사람의 영상이 안 보일 수 있음.
 // Bind 해주지 않으면 this 에러남.
-const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices) as typeof navigator.mediaDevices.getUserMedia;
+const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
 const streamOptions: MediaStreamConstraints = { audio: true, video: true };
 
 const MotionBox = motion<Omit<BoxProps, 'transition'>>(Box);
@@ -39,6 +39,7 @@ const ViewingPrepareCSRPage = () => {
   const [asyncIsAllReady, setAsyncIsAllReady] = useState<boolean>(isAllReady);
 
   const [myStream, setMyStream] = useRecoilState(myStreamState);
+  const resetMyStreamRecoil = useResetRecoilState(myStreamState);
 
   const socket = useSocket();
   const myPeer = useMyPeer();
@@ -64,7 +65,7 @@ const ViewingPrepareCSRPage = () => {
         track.stop();
         myStream.removeTrack(track);
       });
-      setMyStream(undefined);
+      resetMyStreamRecoil();
     }
 
     if (socket) {
@@ -158,7 +159,7 @@ const ViewingPrepareCSRPage = () => {
       toastLog('error', 'myPeer disconnected', 'peer가 시그널링 서버와 끊겼습니다.');
     };
 
-    const handlePeerError = e => {
+    const handlePeerError = (e: any) => {
       toastLog('error', 'myPeer error', '심각한 에러발생 로그창 확인.');
       console.error('handlePeerError', e.type, e);
       switch (e.type as string) {
@@ -185,6 +186,7 @@ const ViewingPrepareCSRPage = () => {
     };
   }, [myPeer]);
 
+  //  TODO 종종 script 로딩 안됨
   return (
     <>
       <AnimatePresence>
@@ -223,7 +225,7 @@ const ViewingPrepareCSRPage = () => {
                   <Tag colorScheme={isMediapipeSetup ? 'green' : 'red'}>motion</Tag>
                 </HStack>
                 <HStack>
-                  {[mediapipeError, socketError, streamError, peerError, ivsError].map((errorText, idx) => {
+                  {[mediapipeError, socketError, streamError, peerError, ivsError].map(errorText => {
                     if (errorText)
                       return (
                         <Alert status="error">
@@ -231,6 +233,8 @@ const ViewingPrepareCSRPage = () => {
                           {peerError}
                         </Alert>
                       );
+
+                    return <></>;
                   })}
                 </HStack>
               </Box>

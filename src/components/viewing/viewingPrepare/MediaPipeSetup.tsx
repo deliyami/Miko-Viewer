@@ -33,7 +33,7 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
     [0, 0, 0],
   ]); //[[오른손x,y,z],[왼손x,y,z]]
   const scoreRef = useRef<number>(0);
-  const myPeerId = user.data.uuid;
+  const myPeerId = user.data!.uuid;
   const [peerChange, setPeerChange] = useState(false);
 
   const userMotionScore = (before: number[], after: NormalizedLandmark) => {

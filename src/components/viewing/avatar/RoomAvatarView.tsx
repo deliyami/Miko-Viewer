@@ -3,7 +3,7 @@ import { myAvatarReplicateNumState, peerDataListState } from '@src/state/recoil'
 import { AnimatePresence, LayoutGroup } from 'framer-motion';
 import { useRecoilValue } from 'recoil';
 import { My3DAvatar } from './My3DAvatar';
-import { Peer3DAvatar } from './Peer3DAvatart';
+import { Peer3DAvatar } from './Peer3DAvatar';
 
 const RoomAvatarView = () => {
   const peerDataList = useRecoilValue(peerDataListState);

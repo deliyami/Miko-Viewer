@@ -2,7 +2,7 @@ import { NEXT_URL, USER_TICKET_COOKIE } from '@src/const';
 import { checkLogin } from '@src/helper/api';
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 
-export async function middleware(req: NextRequest, ev: NextFetchEvent) {
+export async function middleware(req: NextRequest, _ev: NextFetchEvent) {
   // Check Login Cookie
   const userTicketId = req.cookies[USER_TICKET_COOKIE];
   const [isNotLogin, redirect] = checkLogin(req);

@@ -12,11 +12,11 @@ import { SuperChatOption } from './SuperChatOption';
 
 const ChatMessageInput = memo(() => {
   const socket = useSocket();
-  const user = useUser();
+  const { data: userData } = useUser();
   const [isShow, setIsShow] = useRecoilState(isShowChatInputState);
   const [chatMode, setChatMode] = useRecoilState(chatModeState);
   const peers = useRecoilValue(peerDataListState);
-  const inputRef = useRef<HTMLInputElement>();
+  const inputRef = useRef<HTMLInputElement>(null);
   const [newMessage, setNewMessage] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
 
@@ -31,14 +31,14 @@ const ChatMessageInput = memo(() => {
     addedScoreForSeconds.addScore(1);
 
     const data: ChatMessageInterface = {
-      sender: user.data.name,
+      sender: userData!.name,
       text: newMessage,
       amount,
       timestamp: Date.now(),
     };
 
     sendToAllPeers(peers, { type: 'chat', data });
-    showChatToRoom(user.data.uuid, newMessage, 5);
+    showChatToRoom(userData!.uuid, newMessage, 5);
 
     if (chatModeCompute() === 'public') {
       socket.emit('fe-send-message', data);
@@ -46,7 +46,7 @@ const ChatMessageInput = memo(() => {
 
     setNewMessage('');
     setAmount(0);
-    inputRef.current.focus();
+    inputRef.current?.focus();
   };
 
   const onSubmitHandler = (e: FormEvent) => {

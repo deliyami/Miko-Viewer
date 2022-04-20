@@ -1,3 +1,4 @@
+import { UPDATE_USERS_SCORE_TIME } from '@src/const';
 import { sendToAllPeers } from '@src/helper';
 import { useSocket } from '@src/hooks/dynamicHooks';
 import { latestScoreState, peerDataListState } from '@src/state/recoil';
@@ -24,7 +25,7 @@ export const WithIntervalTaskLayer: FC<{ children: ReactElement }> = ({ children
       if (addedScore)
         setLatestScoreState(
           produce(draft => {
-            const updatedScore = (draft?.[user.uuid] ?? 0) + addedScore;
+            const updatedScore = (draft?.[user!.uuid] ?? 0) + addedScore;
             // DataConnection을 통해 전달 후 shareObject의 roomMemberScores를 업데이트
             sendToAllPeers(peers, { type: 'scoreUpdate', data: updatedScore });
 
@@ -32,7 +33,7 @@ export const WithIntervalTaskLayer: FC<{ children: ReactElement }> = ({ children
             socket.emit('fe-update-score', addedScore, updatedScore);
 
             // 나의 Score State를 업데이트
-            draft[user.uuid] = updatedScore;
+            draft[user!.uuid] = updatedScore;
           }),
         );
     }, 1000);
@@ -41,27 +42,21 @@ export const WithIntervalTaskLayer: FC<{ children: ReactElement }> = ({ children
       //  shareObject의 roomMemberScores에서 주기적으로 실제 ScoreState로 점수를 반영함.
       setLatestScoreState(
         produce(draft => {
-          // for (const [userId, score] of Object.entries(roomMemberScores)) {
-          //   const newScore = score;
-          //   draft[userId] = newScore;
-          //   delete roomMemberScores[userId];
-          // }
-
-          for (const key in roomMemberScores) {
-            const newScore = roomMemberScores[key];
-            draft[key] = newScore;
-            delete roomMemberScores[key];
-          }
+          Object.entries(roomMemberScores).forEach(([userId, score]) => {
+            const newScore = score;
+            draft[userId] = newScore;
+            delete roomMemberScores[userId];
+          });
         }),
       );
-    }, 1000);
+    }, UPDATE_USERS_SCORE_TIME);
 
     return () => {
       console.log('useEffect return - withIntervalTaskLayer');
       clearInterval(updateLatestMyScoreInterval);
       clearInterval(updateRoomMemberScoreInterval);
     };
-  }, [peers, user.uuid]);
+  }, [peers, user?.uuid]);
 
   return <>{children}</>;
 };

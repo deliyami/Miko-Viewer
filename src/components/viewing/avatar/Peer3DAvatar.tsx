@@ -5,7 +5,8 @@ import { BiVolumeMute } from '@react-icons/all-files/bi/BiVolumeMute';
 import { FiMoreHorizontal } from '@react-icons/all-files/fi/FiMoreHorizontal';
 import { AvatarModel } from '@src/components/viewing/avatar/AvatarModel';
 import { NEXT_URL } from '@src/const';
-import { isOnAvatarState, isOnPeerSoundState, PeerDataInterface } from '@src/state/recoil';
+import { isOnAvatarState, isOnPeerSoundState } from '@src/state/recoil';
+import { PeerDataInterface } from '@src/types/local/PeerData';
 import { createRef, memo, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AvatarConnectionStatus } from './AvatarConnectionStatus';
@@ -20,7 +21,7 @@ type Props = {
 };
 
 export const Peer3DAvatar = memo<Props>(({ peer }) => {
-  const { id: uuid, data, dataConnection, mediaStream, mediaConnection } = peer;
+  const { id: uuid, data, dataConnection, mediaStream } = peer;
 
   const audioRef = createRef<HTMLAudioElement>();
   const isOnPeerSound = useRecoilValue(isOnPeerSoundState);
@@ -34,7 +35,6 @@ export const Peer3DAvatar = memo<Props>(({ peer }) => {
       mediaStream.getAudioTracks()[0].enabled = true;
       audio.srcObject = mediaStream;
     }
-    return () => {};
   }, [mediaStream]);
   // useEffect interval/ worker interval return에서 죽이기
 

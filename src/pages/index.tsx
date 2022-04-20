@@ -5,7 +5,7 @@ import { getPageLaravelData } from '@src/helper/getDataFromLaravel';
 import BasicLayout from '@src/layout/BasicLayout';
 import { useCheckLogin } from '@src/state/swr';
 import { Concert } from '@src/types/share';
-import { GetStaticProps, InferGetStaticPropsType } from 'next';
+import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { FC, ReactElement } from 'react';
