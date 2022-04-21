@@ -8,7 +8,8 @@ const animate: AnimationControls | TargetAndTransition | VariantLabels | boolean
   scale: [0, 1.1, 1],
 };
 
-const DoneAnimationBox: FC<Props> = ({ children, endDone, duration, delay = 5, x, y }) => {
+const DoneAnimationBox: FC<Props> = ({ children, endDone, duration = 1, delay = 5, x, y }) => {
+  console.log('donebox 들어옴');
   const transition: Transition = {
     damping: 10,
     duration,
