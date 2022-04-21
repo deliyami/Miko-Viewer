@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef } from 'react';
 
 const CameraScreen: FC<{ stream: MediaStream }> = ({ stream }) => {
-  const videoRef = useRef<HTMLVideoElement>();
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     if (videoRef.current) {

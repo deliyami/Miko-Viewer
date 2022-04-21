@@ -149,6 +149,7 @@ const WithSocketEventLayout: FC<{ children: ReactElement }> = ({ children }) => 
     };
     myPeer.on('connection', peerOnDataConnection);
 
+    //  TODO 소리만 보내기
     const peerOnCall = (mediaConnection: MediaConnection): void => {
       addMediaConnectionToPeersDataList(mediaConnection, mediaConnection.peer);
       addEventToMediaConnection(mediaConnection);
