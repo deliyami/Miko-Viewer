@@ -82,8 +82,6 @@ export const ViewingDone = forwardRef((_, ref) => {
     // console.log('send', doneItem[clicked]);
     if (clicked === -1) return;
     const item = doneItem[clicked];
-    console.log('되고는 있다', item);
-    console.log('되고는 있다', user.data.name);
     const data: DoneSendInterface = {
       sender: user.data.name,
       itemId: item.id,

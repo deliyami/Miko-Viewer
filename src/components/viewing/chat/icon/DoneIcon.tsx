@@ -1,9 +1,9 @@
 import { JSONExporter } from '@src/components/viewing/chat/icon/JSONExporter';
 import { DoneProps } from '@src/types/share';
 import { LottieOptions, useLottie } from 'lottie-react';
-import { FC, forwardRef } from 'react';
+import { FC } from 'react';
 /* eslint-disable */
-export const DoneIcon: FC<DoneProps> = forwardRef(({ path, loop = true, autoplay = true, width = 100 }, ref) => {
+export const DoneIcon: FC<DoneProps> = ({ path, loop = true, autoplay = true, width = 100 }) => {
   const options: LottieOptions = {
     renderer: 'canvas',
     animationData: JSONExporter[path],
@@ -15,4 +15,4 @@ export const DoneIcon: FC<DoneProps> = forwardRef(({ path, loop = true, autoplay
   };
   const { View } = useLottie(options);
   return View;
-});
+};
