@@ -1,30 +1,40 @@
+import { Button } from '@chakra-ui/react';
 import DoneAnimationBox from '@src/components/viewing/chat/icon/DoneAnimationBox';
 import { DoneIcon } from '@src/components/viewing/chat/icon/DoneIcon';
 import { useSocket } from '@src/hooks/dynamicHooks';
-import { doneAccept } from '@src/state/recoil';
-import { waitingDone } from '@src/state/shareObject/shareDoneObject';
+import { doneState, peerDataListState } from '@src/state/recoil';
 import { DoneSendInterface } from '@src/types/share';
-import { FC, useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { FC, useCallback, useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
-type Props = { width?: number; duration?: number; delay?: number; x: number; y: number };
+type DoneList = {
+  data: DoneSendInterface;
+  x: number;
+  y: number;
+};
 
-export const DoneBallon: FC<Props> = props => {
-  const [doneApt, setDoneApt] = useRecoilState(doneAccept);
+export const DoneBallon: FC = () => {
   const [isRunning, setIsRunning] = useState(false);
-  const [nowDone, setNowDone] = useState<number>();
+  // const [done, setDone] = useState<DoneList[]>([]);
+  const peers = useRecoilValue(peerDataListState);
+  const [done, setDone] = useRecoilState(doneState);
   const socket = useSocket();
 
-  const getBroadcastedNewDone = (data: DoneSendInterface) => {
-    console.log('도네 받았다', waitingDone.length, waitingDone);
-    waitingDone[waitingDone.length] = data;
-    setDoneApt(e => {
-      if (!e) {
-        return true;
-      }
-      return e;
-    });
-  };
+  const getBroadcastedNewDone = useCallback(
+    (data: DoneSendInterface) => {
+      console.log('도네 받았다');
+      setDone(before => {
+        // const x = Math.random() * 600;
+        // const y = Math.random() * 600;
+        console.log('변경', before);
+        const x = 0;
+        const y = 0;
+        const after = [...before, { data, x, y }];
+        return after;
+      });
+    },
+    [socket, done, peers],
+  );
   useEffect(() => {
     socket.on('be-broadcast-done-item', getBroadcastedNewDone);
     return () => {
@@ -32,41 +42,33 @@ export const DoneBallon: FC<Props> = props => {
     };
   }, [socket]);
 
-  const doneHandler = () => {
-    console.log('2실행');
-    const thisDone = waitingDone[0];
-    if (typeof thisDone === 'undefined') {
-      setDoneApt(false);
-      return;
-    }
-    setNowDone(thisDone.itemId);
-    setIsRunning(true);
-  };
-  useEffect(() => {
-    console.log('1실행');
-    if (!doneApt) {
-      return;
-    }
-    doneHandler();
-  }, [doneApt]);
-  const retry = () => {
-    console.log('first');
-    setIsRunning(false);
-    setNowDone(undefined);
-    waitingDone.shift();
-    setTimeout(() => {
-      doneHandler();
-    }, 500);
+  const endDone = () => {
+    console.log('도네 종료');
+    // setDone(before => {
+    //   const after = [...before];
+    //   after.shift();
+    //   return after;
+    // });
   };
   return (
     <>
-      {isRunning ? (
-        <DoneAnimationBox retry={retry} x={200} y={-100} duration={1} delay={1}>
-          <DoneIcon width={300} path={nowDone}></DoneIcon>
-        </DoneAnimationBox>
-      ) : (
-        <></>
-      )}
+      <div>테스트</div>
+      <Button
+        onClick={() => {
+          console.log(done);
+        }}
+      >
+        click
+      </Button>
+      {done.map((value, index) => {
+        <>
+          <div>tests</div>
+          <DoneAnimationBox key={index} endDone={endDone} x={value.x} y={value.y} duration={1} delay={1}>
+            <DoneIcon width={300} path={value.data.itemId}></DoneIcon>
+          </DoneAnimationBox>
+          ;
+        </>;
+      })}
     </>
   );
 };

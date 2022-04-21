@@ -1,14 +1,14 @@
 import { AnimationControls, motion, TargetAndTransition, Transition, VariantLabels } from 'framer-motion';
 import { FC, ReactElement, useEffect } from 'react';
 
-type Props = { retry: Function; children: ReactElement; duration?: number; delay?: number; x: number; y: number };
+type Props = { endDone: Function; children: ReactElement; duration?: number; delay?: number; x: number; y: number };
 
 const animate: AnimationControls | TargetAndTransition | VariantLabels | boolean = {
   y: ['20%', '-5%', '0%'],
   scale: [0, 1.1, 1],
 };
 
-const DoneAnimationBox: FC<Props> = ({ children, retry, duration, delay = 5, x, y }) => {
+const DoneAnimationBox: FC<Props> = ({ children, endDone, duration, delay = 5, x, y }) => {
   const transition: Transition = {
     damping: 10,
     duration,
@@ -19,7 +19,7 @@ const DoneAnimationBox: FC<Props> = ({ children, retry, duration, delay = 5, x, 
   };
   useEffect(() => {
     setTimeout(() => {
-      retry();
+      endDone();
     }, (duration * 2 + delay) * 1000 + 500);
   }, []);
   return (

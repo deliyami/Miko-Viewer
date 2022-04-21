@@ -1,14 +1,9 @@
 import { DoneSendInterface } from '@src/types/share';
 import { atom } from 'recoil';
 
-const doneState = atom<DoneSendInterface>({
+const doneState = atom<{ data: DoneSendInterface; x: number; y: number }[]>({
   key: 'doneState',
-  default: undefined,
+  default: [],
 });
 
-const doneAccept = atom<boolean>({
-  key: 'doneAccept',
-  default: false,
-});
-
-export { doneState, doneAccept };
+export { doneState };
