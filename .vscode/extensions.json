@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "formulahendry.auto-close-tag",
+    "formulahendry.auto-rename-tag",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "steoates.autoimport",
+    "streetsidesoftware.code-spell-checker",
+    "ExodiusStudios.comment-anchors",
+    "usernamehw.errorlens",
+    "mhutchie.git-graph",
+    "wix.vscode-import-cost"
+  ],
+  "unwantedRecommendations": []
+}

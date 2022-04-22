@@ -4,5 +4,8 @@
   "singleQuote": true,
   "printWidth": 180,
   "tabWidth": 2,
-  "arrowParens": "avoid"
+  "arrowParens": "avoid",
+  "proseWrap": "always",
+  "bracketSpacing": true,
+  "jsxSingleQuote": false
 }
