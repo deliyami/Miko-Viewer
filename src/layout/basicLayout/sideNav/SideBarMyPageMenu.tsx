@@ -1,7 +1,7 @@
 import { Box, Collapse, useDisclosure } from '@chakra-ui/react';
 import { CgProfile } from '@react-icons/all-files/cg/CgProfile';
 import { useCheckLogin } from '@src/state/swr';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useHover } from 'usehooks-ts';
 import { LinkItemProps, SideBarNavItem } from './SideBarNavItem';
 
@@ -21,6 +21,10 @@ const SideBarMyPageMenu = () => {
   const isHover = useHover(hoverRef);
 
   const isActive = isHover || isOpen;
+
+  useEffect(() => {
+    onToggle();
+  }, []);
 
   return (
     <Box ref={hoverRef}>

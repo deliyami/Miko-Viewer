@@ -1,7 +1,8 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Drawer, DrawerContent, useDisclosure } from '@chakra-ui/react';
 import Footer from '@src/components/home/Footer';
-import MenuBar from '@src/layout/basicLayout/MenuBar';
 import { FC, ReactElement } from 'react';
+import { SideBar } from './basicLayout/sideNav/Sidebar';
+import { TopNav } from './basicLayout/topNav/TopNav';
 
 //  NOTE <Loading/>이 아닌 Loading으로 경고
 type Props = {
@@ -9,9 +10,22 @@ type Props = {
 };
 
 const Layout: FC<Props> = ({ children }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Box minH="100vh" display="flex" flexDir="column">
-      <MenuBar />
+      <SideBar onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
+      <Drawer autoFocus={false} isOpen={isOpen} placement="left" onClose={onClose} returnFocusOnClose={false} onOverlayClick={onClose} size="full">
+        <DrawerContent>
+          <SideBar
+            onClose={onClose}
+            onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+              if ((e.target as Element).classList.contains('SideBarNavItem')) onClose();
+            }}
+          />
+        </DrawerContent>
+      </Drawer>
+      <TopNav onOpen={onOpen} />
       <Box ml={{ base: 0, md: 60 }} mt="10" p="4" flexGrow={1} paddingBottom="100px">
         {children}
       </Box>

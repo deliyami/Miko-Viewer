@@ -33,6 +33,7 @@ export const SideBarNavItem = ({ link, ...rest }: NavItemProps) => {
       userSelect="none"
       position="relative"
       onHover
+      className="SideBarNavItem"
       {...rest}
     >
       {icon && (
