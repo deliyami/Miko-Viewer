@@ -1,30 +1,22 @@
 import { AnimationControls, motion, TargetAndTransition, Transition, VariantLabels } from 'framer-motion';
-import { FC, ReactElement, useEffect } from 'react';
+import { FC, ReactElement } from 'react';
 
-type Props = { endDone: Function; children: ReactElement; duration?: number; delay?: number; x: number; y: number };
+type Props = { children: ReactElement };
 
 const animate: AnimationControls | TargetAndTransition | VariantLabels | boolean = {
   y: ['20%', '-5%', '0%'],
   scale: [0, 1.1, 1],
 };
 
-const DoneAnimationBox: FC<Props> = ({ children, endDone, duration = 1, delay = 5, x, y }) => {
-  console.log('donebox 들어옴');
+const DoneAnimationBox: FC<Props> = ({ children }) => {
   const transition: Transition = {
     damping: 10,
-    duration,
+    duration: 0.2,
     times: [0, 0.15, 0.3],
-    repeat: 1,
-    repeatType: 'reverse',
-    repeatDelay: delay,
   };
-  useEffect(() => {
-    setTimeout(() => {
-      endDone();
-    }, (duration * 2 + delay) * 1000 + 500);
-  }, []);
+
   return (
-    <motion.div style={{ x, y, position: 'absolute' }} animate={animate} transition={transition}>
+    <motion.div animate={animate} transition={transition}>
       {children}
     </motion.div>
   );

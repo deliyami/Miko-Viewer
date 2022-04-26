@@ -1,11 +1,11 @@
 import { Center, HStack, Text, VStack } from '@chakra-ui/react';
 import VideoPlayer from '@src/components/ivs-player/VideoPlayer';
-import { DoneBallon } from '@src/components/viewing/chat/icon/DoneBallon';
 import { useIvsPlayer } from '@src/hooks/dynamicHooks';
 import { useEffect, useState } from 'react';
 import RoomAvatarView from './avatar/RoomAvatarView';
 import AmbianceBox from './centerContainer/AmbianceBox';
 import ChangePenColor from './centerContainer/ChangePenColor';
+import DoneRenderBox from './centerContainer/DoneRenderBox';
 import ChatMessageInput from './chat/ChatMessageInput';
 import ViewingSideMenuBar from './menu/ViewingSideMenuBar';
 import ViewingRightContainer from './rightContainer/ViewingRightContainer';
@@ -40,6 +40,7 @@ const ViewingCSRPage = () => {
         <WithIntervalTaskLayer>
           <HStack width="100vw" h="full" position="relative" color="white" overflow="clip" backgroundColor="#181818">
             <AmbianceBox />
+            <DoneRenderBox />
             <ChangePenColor />
             <VStack width="full" h="full" position="relative">
               {IVSPlayer ? (
@@ -54,7 +55,6 @@ const ViewingCSRPage = () => {
               <ChatMessageInput />
               <RoomAvatarView />
             </VStack>
-            <DoneBallon x={10} y={10}></DoneBallon>
             <ViewingRightContainer />
             <ViewingSideMenuBar zIndex="2" />
           </HStack>

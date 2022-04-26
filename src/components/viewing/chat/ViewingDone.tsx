@@ -83,7 +83,7 @@ export const ViewingDone = forwardRef((_, ref) => {
     if (clicked === -1) return;
     const item = doneItem[clicked];
     const data: DoneSendInterface = {
-      sender: user.data.name,
+      sender: user.data!.name,
       itemId: item.id,
       timestamp: Date.now(),
     };

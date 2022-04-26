@@ -13,7 +13,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 export const WithIntervalMotionLayer: FC<{ children: ReactElement }> = ({ children }) => {
   const { data: user } = useUser();
   const peers = useRecoilValue(peerDataListState);
-  sendMotionForFrames.setPeerId(user.uuid);
+  sendMotionForFrames.setPeerId(user!.uuid);
 
   const setLatestMotionState = useSetRecoilState(latestMotionState);
 
@@ -30,7 +30,7 @@ export const WithIntervalMotionLayer: FC<{ children: ReactElement }> = ({ childr
               // sendToAllPeers와 recoil state만 업데이트
               sendToAllPeers(peers, { type: 'motion', data: setMotion });
 
-              draft[user.uuid] = updatedMotion;
+              draft[user!.uuid] = updatedMotion;
             }
           }),
         );
@@ -44,7 +44,7 @@ export const WithIntervalMotionLayer: FC<{ children: ReactElement }> = ({ childr
           for (const key in roomMemberMotions) {
             const newMotion = roomMemberMotions[key];
             const userModel = modelListObject[key];
-            if (newMotion && userModel && key !== user.uuid) {
+            if (newMotion && userModel && key !== user!.uuid) {
               setBone(userModel, key, newMotion.pose, newMotion.face);
               draft[key] = newMotion;
               delete roomMemberMotions[key];
