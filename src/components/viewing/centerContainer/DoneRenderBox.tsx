@@ -1,5 +1,8 @@
 import { Center } from '@chakra-ui/react';
+import { doneItem } from '@src/const';
 import { useSocket } from '@src/hooks/dynamicHooks';
+import { addedScoreForSeconds } from '@src/state/shareObject';
+import { useUser } from '@src/state/swr';
 import { DoneSendInterface } from '@src/types/share';
 import { useEffect, useState } from 'react';
 import DoneAnimationBox from '../chat/icon/DoneAnimationBox';
@@ -35,8 +38,14 @@ function getCoordinate() {
 export default function DoneRenderBox(): JSX.Element {
   const [doneList, setDoneList] = useState<DoneRenderData[]>([]);
   const socket = useSocket();
+  const { data: userData } = useUser();
 
   const getBroadcastedNewDone = (data: DoneSendInterface) => {
+    if (data.sender === userData!.name) {
+      const { price } = doneItem[data.itemId];
+      addedScoreForSeconds.addScore(Math.round(price / 10), 'done');
+    }
+
     setDoneList(prev => {
       const [x, y] = getCoordinate();
       const newDone = {

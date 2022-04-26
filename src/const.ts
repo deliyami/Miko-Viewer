@@ -21,6 +21,7 @@ export const doneItem: DoneItem[] = [
   { name: '日々', price: 75000, id: 4 },
   { name: 'キラキラ', price: 4000, id: 5 },
 ];
+
 export const AVATAR_THEME_NAME = ['ミク', 'キラリ', 'タンジロ', 'サトル', 'AGU'];
 
 export const chType = ['チャージ', 'チケット購入', 'SC送り', 'アイテム使用', 'グッズ購入', 'チケット販売', 'グッズ販売', 'SC受け', 'アイテム受け'];

@@ -2,6 +2,8 @@ import { Box, Heading, VStack } from '@chakra-ui/react';
 import { MAX_MSGS } from '@src/const';
 import { useSocket } from '@src/hooks/dynamicHooks';
 import { isOnChatState } from '@src/state/recoil';
+import { addedScoreForSeconds } from '@src/state/shareObject';
+import { useUser } from '@src/state/swr';
 import { ChatMessageInterface } from '@src/types/dto/ChatMessageType';
 import produce from 'immer';
 // @ts-ignore
@@ -72,10 +74,15 @@ const ChatBox = () => {
   const updatedTimestamp = useRef(Date.now());
   const setTimeoutId = useRef<NodeJS.Timeout>();
   const isOnChat = useRecoilValue(isOnChatState);
+  const { data: userData } = useUser();
 
   useEffect(() => {
     const getBroadcastedNewMessage = (data: ChatMessageInterface) => {
       const curTimestamp = Date.now();
+
+      if (data.amount && data.sender === userData?.name) {
+        addedScoreForSeconds.addScore(Math.round(data.amount / 10), 'superChat');
+      }
 
       const handleSetMessages = () => {
         setMessages(
