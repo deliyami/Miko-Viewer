@@ -1,4 +1,4 @@
-import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react';
+import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Heading, useDisclosure } from '@chakra-ui/react';
 import CameraScreen from '@src/components/common/meidaView/CameraScreen';
 import CameraSwitch from '@src/components/common/meidaView/CameraSwitch';
 import { myStreamState } from '@src/state/recoil';
@@ -16,22 +16,26 @@ const MyCamera = forwardRef((_, ref) => {
   }));
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent maxW="50vw">
-        <ModalHeader>내 카메라 확인</ModalHeader>
-        <CameraSwitch></CameraSwitch>
-        <ModalCloseButton />
-        <ModalBody>
+    <Drawer isOpen={isOpen} placement="right" size="md" onClose={onClose}>
+      <DrawerOverlay backgroundColor="transparent" />
+      <DrawerContent>
+        <DrawerCloseButton />
+        <DrawerHeader>カメラ変更</DrawerHeader>
+        <DrawerBody>
+          <Heading size="md" py="1">
+            カメラ画像
+          </Heading>
           <CameraScreen stream={myStream} />
-        </ModalBody>
+          <CameraSwitch />
+        </DrawerBody>
 
-        <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}></Button>
-          {/* <Button variant="ghost">Secondary Action</Button> */}
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        <DrawerFooter>
+          <Button variant="outline" mr={3} onClick={onClose}>
+            閉じる
+          </Button>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 });
 
