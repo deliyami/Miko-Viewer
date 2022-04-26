@@ -29,7 +29,7 @@ export const useUser = () => {
       .get(url)
       .then(res => res.data)
       .catch(err => {
-        setCookie('isLogin', '', 0);
+        setCookie('isLogin', '', 0.0001);
         setIsLogin(false);
         console.error(err);
         return null;
@@ -56,9 +56,12 @@ export const useUser = () => {
 };
 
 export const tryLogin = async (loginData: LoginData) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  // const setLoginStatus = useSetRecoilState(loginState);
   try {
     const { data } = await axiosI.post<User>(`${URL_LOGIN}`, loginData);
     mutate(URL_USER, data, true);
+    // setLoginStatus(true);
     return true;
   } catch (error) {
     return false;
@@ -91,7 +94,7 @@ export const useCheckLogin = () => {
 
   useEffect(() => {
     const isTokenExist = document.cookie.match(/^(.*;)?\s*isLogin\s*=\s*[^;]+(.*)?$/);
-    if (isTokenExist?.[0] === 'isLogin=1') setIsLogin(true);
+    if (isTokenExist?.[0]) setIsLogin(true);
   }, []);
 
   return isLogin;

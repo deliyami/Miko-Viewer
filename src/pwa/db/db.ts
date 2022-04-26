@@ -10,6 +10,7 @@ export interface ScoreHistory {
   type: number;
 }
 
+// TODO 적당한 시기에 score 테이블 초기화
 export class MySubClassedDexie extends Dexie {
   scoreHistory!: Table<ScoreHistory>;
 
