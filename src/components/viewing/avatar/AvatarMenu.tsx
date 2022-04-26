@@ -20,13 +20,9 @@ const circleMotion: Variants = {
       opacity: [1, 1],
       x: xy[idx][0],
       y: xy[idx][1],
-      //   width: '200px',
-      //   height: '200px',
-      //   scale: [0, 1.5],
       transition: {
         duration: 0.5,
         type: 'spring',
-        // ease: 'easeIn',
         when: 'beforeChildren',
         delay: 0.1 * (idx + 1),
       },
@@ -52,9 +48,7 @@ export const AvatarMenu: FC<{ children: ReactElement[] }> = ({ children }) => {
       {Children.map(children, (child, idx) => (
         <MotionBox key="idx" variants={circleMotion} custom={[idx]} position="absolute">
           <MotionBox display="flex" alignItems="center" justifyContent="center" variants={iconMotion} w="40px" h="40px">
-            {/* <Center w="40px" h="40px" bgColor="red" borderRadius="full"> */}
             {child}
-            {/* </Center> */}
           </MotionBox>
         </MotionBox>
       ))}

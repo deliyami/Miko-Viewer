@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { ReactElement, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 
-const DynamicViewingPage = dynamic(() => import('../../../components/viewing/ViewingPrepareCSRPage'), {
+const DynamicViewingPage = dynamic(() => import('@src/components/viewing/ViewingPrepareCSRPage'), {
   loading: () => <div> loading</div>,
   ssr: false,
   suspense: true,
@@ -63,8 +63,8 @@ export default function ViewingPage(): InferGetServerSidePropsType<typeof getSer
   useEffect(() => {
     if (!userTicket) return;
 
-    const endTimeMs = dayjs().diff(userTicket.ticket.concertEndDate);
-
+    const diffTime = dayjs().diff(userTicket.ticket.concertEndDate);
+    const endTimeMs = diffTime ? -1 * diffTime : 0;
     const setTimeoutId = setTimeout(() => {
       router.push(`/live/${userTicket.ticketId}/result/${userTicket.userId}`);
     }, endTimeMs);

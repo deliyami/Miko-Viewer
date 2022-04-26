@@ -2,14 +2,13 @@ import { Center, HStack, Text, VStack } from '@chakra-ui/react';
 import VideoPlayer from '@src/components/ivs-player/VideoPlayer';
 import { DoneBallon } from '@src/components/viewing/chat/icon/DoneBallon';
 import { useIvsPlayer } from '@src/hooks/dynamicHooks';
-import styles from '@src/style/css/viewing.module.scss';
 import { useEffect, useState } from 'react';
 import RoomAvatarView from './avatar/RoomAvatarView';
-import ChatBox from './chat/ChatBox';
+import AmbianceBox from './centerContainer/AmbianceBox';
+import ChangePenColor from './centerContainer/ChangePenColor';
 import ChatMessageInput from './chat/ChatMessageInput';
 import ViewingSideMenuBar from './menu/ViewingSideMenuBar';
-import AudioAnalyser from './rightContainer/audioAnalyze/AudioAnalyser';
-import RankingView from './rightContainer/ranking/RankingView';
+import ViewingRightContainer from './rightContainer/ViewingRightContainer';
 import ViewingWindowEventLayout from './ViewingWindowEventLayout';
 import { WithIntervalTaskLayer } from './WithIntervalTaskLayer';
 import WithSocketEventLayout from './WithSocketEventLayout';
@@ -40,9 +39,8 @@ const ViewingCSRPage = () => {
       <WithSocketEventLayout>
         <WithIntervalTaskLayer>
           <HStack width="100vw" h="full" position="relative" color="white" overflow="clip" backgroundColor="#181818">
-            <Center h="full" w="full" zIndex="0" position="absolute">
-              <canvas className={styles.ambiance} id="ambiance" />
-            </Center>
+            <AmbianceBox />
+            <ChangePenColor />
             <VStack width="full" h="full" position="relative">
               {IVSPlayer ? (
                 <VideoPlayer />
@@ -57,11 +55,7 @@ const ViewingCSRPage = () => {
               <RoomAvatarView />
             </VStack>
             <DoneBallon x={10} y={10}></DoneBallon>
-            <VStack width="25vw" h="100vh" maxH="100vh" overflow="hidden" zIndex="0">
-              <RankingView />
-              <ChatBox />
-              <AudioAnalyser />
-            </VStack>
+            <ViewingRightContainer />
             <ViewingSideMenuBar zIndex="2" />
           </HStack>
         </WithIntervalTaskLayer>
