@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import Footer from '@src/components/home/Footer';
-import MenuBar from '@src/components/home/MenuBar';
+import MenuBar from '@src/layout/basicLayout/MenuBar';
 import { FC, ReactElement } from 'react';
 
 //  NOTE <Loading/>이 아닌 Loading으로 경고
