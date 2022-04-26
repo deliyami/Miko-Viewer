@@ -32,7 +32,7 @@ const ViewingSettingDrawer = forwardRef((_, ref) => {
 
   return (
     <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
-      <DrawerOverlay />
+      <DrawerOverlay backgroundColor="transparent" />
       <DrawerContent>
         <DrawerCloseButton />
         <DrawerHeader>設定</DrawerHeader>

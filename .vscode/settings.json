@@ -33,6 +33,7 @@
     "babylonjs",
     "chakra",
     "chartjs",
+    "Dexie",
     "googlebot",
     "gstatic",
     "jpop",
@@ -57,6 +58,7 @@
     "usehooks",
     "wasmworker",
     "webrtc",
-    "YMDHM"
+    "YMDHM",
+    "YMDHMS"
   ]
 }

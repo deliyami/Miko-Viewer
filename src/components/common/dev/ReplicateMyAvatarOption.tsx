@@ -2,6 +2,7 @@ import { Box, Flex, Slider, SliderFilledTrack, SliderMark, SliderThumb, SliderTr
 import { myAvatarReplicateNumState } from '@src/state/recoil';
 import React, { FC } from 'react';
 import { useRecoilState } from 'recoil';
+
 export const MAX_REPLICATE = 4;
 export const ReplicateMyAvatarOption: FC = () => {
   const [num, setNum] = useRecoilState(myAvatarReplicateNumState);

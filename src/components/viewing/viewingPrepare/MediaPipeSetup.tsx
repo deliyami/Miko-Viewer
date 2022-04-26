@@ -42,7 +42,7 @@ const MediaPipeSetup = memo<Props>(({ setIsMediaPipeSetup, setMediaPipeError }) 
       scoreRef.current += newScore;
       const updateScore = Math.floor(scoreRef.current); // 1
       scoreRef.current -= updateScore;
-      addedScoreForSeconds.addScore(updateScore);
+      addedScoreForSeconds.addScore(updateScore, 'motion');
       before[0] = after.x;
       before[1] = after.y;
       before[2] = after.z;

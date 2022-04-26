@@ -11,7 +11,7 @@ const VOLUME_CHECK_INTERVAL = 1000 * 0.5;
 const MAX_VOLUME = 300;
 const MIN_VOLUME = 100;
 
-const processVolume = volume => {
+const processVolume = (volume: number) => {
   const cut = Math.min(MAX_VOLUME, volume);
   const normalized = ((cut - MIN_VOLUME) / (MAX_VOLUME - MIN_VOLUME)) * 100;
   const rounded = Math.round(normalized);
@@ -25,7 +25,7 @@ const AudioAnalyser = () => {
   const [volume, setVolume] = useState(0);
 
   useEffect(() => {
-    let intervalId;
+    let intervalId: NodeJS.Timeout;
     if (myStream && isOnAudioAnalyzer) {
       const audioContext = new AudioContext();
       const audioSource = audioContext.createMediaStreamSource(myStream);
@@ -39,7 +39,7 @@ const AudioAnalyser = () => {
         const volumeSum = dataArray.reduce((prev, cur) => prev + cur, 0);
         const processedVolume = processVolume(Math.max(0, volumeSum - 32500));
         setVolume(processedVolume);
-        addedScoreForSeconds.addScore(processedVolume % 10); // 0~10 점
+        addedScoreForSeconds.addScore(processedVolume % 10, 'voice'); // 0~10 점
       };
       intervalId = setInterval(volumeCallback, VOLUME_CHECK_INTERVAL);
     }

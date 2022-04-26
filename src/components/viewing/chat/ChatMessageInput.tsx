@@ -28,7 +28,7 @@ const ChatMessageInput = memo(() => {
 
   const sendMessage = () => {
     if (!newMessage) return;
-    addedScoreForSeconds.addScore(1);
+    addedScoreForSeconds.addScore(1, 'chat');
 
     const data: ChatMessageInterface = {
       sender: userData!.name,
