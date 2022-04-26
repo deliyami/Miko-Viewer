@@ -44,7 +44,7 @@ const ChangePenColor = () => {
         </MotionBox>
       ))}
       <Center border="2px" borderRadius="full" borderColor="white" width={BoxSize + 'px'} height={BoxSize + 'px'}>
-        <Image boxSize="full" width={BoxSize * 0.7 + 'px'} height={BoxSize * 0.7 + 'px'} src="/image/temp/penlight.svg" color="white" />
+        <Image alt="penlight-icon" boxSize="full" width={BoxSize * 0.7 + 'px'} height={BoxSize * 0.7 + 'px'} src="/image/temp/penlight.svg" color="white" />
       </Center>
     </MotionBox>
   );

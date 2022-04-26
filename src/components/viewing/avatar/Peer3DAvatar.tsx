@@ -1,4 +1,4 @@
-import { Box, Center, Heading, Text } from '@chakra-ui/react';
+import { Box, Center, Heading } from '@chakra-ui/react';
 import { AiOutlineSound } from '@react-icons/all-files/ai/AiOutlineSound';
 import { AiOutlineUserAdd } from '@react-icons/all-files/ai/AiOutlineUserAdd';
 import { BiVolumeMute } from '@react-icons/all-files/bi/BiVolumeMute';
@@ -13,6 +13,7 @@ import { AvatarConnectionStatus } from './AvatarConnectionStatus';
 import { AvatarEnterEffect } from './AvatarEnterEffect';
 import { AvatarMenu } from './AvatarMenu';
 import { AvatarScore } from './AvatarScore';
+import RoomChatBox from './RoomChatBox';
 
 const AVATAR_SIZE = 200;
 
@@ -82,8 +83,7 @@ export const Peer3DAvatar = memo<Props>(({ peer }) => {
           </Box>
         )}
         <Box width="full" position="absolute" top="0" h="2rem" color="white">
-          <Text fontSize="6xl" id={uuid + 'motion'}></Text>
-          <Text fontSize="3xl" width="30vw" id={uuid + 'chat'}></Text>
+          <RoomChatBox peerId={uuid} />
         </Box>
         <Heading position="absolute" top="2" left="1" fontSize="1.2rem">
           {data.name}

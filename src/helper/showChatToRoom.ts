@@ -1,7 +1,7 @@
-const hideChatSetTimeOut = {};
+const hideChatSetTimeOut: { [key: string]: NodeJS.Timeout } = {};
 
-const showChatToRoom = (id: string, text: string, time: number = 5) => {
-  const chatDiv = document.getElementById(id + 'chat');
+const showChatToRoom = (id: string, text: string, time: number = 2) => {
+  const chatDiv = document.getElementById(id + 'chat') as HTMLElement;
   chatDiv.innerText = text;
 
   clearTimeout(hideChatSetTimeOut[id]);

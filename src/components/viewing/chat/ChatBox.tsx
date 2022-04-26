@@ -68,9 +68,9 @@ const MESSAGE_THROTTLE_TIME = 1000 * 1;
 const ChatBox = () => {
   const socket = useSocket();
   const [messages, setMessages] = useState([]);
-  const messagesBuffer = useRef([]);
+  const messagesBuffer = useRef<ChatMessageInterface[]>([]);
   const updatedTimestamp = useRef(Date.now());
-  const setTimeoutId = useRef(null);
+  const setTimeoutId = useRef<NodeJS.Timeout>();
   const isOnChat = useRecoilValue(isOnChatState);
 
   useEffect(() => {
@@ -101,7 +101,7 @@ const ChatBox = () => {
         );
       };
 
-      clearTimeout(setTimeoutId.current);
+      clearTimeout(setTimeoutId.current as NodeJS.Timeout);
       messagesBuffer.current.push(data);
 
       if (curTimestamp - updatedTimestamp.current < MESSAGE_THROTTLE_TIME) {
@@ -116,14 +116,14 @@ const ChatBox = () => {
     if (isOnChat) socket.on('be-broadcast-new-message', getBroadcastedNewMessage);
 
     return () => {
-      clearTimeout(setTimeoutId.current);
+      clearTimeout(setTimeoutId.current as NodeJS.Timeout);
       cache.clearAll();
       socket.off('be-broadcast-new-message', getBroadcastedNewMessage);
     };
   }, [socket, isOnChat]);
 
   return (
-    <VStack flexGrow="1" backgroundColor="#202020" border="2px" borderColor="#262626" overflow="scroll" width="full" textColor="white">
+    <VStack flexGrow={1} backgroundColor="#202020" border="2px" borderColor="#262626" overflow="scroll" width="full" textColor="white">
       <Heading size="sm">チャット</Heading>
       <ChatBoxRender messages={messages} />
     </VStack>

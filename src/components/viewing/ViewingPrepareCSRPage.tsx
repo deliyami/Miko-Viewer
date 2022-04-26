@@ -164,7 +164,9 @@ const ViewingPrepareCSRPage = () => {
     if (myPeer.open) {
       setIsReadyPeer(true);
     } else {
-      myPeer.reconnect();
+      if (!myPeer.destroyed) {
+        myPeer.reconnect();
+      }
       setTimeoutId = setTimeout(handleFireRerender, 200);
     }
     return () => {
