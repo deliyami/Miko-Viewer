@@ -1,4 +1,4 @@
-import { Box, Flex, SimpleGrid, Text, useMediaQuery } from '@chakra-ui/react';
+import { Box, Flex, Image, SimpleGrid, Text, useMediaQuery } from '@chakra-ui/react';
 import { IMAGE_DOMAIN } from '@src/const';
 import { Product } from '@src/types/share';
 import Link from 'next/link';
@@ -13,15 +13,15 @@ const ProductsList: FC<{ products: Product[] }> = ({ products }) => {
       {products.map((item, id) => (
         <Link key={id} href={`/concerts/${router.query.id}/products/${item.id}`}>
           <a>
-            <Flex justifyItems={'center'}>
-              <Box _hover={{ boxShadow: '2xl' }} rounded="md" p={'3%'}>
-                <img src={`${IMAGE_DOMAIN}product_image/${item.image}`} alt={item.name} />
-                <Text>{item.name}</Text>
-                <Flex justifyContent={'flex-end'}>
-                  <Text fontWeight={'bold'}>¥{item.price}</Text>
-                </Flex>
-              </Box>
-            </Flex>
+            {/* <Flex justifyItems={'center'}> */}
+            <Box _hover={{ boxShadow: '2xl' }} rounded="md" p={'3%'}>
+              <Image border={'solid'} src={`${IMAGE_DOMAIN}product_image/${item.image}`} alt={item.name}></Image>
+              <Text>{item.name}</Text>
+              <Flex justifyContent={'flex-end'}>
+                <Text fontWeight={'bold'}>¥{item.price}</Text>
+              </Flex>
+            </Box>
+            {/* </Flex> */}
           </a>
         </Link>
       ))}

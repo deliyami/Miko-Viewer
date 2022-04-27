@@ -34,7 +34,7 @@ const ProductDetail: FC<{ item: Product }> = ({ item }) => {
   return (
     <Flex justifyContent={'center'}>
       <Flex>
-        <Box w={500} h={500}>
+        <Box w={'500px'} h={'500px'}>
           <Image boxSize={'full'} alt="productImage" src={`${IMAGE_DOMAIN}product_image/${item.image}`}></Image>
         </Box>
       </Flex>

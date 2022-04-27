@@ -1,5 +1,5 @@
 import { Button, Flex, Input, Select, Text } from '@chakra-ui/react';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 
 type Type = {
   setAddress: Function;
@@ -13,7 +13,7 @@ const Address = ({ setAddress }: Type) => {
   const [city, setCity] = useState('');
   const [detail, setDetail] = useState('');
 
-  function onChangeSelected(e: React.ChangeEvent<HTMLInputElement>) {
+  function onChangeSelected(e: ChangeEvent<HTMLSelectElement>) {
     setSelected(e.target.value);
   }
   function onChangeCity(e: React.ChangeEvent<HTMLInputElement>) {
@@ -42,7 +42,7 @@ const Address = ({ setAddress }: Type) => {
         </Flex>
       </Flex>
       <Flex py={'2%'} ml={'32%'} w={'50%'} flexDirection={'column'}>
-        <Select pb={'2%'} w={'45%'} required value={selected} onChange={() => onChangeSelected}>
+        <Select pb={'2%'} w={'45%'} required value={selected} onChange={onChangeSelected}>
           <option>都道府県を選択</option>
           <option>北海道</option>
           <option>青森県</option>
