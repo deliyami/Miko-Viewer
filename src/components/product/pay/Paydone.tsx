@@ -15,13 +15,14 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { NEXT_URL } from '@src/const';
-import { Cart } from '@src/types/local';
+import { useUser } from '@src/state/swr';
+import { useSingleLaravel } from '@src/state/swr/useLaravel';
 import { useRouter } from 'next/router';
-import { FC } from 'react';
 
-const Paydone: FC<{ carts: Cart }> = ({ carts }) => {
+const Paydone = () => {
   const router = useRouter();
-  console.log(carts);
+  const { data: userData } = useUser();
+  // const orders = useSingleLaravel('/orders', userData?.id, {});
   return (
     <Flex flexDir={'column'}>
       <Text fontSize={'3xl'} textAlign={'center'} my={'5%'}>

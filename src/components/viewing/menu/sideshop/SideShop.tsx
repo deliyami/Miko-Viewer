@@ -16,23 +16,23 @@ import {
 import { BiArrowFromLeft } from '@react-icons/all-files/bi/BiArrowFromLeft';
 import { BiArrowFromRight } from '@react-icons/all-files/bi/BiArrowFromRight';
 import { FaGift } from '@react-icons/all-files/fa/FaGift';
+import { FaShoppingCart } from '@react-icons/all-files/fa/FaShoppingCart';
 import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
 import { useUser } from '@src/state/swr';
 import { useSingleLaravel } from '@src/state/swr/useLaravel';
 import React, { FC, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
-import Cart from './Carts';
+import Carts from './Carts';
 import Product from './Product';
 
-const CartView: FC<{ cartIsOpen: boolean; setCartCount: (value: React.SetStateAction<number>) => void }> = ({ cartIsOpen, setCartCount }) => {
+const CartView: FC<{ size: string; cartIsOpen: boolean; setCartCount: (value: React.SetStateAction<number>) => void }> = ({ size, cartIsOpen, setCartCount }) => {
   const { data: userData } = useUser();
   const cart = useSingleLaravel('/cart_products', userData?.id, {});
   useEffect(() => {
     setCartCount(cart.data?.length);
-  }, [cart.data?.length]);
-  // alert(JSON.stringify(cart));
-  if (cartIsOpen && cart.data) return <Cart cart={cart.data}></Cart>;
+  }, [cart.data?.length, setCartCount]);
+  if (cartIsOpen && cart.data) return <Carts cart={cart.data}></Carts>;
 
-  return <Product setCartCount={setCartCount} />;
+  return <Product size={size} setCartCount={setCartCount} />;
 };
 
 const SideShop = forwardRef((_, ref) => {
@@ -77,10 +77,17 @@ const SideShop = forwardRef((_, ref) => {
           {!size ? <BiArrowFromLeft fontSize={'25px'} /> : <BiArrowFromRight fontSize={'25px'} />}
         </Button>
         <DrawerHeader>
-          <Flex cursor={'default'} border={'1px'} p="8px" w={'180px'} color="white" justifyContent="center" borderRadius={'2xl'} alignItems="center" background="#1CE0D7">
-            <Text>グッズリスト</Text>
-            <FaGift />
-          </Flex>
+          {cartOpen === true ? (
+            <Flex cursor={'default'} border={'1px'} p="8px" w={'180px'} color="white" justifyContent="center" borderRadius={'2xl'} alignItems="center" background="#1CE0D7">
+              <Text>カート</Text>
+              <FaShoppingCart />
+            </Flex>
+          ) : (
+            <Flex cursor={'default'} border={'1px'} p="8px" w={'180px'} color="white" justifyContent="center" borderRadius={'2xl'} alignItems="center" background="#1CE0D7">
+              <Text>グッズリスト</Text>
+              <FaGift />
+            </Flex>
+          )}
         </DrawerHeader>
         <Slider min={30} value={opacity} onChange={onOpacity} position={'absolute'} bottom="11px" ml="20px" aria-label="slider-ex-1" w={'190px'} defaultValue={100}>
           <SliderTrack>
@@ -90,7 +97,7 @@ const SideShop = forwardRef((_, ref) => {
         </Slider>
         <DrawerBody mt={'10px'}>
           <AsyncBoundary>
-            <CartView cartIsOpen={cartOpen} setCartCount={setCartCount} />
+            <CartView size={sizeValue} cartIsOpen={cartOpen} setCartCount={setCartCount} />
           </AsyncBoundary>
         </DrawerBody>
         <DrawerFooter>

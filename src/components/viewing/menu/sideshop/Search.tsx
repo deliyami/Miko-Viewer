@@ -1,9 +1,13 @@
 import { Search2Icon } from '@chakra-ui/icons';
 import { Input, InputGroup, InputRightElement } from '@chakra-ui/react';
-import { ChangeEventHandler, KeyboardEventHandler, useState } from 'react';
+import { ChangeEventHandler, KeyboardEventHandler } from 'react';
 
-const Search = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+type SearchType = {
+  searchQuery: string;
+  setSearchQuery: Function;
+};
+
+const Search = ({ searchQuery, setSearchQuery }: SearchType) => {
   //   const router = useRouter();
 
   const onChangeSearch: ChangeEventHandler<HTMLInputElement> = e => {
@@ -20,7 +24,7 @@ const Search = () => {
     }
   };
   return (
-    <InputGroup bg={'white'} mb={'20px'}>
+    <InputGroup bg={'white'} mb={'20px'} w={'450px'} alignSelf="center">
       <InputRightElement cursor={'pointer'} background={'#1CE0D7'}>
         <Search2Icon color={'white'} />
       </InputRightElement>
