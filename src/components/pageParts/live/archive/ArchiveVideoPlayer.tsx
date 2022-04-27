@@ -1,5 +1,5 @@
-import { Box, Center } from '@chakra-ui/react';
-import { generateIvsM3U8 } from '@src/helper/dynamic/ivsHelper';
+import { Center, Heading, HStack, Text } from '@chakra-ui/react';
+import { generateIvsM3U8, generateIvsThumbUrl } from '@src/helper/dynamic/ivsHelper';
 import { useIvsPlayer } from '@src/hooks/dynamicHooks';
 import { usePageLaravel } from '@src/state/swr/useLaravel';
 import { Recording } from '@src/types/share/Recording';
@@ -12,12 +12,31 @@ import 'video.js/dist/video-js.css';
 
 type IvsVideoJS = videojs.Player & VideoJSIVSTech & VideoJSQualityPlugin;
 
-const RecordingItem: FC<{ recording: Recording; setM3u8: Dispatch<SetStateAction<string | undefined>> }> = ({ recording, setM3u8 }) => {
+const RecordingItem: FC<{ recording: Recording; setM3u8: Dispatch<SetStateAction<string | undefined>>; idx: number }> = ({ recording, setM3u8, idx }) => {
+  const { prefix } = recording;
   const recordSelectHandler: MouseEventHandler<HTMLDivElement> = () => {
-    setM3u8(recording.prefix);
+    setM3u8(prefix);
   };
 
-  return <Box onClick={recordSelectHandler}>{recording.prefix}</Box>;
+  const imgUrl = generateIvsThumbUrl(prefix, 0);
+
+  return (
+    <Center
+      onClick={recordSelectHandler}
+      height="100px"
+      width="200px"
+      bgColor="blackAlpha.800"
+      backgroundImage={`url(${imgUrl})`}
+      backgroundSize="cover"
+      backgroundPosition="center"
+      filter="grayscale(80%)"
+      _hover={{ boxShadow: '0 0 0 2px white;' }}
+    >
+      <Heading fontSize="5xl" fontWeight="extrabold" color="white">
+        {idx}
+      </Heading>
+    </Center>
+  );
 };
 
 const RecordingSelector: FC<{ setM3u8: Dispatch<SetStateAction<string | undefined>> }> = ({ setM3u8 }) => {
@@ -29,12 +48,14 @@ const RecordingSelector: FC<{ setM3u8: Dispatch<SetStateAction<string | undefine
     ],
   });
 
+  if (!data || data.data.length === 0) return <Text> No Recordings </Text>;
+
   return (
-    <Box>
-      {data?.data.map(recording => {
-        return <RecordingItem key={recording.id} recording={recording} setM3u8={setM3u8} />;
+    <HStack overflowX="scroll" width="full" backgroundColor="blackAlpha.800" padding="2">
+      {data.data.map((recording, idx) => {
+        return <RecordingItem key={recording.id} recording={recording} setM3u8={setM3u8} idx={idx} />;
       })}
-    </Box>
+    </HStack>
   );
 };
 

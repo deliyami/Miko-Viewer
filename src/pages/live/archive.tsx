@@ -10,6 +10,7 @@ const DynamicArchivePageCSR = dynamic(() => import('@src/components/pageParts/li
   suspense: true,
 });
 
+// TODO 보안
 const ArchivePage = () => {
   useEffect(() => {
     window.HELP_IMPROVE_VIDEOJS = false; // video.js GA off
