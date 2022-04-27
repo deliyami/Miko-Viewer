@@ -1,12 +1,16 @@
 import { SmallCloseIcon } from '@chakra-ui/icons';
 import { Avatar, AvatarBadge, Button, Center, Flex, FormControl, FormErrorMessage, FormLabel, Heading, IconButton, Input, Stack } from '@chakra-ui/react';
 import { IMAGE_DOMAIN, LARAVEL_URL } from '@src/const';
+import { toastLog } from '@src/helper';
 import { axiosI } from '@src/state/fetcher';
-import { useUser } from '@src/state/swr';
+import { URL_USER, useUser } from '@src/state/swr';
+import { User } from '@src/types/share';
+import { CommonDataResponse } from '@src/types/share/common';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { mutate } from 'swr';
 
 const EditProfile = () => {
   const {
@@ -19,18 +23,17 @@ const EditProfile = () => {
     getValues,
     formState: { errors, isSubmitting },
   } = useForm<{ name: string; email: string; password: string; avatar: string }>({ mode: 'all' });
-
   const { data: userData } = useUser();
   const router = useRouter();
+  const [avatar, setAvatar] = useState(userData!.avatar ?? null);
+  const [email, setEmail] = useState(userData!.email);
+  const [name, setName] = useState(userData!.name);
+  const [imageSrc, setImageSrc] = useState('');
 
   if (!userData) {
     router.push('/login');
     return <></>;
   }
-
-  const [avatar, setAvatar] = useState(userData.avatar ?? null);
-  const [email, setEmail] = useState(userData.email);
-  const [name, setName] = useState(userData.name);
 
   const onSubmit = async (data: any) => {
     const formData = new FormData();
@@ -44,24 +47,24 @@ const EditProfile = () => {
     // console.log('submit');
     // console.log(data);
     axiosI
-      .post(LARAVEL_URL + `/users/${userData.id}`, formData)
+      .post<CommonDataResponse<User>>(LARAVEL_URL + `/users/${userData.id}`, formData)
       .then(response => {
-        console.log(response);
-        router.push('/');
+        mutate(URL_USER, response.data.data).then(() => {
+          toastLog('success', 'アップデートに成功しました。');
+          router.push('/');
+        });
       })
       .catch((e: AxiosError) => {
         console.error('error in edit', e.message);
       });
   };
 
-  const [imageSrc, setImageSrc] = useState('');
-
   const saveFileImage = (e: any) => {
     setImageSrc(URL.createObjectURL(e.target.files[0]));
     setAvatar(e.target.files[0]);
   };
 
-  const removeFileImage = (e: any) => {
+  const removeFileImage = () => {
     URL.revokeObjectURL(imageSrc);
     setImageSrc('');
     setAvatar(null);
@@ -78,7 +81,7 @@ const EditProfile = () => {
             <FormLabel>Avatar</FormLabel>
             <Stack direction={['column', 'row']} spacing={6}>
               <Center>
-                <Avatar size="2xl" src={imageSrc ? imageSrc : IMAGE_DOMAIN + avatar}>
+                <Avatar size="2xl" src={imageSrc || IMAGE_DOMAIN + avatar}>
                   <AvatarBadge
                     onClick={removeFileImage}
                     as={IconButton}
