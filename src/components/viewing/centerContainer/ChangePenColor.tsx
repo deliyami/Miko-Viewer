@@ -37,7 +37,7 @@ const colors = ['#39c5bb', '#ffcc11', '#ffee11', '#ffbbcc', '#dd4444', '#3366cc'
 
 const ChangePenColor = () => {
   return (
-    <MotionBox top="500" left="0" display="flex" zIndex="2" justifyContent="center" alignItems="center" whileHover="hover" animate="hidden" position="absolute">
+    <MotionBox bottom="20vh" left="1" display="flex" zIndex="2" justifyContent="center" alignItems="center" whileHover="hover" animate="hidden" position="absolute">
       {colors.map((child, idx) => (
         <MotionBox key={child} variants={circleMotion} custom={[idx, colors.length]} position="absolute">
           <MotionBox variants={iconMotion} borderRadius="full" backgroundColor={child} _hover={{ borderColor: 'white', border: '2px', scale: 1.5 }}></MotionBox>

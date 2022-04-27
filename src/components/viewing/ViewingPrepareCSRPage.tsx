@@ -5,7 +5,7 @@ import { useMyPeer, useSocket } from '@src/hooks/dynamicHooks';
 import { ivsErrorState, mediapipeErrorState, myStreamState, peerErrorState, prepareAnimationDurationState, socketErrorState, streamErrorState } from '@src/state/recoil';
 import { AnimatePresence, motion } from 'framer-motion';
 import Script from 'next/script';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import LottieVideoPlay from '../lottie/LottieVideoPlay';
 import ViewingCSRPage from './ViewingCSRPage';
@@ -34,6 +34,8 @@ const ViewingPrepareCSRPage = () => {
   const [ivsError, setIvsError] = useRecoilState(ivsErrorState);
   const prepareAnimationDuration = useRecoilValue(prepareAnimationDurationState);
 
+  const isExitedRef = useRef(false);
+
   const isAllReady = isReadyPeer && isReadySocket && isReadyStream && isReadyIvs && isMediapipeSetup;
   const [asyncIsAllReady, setAsyncIsAllReady] = useState<boolean>(isAllReady);
 
@@ -58,6 +60,7 @@ const ViewingPrepareCSRPage = () => {
 
   const handleCleanUp = () => {
     console.log('handleCleanUp');
+    isExitedRef.current = true;
 
     if (myStream) {
       myStream.getTracks().forEach(track => {
@@ -178,6 +181,7 @@ const ViewingPrepareCSRPage = () => {
     if (!myPeer) return;
 
     const handleClose = () => {
+      if (isExitedRef.current) return;
       toastLog('error', 'myPeer destroyed', 'peer가 파괴되었습니다..');
       myPeer.destroy();
     };

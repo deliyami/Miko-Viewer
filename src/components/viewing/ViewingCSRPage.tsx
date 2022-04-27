@@ -6,6 +6,7 @@ import RoomAvatarView from './avatar/RoomAvatarView';
 import AmbianceBox from './centerContainer/AmbianceBox';
 import ChangePenColor from './centerContainer/ChangePenColor';
 import DoneRenderBox from './centerContainer/DoneRenderBox';
+import ExitBtn from './centerContainer/ExitBtn';
 import ChatMessageInput from './chat/ChatMessageInput';
 import ViewingSideMenuBar from './menu/ViewingSideMenuBar';
 import ViewingRightContainer from './rightContainer/ViewingRightContainer';
@@ -42,6 +43,7 @@ const ViewingCSRPage = () => {
             <AmbianceBox />
             <DoneRenderBox />
             <ChangePenColor />
+            <ExitBtn />
             <VStack width="full" h="full" position="relative">
               {IVSPlayer ? (
                 <VideoPlayer />
