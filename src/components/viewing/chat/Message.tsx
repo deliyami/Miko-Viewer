@@ -2,13 +2,17 @@ import styles from '@src/style/css/chat.module.scss';
 import { ChatMessageInterface } from '@src/types/dto/ChatMessageType';
 import React, { FC } from 'react';
 
-const COLORS = ['#36C5F0', '#2EB67D', '#E01E5A', '#ECB22E', '#E51670', 'red'];
-const DARKEN_COLORS = ['#0a6b88', '#175b3e', '#700f2c', '#815d0b', '#720b38', 'red'];
+export const COLORS = ['#36C5F0', '#2EB67D', '#E01E5A', '#ECB22E', '#E51670', 'red'];
+export const DARKEN_COLORS = ['#0a6b88', '#175b3e', '#700f2c', '#815d0b', '#720b38', 'red'];
 const MAX_AMOUNT = 10000;
+
+export const getColorIdxByAmount = (amount: number) => {
+  return Math.floor((Math.min(MAX_AMOUNT, amount) / MAX_AMOUNT) * (COLORS.length - 1));
+};
 
 const Message: FC<{ data: ChatMessageInterface }> = ({ data: { sender, text, amount, timestamp } }) => {
   const SuperChat: FC = () => {
-    const colorIdx = Math.floor((Math.min(MAX_AMOUNT, amount) / MAX_AMOUNT) * (COLORS.length - 1));
+    const colorIdx = getColorIdxByAmount(amount as number);
 
     return (
       <div className={styles['super-chat']} style={{ backgroundColor: COLORS[colorIdx] }}>

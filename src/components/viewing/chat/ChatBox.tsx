@@ -11,6 +11,7 @@ import { FC, memo, useEffect, useRef, useState } from 'react';
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized';
 import { useRecoilValue } from 'recoil';
 import Message from './Message';
+import SuperChatList from './SuperChatList';
 
 const cache = new CellMeasurerCache({
   defaultHeight: 200,
@@ -70,6 +71,7 @@ const MESSAGE_THROTTLE_TIME = 1000 * 1;
 const ChatBox = () => {
   const socket = useSocket();
   const [messages, setMessages] = useState([]);
+  const [superChats, setSuperChats] = useState<ChatMessageInterface[]>([]);
   const messagesBuffer = useRef<ChatMessageInterface[]>([]);
   const updatedTimestamp = useRef(Date.now());
   const setTimeoutId = useRef<NodeJS.Timeout>();
@@ -82,6 +84,10 @@ const ChatBox = () => {
 
       if (data.amount && data.sender === userData?.name) {
         addedScoreForSeconds.addScore(Math.round(data.amount / 10), 'superChat');
+      }
+
+      if (data.amount) {
+        setSuperChats(prev => [data, ...prev]);
       }
 
       const handleSetMessages = () => {
@@ -132,6 +138,7 @@ const ChatBox = () => {
   return (
     <VStack flexGrow={1} backgroundColor="#202020" border="2px" borderColor="#262626" overflow="scroll" width="full" textColor="white">
       <Heading size="sm">チャット</Heading>
+      <SuperChatList messages={superChats} setMessages={setSuperChats} />
       <ChatBoxRender messages={messages} />
     </VStack>
   );
