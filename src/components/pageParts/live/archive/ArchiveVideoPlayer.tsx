@@ -1,25 +1,44 @@
-import { Center } from '@chakra-ui/react';
+import { Box, Center } from '@chakra-ui/react';
 import { generateIvsM3U8 } from '@src/helper/dynamic/ivsHelper';
 import { useIvsPlayer } from '@src/hooks/dynamicHooks';
+import { usePageLaravel } from '@src/state/swr/useLaravel';
+import { Recording } from '@src/types/share/Recording';
+// import '@videojs/themes/dist/city/index.css';
 import type { VideoJSEvents, VideoJSIVSTech, VideoJSQualityPlugin } from 'amazon-ivs-player';
-import { FC, useEffect, useRef } from 'react';
+import { useRouter } from 'next/router';
+import { Dispatch, FC, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 
-// // We use the TypeScript compiler (TSC) to check types; it doesn't know what this WASM module is, so let's ignore the error it throws (TS2307).
-// // @ts-ignore
-// import wasmBinaryPath from 'amazon-ivs-player/dist/assets/amazon-ivs-wasmworker.min.wasm';
-// import wasmWorkerPath from 'amazon-ivs-player/dist/assets/amazon-ivs-wasmworker.min.js';
-
-// const createAbsolutePath = (assetPath: string) => new URL(assetPath, document.URL).toString();
-
-// register the tech with videojs
-
 type IvsVideoJS = videojs.Player & VideoJSIVSTech & VideoJSQualityPlugin;
 
-const prefix = 'ivs/v1/121323684128/NIFlWVmsiHXA/2022/4/19/10/17/8X0n3badH9py';
+const RecordingItem: FC<{ recording: Recording; setM3u8: Dispatch<SetStateAction<string | undefined>> }> = ({ recording, setM3u8 }) => {
+  const recordSelectHandler: MouseEventHandler<HTMLDivElement> = () => {
+    setM3u8(recording.prefix);
+  };
 
-const VideoJS: FC<{ options: videojs.PlayerOptions; onReady: (player: IvsVideoJS) => void }> = ({ onReady, options }) => {
+  return <Box onClick={recordSelectHandler}>{recording.prefix}</Box>;
+};
+
+const RecordingSelector: FC<{ setM3u8: Dispatch<SetStateAction<string | undefined>> }> = ({ setM3u8 }) => {
+  const router = useRouter();
+  const { data } = usePageLaravel('/recordings', {
+    filter: [
+      ['ticket_id', router.query.ticket_id as string],
+      ['avl_archive', 1], // 스트리머가 허용한 영상만 볼 수 있음.
+    ],
+  });
+
+  return (
+    <Box>
+      {data?.data.map(recording => {
+        return <RecordingItem key={recording.id} recording={recording} setM3u8={setM3u8} />;
+      })}
+    </Box>
+  );
+};
+
+const VideoJS: FC<{ options: videojs.PlayerOptions; onReady: (player: IvsVideoJS) => void; m3u8?: string }> = ({ onReady, options, m3u8 }) => {
   const IVSPlayer = useIvsPlayer();
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<IvsVideoJS>();
@@ -37,7 +56,7 @@ const VideoJS: FC<{ options: videojs.PlayerOptions; onReady: (player: IvsVideoJS
       options,
       () => {
         console.warn('Player is ready to use');
-        player.src(generateIvsM3U8(prefix));
+        if (m3u8) player.src(generateIvsM3U8(m3u8));
       },
     ) as IvsVideoJS;
 
@@ -75,11 +94,16 @@ const VideoJS: FC<{ options: videojs.PlayerOptions; onReady: (player: IvsVideoJS
     }
   };
 
-  return <video ref={videoRef} id="videojs-player" className="video-js vjs-big-play-centered" />;
+  useEffect(() => {
+    if (m3u8 && playerRef.current) playerRef.current.src(generateIvsM3U8(m3u8));
+  }, [m3u8]);
+
+  return <video ref={videoRef} id="videojs-player" className="video-js vjs-big-play-centered " />;
 };
 
 const ArchiveVideoPlayer = () => {
   const playerRef = useRef<IvsVideoJS>();
+  const [m3u8, setM3u8] = useState<string>();
 
   const videoJsOptions: videojs.PlayerOptions = {
     techOrder: ['AmazonIVS'],
@@ -104,8 +128,9 @@ const ArchiveVideoPlayer = () => {
   };
 
   return (
-    <Center w="640px" h="480px" margin="15px">
-      <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
+    <Center w="full" maxW="container.xl" margin="15px" flexDirection="column">
+      <RecordingSelector setM3u8={setM3u8} />
+      <VideoJS options={videoJsOptions} onReady={handlePlayerReady} m3u8={m3u8} />
     </Center>
   );
 };

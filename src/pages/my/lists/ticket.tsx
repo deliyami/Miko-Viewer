@@ -22,7 +22,7 @@ const UserTicketList = () => {
     page,
     perPage: PER_PAGE,
     filter: [
-      ['user_id', userData.id],
+      ['user_id', userData!.id],
       ['is_used', isUsedId || 0],
     ],
     with: ['ticket', 'concert'],

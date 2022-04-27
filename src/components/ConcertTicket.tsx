@@ -18,6 +18,18 @@ const ButtonStatus: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
     router.push('/live/enter');
   };
 
+  const archiveEnterHandler = () => {
+    router.push(
+      {
+        pathname: '/live/archive',
+        query: {
+          ticket_id: userTicket.ticketId,
+        },
+      },
+      undefined,
+    );
+  };
+
   // 날짜 비교
   const compareStartDate = dayjs(userTicket.ticket.concertStartDate);
   const compareEndDate = dayjs(userTicket.ticket.concertEndDate);
@@ -36,7 +48,7 @@ const ButtonStatus: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
         </Button>
       ) : (
         archiving && (
-          <Button colorScheme="purple" size="sm" fontWeight="800" fontSize="14px" _hover={{ bg: 'purple.500', color: 'white' }}>
+          <Button onClick={archiveEnterHandler} colorScheme="purple" size="sm" fontWeight="800" fontSize="14px" _hover={{ bg: 'purple.500', color: 'white' }}>
             アーカイブ視聴
           </Button>
         )

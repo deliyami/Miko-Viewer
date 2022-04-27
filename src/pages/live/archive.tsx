@@ -1,8 +1,8 @@
 import { Box, Text } from '@chakra-ui/react';
 import AsyncBoundary from '@src/components/common/wrapper/AsyncBoundary';
+import BasicLayout from '@src/layout/BasicLayout';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { ReactElement, useEffect } from 'react';
 
 const DynamicArchivePageCSR = dynamic(() => import('@src/components/pageParts/live/archive/ArchivePageCSR'), {
   loading: () => <div> loading</div>,
@@ -11,16 +11,13 @@ const DynamicArchivePageCSR = dynamic(() => import('@src/components/pageParts/li
 });
 
 const ArchivePage = () => {
-  const router = useRouter();
-
   useEffect(() => {
     window.HELP_IMPROVE_VIDEOJS = false; // video.js GA off
   }, []);
 
   return (
     <Box>
-      {router.asPath}
-      <Text>코인</Text>
+      <Text>アーカイブ</Text>
       <AsyncBoundary>
         <DynamicArchivePageCSR />
       </AsyncBoundary>
@@ -28,4 +25,7 @@ const ArchivePage = () => {
   );
 };
 
+ArchivePage.getLayout = function getLayout(page: ReactElement) {
+  return <BasicLayout>{page}</BasicLayout>;
+};
 export default ArchivePage;
