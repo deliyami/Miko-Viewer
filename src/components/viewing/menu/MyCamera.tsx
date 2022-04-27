@@ -1,6 +1,6 @@
 import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Heading, useDisclosure } from '@chakra-ui/react';
-import CameraScreen from '@src/components/common/meidaView/CameraScreen';
-import CameraSwitch from '@src/components/common/meidaView/CameraSwitch';
+import CameraScreen from '@src/components/common/mediaView/CameraScreen';
+import CameraSwitch from '@src/components/common/mediaView/CameraSwitch';
 import { myStreamState } from '@src/state/recoil';
 import { forwardRef, useImperativeHandle } from 'react';
 import { useRecoilValue } from 'recoil';

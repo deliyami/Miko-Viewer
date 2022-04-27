@@ -29,7 +29,7 @@ const MyRanking = memo(() => {
     };
 
     socket.on('be-update-myRank', getMyRank);
-    let updateMyRankInterval;
+    let updateMyRankInterval: NodeJS.Timeout;
     if (isOnMyRanking) {
       updateMyRankInterval = setInterval(() => {
         socket.emit('fe-get-myRank');
@@ -42,7 +42,7 @@ const MyRanking = memo(() => {
     };
   }, [socket]);
 
-  return <Heading size="sm">{myRank ? `MyRank: ${myRank}位 - ${latestScore[user.uuid]}  ` : 'loading'} </Heading>;
+  return <Heading size="sm">{myRank ? `MyRank: ${myRank}位 - ${latestScore[user!.uuid]}  ` : 'loading'} </Heading>;
 });
 
 MyRanking.displayName = 'MyRanking';
@@ -107,7 +107,7 @@ const RankingView: FC = () => {
   return (
     <VStack
       width="full"
-      flexShrink="0"
+      flexShrink={0}
       minH="150px"
       position="relative"
       backgroundColor="#202020"
