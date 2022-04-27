@@ -38,7 +38,6 @@ const TextTestPage = () => {
       const animations = ['idle'];
       worker.postMessage({ canvas, url, animations }, [canvas]);
     }
-    return () => {};
   }, []);
 
   return (
