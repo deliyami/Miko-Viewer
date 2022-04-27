@@ -2,7 +2,7 @@ import { Avatar, Center, Heading, HStack, Text } from '@chakra-ui/react';
 import { MotionBox } from '@src/components/common/motion/MotionChakra';
 import { IMAGE_DOMAIN } from '@src/const';
 import { ChatMessageInterface } from '@src/types/dto/ChatMessageType';
-import { Dispatch, FC, SetStateAction, useEffect } from 'react';
+import { Dispatch, FC, memo, SetStateAction, useEffect } from 'react';
 import { COLORS, DARKEN_COLORS, getColorIdxByAmount } from './Message';
 
 const SuperChatItem: FC<{ message: ChatMessageInterface; setMessages: Dispatch<SetStateAction<ChatMessageInterface[]>> }> = ({
@@ -52,7 +52,7 @@ const SuperChatItem: FC<{ message: ChatMessageInterface; setMessages: Dispatch<S
   );
 };
 
-const SuperChatList: FC<{ messages: ChatMessageInterface[]; setMessages: Dispatch<SetStateAction<ChatMessageInterface[]>> }> = ({ messages, setMessages }) => {
+const SuperChatList = memo<{ messages: ChatMessageInterface[]; setMessages: Dispatch<SetStateAction<ChatMessageInterface[]>> }>(({ messages, setMessages }) => {
   return (
     <HStack w="full" h="14" overflowX="scroll" px="1">
       {messages.map(message => (
@@ -60,12 +60,13 @@ const SuperChatList: FC<{ messages: ChatMessageInterface[]; setMessages: Dispatc
       ))}
       {messages.length === 0 && (
         <Heading w="full" textAlign="center">
-          {' '}
           SUPER CHAT...
         </Heading>
       )}
     </HStack>
   );
-};
+});
+
+SuperChatList.displayName = 'SuperChatList';
 
 export default SuperChatList;

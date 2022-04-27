@@ -187,7 +187,7 @@ const ViewingPrepareCSRPage = () => {
     };
 
     const handlePeerDisconnected = () => {
-      //   myPeer.reconnect();
+      myPeer.reconnect();
       toastLog('error', 'myPeer disconnected', 'peer가 시그널링 서버와 끊겼습니다.');
     };
 
@@ -196,8 +196,11 @@ const ViewingPrepareCSRPage = () => {
       console.error('handlePeerError', e.type, e);
       switch (e.type as string) {
         case 'unavailable-id': // id가 중복되었을 경우
-          myPeer.disconnect(); // reconnect를 위해 한번 disconnect를 할 필요가 있다.
+          // myPeer.disconnect(); // reconnect를 위해 한번 disconnect를 할 필요가 있다.
           setPeerError('このIDで既に接続しているユーザーがいます。');
+          // setTimeout(() => {
+          //   myPeer.disconnect();
+          // }, 5000);
           break;
         default:
           setPeerError(e.type as string);

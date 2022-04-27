@@ -24,16 +24,6 @@ const result = () => {
     };
   }, [router.isReady]);
 
-  // })
-
-  //   function ranking(){
-  //       axios.get(``).then( (res) =>{
-  //           setRank(res.data);
-  //           console.log(rank);
-  //           //콘서트아이디를 주소창에
-  //       }
-  //       )
-
   return (
     <Flex h="72%" flexDirection={'column'} justifyContent={'space-evenly'}>
       <Text ml={'5%'} h={'1%'} fontWeight={'bold'} fontSize={'6xl'}>

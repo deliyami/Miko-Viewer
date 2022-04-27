@@ -2,8 +2,8 @@ import styles from '@src/style/css/chat.module.scss';
 import { ChatMessageInterface } from '@src/types/dto/ChatMessageType';
 import React, { FC } from 'react';
 
-export const COLORS = ['#36C5F0', '#2EB67D', '#E01E5A', '#ECB22E', '#E51670', 'red'];
-export const DARKEN_COLORS = ['#0a6b88', '#175b3e', '#700f2c', '#815d0b', '#720b38', 'red'];
+export const COLORS = ['#36C5F0', '#2EB67D', '#E01E5A', '#ECB22E', '#E51670', '#FF0000'];
+export const DARKEN_COLORS = ['#0a6b88', '#175b3e', '#700f2c', '#815d0b', '#720b38', '#AA0000'];
 const MAX_AMOUNT = 10000;
 
 export const getColorIdxByAmount = (amount: number) => {
