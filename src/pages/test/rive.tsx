@@ -7,10 +7,7 @@ function sleep(ms) {
   while (Date.now() < wakeUpTime) {}
 }
 const TextTestPage = () => {
-  const params = {
-    src: '/rive/poison-loader.riv',
-    autoplay: false,
-  };
+  const params: Parameters<typeof useRive>[0] = { src: '/rive/emoji.riv', autoplay: true, artboard: 'Bother', animations: 'Animation 1' };
   const { RiveComponent, rive } = useRive(params);
   const [time, setTime] = useState(0);
   setInterval(() => {
@@ -24,7 +21,7 @@ const TextTestPage = () => {
   };
 
   useEffect(() => {
-    const worker = new Worker(new URL('../../worker/rive.worker.ts', import.meta.url), { type: 'module' });
+    const worker = new Worker(new URL('@src/worker/rive.worker.ts', import.meta.url), { type: 'module' });
     worker.onmessage = function (oEvent) {
       console.info('Worker said : ', oEvent);
     };

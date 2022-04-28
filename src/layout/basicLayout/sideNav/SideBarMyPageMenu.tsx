@@ -20,7 +20,7 @@ const SideBarMyPageMenu = () => {
   const hoverRef = useRef<any>(null);
   const isHover = useHover(hoverRef);
 
-  const isActive = isHover || isOpen;
+  const isActive = (isHover || isOpen) && isLogin;
 
   useEffect(() => {
     onToggle();

@@ -1,7 +1,8 @@
 import Rive from 'rive-canvas';
 
+// eslint-disable-next-line no-restricted-globals
 addEventListener('message', async ({ data }) => {
-  const { canvas, url, animations } = data;
+  const { canvas, url, animations, artboardName } = data;
 
   // Load .riv file
   const req = new Request(url);
@@ -9,14 +10,14 @@ addEventListener('message', async ({ data }) => {
   const loadFile = fetch(req).then(res => res.arrayBuffer());
   const [rive, buf] = await Promise.all([loadRive, loadFile]);
   const file = rive.load(new Uint8Array(buf));
-  const artboard = file.defaultArtboard();
+  const artboard = file.artboardByName(artboardName);
 
   // Associate CanvasRenderer with offset context
   const ctx = canvas.getContext('2d');
   const renderer = new rive.CanvasRenderer(ctx);
 
   // Move frame of each animation
-  const animate = animations.map(name => {
+  const animate = animations.map((name: string) => {
     const animation = artboard.animationByName(name);
     const instance = new rive.LinearAnimationInstance(animation);
     return (delta: number) => {

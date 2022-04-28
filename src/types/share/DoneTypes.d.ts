@@ -18,10 +18,4 @@ type DoneIconName =
   | 'StarBurst'
   | 'MoneyRain';
 
-type DoneProps = {
-  path: number;
-  loop?: boolean;
-  autoplay?: boolean;
-  width?: number;
-};
 export type { DoneIconName, DoneProps };

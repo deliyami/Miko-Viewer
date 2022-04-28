@@ -5,8 +5,8 @@ import { addedScoreForSeconds } from '@src/state/shareObject';
 import { useUser } from '@src/state/swr';
 import { DoneSendInterface } from '@src/types/share';
 import { useEffect, useState } from 'react';
-import DoneAnimationBox from '../chat/icon/DoneAnimationBox';
-import { DoneIcon } from '../chat/icon/DoneIcon';
+import DoneAnimationBox from './done/DoneAnimationBox';
+import { DoneIcon } from './done/DoneIcon';
 
 interface DoneRenderData {
   x: number;
@@ -73,7 +73,7 @@ export default function DoneRenderBox(): JSX.Element {
       {doneList.map(({ data, id, x, y }) => (
         <Center key={id} left={x} top={y} bgColor="transparent" position="absolute">
           <DoneAnimationBox>
-            <DoneIcon width={200} path={data.itemId}></DoneIcon>
+            <DoneIcon width={200} itemId={data.itemId}></DoneIcon>
           </DoneAnimationBox>
         </Center>
       ))}
