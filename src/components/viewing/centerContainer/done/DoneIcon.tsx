@@ -46,5 +46,5 @@ export const DoneIcon: FC<DoneProps> = ({ itemId, loop = true, autoplay = true, 
     }
   }, []);
 
-  return <canvas ref={canvasRef} width="300px" height="300px" />;
+  return <canvas ref={canvasRef} width={`${width}px`} height={`${width}px`} />;
 };
