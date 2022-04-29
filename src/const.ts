@@ -48,7 +48,7 @@ export const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_SERVER ?? 'http://local
 
 export const NEXT_URL = process.env.NEXT_PUBLIC_NEXT_URL ?? 'http://localhost:3000';
 
-export const S3_IVS_URL = process.env.NEXT_PUBLIC_S3_IVS_URL ?? 'https://miko-ivs-bucket.s3.amazonaws.com';
+export const S3_IVS_URL = process.env.NEXT_PUBLIC_S3_IVS_URL ?? 'https://ivs.mikopj.live';
 
 // URL
 export const URL_USER_TICKET = '/user_tickets';
