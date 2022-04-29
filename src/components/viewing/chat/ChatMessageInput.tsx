@@ -1,5 +1,4 @@
 import { Box, Button, Center, Input, ScaleFade } from '@chakra-ui/react';
-import { DoneOption } from '@src/components/viewing/chat/DoneOption';
 import { sendToAllPeers, showChatToRoom } from '@src/helper';
 import { useSocket } from '@src/hooks/dynamicHooks';
 import { chatModeState, isShowChatInputState, peerDataListState } from '@src/state/recoil';
@@ -8,6 +7,7 @@ import { useUser } from '@src/state/swr';
 import { ChatMessageInterface } from '@src/types/dto/ChatMessageType';
 import { FormEvent, KeyboardEventHandler, memo, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { DoneOption } from './DoneOption';
 import { SuperChatOption } from './SuperChatOption';
 
 const ChatMessageInput = memo(() => {
