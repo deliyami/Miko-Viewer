@@ -1,12 +1,13 @@
 {
+  "name": "Miko - Concert Streaming App",
+  "description": "Miko - Concert Streaming App",
+  "short_name": "Miko",
   "theme_color": "#3ed7b7",
   "background_color": "#070726",
   "display": "fullscreen",
   "scope": "/",
   "start_url": "/",
-  "name": "Miko - Concert Streaming App",
-  "short_name": "Miko",
-  "description": "Miko - Concert Streaming App",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "/image/icon/icon-192x192.png",

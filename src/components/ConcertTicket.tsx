@@ -1,11 +1,12 @@
 import { Badge, Box, Button, Center, HStack, Image, Td, Text, Tr } from '@chakra-ui/react';
-import { IMAGE_DOMAIN } from '@src/const';
+import { IMAGE_DOMAIN, NEST_URL, VapidServerKey } from '@src/const';
 import { convertDate } from '@src/helper';
+import { axiosI } from '@src/state/fetcher';
 import { curUserTicketState } from '@src/state/recoil';
 import { UserTicket } from '@src/types/share';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 
 const ButtonStatus: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
@@ -143,7 +144,45 @@ const TicketInfo: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
   );
 };
 
+const registerPushNotification = (userTicket: UserTicket) => {
+  function postSubscription(Subscription: PushSubscription) {
+    console.log('data', userTicket);
+    console.log('subscription', Subscription);
+    const startDate = userTicket.ticket.concertStartDate;
+    const concertData = userTicket.concert;
+
+    axiosI.post(`${NEST_URL}/register`, { Subscription, concertData, startDate }).catch(err => console.log(err));
+  }
+
+  async function requestNotification() {
+    Notification.requestPermission().then(status => {
+      if (status === 'denied') {
+        alert('Notification 거부됨');
+      } else if (navigator.serviceWorker) {
+        navigator.serviceWorker
+          .register('/sw.js') // serviceworker 등록
+          .then(async function (registration) {
+            const subscribeOptions = {
+              userVisibleOnly: true,
+              // push subscription이 유저에게 항상 보이는지 여부. 알림을 숨기는 등 작업이 들어가지는에 대한 여부인데, 크롬에서는 true 밖에 지원안한다.
+              applicationServerKey: VapidServerKey, // 발급받은 vapid public key
+            };
+            registration.pushManager.subscribe(subscribeOptions).then(function (pushSubscription) {
+              // subscription 정보를 저장할 서버로 보낸다.
+              postSubscription(pushSubscription);
+            });
+          });
+      }
+    });
+  }
+  requestNotification();
+};
+
 const ConcertTicket: FC<{ userTicket: UserTicket }> = ({ userTicket }) => {
+  useEffect(() => {
+    registerPushNotification(userTicket);
+  }, []);
+
   return <TicketInfo userTicket={userTicket} />;
 };
 

@@ -40,6 +40,8 @@ temp
 .env.production
 
 # build
-/public/sw.js
 /public/sw.js.map
-/public/workbox-*
+**/public/sw.js
+**/public/workbox-*.js*
+**/public/worker-*.js*
+**/public/fallback-*.js

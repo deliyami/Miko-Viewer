@@ -1,5 +1,6 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import { DevDrawer } from '@src/components/common/dev/DevDrawer';
+import PWALifecycle from '@src/components/pageParts/home/PWALifecycle';
 import { LARAVEL_URL, NEST_URL } from '@src/const';
 import { toastLog } from '@src/helper';
 import RootEventCatchLayout from '@src/layout/RootEventCatchLayout';
@@ -35,6 +36,7 @@ declare global {
     IVSPlayer: typeof ivs;
     registerIVSQualityPlugin: typeof registerIVSQualityPlugin;
     registerIVSTech: typeof registerIVSTech;
+    // workbox: typeof Workbox;
   }
 }
 
@@ -128,6 +130,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       <Head>
         <meta name="viewport" content="width=device-width,initial-scale=1,  maximum-scale=7.0, user-scalable=yes" />
       </Head>
+      <PWALifecycle />
       <ChakraProvider resetCSS theme={theme}>
         <RecoilRoot>
           <DevDrawer />

@@ -5,7 +5,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 const withPWA = require('next-pwa');
-const runtimeCaching = require('next-pwa/cache');
+const runtimeCaching = require('./src/pwa/workbox/cache.js');
 const withInterceptStdout = require('next-intercept-stdout')(
   {
     reactStrictMode: true,
@@ -51,9 +51,9 @@ const nextConfig = {
     modularizeImports: {},
   },
   compiler: {
-    removeConsole: {
-      exclude: ['error', 'info'],
-    },
+    // removeConsole: {
+    //   exclude: ['error', 'info'],
+    // },
   },
   productionBrowserSourceMaps: true, // default false , true로하면 빌드시간이 매우 상승하지만 디버깅에 조워짐 + 권장사항 점수 상승
   swcMinify: true,
@@ -101,12 +101,21 @@ module.exports = withPlugins([
     withPWA,
     {
       pwa: {
-        dest: 'public',
-        register: true,
-        skipWaiting: true,
         disable: process.env.NODE_ENV === 'development',
+        dest: 'public',
+        register: false, //  register.js를 커스텀해서 사용하면 false
+        skipWaiting: true,
+        scope: '/', //  /app으로 하면 /app* 만 pwa
         runtimeCaching,
+        customWorkerDir: './src/pwa/workbox',
         buildExcludes: [/middleware-manifest\.json$/],
+        // fallbacks: {
+        //   // image: '/static/images/fallback.png',
+        //   // document: '/_offline',  // if you want to fallback to a custom    page other than /_offline
+        //   // font: '/static/font/fallback.woff2',
+        //   // audio: ...,
+        //   // video: ...,
+        // },
       },
     },
   ],

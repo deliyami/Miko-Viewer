@@ -55,3 +55,5 @@ export const URL_USER_TICKET = '/user_tickets';
 
 // Interval
 export const UPDATE_USERS_SCORE_TIME = 1000;
+
+export const VapidServerKey = process.env.NEXT_PUBLIC_WEB_PUSH_SERVER_KEY;
